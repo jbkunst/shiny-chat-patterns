@@ -13,12 +13,11 @@ ui <- bslib::page_navbar(
 
 server <- function(input, output, session) {
   
-  # https://github.com/posit-dev/shinychat?tab=readme-ov-file#example
   chat <- ellmer::chat_openai(
     model = "gpt-3.5-turbo",
     system_prompt = paste(readLines(here("md/app_02_prompt.md"), warn = FALSE), collapse = "\n")
     )
-  # puedo _appendear_ cualquier texto.
+
   shinychat::chat_append("chat", paste(readLines(here("md/app_02_saludo.md"), warn = FALSE), collapse = "\n"))
   
   shiny::observeEvent(input$chat_user_input, {
