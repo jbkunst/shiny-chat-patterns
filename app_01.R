@@ -3,8 +3,7 @@ library(bslib)
 
 ui <- bslib::page_navbar(
   sidebar = sidebar(
-    width = 350,
-    "Sidebar"
+    width = 400
   )
 )
 
