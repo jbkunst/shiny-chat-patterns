@@ -6,3 +6,7 @@ chat <- ellmer::chat_openai(
   )
 
 chat$chat("Saludame")
+
+chat$chat("cuanto es 2 elevado a 4")
+
+live_console(chat)

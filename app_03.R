@@ -31,6 +31,7 @@ server <- function(input, output, session) {
   }
 
   output$salida <- renderText({
+    if(is.null(fecha_hora_reac())) return(NULL)
     paste0("La hora es ", fecha_hora_reac())
   })
 
