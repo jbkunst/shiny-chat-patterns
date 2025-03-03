@@ -89,6 +89,8 @@ df_to_html <- function(df, maxrows = 5) {
   paste0(tbl_html, "\n", rows_notice)
 }
 
+card <- purrr::partial(bslib::card, full_screen = TRUE)
+
 # variables --------------------------------------------------------------
 conn <- dbConnect(duckdb(), dbdir = db_path, read_only = TRUE)
 onStop(\() dbDisconnect(conn))
@@ -120,7 +122,7 @@ ui <- bslib::page_navbar(
     verbatimTextOutput("query_sql") |> tagAppendAttributes(style = "max-height: 100px; overflow: auto;"),
 
     bslib::layout_columns(
-      widths = 4,
+      col_widths = 4,
       fill = FALSE,
       value_box("Registros", value = textOutput("vb_nrows")),
       value_box("Datos", value = NULL),
@@ -128,11 +130,10 @@ ui <- bslib::page_navbar(
     ),
 
     bslib::layout_columns(
-      widths = c(12),
-      card(       
-        card_header("Data"),
-        reactableOutput("table", height = "100%")
-      )
+      col_widths = c(6, 6, 12),
+      card(plotOutput("plot")),
+      card(),
+      card(reactableOutput("table", height = "100%"))
     )
   )
 )
@@ -156,6 +157,19 @@ server <- function(input, output, session) {
   })
 
   output$vb_nrows <- renderText(nrow(data()))
+
+  output$plot <- renderPlot({
+    data <- data() # pinguinos
+
+    ggplot(data = data, aes(x = largo_aleta_mm, y = masa_corporal_g)) +
+      geom_point(aes(color = especie), size = 3, alpha = 0.8) +
+      theme_minimal() +
+      scale_color_manual(values = c("darkorange", "purple", "cyan4")) +
+      labs(x = "Largo aleta (mm)", y = "Masa corporal (g)", color = "Especie") +
+      theme(legend.position = "bottom")
+
+  })
+
   output$table <- renderReactable(reactable(data(), pagination = FALSE, compact = TRUE))
 
   # definición chat y tools ------------------------------------------------
