@@ -89,7 +89,6 @@ df_to_html <- function(df, maxrows = 5) {
   paste0(tbl_html, "\n", rows_notice)
 }
 
-
 # variables --------------------------------------------------------------
 conn <- dbConnect(duckdb(), dbdir = db_path, read_only = TRUE)
 onStop(\() dbDisconnect(conn))
@@ -115,9 +114,18 @@ ui <- bslib::page_navbar(
   ),
   nav_panel(
     title = "Dashboard",
+    # tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")),
+    includeCSS("www/styles.css"),
     textOutput("title_sql", container = h3),
     verbatimTextOutput("query_sql") |> tagAppendAttributes(style = "max-height: 100px; overflow: auto;"),
-    verbatimTextOutput("salida"),
+
+    bslib::layout_columns(
+      widths = 4,
+      fill = FALSE,
+      value_box("Registros", value = textOutput("vb_nrows")),
+      value_box("Datos", value = NULL),
+      value_box("Datos", value = NULL)
+    ),
 
     bslib::layout_columns(
       widths = c(12),
@@ -147,10 +155,14 @@ server <- function(input, output, session) {
     dbGetQuery(conn, sql)
   })
 
+  output$vb_nrows <- renderText(nrow(data()))
   output$table <- renderReactable(reactable(data(), pagination = FALSE, compact = TRUE))
 
   # definición chat y tools ------------------------------------------------
   append_output <- function(...) {
+
+    cli::cli_inform("running `append_output`")
+
     txt <- paste0(...)
     shinychat::chat_append_message(
       "chat",
@@ -162,8 +174,17 @@ server <- function(input, output, session) {
   }
 
   update_dashboard <- function(query, title) {
-    append_output("\n```sql\n", query, "\n```\n\n")
 
+    cli::cli_inform("running `update_dashboard`:\n\tquery: {query}\n\ttitle: {title}")
+
+    if(query == "") {
+      current_query(query)
+      current_title(title)
+      return(TRUE)
+    }
+
+    append_output("\n```sql\n", query, "\n```\n\n")
+    
     tryCatch(
       {
         # Try it to see if it errors; if so, the LLM will see the error
@@ -178,12 +199,17 @@ server <- function(input, output, session) {
     if (!is.null(query)) {
       current_query(query)
     }
+    
     if (!is.null(title)) {
       current_title(title)
     }
+    
   }
 
   query <- function(query) {
+
+    cli::cli_inform("running `query`")
+
     # Do this before query, in case it errors
     append_output("\n```sql\n", query, "\n```\n\n")
 
@@ -226,7 +252,6 @@ server <- function(input, output, session) {
   })
 
 }
-
 
 # run application --------------------------------------------------------
 shinyApp(ui, server)

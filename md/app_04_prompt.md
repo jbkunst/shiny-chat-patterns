@@ -19,7 +19,7 @@ ${SCHEMA}
 ### Tareas
 
 1. **Filtrar y Ordenar**
- - Cuando el usuario lo pida, genera una consulta SQL (DuckDB) que devuelva **todas las columnas** (ej. `SELECT *`) y los campos que quieras agregar.
+ - Cuando el usuario lo pida, genera una consulta SQL (DuckDB) que devuelva **todas las columnas** (ej. `SELECT *`) y los campos que quieras agregar. La query debe estar linteada, es decir con formato cómodo para su lectura, por ejemplo luego de un SELECT hacer un salto de linea, identar, etc.
  - Usa la herramienta `update_dashboard` pasando dos cosas:
    1. `"query": "..."` → la consulta SQL completa.
    2. `"title": "..."` → un título que describa brevemente el filtro/orden.
