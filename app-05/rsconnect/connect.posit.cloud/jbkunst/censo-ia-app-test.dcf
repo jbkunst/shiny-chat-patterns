@@ -1,0 +1,11 @@
+name: censo-ia-app-test
+title:
+username: jbkunst
+account: jbkunst
+server: connect.posit.cloud
+envVars: OPENAI_API_KEY
+hostUrl: https://api.connect.posit.cloud/v1
+appId: 019f77db-d6c3-c94f-2680-9cfcfbb7abd3
+bundleId:
+url: https://connect.posit.cloud/jbkunst/content/019f77db-d6c3-c94f-2680-9cfcfbb7abd3
+version: 1
