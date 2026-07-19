@@ -1,8 +1,7 @@
 library(shiny)
 library(bslib)
-library(here)
 library(ellmer)
-library(shinychat) # pak::pak("posit-dev/shinychat")
+library(shinychat) # pak::pak("posit-dev/shinychat/pkg-r")
 
 ui <- bslib::page_navbar(
   sidebar = sidebar(
@@ -21,11 +20,10 @@ server <- function(input, output, session) {
 
   obtener_hora_actual <- function(){
     cli::cli_inform("Ejecutando `obtener_hora_actual`")
-    x <-Sys.time()
+    x <- Sys.time()
   
-    # aprovecho de actualizar una variable reactiva para utilizarla en shiny
-    # la función debe estar definida dentro del server para actualizar
-    # la variable reactiva, en otro caso puede estar definida en otra parte.
+    # Update a reactive value so Shiny can display the tool result.
+    # The function lives inside server because it modifies session state.
     fecha_hora_reac(x)
     x
   }
@@ -37,15 +35,20 @@ server <- function(input, output, session) {
 
   chat <- ellmer::chat_openai(
     model = "gpt-3.5-turbo",
-    system_prompt = paste(readLines(here("md/app_03_prompt.md"), warn = FALSE), collapse = "\n")
+    system_prompt = paste(readLines("prompt.md", warn = FALSE), collapse = "\n")
     )
 
-  chat$register_tool(tool(
-    .fun = obtener_hora_actual,
-    .description = "Función que al ejecutar retorna la fecha y hora actual del sistema."
-  ))
+  obtener_hora_actual <- tool(
+    obtener_hora_actual,
+    name = "obtener_hora_actual",
+    description =  "Función que al ejecutar retorna la fecha y hora actual del sistema.",
+    arguments = list()
+  )
   
-  shinychat::chat_append("chat",  "Hola! Comencemos!")
+  chat$register_tool(obtener_hora_actual)
+
+  greeting <- paste(readLines("greeting.md", warn = FALSE), collapse = "\n")
+  shinychat::chat_append("chat", greeting)
   
   shiny::observeEvent(input$chat_user_input, {
     stream <- chat$stream_async(input$chat_user_input)
