@@ -1,17 +1,15 @@
 # packages ---------------------------------------------------------------
 library(shiny)
 library(bslib)
-library(here)
 library(ellmer)
-library(shinychat) # pak::pak("posit-dev/shinychat")
+library(shinychat) # pak::pak("posit-dev/shinychat/pkg-r")
 library(duckdb)
-library(here)
 library(datos)     # pak::pak("cienciadedatos/datos")
 library(tidyverse)
 library(reactable)
 
 # setup ------------------------------------------------------------------
-db_path       <- here("db/database.duckdb")
+db_path       <- tempfile(fileext = ".duckdb")
 db_table_name <- "pinguinos"
 
 if (file.exists(db_path)) unlink(db_path)
@@ -25,7 +23,7 @@ system_prompt <- function(df, name, categorical_threshold = 10) {
   schema <- df_to_schema(df, name, categorical_threshold)
 
   # Read the prompt file
-  prompt_path <- here("md/app_04_prompt.md")
+  prompt_path <- "prompt.md"
   prompt_content <- read_lines(prompt_path)
   prompt_text <- str_c(prompt_content, collapse = "\n")
 
@@ -71,24 +69,6 @@ df_to_schema <- function(df, name, categorical_threshold) {
   return(paste(schema, collapse = "\n"))
 }
 
-df_to_html <- function(df, maxrows = 5) {
-  df_short <- if (nrow(df) > 10) head(df, maxrows) else df
-
-  tbl_html <- capture.output(
-    df_short |>
-      xtable::xtable() |>
-      print(type = "html", include.rownames = FALSE, html.table.attributes = NULL)
-  ) |> paste(collapse = "\n")
-
-  if (nrow(df_short) != nrow(df)) {
-    rows_notice <- glue::glue("\n\n(Showing only the first {maxrows} rows out of {nrow(df)}.)\n")
-  } else {
-    rows_notice <- ""
-  }
-
-  paste0(tbl_html, "\n", rows_notice)
-}
-
 card <- purrr::partial(bslib::card, full_screen = TRUE)
 
 # variables --------------------------------------------------------------
@@ -98,7 +78,7 @@ onStop(\() dbDisconnect(conn))
 # gpt-4o does much better than gpt-4o-mini, especially at interpreting plots
 openai_model <- "gpt-3.5-turbo" # "gpt-4o"
 
-greeting <- str_c(read_lines(here("md/app_04_greetings.md")), collapse = "\n")
+greeting <- str_c(read_lines("greeting.md"), collapse = "\n")
 greeting <- str_replace(greeting, "\\$\\{TABLE\\}", db_table_name)
 # cat(greeting)
 
@@ -112,7 +92,7 @@ system_prompt_str <- system_prompt(
 ui <- bslib::page_navbar(
   sidebar = sidebar(
     width = 400,
-    shinychat::chat_ui("chat", placeholder = "Ingresa un mensaje...")
+    shinychat::chat_mod_ui("chat", placeholder = "Ingresa un mensaje...")
   ),
   nav_panel(
     title = "Dashboard",
@@ -125,14 +105,14 @@ ui <- bslib::page_navbar(
       col_widths = 4,
       fill = FALSE,
       value_box("Registros", value = textOutput("vb_nrows")),
-      value_box("Datos", value = NULL),
-      value_box("Datos", value = NULL)
+      value_box("Especies", value = textOutput("vb_species")),
+      value_box("Masa promedio", value = textOutput("vb_avg_mass"))
     ),
 
     bslib::layout_columns(
       col_widths = c(6, 6, 12),
       card(plotOutput("plot")),
-      card(),
+      card(plotOutput("plot_species")),
       card(reactableOutput("table", height = "100%"))
     )
   )
@@ -141,7 +121,7 @@ ui <- bslib::page_navbar(
 # server -----------------------------------------------------------------
 server <- function(input, output, session) {
   
-  # variables reactivas
+  # reactive values
   current_title <- reactiveVal(NULL)
   current_query <- reactiveVal(NULL)
 
@@ -157,6 +137,8 @@ server <- function(input, output, session) {
   })
 
   output$vb_nrows <- renderText(nrow(data()))
+  output$vb_species <- renderText(n_distinct(data()$especie))
+  output$vb_avg_mass <- renderText(paste0(round(mean(data()$masa_corporal_g, na.rm = TRUE)), " g"))
 
   output$plot <- renderPlot({
     data <- data() # pinguinos
@@ -170,77 +152,34 @@ server <- function(input, output, session) {
 
   })
 
+  output$plot_species <- renderPlot({
+    data() |>
+      count(especie) |>
+      ggplot(aes(x = especie, y = n, fill = especie)) +
+      geom_col(width = 0.7, show.legend = FALSE) +
+      geom_text(aes(label = n), vjust = -0.4) +
+      scale_fill_manual(values = c("darkorange", "purple", "cyan4")) +
+      labs(x = NULL, y = "Cantidad", title = "Pingüinos por especie") +
+      theme_minimal() +
+      theme(plot.title = element_text(face = "bold"))
+  })
+
   output$table <- renderReactable(reactable(data(), pagination = FALSE, compact = TRUE))
 
-  # definición chat y tools ------------------------------------------------
-  append_output <- function(...) {
-
-    cli::cli_inform("running `append_output`")
-
-    txt <- paste0(...)
-    shinychat::chat_append_message(
-      "chat",
-      list(role = "assistant", content = txt),
-      chunk = TRUE,
-      operation = "append",
-      session = session
-    )
-  }
-
+  # chat and tool definitions ---------------------------------------------
   update_dashboard <- function(query, title) {
-
-    cli::cli_inform("running `update_dashboard`:\n\tquery: {query}\n\ttitle: {title}")
-
-    if(query == "") {
-      current_query(query)
-      current_title(title)
-      return(TRUE)
+    if (query != "") {
+      dbGetQuery(conn, query)
     }
 
-    append_output("\n```sql\n", query, "\n```\n\n")
-    
-    tryCatch(
-      {
-        # Try it to see if it errors; if so, the LLM will see the error
-        dbGetQuery(conn, query)
-      },
-      error = function(err) {
-        append_output("> Error: ", conditionMessage(err), "\n\n")
-        stop(err)
-      }
-    )
-
-    if (!is.null(query)) {
-      current_query(query)
-    }
-    
-    if (!is.null(title)) {
-      current_title(title)
-    }
-    
+    current_query(query)
+    current_title(title)
+    TRUE
   }
 
   query <- function(query) {
-
-    cli::cli_inform("running `query`")
-
-    # Do this before query, in case it errors
-    append_output("\n```sql\n", query, "\n```\n\n")
-
-    tryCatch(
-      {
-        df <- dbGetQuery(conn, query)
-      },
-      error = function(e) {
-        append_output("> Error: ", conditionMessage(e), "\n\n")
-        stop(e)
-      }
-    )
-
-    tbl_html <- df_to_html(df, maxrows = 5)
-    append_output(tbl_html, "\n\n")
-
-    jsonlite::toJSON(df, auto_unbox = TRUE)
+    dbGetQuery(conn, query) |>
+      jsonlite::toJSON(auto_unbox = TRUE)
   }
 
   chat <- ellmer::chat_openai(model = openai_model, system_prompt = system_prompt_str)
@@ -257,13 +196,8 @@ server <- function(input, output, session) {
     "Realiza una consulta SQL sobre los datos y devuelve los resultados en formato JSON.",
     query = type_string("Una consulta SQL de DuckDB; debe ser una instrucción SELECT.")
   ))
-  
-  shinychat::chat_append("chat", greeting)
-  
-  shiny::observeEvent(input$chat_user_input, {
-    stream <- chat$stream_async(input$chat_user_input)
-    chat_append("chat", stream)
-  })
+
+  shinychat::chat_mod_server("chat", client = chat, greeting = greeting)
 
 }
 
