@@ -18,17 +18,43 @@ conn <- dbConnect(duckdb(), dbdir = db_path, read_only = FALSE)
 DBI::dbWriteTable(conn, "pinguinos", pinguinos, overwrite = TRUE)
 dbDisconnect(conn)
 
+system_prompt_template <- paste(
+  "Eres el asistente breve de un dashboard. Trabajas únicamente con DuckDB y esta tabla:",
+  "",
+  "${SCHEMA}",
+  "",
+  "## Herramientas",
+  "",
+  "- Usa `update_dashboard(query, title)` para filtrar, ordenar o reiniciar el dashboard.",
+  "- Usa `query(query)` para responder preguntas sobre los datos.",
+  "",
+  "## Reglas",
+  "",
+  "- Genera solamente consultas `SELECT` sobre la tabla disponible.",
+  "- Realiza cálculos y agregaciones dentro de SQL.",
+  "- Para reiniciar, llama `update_dashboard` con `query = \"\"`.",
+  "- Si la solicitud es ambigua, pide una aclaración.",
+  "- Mantén las respuestas cortas y en español.",
+  sep = "\n"
+)
+
+greeting_template <- paste(
+  "Explora la tabla `${TABLE}` con el chat. Por ejemplo:",
+  "",
+  "- “Muestra solo los pingüinos Adelie”.",
+  "- “Ordena por masa corporal”.",
+  "- “Compara la masa promedio entre especies”.",
+  "",
+  "También puedes escribir “reiniciar” para volver a todos los datos.",
+  sep = "\n"
+)
+
 # helpers ----------------------------------------------------------------
 system_prompt <- function(df, name, categorical_threshold = 10) {
   schema <- df_to_schema(df, name, categorical_threshold)
 
-  # Read the prompt file
-  prompt_path <- "prompt.md"
-  prompt_content <- read_lines(prompt_path)
-  prompt_text <- str_c(prompt_content, collapse = "\n")
-
   # Replace the placeholder with the schema
-  prompt_text <- str_replace(prompt_text, "\\$\\{SCHEMA\\}", schema)
+  prompt_text <- str_replace(system_prompt_template, "\\$\\{SCHEMA\\}", schema)
 
   prompt_text
 }
@@ -76,10 +102,9 @@ conn <- dbConnect(duckdb(), dbdir = db_path, read_only = TRUE)
 onStop(\() dbDisconnect(conn))
 
 # gpt-4o does much better than gpt-4o-mini, especially at interpreting plots
-openai_model <- "gpt-3.5-turbo" # "gpt-4o"
+openai_model <- Sys.getenv("OPENAI_MODEL", unset = "gpt-3.5-turbo")
 
-greeting <- str_c(read_lines("greeting.md"), collapse = "\n")
-greeting <- str_replace(greeting, "\\$\\{TABLE\\}", db_table_name)
+greeting <- str_replace(greeting_template, "\\$\\{TABLE\\}", db_table_name)
 # cat(greeting)
 
 system_prompt_str <- system_prompt(
@@ -89,32 +114,30 @@ system_prompt_str <- system_prompt(
 # cat(system_prompt_str)
 
 # user interface ---------------------------------------------------------
-ui <- bslib::page_navbar(
+ui <- bslib::page_sidebar(
+  title = "App 04 - Dashboard de pingüinos",
   sidebar = sidebar(
     width = 400,
     shinychat::chat_mod_ui("chat", placeholder = "Ingresa un mensaje...")
   ),
-  nav_panel(
-    title = "Dashboard",
-    # tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")),
-    includeCSS("www/styles.css"),
-    textOutput("title_sql", container = h3),
-    verbatimTextOutput("query_sql") |> tagAppendAttributes(style = "max-height: 100px; overflow: auto;"),
+  # tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")),
+  includeCSS("www/styles.css"),
+  textOutput("title_sql", container = h3),
+  verbatimTextOutput("query_sql") |> tagAppendAttributes(style = "max-height: 100px; overflow: auto;"),
 
-    bslib::layout_columns(
-      col_widths = 4,
-      fill = FALSE,
-      value_box("Registros", value = textOutput("vb_nrows")),
-      value_box("Especies", value = textOutput("vb_species")),
-      value_box("Masa promedio", value = textOutput("vb_avg_mass"))
-    ),
+  bslib::layout_columns(
+    col_widths = 4,
+    fill = FALSE,
+    value_box("Registros", value = textOutput("vb_nrows")),
+    value_box("Especies", value = textOutput("vb_species")),
+    value_box("Masa promedio", value = textOutput("vb_avg_mass"))
+  ),
 
-    bslib::layout_columns(
-      col_widths = c(6, 6, 12),
-      card(plotOutput("plot")),
-      card(plotOutput("plot_species")),
-      card(reactableOutput("table", height = "100%"))
-    )
+  bslib::layout_columns(
+    col_widths = c(6, 6, 12),
+    card(plotOutput("plot")),
+    card(plotOutput("plot_species")),
+    card(reactableOutput("table", height = "100%"))
   )
 )
 

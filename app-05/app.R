@@ -5,6 +5,26 @@ library(sf)
 library(ellmer)
 library(shinychat)
 
+system_prompt_text <- paste(
+  "Eres un asistente breve para explorar un mapa mundial.",
+  "",
+  "- Usa `go_to_country` para viajar a un país.",
+  "- Usa `show_country_report` para abrir su informe.",
+  "- Usa `change_metric` para cambiar la coropleta.",
+  "- Las métricas disponibles son `life_expectancy`, `life_expectancy_change`, `population_growth`, `population`, `gdp_per_capita` y `gdp_growth`.",
+  "- Responde siempre en español.",
+  sep = "\n"
+)
+
+greeting_text <- paste(
+  "Datos históricos de **Gapminder**.",
+  "",
+  "Puedes mostrar **esperanza de vida**, **cambio en esperanza de vida**, **crecimiento poblacional**, **población**, **PIB por habitante** o **crecimiento del PIB por habitante**.",
+  "",
+  "Prueba: **viaja a China** o **abre el informe de Chile**.",
+  sep = "\n"
+)
+
 # data --------------------------------------------------------------------
 data("countries110", package = "rnaturalearthdata")
 
@@ -98,44 +118,33 @@ add_choropleth <- function(map, metric) {
 }
 
 # user interface ----------------------------------------------------------
-ui <- page_navbar(
-  title = NULL,
-  fillable = TRUE,
-  padding = 0,
-  fillable_mobile = TRUE,
-  nav_panel(
-    "Censo mundial",
-    div(
-      style = "position: relative; width: 100%; height: 100%; min-height: 0;",
-      leafletOutput("map", width = "100%", height = "100%"),
-      absolutePanel(
-        top = 16,
-        left = 16,
-        width = 380,
-        draggable = TRUE,
-        style = "z-index: 1000; max-width: calc(100% - 32px);",
-        accordion(
-          open = TRUE,
-          accordion_panel(
-            "Asistente del mapa",
-            shinychat::chat_mod_ui(
-              "chat",
-              height = "420px",
-              placeholder = "Viaja a China..."
-            )
-          )
-        )
-      )
+ui <- page_sidebar(
+  title = "App 05 - Mapa mundial",
+  sidebar = sidebar(
+    width = 400,
+    shinychat::chat_mod_ui(
+      "chat",
+      placeholder = "Viaja a China..."
     )
   ),
-  nav_spacer(),
-  nav_panel(
-    "Acerca de",
-    div(
-      class = "p-4",
-      h2("Acerca de"),
-      p("Ejemplo mínimo con geometrías de Natural Earth y datos históricos de Gapminder."),
-      div(style = "overflow-x: auto;", tableOutput("country_table"))
+  fillable = TRUE,
+  fillable_mobile = TRUE,
+  navset_card_tab(
+    nav_panel(
+      "Censo mundial",
+      div(
+        style = "position: relative; width: 100%; height: 100%; min-height: 0;",
+        leafletOutput("map", width = "100%", height = "100%")
+      )
+    ),
+    nav_panel(
+      "Acerca de",
+      div(
+        class = "p-4",
+        h2("Acerca de"),
+        p("Ejemplo mínimo con geometrías de Natural Earth y datos históricos de Gapminder."),
+        div(style = "overflow-x: auto;", tableOutput("country_table"))
+      )
     )
   )
 )
@@ -241,11 +250,9 @@ server <- function(input, output, session) {
     paste("Coropleta actualizada a", metrics[[metric]]$label)
   }
 
-  system_prompt <- paste(readLines("prompt.md", warn = FALSE), collapse = "\n")
-
   chat <- ellmer::chat_openai(
-    model = "gpt-3.5-turbo",
-    system_prompt = system_prompt
+    model = Sys.getenv("OPENAI_MODEL", unset = "gpt-3.5-turbo"),
+    system_prompt = system_prompt_text
   )
 
   chat$register_tool(tool(
@@ -276,7 +283,7 @@ server <- function(input, output, session) {
   shinychat::chat_mod_server(
     "chat",
     client = chat,
-    greeting = paste(readLines("greeting.md", warn = FALSE), collapse = "\n")
+    greeting = greeting_text
   )
 }
 
