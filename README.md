@@ -9,9 +9,10 @@ Cada aplicación es independiente y tiene su propio `app.R`:
 - `app-03`: chat con una herramienta.
 - `app-04`: dashboard de pingüinos controlado por chat.
 - `app-05`: mapa mundial controlado por chat.
+- `app-06`: flujo mínimo con dos agentes: analyst → ejecución simulada → writer.
 
 Para ejecutar una aplicación:
 
 ```r
-shiny::runApp("app-05")
+shiny::runApp("app-06")
 ```
