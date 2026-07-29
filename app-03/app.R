@@ -3,15 +3,22 @@ library(bslib)
 library(ellmer)
 library(shinychat) # pak::pak("posit-dev/shinychat/pkg-r")
 
-ui <- bslib::page_navbar(
+system_prompt_text <- paste(
+  "Eres un asistente experto en SQL. Responde de forma breve y clara.",
+  "",
+  "También puedes usar `obtener_hora_actual` para consultar la fecha y hora del sistema. Usa la herramienta cuando el usuario pregunte por la hora, la fecha o solicite un cálculo que dependa del momento actual.",
+  sep = "\n"
+)
+
+greeting_text <- "Hola. Puedo consultar la fecha y hora actual. Prueba preguntando: **¿qué hora es?**"
+
+ui <- bslib::page_sidebar(
+  title = "App 03 - Chat con herramienta",
   sidebar = sidebar(
     width = 400,
     shinychat::chat_ui("chat", placeholder = "Ingresa un mensaje...")
   ),
-  nav_panel(
-    title = "Panel",
-    verbatimTextOutput("salida")
-  )
+  verbatimTextOutput("salida")
 )
 
 server <- function(input, output, session) {
@@ -34,8 +41,8 @@ server <- function(input, output, session) {
   })
 
   chat <- ellmer::chat_openai(
-    model = "gpt-3.5-turbo",
-    system_prompt = paste(readLines("prompt.md", warn = FALSE), collapse = "\n")
+    model = Sys.getenv("OPENAI_MODEL", unset = "gpt-3.5-turbo"),
+    system_prompt = system_prompt_text
     )
 
   obtener_hora_actual <- tool(
@@ -47,8 +54,7 @@ server <- function(input, output, session) {
   
   chat$register_tool(obtener_hora_actual)
 
-  greeting <- paste(readLines("greeting.md", warn = FALSE), collapse = "\n")
-  shinychat::chat_append("chat", greeting)
+  shinychat::chat_append("chat", greeting_text)
   
   shiny::observeEvent(input$chat_user_input, {
     stream <- chat$stream_async(input$chat_user_input)
