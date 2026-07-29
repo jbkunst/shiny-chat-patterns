@@ -1,7 +1,8 @@
 library(shiny)
 library(bslib)
 
-ui <- bslib::page_navbar(
+ui <- bslib::page_sidebar(
+  title = "App 01 - Estructura básica",
   sidebar = sidebar(
     width = 400
   )

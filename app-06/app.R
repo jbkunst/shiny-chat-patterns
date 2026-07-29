@@ -4,10 +4,9 @@ library(ellmer)
 library(shinychat)
 
 # agents ------------------------------------------------------------------
-
 analyst_agent <- function(question) {
   chat <- ellmer::chat_openai(
-    model = "gpt-5-nano",
+    model = Sys.getenv("OPENAI_MODEL", unset = "gpt-5-nano"),
     system_prompt = paste(
       "You are analyst_agent.",
       "The user asks questions about a toy table named sales with columns:",
@@ -24,7 +23,7 @@ writer_agent <- function(question, analysis, data) {
   data_text <- paste(capture.output(print(data, row.names = FALSE)), collapse = "\n")
 
   chat <- ellmer::chat_openai(
-    model = "gpt-5-nano",
+    model = Sys.getenv("OPENAI_MODEL", unset = "gpt-5-nano"),
     system_prompt = paste(
       "You are writer_agent.",
       "Answer clearly and briefly using only the supplied query result.",
@@ -40,19 +39,17 @@ writer_agent <- function(question, analysis, data) {
 }
 
 # fake database -----------------------------------------------------------
-
 simulate_execution <- function(analysis) {
   # In a real app this is where DBI::dbGetQuery() would execute the SQL.
   # We intentionally ignore `analysis` and return fixed data for the example.
   data.frame(
-    region = c("Norte", "Centro", "Sur"),
+    region = c("North", "Central", "South"),
     units = c(420, 560, 310),
     revenue = c(125000, 186000, 98000)
   )
 }
 
 # orchestrator ------------------------------------------------------------
-
 orchestrate <- function(question) {
   analysis <- analyst_agent(question)
   data <- simulate_execution(analysis)
@@ -66,18 +63,17 @@ orchestrate <- function(question) {
 }
 
 # user interface ----------------------------------------------------------
-
 ui <- page_sidebar(
-  title = "App 06 · Two agents",
+  title = "App 06 - Two agents",
   sidebar = sidebar(
-    width = 420,
+    width = 400,
     shinychat::chat_ui(
       "chat",
-      placeholder = "Ej: ¿Qué región vende más?"
+      placeholder = "Example: Which region sells the most?"
     )
   ),
-  h4("Flujo lineal"),
-  p("Pregunta → analyst_agent → ejecución simulada → writer_agent"),
+  h4("Simple workflow"),
+  p("Question -> analyst_agent -> simulated execution -> writer_agent"),
   layout_columns(
     card(
       card_header("1. analyst_agent"),
@@ -92,9 +88,8 @@ ui <- page_sidebar(
 )
 
 # server ------------------------------------------------------------------
-
 server <- function(input, output, session) {
-  last_analysis <- reactiveVal("Aún no hay análisis.")
+  last_analysis <- reactiveVal("There is no analysis yet.")
   last_data <- reactiveVal(NULL)
 
   output$analysis <- renderText(last_analysis())
@@ -103,8 +98,8 @@ server <- function(input, output, session) {
   shinychat::chat_append(
     "chat",
     paste(
-      "Este ejemplo usa dos agentes sin memoria compartida.",
-      "Haz una pregunta sobre ventas por región, producto, unidades o revenue."
+      "This example uses two agents without shared memory.",
+      "Ask a question about sales by region, product, units, or revenue."
     )
   )
 
