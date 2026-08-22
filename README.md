@@ -56,3 +56,6 @@ install.packages(c(
 
 Las extensiones también requieren `leaflet`, `sf`, `gapminder`, `countrycode`
 y `rnaturalearthdata`.
+
+Los ejemplos de agentes con SQLite también requieren `RSQLite` y
+`nycflights13`.
