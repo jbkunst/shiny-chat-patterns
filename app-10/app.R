@@ -45,22 +45,6 @@ metrics <- list(
   gdp_growth = list(column = "gdp_per_capita_growth", label = "Crecimiento del PIB por habitante (%)")
 )
 
-country_data <- data.frame(
-  ISO = countries$country_id,
-  País = countries$country_name,
-  Continente = countries$continent,
-  `Esperanza de vida 1997` = countries$life_expectancy_1997,
-  `Esperanza de vida 2007` = countries$life_expectancy,
-  `Cambio esperanza de vida` = countries$life_expectancy_change,
-  `Población 1997` = countries$population_1997,
-  `Población 2007` = countries$population_2007,
-  `Crecimiento población` = countries$population_growth,
-  `PIB por habitante 1997` = countries$gdp_per_capita_1997,
-  `PIB por habitante 2007` = countries$gdp_per_capita_2007,
-  `Crecimiento PIB por habitante` = countries$gdp_per_capita_growth,
-  check.names = FALSE
-)
-
 add_choropleth <- function(map, metric) {
   info <- metrics[[metric]]
   values <- countries[[info$column]]
@@ -99,46 +83,18 @@ system_prompt <- paste(readLines("prompt.md", warn = FALSE), collapse = "\n")
 
 # user interface ----------------------------------------------------------
 
-ui <- page_navbar(
-  title = NULL,
+ui <- page_sidebar(
+  title = "App 10 · Mapa mundial",
   fillable = TRUE,
-  padding = 0,
-  fillable_mobile = TRUE,
-  nav_panel(
-    "App 10 · Mapa mundial",
-    div(
-      style = "position: relative; width: 100%; height: 100%; min-height: 0;",
-      leafletOutput("map", width = "100%", height = "100%"),
-      absolutePanel(
-        top = 16,
-        left = 16,
-        width = 380,
-        draggable = TRUE,
-        style = "z-index: 1000; max-width: calc(100% - 32px);",
-        accordion(
-          open = TRUE,
-          accordion_panel(
-            "Asistente del mapa",
-            shinychat::chat_ui(
-              "chat",
-              messages = greeting,
-              placeholder = "Viaja a China..."
-            )
-          )
-        )
-      )
+  sidebar = sidebar(
+    width = 400,
+    shinychat::chat_ui(
+      "chat",
+      messages = greeting,
+      placeholder = "Viaja a China..."
     )
   ),
-  nav_spacer(),
-  nav_panel(
-    "Acerca de",
-    div(
-      class = "p-4",
-      h2("Acerca de"),
-      p("Ejemplo con geometrías de Natural Earth y datos históricos de Gapminder."),
-      div(style = "overflow-x: auto;", tableOutput("country_table"))
-    )
-  )
+  leafletOutput("map", width = "100%", height = "100%")
 )
 
 # server ------------------------------------------------------------------
@@ -146,8 +102,6 @@ ui <- page_navbar(
 server <- function(input, output, session) {
   map_metric <- reactiveVal("life_expectancy")
   selected_country <- reactiveVal(NULL)
-
-  output$country_table <- renderTable(country_data, striped = TRUE, hover = TRUE)
 
   output$map <- renderLeaflet({
     leaflet(options = leafletOptions(zoomControl = FALSE)) |>

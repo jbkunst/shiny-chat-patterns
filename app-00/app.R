@@ -10,11 +10,8 @@ ui <- page_sidebar(
     sliderInput("n", "Cantidad de puntos", min = 5, max = 50, value = 20),
     selectInput("color", "Color", c(Azul = "#2C7FB8", Verde = "#2CA25F", Naranjo = "#F28E2B"))
   ),
-  card(
-    card_header("Una entrada, una salida"),
-    textOutput("greeting"),
-    plotOutput("plot")
-  )
+  textOutput("greeting"),
+  plotOutput("plot")
 )
 
 # server ------------------------------------------------------------------
