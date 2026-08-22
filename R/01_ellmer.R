@@ -1,9 +1,6 @@
 library(ellmer)
 
-chat <- ellmer::chat_openai(
-  model = "gpt-5-nano",
-  system_prompt = "Eres un bot muy alegre."
-)
+chat <- ellmer::chat_openai(model = "gpt-5-nano", system_prompt = "Eres un bot muy alegre.")
 
 chat$chat("Salúdame")
 

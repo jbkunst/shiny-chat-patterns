@@ -48,10 +48,7 @@ server <- function(input, output, session) {
   })
 
   output$n_rows <- renderText(nrow(data()))
-
-  output$avg_mass <- renderText({
-    paste0(round(mean(data()$masa_corporal_g, na.rm = TRUE)), " g")
-  })
+  output$avg_mass <- renderText(paste0(round(mean(data()$masa_corporal_g, na.rm = TRUE)), " g"))
 
   output$plot <- renderPlot({
     df <- data()
@@ -95,17 +92,17 @@ server <- function(input, output, session) {
 
   chat <- ellmer::chat_openai(
     model = "gpt-5-nano",
-    system_prompt = "Responde brevemente en español. Usa summarize_penguins para toda pregunta sobre los datos y no inventes resultados."
+    system_prompt = paste(
+      "Responde brevemente en español.",
+      "Usa summarize_penguins para toda pregunta sobre los datos y no inventes resultados."
+    )
   )
 
   chat$register_tool(tool(
     summarize_penguins,
     "Calcula un resumen real de una especie usando el dataset de pingüinos.",
     arguments = list(
-      species = type_enum(
-        c("Adelia", "Barbijo", "Papúa", "Todas"),
-        "Especie que se quiere resumir."
-      )
+      species = type_enum(c("Adelia", "Barbijo", "Papúa", "Todas"), "Especie que se quiere resumir.")
     )
   ))
 

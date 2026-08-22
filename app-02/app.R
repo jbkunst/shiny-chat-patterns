@@ -48,10 +48,7 @@ server <- function(input, output, session) {
   })
 
   output$n_rows <- renderText(nrow(data()))
-
-  output$avg_mass <- renderText({
-    paste0(round(mean(data()$masa_corporal_g, na.rm = TRUE)), " g")
-  })
+  output$avg_mass <- renderText(paste0(round(mean(data()$masa_corporal_g, na.rm = TRUE)), " g"))
 
   output$plot <- renderPlot({
     df <- data()
@@ -69,7 +66,10 @@ server <- function(input, output, session) {
 
   chat <- ellmer::chat_openai(
     model = "gpt-5-nano",
-    system_prompt = "Responde brevemente en español sobre el dataset Palmer Penguins. No inventes resultados numéricos."
+    system_prompt = paste(
+      "Responde brevemente en español sobre el dataset Palmer Penguins.",
+      "No inventes resultados numéricos."
+    )
   )
 
   observeEvent(input$chat_user_input, {

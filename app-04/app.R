@@ -73,10 +73,7 @@ server <- function(input, output, session) {
     DBI::dbGetQuery(con, validate_select(query))
   }
 
-  chat <- ellmer::chat_openai(
-    model = "gpt-5-nano",
-    system_prompt = system_prompt
-  )
+  chat <- ellmer::chat_openai(model = "gpt-5-nano", system_prompt = system_prompt)
 
   chat$register_tool(tool(
     query_penguins,

@@ -58,11 +58,7 @@ orchestrate <- function(question) {
   data <- simulate_execution(analysis)
   answer <- writer_agent(question, analysis, data)
 
-  list(
-    analysis = analysis,
-    data = data,
-    answer = answer
-  )
+  list(analysis = analysis, data = data, answer = answer)
 }
 
 # user interface ----------------------------------------------------------
@@ -83,14 +79,8 @@ ui <- page_sidebar(
   h4("Flujo lineal"),
   p("Pregunta → analyst_agent → ejecución simulada → writer_agent"),
   layout_columns(
-    card(
-      card_header("1. analyst_agent"),
-      verbatimTextOutput("analysis")
-    ),
-    card(
-      card_header("2. simulated execution"),
-      tableOutput("data")
-    ),
+    card(card_header("1. analyst_agent"), verbatimTextOutput("analysis")),
+    card(card_header("2. simulated execution"), tableOutput("data")),
     col_widths = c(6, 6)
   )
 )
@@ -114,10 +104,7 @@ server <- function(input, output, session) {
       last_data(result$data)
       shinychat::chat_append("chat", result$answer)
     }, error = function(error) {
-      shinychat::chat_append(
-        "chat",
-        paste("Error:", conditionMessage(error))
-      )
+      shinychat::chat_append("chat", paste("Error:", conditionMessage(error)))
     })
   })
 }

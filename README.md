@@ -9,6 +9,7 @@ mismo dominio de datos durante el recorrido principal.
 
 | App | Nueva idea | Ejemplo |
 |---|---|---|
+| `app-00` | Shiny desde cero | Widgets básicos conectados a dos outputs mínimos |
 | `app-01` | Shiny básico | Dashboard de pingüinos con un filtro manual |
 | `app-02` | Chat dentro de Shiny | El dashboard incorpora un chat, todavía sin acceso a los datos |
 | `app-03` | Primera tool | El modelo consulta un resumen real de los pingüinos |
@@ -32,7 +33,7 @@ empieza a crecer, se separan en `greeting.md` y `prompt.md`.
 Cada aplicación es independiente y tiene su propio `app.R`.
 
 ```r
-shiny::runApp("app-01")
+shiny::runApp("app-00")
 ```
 
 Para usar las apps con chat se necesita `OPENAI_API_KEY` en `.Renviron`.

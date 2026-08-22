@@ -12,9 +12,7 @@ data("countries110", package = "rnaturalearthdata")
 countries <- st_transform(countries110, 4326)
 countries$country_id <- countries$adm0_a3
 countries$country_name <- ifelse(
-  is.na(countries$name_es) | countries$name_es == "",
-  countries$name,
-  countries$name_es
+  is.na(countries$name_es) | countries$name_es == "", countries$name, countries$name_es
 )
 
 gap_2007 <- subset(gapminder::gapminder, year == 2007)
@@ -26,26 +24,21 @@ index_2007 <- match(countries$country_id, gap_2007$country_id)
 index_1997 <- match(countries$country_id, gap_1997$country_id)
 countries$life_expectancy_1997 <- gap_1997$lifeExp[index_1997]
 countries$life_expectancy <- gap_2007$lifeExp[index_2007]
-countries$life_expectancy_change <- round(
-  countries$life_expectancy - countries$life_expectancy_1997,
-  1
-)
+countries$life_expectancy_change <- round(countries$life_expectancy - countries$life_expectancy_1997, 1)
 countries$population_1997 <- gap_1997$pop[index_1997]
 countries$population_2007 <- gap_2007$pop[index_2007]
-countries$population_growth <- round(
-  100 * (countries$population_2007 / countries$population_1997 - 1),
-  1
-)
+countries$population_growth <- round(100 * (countries$population_2007 / countries$population_1997 - 1), 1)
 countries$gdp_per_capita_1997 <- gap_1997$gdpPercap[index_1997]
 countries$gdp_per_capita_2007 <- gap_2007$gdpPercap[index_2007]
 countries$gdp_per_capita_growth <- round(
-  100 * (countries$gdp_per_capita_2007 / countries$gdp_per_capita_1997 - 1),
-  1
+  100 * (countries$gdp_per_capita_2007 / countries$gdp_per_capita_1997 - 1), 1
 )
 
 metrics <- list(
   life_expectancy = list(column = "life_expectancy", label = "Esperanza de vida (2007)"),
-  life_expectancy_change = list(column = "life_expectancy_change", label = "Cambio en esperanza de vida (años)"),
+  life_expectancy_change = list(
+    column = "life_expectancy_change", label = "Cambio en esperanza de vida (años)"
+  ),
   population_growth = list(column = "population_growth", label = "Crecimiento poblacional (%)"),
   population = list(column = "population_2007", label = "Población (2007)"),
   gdp_per_capita = list(column = "gdp_per_capita_2007", label = "PIB por habitante (2007)"),
@@ -169,13 +162,9 @@ server <- function(input, output, session) {
       add_choropleth(metric)
   }
 
-  session$onFlushed(function() {
-    update_choropleth("life_expectancy")
-  }, once = TRUE)
+  session$onFlushed(function() update_choropleth("life_expectancy"), once = TRUE)
 
-  observeEvent(map_metric(), ignoreInit = TRUE, {
-    update_choropleth(map_metric())
-  })
+  observeEvent(map_metric(), update_choropleth(map_metric()), ignoreInit = TRUE)
 
   find_country <- function(country_name) {
     query <- tolower(trimws(country_name))
@@ -217,14 +206,8 @@ server <- function(input, output, session) {
       title = country$country_name,
       layout_columns(
         col_widths = c(6, 6),
-        value_box(
-          "Esperanza de vida",
-          paste0(country$life_expectancy, " años")
-        ),
-        value_box(
-          "Crecimiento poblacional",
-          paste0(country$population_growth, "%")
-        )
+        value_box("Esperanza de vida", paste0(country$life_expectancy, " años")),
+        value_box("Crecimiento poblacional", paste0(country$population_growth, "%"))
       ),
       easyClose = TRUE,
       footer = modalButton("Cerrar")
@@ -251,10 +234,7 @@ server <- function(input, output, session) {
     paste("Coropleta actualizada a", metrics[[metric]]$label)
   }
 
-  chat <- ellmer::chat_openai(
-    model = "gpt-5-nano",
-    system_prompt = system_prompt
-  )
+  chat <- ellmer::chat_openai(model = "gpt-5-nano", system_prompt = system_prompt)
 
   chat$register_tools(list(
     tool(
@@ -268,24 +248,17 @@ server <- function(input, output, session) {
     tool(
       show_country_report,
       "Centra el mapa y abre un informe de un país.",
-      arguments = list(
-        country_name = type_string("Nombre del país en español o inglés.")
-      )
+      arguments = list(country_name = type_string("Nombre del país en español o inglés."))
     ),
     tool(
       change_metric,
       "Cambia la variable de la coropleta.",
-      arguments = list(
-        metric = type_string(paste("Una de:", paste(names(metrics), collapse = ", ")))
-      )
+      arguments = list(metric = type_string(paste("Una de:", paste(names(metrics), collapse = ", "))))
     )
   ))
 
   observeEvent(input$chat_user_input, {
-    stream <- chat$stream_async(
-      input$chat_user_input,
-      tool_mode = "sequential"
-    )
+    stream <- chat$stream_async(input$chat_user_input, tool_mode = "sequential")
     shinychat::chat_append("chat", stream)
   })
 }

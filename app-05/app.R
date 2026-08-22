@@ -65,18 +65,13 @@ server <- function(input, output, session) {
   current_title <- reactiveVal("Todos los pingüinos")
   current_query <- reactiveVal("SELECT * FROM pinguinos")
 
-  data <- reactive({
-    DBI::dbGetQuery(con, current_query())
-  })
+  data <- reactive(DBI::dbGetQuery(con, current_query()))
 
   output$title <- renderText(current_title())
   output$query <- renderText(current_query())
   output$n_rows <- renderText(nrow(data()))
   output$n_species <- renderText(length(unique(data()$especie)))
-
-  output$avg_mass <- renderText({
-    paste0(round(mean(data()$masa_corporal_g, na.rm = TRUE)), " g")
-  })
+  output$avg_mass <- renderText(paste0(round(mean(data()$masa_corporal_g, na.rm = TRUE)), " g"))
 
   output$plot <- renderPlot({
     df <- data()
@@ -101,16 +96,10 @@ server <- function(input, output, session) {
     current_query(query)
     current_title(title)
 
-    list(
-      message = "Dashboard actualizado.",
-      records = nrow(result)
-    )
+    list(message = "Dashboard actualizado.", records = nrow(result))
   }
 
-  chat <- ellmer::chat_openai(
-    model = "gpt-5-nano",
-    system_prompt = system_prompt
-  )
+  chat <- ellmer::chat_openai(model = "gpt-5-nano", system_prompt = system_prompt)
 
   chat$register_tool(tool(
     update_dashboard,

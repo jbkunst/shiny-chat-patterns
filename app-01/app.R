@@ -11,23 +11,15 @@ species <- c("Todas", sort(unique(stats::na.omit(penguins$especie))))
 
 ui <- page_sidebar(
   title = "App 01 · Shiny básico",
-  sidebar = sidebar(
-    selectInput("species", "Especie", choices = species)
-  ),
+  sidebar = sidebar(selectInput("species", "Especie", choices = species)),
   layout_columns(
     value_box("Registros", textOutput("n_rows")),
     value_box("Masa promedio", textOutput("avg_mass")),
     col_widths = c(6, 6)
   ),
   layout_columns(
-    card(
-      card_header("Aleta y masa corporal"),
-      plotOutput("plot")
-    ),
-    card(
-      card_header("Primeros registros"),
-      tableOutput("table")
-    ),
+    card(card_header("Aleta y masa corporal"), plotOutput("plot")),
+    card(card_header("Primeros registros"), tableOutput("table")),
     col_widths = c(6, 6)
   )
 )
@@ -44,10 +36,7 @@ server <- function(input, output, session) {
   })
 
   output$n_rows <- renderText(nrow(data()))
-
-  output$avg_mass <- renderText({
-    paste0(round(mean(data()$masa_corporal_g, na.rm = TRUE)), " g")
-  })
+  output$avg_mass <- renderText(paste0(round(mean(data()$masa_corporal_g, na.rm = TRUE)), " g"))
 
   output$plot <- renderPlot({
     df <- data()
@@ -61,11 +50,7 @@ server <- function(input, output, session) {
     )
   })
 
-  output$table <- renderTable(
-    head(data(), 10),
-    striped = TRUE,
-    hover = TRUE
-  )
+  output$table <- renderTable(head(data(), 10), striped = TRUE, hover = TRUE)
 }
 
 shinyApp(ui, server)
