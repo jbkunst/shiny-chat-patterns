@@ -1,26 +1,26 @@
 library(shiny)
 library(bslib)
+library(forecast)
 
 # user interface ----------------------------------------------------------
-
 ui <- page_sidebar(
   title = "App 00 · Shiny desde cero",
   sidebar = sidebar(
-    textInput("name", "Nombre", value = "Joshua"),
-    sliderInput("n", "Cantidad de puntos", min = 5, max = 50, value = 20),
-    selectInput("color", "Color", c(Azul = "#2C7FB8", Verde = "#2CA25F", Naranjo = "#F28E2B"))
+    textInput("title", "Título", value = "Pasajeros aéreos"),
+    sliderInput("n", "Cantidad de puntos", min = 24, max = 144, value = 36, step = 12),
+    checkboxInput("forecast", "Mostrar pronóstico", value = FALSE)
   ),
-  textOutput("greeting"),
+  h2(textOutput("plot_title")),
   plotOutput("plot")
 )
 
 # server ------------------------------------------------------------------
-
 server <- function(input, output, session) {
-  output$greeting <- renderText(paste("Hola", input$name))
+  output$plot_title <- renderText(input$title)
 
   output$plot <- renderPlot({
-    plot(seq_len(input$n), pch = 19, col = input$color, xlab = NULL, ylab = NULL)
+    fun <- if (input$forecast) forecast::forecast else identity
+    plot(fun(head(AirPassengers, input$n)), xlab = NULL, ylab = "Pasajeros (miles)")
   })
 }
 
