@@ -32,6 +32,12 @@ empieza a crecer, se separan en `greeting.md` y `prompt.md`.
 | `app-10` | Mapa mundial controlado por chat |
 | `app-11` | Flujo lineal con dos agentes |
 
+## Agentes y orquestación
+
+| App | Tema |
+|---|---|
+| `app-20` | Una función orquestadora coordina dos agentes persistentes y SQLite |
+
 ## Ejecutar
 
 Cada aplicación es independiente y tiene su propio `app.R`.
@@ -50,3 +56,6 @@ install.packages(c(
 
 Las extensiones también requieren `leaflet`, `sf`, `gapminder`, `countrycode`
 y `rnaturalearthdata`.
+
+Los ejemplos de agentes con SQLite también requieren `RSQLite` y
+`nycflights13`.

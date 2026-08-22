@@ -22,7 +22,8 @@ identificar en una slide o en un diff.
   Shiny.
 - `app-06`: agrega tools de interfaz como `show_table()` y `show_chart()` que
   abren modales.
-- `app-10` en adelante: extensiones como mapas, agentes y flujos más complejos.
+- `app-10` a `app-19`: extensiones visuales y de interacción, como mapas.
+- `app-20` en adelante: orquestación, agentes y bots especializados.
 
 Agrega una app intermedia en vez de introducir varios conceptos nuevos en el
 mismo paso.
