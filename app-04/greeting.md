@@ -1,7 +1,6 @@
-Explora la tabla `${TABLE}` con el chat. Por ejemplo:
+Ahora puedo consultar una base DuckDB real, pero todavía no modifico la interfaz.
 
-- “Muestra solo los pingüinos Adelie”.
-- “Ordena por masa corporal”.
-- “Compara la masa promedio entre especies”.
+Prueba con:
 
-También puedes escribir “reiniciar” para volver a todos los datos.
+- **¿Cuántos pingüinos hay por especie?**
+- **¿Cuál es la masa promedio por isla?**
