@@ -1,60 +1,115 @@
 library(shiny)
 library(bslib)
+library(datos)
 library(ellmer)
-library(shinychat) # pak::pak("posit-dev/shinychat/pkg-r")
+library(shinychat)
 
-ui <- bslib::page_navbar(
+# data --------------------------------------------------------------------
+
+penguins <- datos::pinguinos
+species <- c("Todas", sort(unique(stats::na.omit(penguins$especie))))
+
+# user interface ----------------------------------------------------------
+
+ui <- page_sidebar(
+  title = "App 03 · Primera tool",
   sidebar = sidebar(
-    width = 400,
-    shinychat::chat_ui("chat", placeholder = "Ingresa un mensaje...")
+    selectInput("species", "Especie", choices = species),
+    shinychat::chat_ui(
+      "chat",
+      messages = paste(
+        "Ahora sí puedo consultar los datos reales.",
+        "Prueba: **resume los pingüinos Adelia**."
+      ),
+      placeholder = "Resume una especie..."
+    )
   ),
-  nav_panel(
-    title = "Panel",
-    verbatimTextOutput("salida")
+  layout_columns(
+    value_box("Registros", textOutput("n_rows")),
+    value_box("Masa promedio", textOutput("avg_mass")),
+    col_widths = c(6, 6)
+  ),
+  layout_columns(
+    card(plotOutput("plot")),
+    card(tableOutput("table")),
+    col_widths = c(6, 6)
   )
 )
 
-server <- function(input, output, session) {
-  
-  fecha_hora_reac <- reactiveVal(NULL)
+# server ------------------------------------------------------------------
 
-  obtener_hora_actual <- function(){
-    cli::cli_inform("Ejecutando `obtener_hora_actual`")
-    x <- Sys.time()
-  
-    # Update a reactive value so Shiny can display the tool result.
-    # The function lives inside server because it modifies session state.
-    fecha_hora_reac(x)
-    x
+server <- function(input, output, session) {
+  data <- reactive({
+    if (input$species == "Todas") {
+      penguins
+    } else {
+      penguins[penguins$especie == input$species, ]
+    }
+  })
+
+  output$n_rows <- renderText(nrow(data()))
+  output$avg_mass <- renderText(paste0(round(mean(data()$masa_corporal_g, na.rm = TRUE)), " g"))
+
+  output$plot <- renderPlot({
+    df <- data()
+
+    plot(
+      df$largo_aleta_mm,
+      df$masa_corporal_g,
+      pch = 19,
+      xlab = "Largo de aleta (mm)",
+      ylab = "Masa corporal (g)"
+    )
+  })
+
+  output$table <- renderTable(head(data(), 10), striped = TRUE, hover = TRUE)
+
+  # tool ------------------------------------------------------------------
+
+  summarize_penguins <- function(species) {
+    if (tolower(species) == "todas") {
+      df <- penguins
+      selected_species <- "Todas"
+    } else {
+      index <- match(tolower(species), tolower(unique(penguins$especie)))
+
+      if (is.na(index)) {
+        stop("Especie no disponible. Usa Adelia, Barbijo, Papúa o Todas.")
+      }
+
+      selected_species <- unique(penguins$especie)[index]
+      df <- penguins[penguins$especie == selected_species, ]
+    }
+
+    list(
+      especie = selected_species,
+      registros = nrow(df),
+      masa_promedio_g = round(mean(df$masa_corporal_g, na.rm = TRUE)),
+      largo_aleta_promedio_mm = round(mean(df$largo_aleta_mm, na.rm = TRUE), 1),
+      islas = sort(unique(df$isla))
+    )
   }
 
-  output$salida <- renderText({
-    if(is.null(fecha_hora_reac())) return(NULL)
-    paste0("La hora es ", fecha_hora_reac())
-  })
-
   chat <- ellmer::chat_openai(
-    model = "gpt-3.5-turbo",
-    system_prompt = paste(readLines("prompt.md", warn = FALSE), collapse = "\n")
+    model = "gpt-5-nano",
+    system_prompt = paste(
+      "Responde brevemente en español.",
+      "Usa summarize_penguins para toda pregunta sobre los datos y no inventes resultados."
     )
-
-  obtener_hora_actual <- tool(
-    obtener_hora_actual,
-    name = "obtener_hora_actual",
-    description =  "Función que al ejecutar retorna la fecha y hora actual del sistema.",
-    arguments = list()
   )
-  
-  chat$register_tool(obtener_hora_actual)
 
-  greeting <- paste(readLines("greeting.md", warn = FALSE), collapse = "\n")
-  shinychat::chat_append("chat", greeting)
-  
-  shiny::observeEvent(input$chat_user_input, {
+  chat$register_tool(tool(
+    summarize_penguins,
+    "Calcula un resumen real de una especie usando el dataset de pingüinos.",
+    arguments = list(
+      species = type_enum(c("Adelia", "Barbijo", "Papúa", "Todas"), "Especie que se quiere resumir.")
+    )
+  ))
+
+  observeEvent(input$chat_user_input, {
     stream <- chat$stream_async(input$chat_user_input)
-    chat_append("chat", stream)
+    shinychat::chat_append("chat", stream)
   })
-
 }
 
 shinyApp(ui, server)

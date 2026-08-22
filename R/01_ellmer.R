@@ -1,12 +1,9 @@
 library(ellmer)
 
-chat <- ellmer::chat_openai(
-  model = "gpt-3.5-turbo",
-  system_prompt = "Eres un bot muy alegre!"
-  )
+chat <- ellmer::chat_openai(model = "gpt-5-nano", system_prompt = "Eres un bot muy alegre.")
 
-chat$chat("Saludame")
+chat$chat("Salúdame")
 
-chat$chat("cuanto es 2 elevado a 4")
+chat$chat("¿Cuánto es 2 elevado a 4?")
 
 live_console(chat)

@@ -1,33 +1,81 @@
 library(shiny)
 library(bslib)
+library(datos)
 library(ellmer)
-library(shinychat) # pak::pak("posit-dev/shinychat/pkg-r")
+library(shinychat)
 
-ui <- bslib::page_navbar(
+# data --------------------------------------------------------------------
+
+penguins <- datos::pinguinos
+species <- c("Todas", sort(unique(stats::na.omit(penguins$especie))))
+
+# user interface ----------------------------------------------------------
+
+ui <- page_sidebar(
+  title = "App 02 · Shiny con chat",
   sidebar = sidebar(
-    width = 400,
-    shinychat::chat_ui("chat", placeholder = "Ingresa un mensaje...")
+    selectInput("species", "Especie", choices = species),
+    shinychat::chat_ui(
+      "chat",
+      messages = paste(
+        "Hola. Puedo conversar sobre el dataset de pingüinos,",
+        "pero todavía no puedo consultar sus datos ni controlar el dashboard."
+      ),
+      placeholder = "Pregunta algo sobre los pingüinos..."
+    )
+  ),
+  layout_columns(
+    value_box("Registros", textOutput("n_rows")),
+    value_box("Masa promedio", textOutput("avg_mass")),
+    col_widths = c(6, 6)
+  ),
+  layout_columns(
+    card(plotOutput("plot")),
+    card(tableOutput("table")),
+    col_widths = c(6, 6)
   )
 )
 
-server <- function(input, output, session) {
-  
-  # https://github.com/posit-dev/shinychat?tab=readme-ov-file#example
-  chat <- ellmer::chat_openai(
-    model = "gpt-3.5-turbo",
-    system_prompt = paste(readLines("prompt.md", warn = FALSE), collapse = "\n")
-    )
+# server ------------------------------------------------------------------
 
-  # Append an initial message to the chat.
-  shinychat::chat_append("chat", paste(readLines("greeting.md", warn = FALSE), collapse = "\n"))
-  
-  shiny::observeEvent(input$chat_user_input, {
-    stream <- chat$stream_async(input$chat_user_input)
-    chat_append("chat", stream)
-    print(chat)
-    # The response is generated asynchronously after the user submits a message.
+server <- function(input, output, session) {
+  data <- reactive({
+    if (input$species == "Todas") {
+      penguins
+    } else {
+      penguins[penguins$especie == input$species, ]
+    }
   })
 
+  output$n_rows <- renderText(nrow(data()))
+  output$avg_mass <- renderText(paste0(round(mean(data()$masa_corporal_g, na.rm = TRUE)), " g"))
+
+  output$plot <- renderPlot({
+    df <- data()
+
+    plot(
+      df$largo_aleta_mm,
+      df$masa_corporal_g,
+      pch = 19,
+      xlab = "Largo de aleta (mm)",
+      ylab = "Masa corporal (g)"
+    )
+  })
+
+  output$table <- renderTable(head(data(), 10), striped = TRUE, hover = TRUE)
+
+  chat <- ellmer::chat_openai(
+    model = "gpt-5-nano",
+    system_prompt = paste(
+      "Responde brevemente en español sobre el dataset Palmer Penguins.",
+      "No inventes resultados numéricos."
+    )
+  )
+
+  observeEvent(input$chat_user_input, {
+    stream <- chat$stream_async(input$chat_user_input)
+    shinychat::chat_append("chat", stream)
+  })
 }
 
 shinyApp(ui, server)

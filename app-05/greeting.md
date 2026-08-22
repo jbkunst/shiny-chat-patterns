@@ -1,5 +1,7 @@
-Datos históricos de **Gapminder**.
+Ahora el chat sí puede modificar el estado reactivo del dashboard.
 
-Puedes mostrar **esperanza de vida**, **cambio en esperanza de vida**, **crecimiento poblacional**, **población**, **PIB por habitante** o **crecimiento del PIB por habitante**.
+Prueba con:
 
-Prueba: **viaja a China** o **abre el informe de Chile**.
+- **Muestra solo los pingüinos Adelia.**
+- **Ordena desde el de mayor masa corporal.**
+- **Reinicia el dashboard.**
