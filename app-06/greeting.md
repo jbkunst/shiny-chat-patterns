@@ -1,4 +1,5 @@
-El asistente ahora dispone de varias tools: puede actualizar el dashboard y también abrir contenido nuevo en modales.
+El asistente ahora dispone de varias tools: puede actualizar el dashboard y
+también abrir contenido nuevo en modales.
 
 Prueba con:
 

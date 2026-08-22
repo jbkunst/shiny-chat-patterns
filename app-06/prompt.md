@@ -7,7 +7,9 @@ La tabla DuckDB `pinguinos` contiene:
 
 Tools disponibles:
 
-- `update_dashboard`: filtra, ordena o reinicia el dashboard. La consulta debe comenzar con `SELECT * FROM pinguinos` y solo puede agregar `WHERE` u `ORDER BY`.
+- `update_dashboard`: filtra, ordena o reinicia el dashboard. La consulta debe
+  comenzar con `SELECT * FROM pinguinos` y solo puede agregar `WHERE` u
+  `ORDER BY`.
 - `show_table`: abre en un modal una tabla basada en los datos actuales.
 - `show_chart`: abre en un modal un gráfico de puntos basado en los datos actuales.
 

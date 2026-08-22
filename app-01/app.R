@@ -18,8 +18,8 @@ ui <- page_sidebar(
     col_widths = c(6, 6)
   ),
   layout_columns(
-    card(card_header("Aleta y masa corporal"), plotOutput("plot")),
-    card(card_header("Primeros registros"), tableOutput("table")),
+    card(plotOutput("plot")),
+    card(tableOutput("table")),
     col_widths = c(6, 6)
   )
 )

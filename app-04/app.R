@@ -48,21 +48,17 @@ ui <- page_sidebar(
       placeholder = "Pregunta por los datos..."
     )
   ),
-  card(
-    card_header("Base de datos"),
-    p("DuckDB en memoria con una tabla llamada ", code("pinguinos"), "."),
-    tags$ul(
-      tags$li(code("especie"), ", ", code("isla"), ", ", code("sexo"), ", ", code("anio")),
-      tags$li(code("largo_pico_mm"), ", ", code("alto_pico_mm")),
-      tags$li(code("largo_aleta_mm"), ", ", code("masa_corporal_g"))
-    )
+  h4("Base de datos"),
+  p("DuckDB en memoria con una tabla llamada ", code("pinguinos"), "."),
+  tags$ul(
+    tags$li(code("especie"), ", ", code("isla"), ", ", code("sexo"), ", ", code("anio")),
+    tags$li(code("largo_pico_mm"), ", ", code("alto_pico_mm")),
+    tags$li(code("largo_aleta_mm"), ", ", code("masa_corporal_g"))
   ),
-  card(
-    card_header("Idea de esta etapa"),
-    p(
-      "La tool ejecuta una consulta y devuelve su resultado al modelo. ",
-      "Todavía no modifica ningún reactive ni output de Shiny."
-    )
+  h4("Idea de esta etapa"),
+  p(
+    "La tool consulta la base y devuelve el resultado al modelo. ",
+    "Todavía no modifica ningún reactive ni output de Shiny."
   )
 )
 

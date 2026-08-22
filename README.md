@@ -1,9 +1,13 @@
-# shiny-chatsidebot
+# shiny-chat-patterns
 
-Ejemplos progresivos para un taller de aplicaciones Shiny con chat y tools.
+Ejemplos progresivos de patrones para construir aplicaciones Shiny con chat y tools.
 
 La idea es que cada aplicación agregue **una sola pieza nueva** y conserve el
-mismo dominio de datos durante el recorrido principal.
+mismo dominio de datos durante el recorrido principal. La secuencia también
+puede usarse como base para demostraciones o talleres.
+
+Todas las apps usan `page_sidebar()` para mantener una estructura consistente
+y concentrar cada ejemplo en el patrón que introduce.
 
 ## Recorrido principal
 
