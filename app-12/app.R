@@ -72,7 +72,7 @@ server <- function(input, output) {
 
   # tools -----------------------------------------------------------------
   chat <- ellmer::chat_openai(model = "gpt-5-nano", system_prompt = prompt_sistema)
-  
+
   chat$register_tool(tool(
     buscar_series,
     "Busca series por título en el catálogo local.",
