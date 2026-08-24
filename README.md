@@ -8,7 +8,7 @@ puede usarse como base para demostraciones o talleres.
 
 Todas las apps usan `page_sidebar()` para mantener una estructura consistente
 y concentrar cada ejemplo en el patrón que introduce. Desde `app-00` hasta
-`app-06`, cada carpeta contiene `app.R` y `app.py` para comparar la misma idea
+`app-08`, cada carpeta contiene `app.R` y `app.py` para comparar la misma idea
 en Shiny para R y Shiny para Python.
 
 ## Recorrido principal
@@ -40,6 +40,12 @@ comparten esos archivos.
 Las apps de países en R y Python leen `data/paises.csv`. El archivo se genera
 con `R/generar-data-paises.R`, de modo que ambas implementaciones trabajan con
 las mismas filas, columnas y valores.
+
+La versión Python de `app-08` usa un globo ortográfico de Plotly. La tool de
+cámara actualiza el widget existente mediante `map.widget.update_geos()`, el
+equivalente práctico de un proxy: no reconstruye el mapa al cambiar el centro.
+Los códigos de país y las coordenadas de cámara provienen del catálogo
+Gapminder incluido en Plotly.
 
 ## Agentes y orquestación
 

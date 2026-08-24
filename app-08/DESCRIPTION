@@ -4,9 +4,7 @@ Description: Integra una tabla espacial DuckDB con un globo reactivo que el chat
 Imports:
     bslib,
     countrycode,
-    datos,
     DBI,
-    dplyr,
     duckdb,
     ellmer,
     gapminder,

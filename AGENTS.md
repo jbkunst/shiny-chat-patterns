@@ -10,7 +10,7 @@ Cada app debe introducir una idea principal y conservar la mayor cantidad de
 código posible de la app anterior. El cambio relevante debe ser fácil de
 identificar en una slide o en un diff.
 
-Desde `app-00` hasta `app-06`, conserva `app.R` y `app.py` en la misma carpeta.
+Desde `app-00` hasta `app-08`, conserva `app.R` y `app.py` en la misma carpeta.
 Ambas versiones deben enseñar el mismo patrón, compartir los datos y prompts, y
 usar una implementación idiomática en cada lenguaje en vez de una traducción
 literal línea por línea.
@@ -27,6 +27,8 @@ literal línea por línea.
   Shiny.
 - `app-06`: agrega tools de interfaz como `show_table()` y `show_chart()` que
   abren modales.
+- `app-07`: compara filtros tradicionales con una consulta solicitada por chat.
+- `app-08`: integra una tool con un globo y actualizaciones de cámara tipo proxy.
 - `app-10`: explorador manual de series del Banco Central de Chile.
 - `app-11`: integra un chat sin tools ni acceso a los datos de la app.
 - `app-12`: agrega tools para encontrar y mostrar una serie.
@@ -88,5 +90,6 @@ mismo paso.
 - Revisa que dos apps consecutivas difieran principalmente en el concepto nuevo.
 - Busca complejidad accidental en la UI y líneas de más de 110 caracteres.
 - Parsea o ejecuta las apps modificadas cuando estén disponibles sus paquetes.
-- Para Python, ejecuta `python -m compileall app-00 app-01 app-02 app-03 app-04 app-05 app-06`.
+- Para Python, ejecuta
+  `python -m compileall app-00 app-01 app-02 app-03 app-04 app-05 app-06 app-07 app-08`.
 - Actualiza la secuencia del README al agregar, eliminar o renumerar una app.
