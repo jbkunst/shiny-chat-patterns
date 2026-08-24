@@ -1,0 +1,14 @@
+Title: App 06 · Tools de interfaz
+Description: Agrega tools que abren una tabla o un gráfico en modales y retornan
+    su contenido para que el modelo pueda utilizarlo en la conversación.
+Imports:
+    bslib,
+    datos,
+    DBI,
+    dplyr,
+    duckdb,
+    ellmer,
+    shiny,
+    shinychat,
+    tinyplot
+Encoding: UTF-8

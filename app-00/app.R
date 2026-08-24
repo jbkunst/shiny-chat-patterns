@@ -4,10 +4,10 @@ library(forecast)
 
 # user interface ----------------------------------------------------------
 ui <- page_sidebar(
-  title = "App 00 · Shiny desde cero",
+  title = "App 00 · Widgets y outputs",
   sidebar = sidebar(
     textInput("title", "Título", value = "Pasajeros aéreos"),
-    sliderInput("n", "Cantidad de puntos", min = 24, max = 144, value = 36, step = 12),
+    sliderInput("n", "Cantidad de puntos", min = 24, max = 144, value = 48, step = 24),
     checkboxInput("forecast", "Mostrar pronóstico", value = FALSE)
   ),
   h2(textOutput("plot_title")),
@@ -20,7 +20,7 @@ server <- function(input, output, session) {
 
   output$plot <- renderPlot({
     fun <- if (input$forecast) forecast::forecast else identity
-    plot(fun(head(AirPassengers, input$n)), xlab = NULL, ylab = "Pasajeros (miles)")
+    plot(fun(head(AirPassengers, input$n)), col = "#0E4F5A", lwd = 2, xlab = NULL, ylab = "Pasajeros (miles)")
   })
 }
 

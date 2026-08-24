@@ -1,0 +1,20 @@
+meta:
+  name: CensoLab
+
+color:
+  background: "#F7F8F8"
+  foreground: "#202326"
+  primary: "#0E4F5A"
+  secondary: "#62676C"
+  success: "#39705A"
+  info: "#3F7180"
+  warning: "#A56A18"
+  danger: "#A64343"
+
+typography:
+  fonts:
+    - family: IBM Plex Sans
+      source: google
+
+  base: IBM Plex Sans
+  headings: IBM Plex Sans

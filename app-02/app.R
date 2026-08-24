@@ -1,73 +1,58 @@
 library(shiny)
 library(bslib)
-library(datos)
 library(ellmer)
 library(shinychat)
+library(tinyplot)
 
 # data --------------------------------------------------------------------
+paises <- datos::paises |> subset(anio == max(anio)) |> dplyr::select(-anio)
+continentes <- c("Todos", levels(paises$continente))
 
-penguins <- datos::pinguinos
-species <- c("Todas", sort(unique(stats::na.omit(penguins$especie))))
+# prompt ------------------------------------------------------------------
+saludo <- "Prueba con:\n\n- **¿Cuántos países se muestran en el dashboard?**"
 
 # user interface ----------------------------------------------------------
-
 ui <- page_sidebar(
-  title = "App 02 · Shiny con chat",
+  title = "App 02 · Chat sin tools",
   sidebar = sidebar(
-    selectInput("species", "Especie", choices = species),
-    shinychat::chat_ui(
-      "chat",
-      messages = paste(
-        "Hola. Puedo conversar sobre el dataset de pingüinos,",
-        "pero todavía no puedo consultar sus datos ni controlar el dashboard."
-      ),
-      placeholder = "Pregunta algo sobre los pingüinos..."
-    )
+    selectInput("continente", "Continente", choices = continentes),
+    shinychat::chat_ui("chat", messages = saludo, placeholder = "Pregunta algo sobre los países..."),
+    width = 400
   ),
   layout_columns(
-    value_box("Registros", textOutput("n_rows")),
-    value_box("Masa promedio", textOutput("avg_mass")),
-    col_widths = c(6, 6)
-  ),
-  layout_columns(
+    value_box("Países", textOutput("n_filas"), showcase = icon("earth-americas"), theme = "text-primary"),
+    value_box("Esperanza de vida", textOutput("vida"), showcase = icon("heart-pulse"), theme="text-primary"),
+    value_box("Población", textOutput("poblacion"), showcase = icon("people-group"), theme = "text-primary"),
     card(plotOutput("plot")),
     card(tableOutput("table")),
-    col_widths = c(6, 6)
+    col_widths = c(4, 4, 4, 6, 6),
+    row_heights = c(1, 3)
   )
 )
 
 # server ------------------------------------------------------------------
-
-server <- function(input, output, session) {
+server <- function(input, output) {
   data <- reactive({
-    if (input$species == "Todas") {
-      penguins
-    } else {
-      penguins[penguins$especie == input$species, ]
-    }
+    if (input$continente == "Todos") paises
+    else paises[paises$continente == input$continente, ]
   })
 
-  output$n_rows <- renderText(nrow(data()))
-  output$avg_mass <- renderText(paste0(round(mean(data()$masa_corporal_g, na.rm = TRUE)), " g"))
+  output$n_filas   <- renderText(nrow(data()))
+  output$vida      <- renderText(paste0(round(mean(data()$esperanza_de_vida), 1), " años"))
+  output$poblacion <- renderText(paste0(round(sum(data()$poblacion) / 1e6), " millones"))
 
   output$plot <- renderPlot({
-    df <- data()
-
-    plot(
-      df$largo_aleta_mm,
-      df$masa_corporal_g,
-      pch = 19,
-      xlab = "Largo de aleta (mm)",
-      ylab = "Masa corporal (g)"
-    )
+    tinyplot(esperanza_de_vida ~ pib_per_capita, data = paises, pch = 19, col = "#d2d2d2", log = "x")
+    tinyplot_add(data = data(), col = "#0E4F5A", cex = 1.5)
   })
 
-  output$table <- renderTable(head(data(), 10), striped = TRUE, hover = TRUE)
+  output$table <- renderTable(data(), striped = TRUE, hover = TRUE)
 
+  # chat ------------------------------------------------------------------
   chat <- ellmer::chat_openai(
     model = "gpt-5-nano",
     system_prompt = paste(
-      "Responde brevemente en español sobre el dataset Palmer Penguins.",
+      "Responde brevemente en español sobre los países de Gapminder en su último año.",
       "No inventes resultados numéricos."
     )
   )

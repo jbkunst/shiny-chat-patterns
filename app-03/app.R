@@ -1,113 +1,81 @@
 library(shiny)
 library(bslib)
-library(datos)
 library(ellmer)
 library(shinychat)
+library(tinyplot)
 
 # data --------------------------------------------------------------------
+paises <- datos::paises |> subset(anio == max(anio)) |> dplyr::select(-anio)
+continentes <- c("Todos", levels(paises$continente))
 
-penguins <- datos::pinguinos
-species <- c("Todas", sort(unique(stats::na.omit(penguins$especie))))
+# prompt ------------------------------------------------------------------
+saludo <- "Prueba con:\n\n- **¿Cuántos países se muestran?**\n- **¿Cuál es su esperanza de vida promedio?**"
 
 # user interface ----------------------------------------------------------
-
 ui <- page_sidebar(
-  title = "App 03 · Primera tool",
+  title = "App 03 · Tool con contexto",
   sidebar = sidebar(
-    selectInput("species", "Especie", choices = species),
-    shinychat::chat_ui(
-      "chat",
-      messages = paste(
-        "Ahora sí puedo consultar los datos reales.",
-        "Prueba: **resume los pingüinos Adelia**."
-      ),
-      placeholder = "Resume una especie..."
-    )
+    selectInput("continente", "Continente", choices = continentes),
+    shinychat::chat_ui("chat", messages = saludo, placeholder = "Pregunta sobre los datos visibles..."),
+    width = 400
   ),
   layout_columns(
-    value_box("Registros", textOutput("n_rows")),
-    value_box("Masa promedio", textOutput("avg_mass")),
-    col_widths = c(6, 6)
-  ),
-  layout_columns(
+    value_box("Países", textOutput("n_filas"), showcase = icon("earth-americas"), theme = "text-primary"),
+    value_box("Esperanza de vida", textOutput("vida"), showcase = icon("heart-pulse"), theme="text-primary"),
+    value_box("Población", textOutput("poblacion"), showcase = icon("people-group"), theme = "text-primary"),
     card(plotOutput("plot")),
     card(tableOutput("table")),
-    col_widths = c(6, 6)
+    col_widths = c(4, 4, 4, 6, 6),
+    row_heights = c(1, 3)
   )
 )
 
 # server ------------------------------------------------------------------
-
-server <- function(input, output, session) {
+server <- function(input, output) {
   data <- reactive({
-    if (input$species == "Todas") {
-      penguins
-    } else {
-      penguins[penguins$especie == input$species, ]
-    }
+    if (input$continente == "Todos") paises
+    else paises[paises$continente == input$continente, ]
   })
 
-  output$n_rows <- renderText(nrow(data()))
-  output$avg_mass <- renderText(paste0(round(mean(data()$masa_corporal_g, na.rm = TRUE)), " g"))
+  output$n_filas   <- renderText(nrow(data()))
+  output$vida      <- renderText(paste0(round(mean(data()$esperanza_de_vida), 1), " años"))
+  output$poblacion <- renderText(paste0(round(sum(data()$poblacion) / 1e6), " millones"))
 
   output$plot <- renderPlot({
-    df <- data()
-
-    plot(
-      df$largo_aleta_mm,
-      df$masa_corporal_g,
-      pch = 19,
-      xlab = "Largo de aleta (mm)",
-      ylab = "Masa corporal (g)"
-    )
+    tinyplot(esperanza_de_vida ~ pib_per_capita, data = paises, pch = 19, col = "#d2d2d2", log = "x")
+    tinyplot_add(data = data(), col = "#0E4F5A", cex = 1.5)
   })
 
-  output$table <- renderTable(head(data(), 10), striped = TRUE, hover = TRUE)
+  output$table <- renderTable(data(), striped = TRUE, hover = TRUE)
 
   # tool ------------------------------------------------------------------
-
-  summarize_penguins <- function(species) {
-    if (tolower(species) == "todas") {
-      df <- penguins
-      selected_species <- "Todas"
-    } else {
-      index <- match(tolower(species), tolower(unique(penguins$especie)))
-
-      if (is.na(index)) {
-        stop("Especie no disponible. Usa Adelia, Barbijo, Papúa o Todas.")
-      }
-
-      selected_species <- unique(penguins$especie)[index]
-      df <- penguins[penguins$especie == selected_species, ]
-    }
-
+  resumir_datos_visibles <- function() {
+    df <- isolate(data())
     list(
-      especie = selected_species,
+      continente = isolate(input$continente),
       registros = nrow(df),
-      masa_promedio_g = round(mean(df$masa_corporal_g, na.rm = TRUE)),
-      largo_aleta_promedio_mm = round(mean(df$largo_aleta_mm, na.rm = TRUE), 1),
-      islas = sort(unique(df$isla))
+      poblacion_total = sum(df$poblacion),
+      esperanza_promedio = round(mean(df$esperanza_de_vida), 1),
+      pib_promedio = round(mean(df$pib_per_capita))
     )
   }
 
+  # chat ------------------------------------------------------------------
   chat <- ellmer::chat_openai(
     model = "gpt-5-nano",
     system_prompt = paste(
       "Responde brevemente en español.",
-      "Usa summarize_penguins para toda pregunta sobre los datos y no inventes resultados."
+      "Usa resumir_datos_visibles para responder sobre el dashboard y no inventes resultados."
     )
   )
 
   chat$register_tool(tool(
-    summarize_penguins,
-    "Calcula un resumen real de una especie usando el dataset de pingüinos.",
-    arguments = list(
-      species = type_enum(c("Adelia", "Barbijo", "Papúa", "Todas"), "Especie que se quiere resumir.")
-    )
+    resumir_datos_visibles,
+    "Resume los países que están visibles en el dashboard."
   ))
 
   observeEvent(input$chat_user_input, {
-    stream <- chat$stream_async(input$chat_user_input)
+    stream <- chat$stream_async(input$chat_user_input, stream = "content")
     shinychat::chat_append("chat", stream)
   })
 }

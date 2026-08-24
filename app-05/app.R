@@ -1,117 +1,106 @@
 library(shiny)
 library(bslib)
-library(datos)
 library(DBI)
 library(duckdb)
 library(ellmer)
 library(shinychat)
+library(tinyplot)
 
 # database ----------------------------------------------------------------
+paises <- datos::paises |> subset(anio == max(anio)) |> dplyr::select(-anio)
 
 con <- DBI::dbConnect(duckdb::duckdb(), dbdir = ":memory:")
-DBI::dbWriteTable(con, "pinguinos", datos::pinguinos)
+DBI::dbWriteTable(con, "paises", paises)
 DBI::dbExecute(con, "SET enable_external_access = false")
 onStop(function() DBI::dbDisconnect(con, shutdown = TRUE))
 
-validate_dashboard_query <- function(query) {
-  query <- trimws(query)
-
-  if (!grepl("^SELECT\\s+\\*\\s+FROM\\s+pinguinos\\b", query, ignore.case = TRUE)) {
-    stop("Usa SELECT * FROM pinguinos, con WHERE u ORDER BY opcionales.")
-  }
-
-  if (grepl(";", query, fixed = TRUE)) {
-    stop("Envía una sola consulta y no incluyas punto y coma.")
-  }
-
-  query
+validar_select <- function(consulta) {
+  consulta <- trimws(consulta)
+  if (!grepl("^SELECT\\b", consulta, ignore.case = TRUE)) stop("Solo se permiten consultas SELECT.")
+  if (!grepl("\\bpaises\\b", consulta, ignore.case = TRUE)) stop("La consulta debe usar paises.")
+  if (grepl(";", consulta, fixed = TRUE)) stop("Envía una sola consulta y no incluyas punto y coma.")
+  consulta
 }
 
 # prompt ------------------------------------------------------------------
-
-greeting <- paste(readLines("greeting.md", warn = FALSE), collapse = "\n")
-system_prompt <- paste(readLines("prompt.md", warn = FALSE), collapse = "\n")
+saludo <- paste(readLines("greeting.md", warn = FALSE), collapse = "\n")
+prompt_sistema <- paste(readLines("prompt.md", warn = FALSE), collapse = "\n")
 
 # user interface ----------------------------------------------------------
-
 ui <- page_sidebar(
-  title = "App 05 · Tool + reactividad",
+  title = tagList("App 05 · Tool + reactividad", tags$small(" · ", textOutput("titulo", inline = TRUE))),
   sidebar = sidebar(
-    width = 420,
-    shinychat::chat_ui(
-      "chat",
-      messages = greeting,
-      placeholder = "Filtra u ordena el dashboard..."
-    )
-  ),
-  h3(textOutput("title", inline = TRUE)),
-  verbatimTextOutput("query"),
-  layout_columns(
-    value_box("Registros", textOutput("n_rows")),
-    value_box("Especies", textOutput("n_species")),
-    value_box("Masa promedio", textOutput("avg_mass")),
-    col_widths = 4
+    shinychat::chat_ui("chat", messages = saludo, placeholder = "Filtra u ordena el dashboard..."),
+    width = 400
   ),
   layout_columns(
+    value_box("Países", textOutput("n_filas"), showcase = icon("earth-americas"), theme = "text-primary"),
+    value_box("Esperanza de vida", textOutput("vida"), showcase = icon("heart-pulse"), theme="text-primary"),
+    value_box("Población", textOutput("poblacion"), showcase = icon("people-group"), theme = "text-primary"),
     card(plotOutput("plot")),
     card(tableOutput("table")),
-    col_widths = c(6, 6)
+    col_widths = c(4, 4, 4, 6, 6),
+    row_heights = c(1, 3)
   )
 )
 
 # server ------------------------------------------------------------------
+server <- function(input, output) {
+  titulo_actual   <- reactiveVal("Todos los países")
+  consulta_actual <- reactiveVal("SELECT * FROM paises") # paises, tal cual
 
-server <- function(input, output, session) {
-  current_title <- reactiveVal("Todos los pingüinos")
-  current_query <- reactiveVal("SELECT * FROM pinguinos")
+  data <- reactive(DBI::dbGetQuery(con, consulta_actual()))
 
-  data <- reactive(DBI::dbGetQuery(con, current_query()))
-
-  output$title <- renderText(current_title())
-  output$query <- renderText(current_query())
-  output$n_rows <- renderText(nrow(data()))
-  output$n_species <- renderText(length(unique(data()$especie)))
-  output$avg_mass <- renderText(paste0(round(mean(data()$masa_corporal_g, na.rm = TRUE)), " g"))
+  output$titulo    <- renderText(titulo_actual())
+  output$n_filas   <- renderText(nrow(data()))
+  output$vida      <- renderText(paste0(round(mean(data()$esperanza_de_vida), 1), " años"))
+  output$poblacion <- renderText(paste0(round(sum(data()$poblacion) / 1e6), " millones"))
 
   output$plot <- renderPlot({
-    df <- data()
-
-    plot(
-      df$largo_aleta_mm,
-      df$masa_corporal_g,
-      pch = 19,
-      xlab = "Largo de aleta (mm)",
-      ylab = "Masa corporal (g)"
-    )
+    tinyplot(esperanza_de_vida ~ pib_per_capita, data = paises, pch = 19, col = "#d2d2d2", log = "x")
+    tinyplot_add(data = data(), col = "#0E4F5A", cex = 1.5)
   })
 
-  output$table <- renderTable(head(data(), 20), striped = TRUE, hover = TRUE)
+  output$table <- renderTable(data(), striped = TRUE, hover = TRUE)
 
-  # tool ------------------------------------------------------------------
-
-  update_dashboard <- function(query, title) {
-    query <- validate_dashboard_query(query)
-    result <- DBI::dbGetQuery(con, query)
-
-    current_query(query)
-    current_title(title)
-
-    list(message = "Dashboard actualizado.", records = nrow(result))
+  # tools -----------------------------------------------------------------
+  consultar_paises <- function(consulta) {
+    DBI::dbGetQuery(con, validar_select(consulta))
   }
 
-  chat <- ellmer::chat_openai(model = "gpt-5-nano", system_prompt = system_prompt)
+  actualizar_dashboard <- function(consulta, titulo) {
+    consulta <- validar_select(consulta)
+    resultado <- DBI::dbGetQuery(con, consulta)
+    if (!all(names(paises) %in% names(resultado))) stop("La consulta debe devolver todas las columnas.")
+
+    consulta_actual(consulta)
+    titulo_actual(titulo)
+
+    list(mensaje = "Dashboard actualizado.", registros = nrow(resultado))
+  }
+
+  # chat ------------------------------------------------------------------
+  chat <- ellmer::chat_openai(model = "gpt-5-nano", system_prompt = prompt_sistema)
 
   chat$register_tool(tool(
-    update_dashboard,
+    consultar_paises,
+    "Ejecuta una consulta SELECT de solo lectura sobre la tabla DuckDB paises.",
+    arguments = list(
+      consulta = type_string("Consulta DuckDB SELECT sobre la tabla paises, sin punto y coma.")
+    )
+  ))
+
+  chat$register_tool(tool(
+    actualizar_dashboard,
     "Filtra, ordena o reinicia los datos reactivos mostrados en el dashboard.",
     arguments = list(
-      query = type_string("SELECT * FROM pinguinos con WHERE u ORDER BY opcionales, sin punto y coma."),
-      title = type_string("Título breve que describe los datos mostrados.")
+      consulta = type_string("SELECT * FROM paises con WHERE u ORDER BY, sin punto y coma."),
+      titulo = type_string("Título breve que describe los datos mostrados.")
     )
   ))
 
   observeEvent(input$chat_user_input, {
-    stream <- chat$stream_async(input$chat_user_input)
+    stream <- chat$stream_async(input$chat_user_input, stream = "content")
     shinychat::chat_append("chat", stream)
   })
 }

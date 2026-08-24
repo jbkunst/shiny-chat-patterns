@@ -1,0 +1,8 @@
+Title: App 00 · Widgets y outputs
+Description: Introduce widgets y outputs de Shiny mediante una serie temporal
+    con una opción de pronóstico, todavía sin reactividad entre varios paneles.
+Imports:
+    bslib,
+    forecast,
+    shiny
+Encoding: UTF-8

@@ -1,46 +1,43 @@
 library(shiny)
 library(bslib)
-library(datos)
+library(tinyplot)
 
 # data --------------------------------------------------------------------
-pinguinos <- datos::pinguinos[
-  c("especie", "isla", "masa_corporal_g", "anio", "largo_aleta_mm")
-]
-especies <- c("Todas", sort(unique(stats::na.omit(as.character(pinguinos$especie)))))
+paises <- datos::paises |> subset(anio == max(anio)) |> dplyr::select(-anio)
+continentes <- c("Todos", levels(paises$continente))
 
 # user interface ----------------------------------------------------------
 ui <- page_sidebar(
-  title = "App 01 · Shiny básico",
-  sidebar = sidebar(selectInput("especie", "Especie", choices = especies)),
+  title = "App 01 · Dashboard reactivo",
+  sidebar = sidebar(selectInput("continente", "Continente", choices = continentes), width = 400),
   layout_columns(
-    value_box("Registros", textOutput("n_filas"), showcase = icon("database")),
-    value_box("Masa promedio", textOutput("masa_promedio"), showcase = icon("weight-scale")),
+    value_box("Países", textOutput("n_filas"), showcase = icon("earth-americas"), theme = "text-primary"),
+    value_box("Esperanza de vida", textOutput("vida"), showcase = icon("heart-pulse"), theme="text-primary"),
+    value_box("Población", textOutput("poblacion"), showcase = icon("people-group"), theme = "text-primary"),
     card(plotOutput("plot")),
     card(tableOutput("table")),
-    col_widths = c(6, 6, 6, 6),
-    row_heights = c(1, 4)
+    col_widths = c(4, 4, 4, 6, 6),
+    row_heights = c(1, 3)
   )
 )
 
 # server ------------------------------------------------------------------
-server <- function(input, output, session) {
+server <- function(input, output) {
   data <- reactive({
-    if (input$especie == "Todas") pinguinos
-    else pinguinos[pinguinos$especie == input$especie, ]
+    if (input$continente == "Todos") paises
+    else paises[paises$continente == input$continente, ]
   })
 
-  output$n_filas       <- renderText(nrow(data()))
-  output$masa_promedio <- renderText(paste0(round(mean(data()$masa_corporal_g, na.rm = TRUE)), " g"))
+  output$n_filas   <- renderText(nrow(data()))
+  output$vida      <- renderText(paste0(round(mean(data()$esperanza_de_vida), 1), " años"))
+  output$poblacion <- renderText(paste0(round(sum(data()$poblacion) / 1e6), " millones"))
 
   output$plot <- renderPlot({
-    df <- data()
-
-    plot(
-      df$largo_aleta_mm, df$masa_corporal_g, pch = 19, col = "#007bc2",
-      xlab = "Largo de aleta (mm)", ylab = "Masa corporal (g)")
+    tinyplot(esperanza_de_vida ~ pib_per_capita, data = paises, pch = 19, col = "#d2d2d2", log = "x")
+    tinyplot_add(data = data(), col = "#0E4F5A", cex = 1.5)
   })
 
-  output$table <- renderTable(head(data(), 10), striped = TRUE, hover = TRUE)
+  output$table <- renderTable(data(), striped = TRUE, hover = TRUE)
 }
 
 shinyApp(ui, server)
