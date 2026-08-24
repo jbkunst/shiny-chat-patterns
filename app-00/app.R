@@ -16,6 +16,7 @@ ui <- page_sidebar(
 
 # server ------------------------------------------------------------------
 server <- function(input, output, session) {
+  
   output$plot_title <- renderText(input$title)
 
   output$plot <- renderPlot({
