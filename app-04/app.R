@@ -7,8 +7,8 @@ library(shinychat)
 library(tinyplot)
 
 # database ----------------------------------------------------------------
-paises <- datos::paises |> subset(anio == max(anio)) |> dplyr::select(-anio)
-continentes <- c("Todos", levels(paises$continente))
+paises <- utils::read.csv(file.path("..", "data", "paises.csv"), fileEncoding = "UTF-8")
+continentes <- c("Todos", sort(unique(paises$continente)))
 
 con <- DBI::dbConnect(duckdb::duckdb(), dbdir = ":memory:")
 DBI::dbWriteTable(con, "paises", paises)

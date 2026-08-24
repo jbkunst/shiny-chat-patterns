@@ -7,7 +7,9 @@ mismo dominio de datos durante el recorrido principal. La secuencia también
 puede usarse como base para demostraciones o talleres.
 
 Todas las apps usan `page_sidebar()` para mantener una estructura consistente
-y concentrar cada ejemplo en el patrón que introduce.
+y concentrar cada ejemplo en el patrón que introduce. Desde `app-00` hasta
+`app-06`, cada carpeta contiene `app.R` y `app.py` para comparar la misma idea
+en Shiny para R y Shiny para Python.
 
 ## Recorrido principal
 
@@ -28,11 +30,16 @@ y concentrar cada ejemplo en el patrón que introduce.
 | `app-13` | Comprender la vista | El chat describe, resume e inspecciona la serie visible |
 
 Cada carpeta entre `app-00` y `app-08` incluye un `DESCRIPTION` con su título,
-resumen y paquetes utilizados.
+resumen y paquetes de R utilizados.
 
 En `app-02` y `app-03`, el greeting y el system prompt permanecen inline para
 que todo el ejemplo se lea en un solo archivo. Desde `app-04`, cuando el prompt
-empieza a crecer, se separan en `greeting.md` y `prompt.md`.
+empieza a crecer, se separan en `greeting.md` y `prompt.md`; ambos lenguajes
+comparten esos archivos.
+
+Las apps de países en R y Python leen `data/paises.csv`. El archivo se genera
+con `R/generar-data-paises.R`, de modo que ambas implementaciones trabajan con
+las mismas filas, columnas y valores.
 
 ## Agentes y orquestación
 
@@ -41,7 +48,7 @@ empieza a crecer, se separan en `greeting.md` y `prompt.md`.
 | `app-20` | Flujo lineal con dos agentes |
 | `app-21` | Una función orquestadora coordina dos agentes persistentes y SQLite |
 
-## Ejecutar
+## Ejecutar en R
 
 Cada aplicación es independiente y tiene su propio `app.R`.
 
@@ -66,3 +73,17 @@ install.packages(c(
 ```r
 remotes::install_github("jbkunst/bcchr")
 ```
+
+## Ejecutar en Python
+
+Desde la raíz del repositorio:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+shiny run --reload app-00/app.py
+```
+
+En Windows, la activación equivalente es `.venv\Scripts\activate`.
+Desde `app-02`, define `OPENAI_API_KEY` en el entorno antes de iniciar la app.

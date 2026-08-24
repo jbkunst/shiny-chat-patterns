@@ -5,6 +5,10 @@
 .DS_Store
 .quarto
 .Renviron
+.env
+.venv/
+__pycache__/
+*.py[cod]
 *.sqlite
 .posit/publish/*
 rsconnect/

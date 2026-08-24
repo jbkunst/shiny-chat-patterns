@@ -10,6 +10,11 @@ Cada app debe introducir una idea principal y conservar la mayor cantidad de
 código posible de la app anterior. El cambio relevante debe ser fácil de
 identificar en una slide o en un diff.
 
+Desde `app-00` hasta `app-06`, conserva `app.R` y `app.py` en la misma carpeta.
+Ambas versiones deben enseñar el mismo patrón, compartir los datos y prompts, y
+usar una implementación idiomática en cada lenguaje en vez de una traducción
+literal línea por línea.
+
 ## Secuencia de apps
 
 - `app-00`: widgets y outputs de Shiny, sin chat.
@@ -33,7 +38,8 @@ mismo paso.
 
 ## Interfaz
 
-- Usa `bslib::page_sidebar()` como estructura por defecto.
+- Usa `bslib::page_sidebar()` en R y `ui.page_sidebar()` en Python como
+  estructura por defecto.
 - Ubica el chat y los controles manuales en el sidebar y el resultado en el área
   principal.
 - Mantén la UI intencionalmente mínima y consistente entre apps consecutivas.
@@ -67,6 +73,7 @@ mismo paso.
 - Usa varias líneas para lógica o argumentos semánticamente distintos.
 - Mantén las líneas en 110 caracteres o menos, incluidos los prompts Markdown.
 - Prefiere R base y el pipe nativo `|>` cuando permitan reducir el ejemplo.
+- En Python, usa type hints y docstrings en las tools para generar sus esquemas.
 - Evita módulos, clases, helpers, dependencias y abstracciones que no sean
   necesarias para enseñar el patrón.
 - Conserva secciones consistentes: data, prompt, user interface, server y tools
@@ -77,7 +84,9 @@ mismo paso.
 ## Antes de publicar
 
 - Confirma que cada app pueda ejecutarse de forma independiente desde su carpeta.
+- Revisa que las versiones R y Python produzcan el mismo comportamiento visible.
 - Revisa que dos apps consecutivas difieran principalmente en el concepto nuevo.
 - Busca complejidad accidental en la UI y líneas de más de 110 caracteres.
-- Parsea o ejecuta las apps modificadas cuando estén disponibles R y sus paquetes.
+- Parsea o ejecuta las apps modificadas cuando estén disponibles sus paquetes.
+- Para Python, ejecuta `python -m compileall app-00 app-01 app-02 app-03 app-04 app-05 app-06`.
 - Actualiza la secuencia del README al agregar, eliminar o renumerar una app.

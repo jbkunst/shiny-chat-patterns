@@ -3,9 +3,7 @@ Description: Permite que el modelo consulte una tabla DuckDB mediante consultas
     SELECT de solo lectura, sin modificar el dashboard.
 Imports:
     bslib,
-    datos,
     DBI,
-    dplyr,
     duckdb,
     ellmer,
     shiny,

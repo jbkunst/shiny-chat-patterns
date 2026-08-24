@@ -3,8 +3,6 @@ Description: Construye un dashboard pequeño de países con un filtro manual,
     indicadores, un gráfico reactivo y una tabla.
 Imports:
     bslib,
-    datos,
-    dplyr,
     shiny,
     tinyplot
 Encoding: UTF-8

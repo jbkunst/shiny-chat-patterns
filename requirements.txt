@@ -1,0 +1,8 @@
+chatlas
+duckdb
+faicons
+matplotlib
+pandas
+pydantic
+shiny
+statsmodels

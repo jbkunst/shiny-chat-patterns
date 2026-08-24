@@ -3,8 +3,6 @@ Description: Registra una primera tool que resume los países visibles y entrega
     al modelo contexto real del estado reactivo del dashboard.
 Imports:
     bslib,
-    datos,
-    dplyr,
     ellmer,
     shiny,
     shinychat,
