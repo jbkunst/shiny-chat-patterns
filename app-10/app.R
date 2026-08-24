@@ -1,220 +1,107 @@
 library(shiny)
 library(bslib)
-library(leaflet)
-library(sf)
-library(ellmer)
-library(shinychat)
+library(dplyr)
+library(stringr)
 
 # data --------------------------------------------------------------------
+catalogo <- readRDS("../data/series_catalog.rds")
+bcch_token <- Sys.getenv("BCCH_TOKEN")
+if (!nzchar(bcch_token)) stop("Configura BCCH_TOKEN para consultar el Banco Central de Chile.")
 
-data("countries110", package = "rnaturalearthdata")
-
-countries <- st_transform(countries110, 4326)
-countries$country_id <- countries$adm0_a3
-countries$country_name <- ifelse(
-  is.na(countries$name_es) | countries$name_es == "", countries$name, countries$name_es
-)
-
-gap_2007 <- subset(gapminder::gapminder, year == 2007)
-gap_1997 <- subset(gapminder::gapminder, year == 1997)
-gap_2007$country_id <- countrycode::countrycode(gap_2007$country, "country.name", "iso3c")
-gap_1997$country_id <- countrycode::countrycode(gap_1997$country, "country.name", "iso3c")
-
-index_2007 <- match(countries$country_id, gap_2007$country_id)
-index_1997 <- match(countries$country_id, gap_1997$country_id)
-countries$life_expectancy_1997 <- gap_1997$lifeExp[index_1997]
-countries$life_expectancy <- gap_2007$lifeExp[index_2007]
-countries$life_expectancy_change <- round(countries$life_expectancy - countries$life_expectancy_1997, 1)
-countries$population_1997 <- gap_1997$pop[index_1997]
-countries$population_2007 <- gap_2007$pop[index_2007]
-countries$population_growth <- round(100 * (countries$population_2007 / countries$population_1997 - 1), 1)
-countries$gdp_per_capita_1997 <- gap_1997$gdpPercap[index_1997]
-countries$gdp_per_capita_2007 <- gap_2007$gdpPercap[index_2007]
-countries$gdp_per_capita_growth <- round(
-  100 * (countries$gdp_per_capita_2007 / countries$gdp_per_capita_1997 - 1), 1
-)
-
-metrics <- list(
-  life_expectancy = list(column = "life_expectancy", label = "Esperanza de vida (2007)"),
-  life_expectancy_change = list(
-    column = "life_expectancy_change", label = "Cambio en esperanza de vida (años)"
-  ),
-  population_growth = list(column = "population_growth", label = "Crecimiento poblacional (%)"),
-  population = list(column = "population_2007", label = "Población (2007)"),
-  gdp_per_capita = list(column = "gdp_per_capita_2007", label = "PIB por habitante (2007)"),
-  gdp_growth = list(column = "gdp_per_capita_growth", label = "Crecimiento del PIB por habitante (%)")
-)
-
-add_choropleth <- function(map, metric) {
-  info <- metrics[[metric]]
-  values <- countries[[info$column]]
-  colors <- c("#DCE6EB", "#A8C0CC", "#6F98AA", "#3F7188", "#234A5C")
-
-  if (metric %in% c("population", "gdp_per_capita")) {
-    values <- log10(values)
-    info$label <- paste(info$label, "— escala log10")
-    palette <- colorNumeric(colors, values, na.color = "transparent")
-  } else {
-    palette <- colorQuantile(colors, values, n = 5, na.color = "transparent")
-  }
-
-  map |>
-    addPolygons(
-      data = countries,
-      layerId = ~country_id,
-      fillColor = palette(values),
-      fillOpacity = 0.8,
-      color = "white",
-      weight = 0.5,
-      label = ~country_name
-    ) |>
-    addLegend(
-      position = "bottomright",
-      pal = palette,
-      values = values,
-      title = info$label
-    )
+buscar_series <- function(texto, n = 20) {
+  terminos <- texto |> iconv(to = "ASCII//TRANSLIT") |> str_to_lower() |> str_split("\\s+") |> unlist()
+  catalogo |>
+    mutate(texto_busqueda = str_c(series_id, spanish_title, english_title, sep = " ") |>
+      iconv(to = "ASCII//TRANSLIT") |> str_to_lower()) |>
+    filter(!is.na(first_observation), !is.na(last_observation)) |>
+    filter(Reduce(`&`, lapply(terminos, \(x) str_detect(texto_busqueda, fixed(x))))) |>
+    arrange(desc(last_observation)) |>
+    select(-texto_busqueda) |>
+    slice_head(n = n)
 }
 
-# prompt ------------------------------------------------------------------
-
-greeting <- paste(readLines("greeting.md", warn = FALSE), collapse = "\n")
-system_prompt <- paste(readLines("prompt.md", warn = FALSE), collapse = "\n")
-
 # user interface ----------------------------------------------------------
-
 ui <- page_sidebar(
-  title = "App 10 · Mapa mundial",
+  title = "App 10 · Explorador manual",
   fillable = TRUE,
   sidebar = sidebar(
-    width = 400,
-    shinychat::chat_ui(
-      "chat",
-      messages = greeting,
-      placeholder = "Viaja a China..."
-    )
+    textInput("busqueda", "Buscar", placeholder = "Escribe al menos 5 caracteres..."),
+    uiOutput("selector_ui"),
+    uiOutput("consulta_ui"),
+    width = 400
   ),
-  leafletOutput("map", width = "100%", height = "100%")
+  layout_columns(
+    card(card_header(textOutput("titulo")), plotOutput("plot")),
+    card(card_header("Observaciones"), tableOutput("table")),
+    col_widths = 12, row_heights = c(1, 1)
+  )
 )
 
 # server ------------------------------------------------------------------
+server <- function(input, output) {
+  busqueda       <- debounce(reactive(trimws(input$busqueda)), 3000)
+  resultados     <- reactiveVal(catalogo[0, ])
+  serie_actual   <- reactiveVal(NULL)
+  datos_actuales <- reactiveVal(NULL)
 
-server <- function(input, output, session) {
-  map_metric <- reactiveVal("life_expectancy")
-  selected_country <- reactiveVal(NULL)
-
-  output$map <- renderLeaflet({
-    leaflet(options = leafletOptions(zoomControl = FALSE)) |>
-      addProviderTiles(providers$CartoDB.Positron) |>
-      setView(lng = 0, lat = 20, zoom = 2)
-  })
-
-  update_choropleth <- function(metric) {
-    leafletProxy("map", session = session) |>
-      clearShapes() |>
-      clearControls() |>
-      add_choropleth(metric)
-  }
-
-  session$onFlushed(function() update_choropleth("life_expectancy"), once = TRUE)
-
-  observeEvent(map_metric(), update_choropleth(map_metric()), ignoreInit = TRUE)
-
-  find_country <- function(country_name) {
-    query <- tolower(trimws(country_name))
-    index <- which(
-      tolower(countries$country_name) == query |
-        tolower(countries$name) == query
-    )[1]
-
-    if (is.na(index)) {
-      stop("No encontré ese país.")
+  observeEvent(busqueda(), {
+    if (nchar(busqueda()) < 5) {
+      resultados(catalogo[0, ])
+      return()
     }
-
-    countries[index, ]
-  }
-
-  center_country <- function(country, zoom = 4) {
-    leafletProxy("map", session = session) |>
-      flyTo(
-        lng = country$label_x,
-        lat = country$label_y,
-        zoom = zoom,
-        options = list(duration = 1.5)
-      )
-  }
-
-  show_country_report <- function(country_name) {
-    country <- find_country(country_name)
-    selected_country(NULL)
-    selected_country(country$country_id)
-    center_country(country)
-
-    paste("Informe abierto para", country$country_name)
-  }
-
-  observeEvent(selected_country(), {
-    country <- countries[countries$country_id == selected_country(), ]
-
-    showModal(modalDialog(
-      title = country$country_name,
-      layout_columns(
-        col_widths = c(6, 6),
-        value_box("Esperanza de vida", paste0(country$life_expectancy, " años")),
-        value_box("Crecimiento poblacional", paste0(country$population_growth, "%"))
-      ),
-      easyClose = TRUE,
-      footer = modalButton("Cerrar")
-    ), session = session)
+    resultados(buscar_series(busqueda()))
   })
 
-  observeEvent(input$map_shape_click, {
-    country <- countries[countries$country_id == input$map_shape_click$id, ]
-    show_country_report(country$country_name)
+  output$selector_ui <- renderUI({
+    req(nrow(resultados()))
+    etiquetas <- paste(resultados()$spanish_title, resultados()$frequency, sep = " · ")
+    selectInput("serie", "Serie", choices = setNames(resultados()$series_id, etiquetas))
   })
 
-  go_to_country <- function(country_name, zoom = 4) {
-    country <- find_country(country_name)
-    center_country(country, zoom)
-    paste("Mapa centrado en", country$country_name)
-  }
+  seleccion <- reactive({
+    req(input$serie)
+    indice <- match(input$serie, resultados()$series_id)
+    req(!is.na(indice))
+    resultados()[indice, ]
+  })
 
-  change_metric <- function(metric) {
-    if (!metric %in% names(metrics)) {
-      stop("Métrica no disponible.")
-    }
-
-    map_metric(metric)
-    paste("Coropleta actualizada a", metrics[[metric]]$label)
-  }
-
-  chat <- ellmer::chat_openai(model = "gpt-5-nano", system_prompt = system_prompt)
-
-  chat$register_tools(list(
-    tool(
-      go_to_country,
-      "Centra el mapa en un país.",
-      arguments = list(
-        country_name = type_string("Nombre del país en español o inglés."),
-        zoom = type_number("Nivel de zoom, normalmente entre 2 y 8.", required = FALSE)
-      )
-    ),
-    tool(
-      show_country_report,
-      "Centra el mapa y abre un informe de un país.",
-      arguments = list(country_name = type_string("Nombre del país en español o inglés."))
-    ),
-    tool(
-      change_metric,
-      "Cambia la variable de la coropleta.",
-      arguments = list(metric = type_string(paste("Una de:", paste(names(metrics), collapse = ", "))))
+  output$consulta_ui <- renderUI({
+    info <- seleccion()
+    anios <- as.integer(format(c(info$first_observation, info$last_observation), "%Y"))
+    tagList(
+      p(paste("Frecuencia:", info$frequency)),
+      p(paste("Primera observación:", info$first_observation)),
+      p(paste("Última observación:", info$last_observation)),
+      sliderInput("anios", "Rango", anios[1], anios[2], c(max(anios[1], anios[2] - 5), anios[2]),
+        step = 1, sep = ""),
+      actionButton("consultar", "Consultar", class = "btn-primary")
     )
-  ))
-
-  observeEvent(input$chat_user_input, {
-    stream <- chat$stream_async(input$chat_user_input, tool_mode = "sequential")
-    shinychat::chat_append("chat", stream)
   })
+
+  observeEvent(input$consultar, {
+    info <- seleccion()
+    req(length(input$anios) == 2)
+    inicio_slider <- as.Date(paste0(as.integer(input$anios[1]), "-01-01"), format = "%Y-%m-%d")
+    fin_slider <- as.Date(paste0(as.integer(input$anios[2]), "-12-31"), format = "%Y-%m-%d")
+    inicio <- max(info$first_observation, inicio_slider)
+    fin <- min(info$last_observation, fin_slider)
+    datos <- bcchr::get_series(info$series_id, inicio, fin, token = bcch_token)
+    if (!nrow(datos)) stop("No hay observaciones en el rango consultado.")
+    serie_actual(info)
+    datos_actuales(datos)
+  })
+
+  output$titulo <- renderText({
+    if (is.null(serie_actual())) "Busca y consulta una serie" else serie_actual()$spanish_title
+  })
+  output$plot <- renderPlot({
+    req(datos_actuales())
+    bcchr::plot_series(datos_actuales())
+  })
+  output$table <- renderTable({
+    req(datos_actuales())
+    transform(datos_actuales(), date = format(date, "%Y-%m-%d"))
+  }, striped = TRUE, hover = TRUE)
 }
 
 shinyApp(ui, server)

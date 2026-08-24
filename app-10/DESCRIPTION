@@ -1,0 +1,11 @@
+Title: App 10 · Explorador de series
+Description: Busca una serie en un catálogo local y permite consultar manualmente
+    sus observaciones, gráfico y tabla.
+Imports:
+    bcchr,
+    bslib,
+    dplyr,
+    ggplot2,
+    shiny,
+    stringr
+Encoding: UTF-8

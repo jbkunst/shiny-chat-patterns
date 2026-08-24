@@ -1,0 +1,13 @@
+Title: App 12 · Chat orientador
+Description: Agrega un chat con tools para encontrar una serie del Banco Central
+    de Chile, resolver ambigüedades y actualizar un gráfico y una tabla.
+Imports:
+    bcchr,
+    bslib,
+    dplyr,
+    ellmer,
+    ggplot2,
+    shiny,
+    shinychat,
+    stringr
+Encoding: UTF-8

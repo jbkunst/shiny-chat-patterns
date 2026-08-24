@@ -1,0 +1,12 @@
+Title: App 13 · Comprender la vista
+Description: La tool que actualiza el dashboard también devuelve un resumen y el gráfico.
+Imports:
+    bcchr,
+    bslib,
+    dplyr,
+    ellmer,
+    ggplot2,
+    shiny,
+    shinychat,
+    stringr
+Encoding: UTF-8
