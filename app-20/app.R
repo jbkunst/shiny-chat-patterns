@@ -2,128 +2,92 @@ library(shiny)
 library(bslib)
 library(ellmer)
 library(shinychat)
-library(DBI)
-library(RSQLite)
 
-# database ----------------------------------------------------------------
-
-db_path <- "nycflights.sqlite"
-
-if (!file.exists(db_path)) {
-  con <- dbConnect(SQLite(), db_path)
-  dbWriteTable(con, "flights", nycflights13::flights)
-  dbWriteTable(con, "airlines", nycflights13::airlines)
-  dbWriteTable(con, "airports", nycflights13::airports)
-  dbWriteTable(con, "planes", nycflights13::planes)
-  dbWriteTable(con, "weather", nycflights13::weather)
-  dbDisconnect(con)
-}
-
-con <- dbConnect(SQLite(), db_path)
-schema <- paste(
-  vapply(dbListTables(con), function(table) {
-    paste0(table, "(", paste(dbListFields(con, table), collapse = ", "), ")")
-  }, character(1)),
-  collapse = "\n"
-)
-dbDisconnect(con)
-
-validate_sql <- function(sql) {
-  sql <- trimws(sql)
-
-  if (!grepl("^(SELECT|WITH)\\b", sql, ignore.case = TRUE)) {
-    stop("Solo se permiten consultas SELECT o WITH.")
-  }
-
-  if (grepl(";", sql, fixed = TRUE)) {
-    stop("Envía una sola consulta y no incluyas punto y coma.")
-  }
-
-  sql
-}
-
-execute_sql <- function(sql) {
-  con <- dbConnect(
-    SQLite(),
-    db_path,
-    flags = RSQLite::SQLITE_RO,
-    loadable.extensions = FALSE
+# agents ------------------------------------------------------------------
+analyst_agent <- function(question) {
+  chat <- ellmer::chat_openai(
+    model = "gpt-5-nano",
+    system_prompt = paste(
+      "You are analyst_agent.",
+      "The user asks questions about a toy table named sales with columns:",
+      "date, region, product, units, revenue.",
+      "Return a very short analysis plan followed by one SQLite SELECT query.",
+      "Do not invent query results."
+    )
   )
-  on.exit(dbDisconnect(con), add = TRUE)
-  dbGetQuery(con, validate_sql(sql))
+
+  chat$chat(question, echo = "none")
 }
 
-extract_sql <- function(analysis) {
-  sql <- sub("(?s).*SQL:\\s*", "", analysis, perl = TRUE)
-  trimws(gsub("```sql|```", "", sql, ignore.case = TRUE))
+writer_agent <- function(question, analysis, data) {
+  data_text <- paste(capture.output(print(data, row.names = FALSE)), collapse = "\n")
+
+  chat <- ellmer::chat_openai(
+    model = "gpt-5-nano",
+    system_prompt = paste(
+      "You are writer_agent.",
+      "Answer clearly and briefly using only the supplied query result.",
+      "The data is simulated for a learning example, so say that explicitly."
+    )
+  )
+
+  chat$chat(paste0(
+    "USER QUESTION:\n", question,
+    "\n\nANALYST OUTPUT:\n", analysis,
+    "\n\nSIMULATED QUERY RESULT:\n", data_text
+  ), echo = "none")
 }
 
-# prompts -----------------------------------------------------------------
+# fake database -----------------------------------------------------------
+simulate_execution <- function(analysis) {
+  # In a real app this is where DBI::dbGetQuery() would execute the SQL.
+  # We intentionally ignore `analysis` and return fixed data for the example.
+  data.frame(
+    region = c("Norte", "Centro", "Sur"),
+    units = c(420, 560, 310),
+    revenue = c(125000, 186000, 98000)
+  )
+}
 
-greeting <- paste(readLines("greeting.md", warn = FALSE), collapse = "\n")
-analyst_prompt <- paste(
-  paste(readLines("analyst-prompt.md", warn = FALSE), collapse = "\n"),
-  "Tablas y columnas disponibles:",
-  schema,
-  sep = "\n"
-)
-writer_prompt <- paste(readLines("writer-prompt.md", warn = FALSE), collapse = "\n")
+# orchestrator ------------------------------------------------------------
+orchestrate <- function(question) {
+  analysis <- analyst_agent(question)
+  data <- simulate_execution(analysis)
+  answer <- writer_agent(question, analysis, data)
+
+  list(analysis = analysis, data = data, answer = answer)
+}
 
 # user interface ----------------------------------------------------------
-
 ui <- page_sidebar(
-  title = "App 20 · Orquestación de agentes",
+  title = "App 20 · Two agents",
   sidebar = sidebar(
     width = 420,
     shinychat::chat_ui(
       "chat",
-      messages = greeting,
-      placeholder = "Ej: ¿Qué aerolínea tuvo más vuelos?"
+      messages = paste(
+        "Este ejemplo usa dos agentes sin memoria compartida.",
+        "Pregunta por ventas, regiones, productos, unidades o revenue."
+      ),
+      placeholder = "Ej: ¿Qué región vende más?"
     )
   ),
-  h4("Flujo explícito"),
-  p("Pregunta → orchestrate() → analyst_agent → SQLite → writer_agent"),
+  h4("Flujo lineal"),
+  p("Pregunta → analyst_agent → ejecución simulada → writer_agent"),
   layout_columns(
     card(card_header("1. analyst_agent"), verbatimTextOutput("analysis")),
-    card(card_header("2. SQLite"), tableOutput("data")),
+    card(card_header("2. simulated execution"), tableOutput("data")),
     col_widths = c(6, 6)
   )
 )
 
 # server ------------------------------------------------------------------
-
 server <- function(input, output, session) {
-  # Agents are created once per Shiny session.
-  analyst_agent <- ellmer::chat_openai(
-    model = "gpt-5-nano",
-    system_prompt = analyst_prompt
-  )
-  writer_agent <- ellmer::chat_openai(
-    model = "gpt-5-nano",
-    system_prompt = writer_prompt
-  )
-
   last_analysis <- reactiveVal("Aún no hay análisis.")
   last_data <- reactiveVal(NULL)
 
   output$analysis <- renderText(last_analysis())
   output$data <- renderTable(last_data(), striped = TRUE)
-
-  # orchestrator ----------------------------------------------------------
-
-  orchestrate <- function(question) {
-    analysis <- analyst_agent$chat(question, echo = "none")
-    data <- execute_sql(extract_sql(analysis))
-    data_text <- paste(capture.output(print(data, row.names = FALSE)), collapse = "\n")
-
-    answer <- writer_agent$chat(paste0(
-      "PREGUNTA:\n", question,
-      "\n\nANÁLISIS:\n", analysis,
-      "\n\nRESULTADO SQLITE:\n", data_text
-    ), echo = "none")
-
-    list(analysis = analysis, data = data, answer = answer)
-  }
 
   observeEvent(input$chat_user_input, {
     question <- trimws(input$chat_user_input)
