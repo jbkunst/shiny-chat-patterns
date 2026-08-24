@@ -7,10 +7,8 @@ library(stringr)
 
 # data --------------------------------------------------------------------
 catalogo <- readRDS("../data/series_catalog.rds")
-bcch_token <- Sys.getenv("BCCH_TOKEN")
-if (!nzchar(bcch_token)) stop("Configura BCCH_TOKEN para consultar el Banco Central de Chile.")
 
-saludo <- paste(readLines("greeting.md", warn = FALSE), collapse = "\n")
+saludo         <- paste(readLines("greeting.md", warn = FALSE), collapse = "\n")
 prompt_sistema <- paste(readLines("prompt.md", warn = FALSE), collapse = "\n")
 
 # user interface ----------------------------------------------------------
@@ -39,7 +37,7 @@ server <- function(input, output) {
     catalogo |>
       mutate(texto_busqueda = str_c(series_id, spanish_title, english_title, sep = " ") |>
         iconv(to = "ASCII//TRANSLIT") |> str_to_lower()) |>
-      filter(Reduce(`&`, lapply(terminos, \(x) str_detect(texto_busqueda, fixed(x))))) |>
+      filter(sapply(texto_busqueda, \(x) all(str_detect(x, fixed(terminos))))) |>
       arrange(desc(last_observation)) |>
       select(series_id, spanish_title, frequency) |>
       slice_head(n = 10)
@@ -49,7 +47,7 @@ server <- function(input, output) {
     info <- catalogo |> filter(series_id == codigo) |> slice_head(n = 1)
     if (!nrow(info)) stop("Código no encontrado.")
 
-    datos <- bcchr::get_series(codigo, desde, hasta, token = bcch_token)
+    datos <- bcchr::get_series(codigo, desde, hasta, token = Sys.getenv("BCCH_TOKEN"))
     serie_actual(info)
     datos_actuales(datos)
 
