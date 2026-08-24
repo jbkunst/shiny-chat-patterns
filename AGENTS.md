@@ -22,7 +22,10 @@ identificar en una slide o en un diff.
   Shiny.
 - `app-06`: agrega tools de interfaz como `show_table()` y `show_chart()` que
   abren modales.
-- `app-10` a `app-19`: extensiones visuales y de interacción, como mapas.
+- `app-10`: explorador manual de series del Banco Central de Chile.
+- `app-11`: integra un chat sin tools ni acceso a los datos de la app.
+- `app-12`: agrega tools para encontrar y mostrar una serie.
+- `app-13`: agrega tools para describir y resumir la serie visible.
 - `app-20` en adelante: orquestación, agentes y bots especializados.
 
 Agrega una app intermedia en vez de introducir varios conceptos nuevos en el
@@ -68,6 +71,8 @@ mismo paso.
   necesarias para enseñar el patrón.
 - Conserva secciones consistentes: data, prompt, user interface, server y tools
   cuando correspondan.
+- Coloca el código inmediatamente después del encabezado de cada sección, sin
+  una línea en blanco intermedia.
 
 ## Antes de publicar
 
