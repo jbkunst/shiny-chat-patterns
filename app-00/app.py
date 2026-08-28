@@ -19,8 +19,10 @@ app_ui = ui.page_sidebar(
         ui.input_slider("n", "Cantidad de puntos", min=24, max=144, value=48, step=24),
         ui.input_checkbox("forecast", "Mostrar pronóstico", value=False),
     ),
-    ui.h2(ui.output_text("plot_title")),
-    ui.output_plot("plot"),
+    ui.card(
+        ui.card_header(ui.output_text("plot_title")),
+        ui.output_plot("plot"),
+    ),
     fillable=True,
     title="App 00 · Widgets y outputs",
     theme=ui.Theme.from_brand(repo_dir / "_brand.yml"),
@@ -31,7 +33,7 @@ app_ui = ui.page_sidebar(
 def server(input: Inputs, output: Outputs, session: Session):
     @render.text
     def plot_title():
-        return input.title()
+        return f"{input.title()} ({input.n()} observaciones)"
 
     @render.plot
     def plot():

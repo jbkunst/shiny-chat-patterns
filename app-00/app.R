@@ -10,14 +10,16 @@ ui <- page_sidebar(
     sliderInput("n", "Cantidad de puntos", min = 24, max = 144, value = 48, step = 24),
     checkboxInput("forecast", "Mostrar pronóstico", value = FALSE)
   ),
-  h2(textOutput("plot_title")),
-  plotOutput("plot")
+  card(
+    card_header(textOutput("plot_title")),
+    plotOutput("plot")
+  )
 )
 
 # server ------------------------------------------------------------------
 server <- function(input, output, session) {
   
-  output$plot_title <- renderText(input$title)
+  output$plot_title <- renderText(paste0(input$title, " (", input$n, " observaciones)"))
 
   output$plot <- renderPlot({
     fun <- if (input$forecast) forecast::forecast else identity
