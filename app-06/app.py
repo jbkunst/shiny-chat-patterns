@@ -91,6 +91,7 @@ app_ui = ui.page_sidebar(
         col_widths=(4, 4, 4, 6, 6),
         row_heights=(1, 3),
     ),
+    fillable=True,
     title=ui.tags.span(
         "App 06 · Tools de interfaz",
         ui.tags.small(" · ", ui.output_text("titulo", inline=True)),

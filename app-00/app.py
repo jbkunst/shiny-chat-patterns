@@ -21,6 +21,7 @@ app_ui = ui.page_sidebar(
     ),
     ui.h2(ui.output_text("plot_title")),
     ui.output_plot("plot"),
+    fillable=True,
     title="App 00 · Widgets y outputs",
     theme=ui.Theme.from_brand(repo_dir / "_brand.yml"),
 )
