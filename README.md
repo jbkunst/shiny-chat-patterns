@@ -54,41 +54,77 @@ Gapminder incluido en Plotly.
 | `app-20` | Flujo lineal con dos agentes |
 | `app-21` | Una función orquestadora coordina dos agentes persistentes y DuckDB |
 
-## Ejecutar en R
+## Instalar
 
-Cada aplicación es independiente y tiene su propio `app.R`.
+Se necesita R 4.6.1 y `uv`. `uv` instala automáticamente una versión de Python
+compatible con `pyproject.toml`.
+
+Instala `uv` en Windows:
+
+```powershell
+winget install --id astral-sh.uv -e
+```
+
+En macOS o Linux:
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+Después de clonar el repositorio, restaura ambos entornos desde la raíz:
+
+```console
+Rscript -e "if (!requireNamespace('renv', quietly = TRUE)) install.packages('renv')"
+Rscript -e "renv::restore()"
+uv sync
+```
 
 R y Python usan entornos separados y reproducibles:
 
 - `renv.lock` fija las dependencias de las apps R.
 - `uv.lock` fija las dependencias de las apps Python.
 
-Restaura el entorno R una vez después de clonar el repositorio:
+## Variables de entorno
 
-```r
-renv::restore()
+Las apps con chat necesitan `OPENAI_API_KEY`. Las apps 10 a 13 necesitan
+`BCCH_TOKEN` para descargar observaciones del Banco Central de Chile.
+
+Para R, crea un archivo `.Renviron` en la raíz:
+
+```dotenv
+OPENAI_API_KEY=tu_clave_de_openai
+BCCH_TOKEN=tu_token_del_banco_central
 ```
 
-Restaura el entorno Python:
+Para ejecutar las apps Python desde PowerShell:
 
-```console
-uv sync
+```powershell
+$env:OPENAI_API_KEY = "tu_clave_de_openai"
 ```
 
-Luego ejecuta una app Shiny desde la raíz:
+En macOS o Linux:
+
+```bash
+export OPENAI_API_KEY="tu_clave_de_openai"
+```
+
+`.Renviron` y `.env` están excluidos de Git. No guardes claves reales en el repositorio.
+
+## Ejecutar en R
+
+Cada aplicación es independiente y tiene su propio `app.R`. Desde la raíz:
 
 ```r
 shiny::runApp("app-00")
 ```
 
-Ejecuta una app Python mediante `uv run`, para asegurar que use el entorno del proyecto:
+## Ejecutar en Python
+
+Usa `uv run` para ejecutar la app dentro del entorno fijado por `uv.lock`:
 
 ```console
 uv run shiny run --reload app-00/app.py
 ```
 
-Para usar las apps con chat se necesita `OPENAI_API_KEY` en `.Renviron`.
-Las apps 10 a 13 usan el catálogo versionado `data/series_catalog.rds` y necesitan
-`BCCH_TOKEN` sólo para descargar las observaciones seleccionadas. `renv::restore()` también
-instala `bcchr` desde GitHub.
-Desde `app-02`, define `OPENAI_API_KEY` en el entorno antes de iniciar la app.
+`renv::restore()` instala también `bcchr` desde GitHub. `uv sync` instala Shiny,
+Chatlas, DuckDB, Plotly y las demás dependencias Python declaradas por el proyecto.
