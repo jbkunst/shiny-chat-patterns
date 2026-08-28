@@ -9,7 +9,12 @@ paises <- utils::read.csv(file.path("..", "data", "paises.csv"), fileEncoding = 
 continentes <- c("Todos", sort(unique(paises$continente)))
 
 # prompt ------------------------------------------------------------------
-saludo <- "Prueba con:\n\n- **¿Cuántos países se muestran?**\n- **¿Cuál es su esperanza de vida promedio?**"
+saludo <- paste(
+  "Prueba con:",
+  "- **¿Cuántos países se muestran?**",
+  "- **¿Cuál es su esperanza de vida promedio?**",
+  sep = "\n\n"
+)
 
 # user interface ----------------------------------------------------------
 ui <- page_sidebar(

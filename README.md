@@ -26,8 +26,8 @@ en Shiny para R y Shiny para Python.
 | `app-08` | Tool + mapa | El chat filtra un globo y controla su variable y cámara |
 | `app-10` | Explorador manual | Busca localmente y consulta una serie del Banco Central de Chile |
 | `app-11` | Chat sin tools | Integra el chat, todavía sin acceso al catálogo ni al dashboard |
-| `app-12` | Chat orientador | El chat encuentra una serie y actualiza el gráfico y la tabla |
-| `app-13` | Comprender la vista | El chat describe, resume e inspecciona la serie visible |
+| `app-12` | Tools para actualizar | El chat encuentra una serie y actualiza el gráfico y la tabla |
+| `app-13` | Tools con contexto | El chat describe, resume e inspecciona la serie visible |
 
 Cada carpeta entre `app-00` y `app-08` incluye un `DESCRIPTION` con su título,
 resumen y paquetes de R utilizados.

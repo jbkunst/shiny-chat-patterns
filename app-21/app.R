@@ -64,7 +64,7 @@ writer_prompt <- paste(readLines("writer-prompt.md", warn = FALSE), collapse = "
 
 # user interface ----------------------------------------------------------
 ui <- page_sidebar(
-  title = "App 11 · Orquestación de agentes",
+  title = "App 21 · Orquestación de agentes",
   sidebar = sidebar(
     width = 420,
     shinychat::chat_ui(

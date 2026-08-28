@@ -28,9 +28,16 @@ prompt_sistema <- paste(readLines("prompt.md", warn = FALSE), collapse = "\n")
 
 # user interface ----------------------------------------------------------
 ui <- page_sidebar(
-  title = tagList("App 06 · Tools de interfaz", tags$small(" · ", textOutput("titulo", inline = TRUE))),
+  title = tagList(
+    "App 06 · Tools de interfaz",
+    tags$small(" · ", textOutput("titulo", inline = TRUE))
+  ),
   sidebar = sidebar(
-    shinychat::chat_ui("chat", messages = saludo, placeholder = "Filtra, muestra datos o crea un gráfico..."),
+    shinychat::chat_ui(
+      "chat",
+      messages = saludo,
+      placeholder = "Filtra, muestra datos o crea un gráfico..."
+    ),
     width = 400
   ),
   layout_columns(

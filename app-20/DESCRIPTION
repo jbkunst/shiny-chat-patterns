@@ -1,0 +1,10 @@
+Title: App 20 · Dos agentes
+Description: Presenta un flujo lineal con un agente analista, una ejecución
+    simulada y un agente redactor.
+Imports:
+    brand.yml,
+    bslib,
+    ellmer,
+    shiny,
+    shinychat
+Encoding: UTF-8
