@@ -2,6 +2,7 @@ Title: App 03 · Tool con contexto
 Description: Registra una primera tool que resume los países visibles y entrega
     al modelo contexto real del estado reactivo del dashboard.
 Imports:
+    brand.yml,
     bslib,
     ellmer,
     shiny,

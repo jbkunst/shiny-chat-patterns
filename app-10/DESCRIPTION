@@ -2,6 +2,7 @@ Title: App 10 · Explorador de series
 Description: Busca una serie en un catálogo local y permite consultar manualmente
     sus observaciones, gráfico y tabla.
 Imports:
+    brand.yml,
     bcchr,
     bslib,
     dplyr,

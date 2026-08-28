@@ -2,6 +2,7 @@ Title: App 07 · Inputs vs query
 Description: Compara filtros tradicionales con una consulta solicitada por chat,
     utilizando ambos caminos para actualizar el mismo dashboard.
 Imports:
+    brand.yml,
     bslib,
     DBI,
     duckdb,

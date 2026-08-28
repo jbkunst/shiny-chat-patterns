@@ -2,6 +2,7 @@ Title: App 05 · Tool + reactividad
 Description: Extiende la tool SQL para que una consulta solicitada por chat
     actualice los datos reactivos mostrados en el dashboard.
 Imports:
+    brand.yml,
     bslib,
     DBI,
     duckdb,

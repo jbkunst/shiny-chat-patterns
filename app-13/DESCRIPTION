@@ -1,6 +1,7 @@
 Title: App 13 · Tools que devuelven contexto
 Description: La tool que actualiza el dashboard también devuelve un resumen y el gráfico.
 Imports:
+    brand.yml,
     bcchr,
     bslib,
     dplyr,

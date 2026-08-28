@@ -1,6 +1,7 @@
 Title: App 11 · Chat sin tools
 Description: Integra un chat mínimo en Shiny, todavía sin tools ni acceso a datos.
 Imports:
+    brand.yml,
     bslib,
     ellmer,
     shiny,

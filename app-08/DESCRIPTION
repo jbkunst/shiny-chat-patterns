@@ -2,6 +2,7 @@ Title: App 08 · Tool + mapa
 Description: Integra una tabla espacial DuckDB con un globo reactivo que el chat
     puede filtrar, colorear por distintas variables y centrar en un país.
 Imports:
+    brand.yml,
     bslib,
     countrycode,
     DBI,

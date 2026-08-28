@@ -2,6 +2,7 @@ Title: App 02 · Chat sin tools
 Description: Agrega un chat al dashboard, pero el modelo todavía no puede
     consultar los datos visibles ni controlar la interfaz.
 Imports:
+    brand.yml,
     bslib,
     ellmer,
     shiny,

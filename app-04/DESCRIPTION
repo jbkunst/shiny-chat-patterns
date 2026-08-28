@@ -2,6 +2,7 @@ Title: App 04 · Tool SQL
 Description: Permite que el modelo consulte una tabla DuckDB mediante consultas
     SELECT de solo lectura, sin modificar el dashboard.
 Imports:
+    brand.yml,
     bslib,
     DBI,
     duckdb,

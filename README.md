@@ -88,7 +88,7 @@ Como alternativa a `renv::restore()`, instala manualmente los paquetes R directo
 
 ```r
 install.packages(c(
-  "bslib", "callr", "countrycode", "datos", "DBI", "dbplyr", "dplyr",
+  "brand.yml", "bslib", "callr", "countrycode", "datos", "DBI", "dbplyr", "dplyr",
   "duckdb", "ellmer", "forecast", "gapminder", "ggplot2", "mapgl",
   "nycflights13", "remotes", "rnaturalearthdata", "sf", "shiny",
   "shinychat", "stringr", "tinyplot"
