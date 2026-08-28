@@ -9,9 +9,15 @@ library(mapgl)
 library(sf)
 
 # database ----------------------------------------------------------------
-paises <- datos::paises |> subset(anio == max(anio)) |> dplyr::select(-anio)
-codigos <- countrycode::countrycode(levels(gapminder::gapminder$country), "country.name", "iso3c")
-paises$codigo <- codigos[as.integer(paises$pais)]
+paises <- utils::read.csv(file.path("..", "data", "paises.csv"), fileEncoding = "UTF-8")
+catalogo <- subset(gapminder::gapminder, year == max(year))
+stopifnot(
+  nrow(paises) == nrow(catalogo),
+  isTRUE(all.equal(paises$esperanza_de_vida, catalogo$lifeExp)),
+  isTRUE(all.equal(paises$poblacion, catalogo$pop)),
+  isTRUE(all.equal(paises$pib_per_capita, catalogo$gdpPercap))
+)
+paises$codigo <- unname(countrycode::countrycode(catalogo$country, "country.name", "iso3c"))
 rangos_mapa <- list(
   esperanza_de_vida = range(paises$esperanza_de_vida),
   poblacion = range(log10(paises$poblacion)),

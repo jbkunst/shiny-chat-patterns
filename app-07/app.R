@@ -7,7 +7,7 @@ library(shinychat)
 library(tinyplot)
 
 # database ----------------------------------------------------------------
-paises <- datos::paises |> subset(anio == max(anio)) |> dplyr::select(-anio)
+paises <- utils::read.csv(file.path("..", "data", "paises.csv"), fileEncoding = "UTF-8")
 
 con <- DBI::dbConnect(duckdb::duckdb(), dbdir = ":memory:")
 DBI::dbWriteTable(con, "paises", paises)
@@ -33,7 +33,7 @@ ui <- page_sidebar(
     accordion(
       accordion_panel(
         "Filtros tradicionales",
-        selectInput("continente", "Continente", levels(paises$continente), multiple = TRUE),
+        selectInput("continente", "Continente", sort(unique(paises$continente)), multiple = TRUE),
         selectInput("pais", "País", paises$pais, multiple = TRUE),
         sliderInput("pib", "PIB per cápita", min(paises$pib_per_capita), max(paises$pib_per_capita),
           value = range(paises$pib_per_capita)),

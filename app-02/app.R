@@ -5,8 +5,8 @@ library(shinychat)
 library(tinyplot)
 
 # data --------------------------------------------------------------------
-paises <- datos::paises |> subset(anio == max(anio)) |> dplyr::select(-anio)
-continentes <- c("Todos", levels(paises$continente))
+paises <- utils::read.csv(file.path("..", "data", "paises.csv"), fileEncoding = "UTF-8")
+continentes <- c("Todos", sort(unique(paises$continente)))
 
 # prompt ------------------------------------------------------------------
 saludo <- "Prueba con:\n\n- **¿Cuántos países se muestran en el dashboard?**"

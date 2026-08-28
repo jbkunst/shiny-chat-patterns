@@ -3,8 +3,6 @@ Description: Agrega un chat al dashboard, pero el modelo todavía no puede
     consultar los datos visibles ni controlar la interfaz.
 Imports:
     bslib,
-    datos,
-    dplyr,
     ellmer,
     shiny,
     shinychat,

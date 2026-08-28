@@ -4,5 +4,15 @@ version = "0.1.0"
 description = "Progressive Shiny and Python chat pattern examples"
 requires-python = ">=3.12"
 dependencies = [
+    "chatlas>=0.22.0",
     "duckdb>=1.5.5",
+    "faicons>=0.2.2",
+    "matplotlib>=3.11.1",
+    "numpy>=2.5.2",
+    "pandas>=3.0.5",
+    "plotly>=7.0.0",
+    "pydantic>=2.13.5",
+    "shiny[theme]>=1.7.0",
+    "shinywidgets>=0.8.1",
+    "statsmodels>=0.15.0",
 ]
