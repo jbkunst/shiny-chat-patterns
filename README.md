@@ -39,30 +39,42 @@ empieza a crecer, se separan en `greeting.md` y `prompt.md`.
 | App | Tema |
 |---|---|
 | `app-20` | Flujo lineal con dos agentes |
-| `app-21` | Una función orquestadora coordina dos agentes persistentes y SQLite |
+| `app-21` | Una función orquestadora coordina dos agentes persistentes y DuckDB |
 
 ## Ejecutar
 
 Cada aplicación es independiente y tiene su propio `app.R`.
 
+R y Python usan entornos separados y reproducibles:
+
+- `renv.lock` fija las dependencias de las apps R.
+- `uv.lock` fija las dependencias de las apps Python.
+
+Restaura el entorno R una vez después de clonar el repositorio:
+
+```r
+renv::restore()
+```
+
+Restaura el entorno Python cuando el repositorio incluya apps en ese lenguaje:
+
+```console
+uv sync
+```
+
+Luego ejecuta una app Shiny desde la raíz:
+
 ```r
 shiny::runApp("app-00")
 ```
 
+Ejecuta los scripts Python mediante `uv run`, para asegurar que usen el entorno del proyecto:
+
+```console
+uv run python ruta/al/script.py
+```
+
 Para usar las apps con chat se necesita `OPENAI_API_KEY` en `.Renviron`.
 Las apps 10 a 13 usan el catálogo versionado `data/series_catalog.rds` y necesitan
-`BCCH_TOKEN` sólo para descargar las observaciones seleccionadas.
-
-```r
-install.packages(c(
-  "brand.yml", "bslib", "countrycode", "datos", "DBI", "dplyr", "duckdb", "ellmer",
-  "forecast", "gapminder", "mapgl", "rnaturalearthdata", "sf", "shiny", "shinychat",
-  "tinyplot"
-))
-```
-
-`bcchr` se instala desde GitHub:
-
-```r
-remotes::install_github("jbkunst/bcchr")
-```
+`BCCH_TOKEN` sólo para descargar las observaciones seleccionadas. `renv::restore()` también
+instala `bcchr` desde GitHub.

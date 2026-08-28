@@ -3,29 +3,29 @@ library(bslib)
 library(ellmer)
 library(shinychat)
 library(DBI)
-library(RSQLite)
+library(duckdb)
 
 # database ----------------------------------------------------------------
-db_path <- "nycflights.sqlite"
+db_path <- "nycflights.duckdb"
 
 if (!file.exists(db_path)) {
-  con <- dbConnect(SQLite(), db_path)
+  con <- dbConnect(duckdb(), dbdir = db_path)
   dbWriteTable(con, "flights", nycflights13::flights)
   dbWriteTable(con, "airlines", nycflights13::airlines)
   dbWriteTable(con, "airports", nycflights13::airports)
   dbWriteTable(con, "planes", nycflights13::planes)
   dbWriteTable(con, "weather", nycflights13::weather)
-  dbDisconnect(con)
+  dbDisconnect(con, shutdown = TRUE)
 }
 
-con <- dbConnect(SQLite(), db_path)
+con <- dbConnect(duckdb(), dbdir = db_path, read_only = TRUE)
 schema <- paste(
   vapply(dbListTables(con), function(table) {
     paste0(table, "(", paste(dbListFields(con, table), collapse = ", "), ")")
   }, character(1)),
   collapse = "\n"
 )
-dbDisconnect(con)
+dbDisconnect(con, shutdown = TRUE)
 
 validate_sql <- function(sql) {
   sql <- trimws(sql)
@@ -42,13 +42,8 @@ validate_sql <- function(sql) {
 }
 
 execute_sql <- function(sql) {
-  con <- dbConnect(
-    SQLite(),
-    db_path,
-    flags = RSQLite::SQLITE_RO,
-    loadable.extensions = FALSE
-  )
-  on.exit(dbDisconnect(con), add = TRUE)
+  con <- dbConnect(duckdb(), dbdir = db_path, read_only = TRUE)
+  on.exit(dbDisconnect(con, shutdown = TRUE), add = TRUE)
   dbGetQuery(con, validate_sql(sql))
 }
 
@@ -79,10 +74,10 @@ ui <- page_sidebar(
     )
   ),
   h4("Flujo explícito"),
-  p("Pregunta → orchestrate() → analyst_agent → SQLite → writer_agent"),
+  p("Pregunta → orchestrate() → analyst_agent → DuckDB → writer_agent"),
   layout_columns(
     card(card_header("1. analyst_agent"), verbatimTextOutput("analysis")),
-    card(card_header("2. SQLite"), tableOutput("data")),
+    card(card_header("2. DuckDB"), tableOutput("data")),
     col_widths = c(6, 6)
   )
 )
@@ -114,7 +109,7 @@ server <- function(input, output, session) {
     answer <- writer_agent$chat(paste0(
       "PREGUNTA:\n", question,
       "\n\nANÁLISIS:\n", analysis,
-      "\n\nRESULTADO SQLITE:\n", data_text
+      "\n\nRESULTADO DUCKDB:\n", data_text
     ), echo = "none")
 
     list(analysis = analysis, data = data, answer = answer)

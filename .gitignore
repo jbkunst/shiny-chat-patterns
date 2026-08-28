@@ -1,6 +1,8 @@
 .Rproj.user
 .Rhistory
 .Rdata
+.venv/
+.uv-cache/
 .httr-oauth
 .DS_Store
 .quarto

@@ -11,7 +11,7 @@ analyst_agent <- function(question) {
       "You are analyst_agent.",
       "The user asks questions about a toy table named sales with columns:",
       "date, region, product, units, revenue.",
-      "Return a very short analysis plan followed by one SQLite SELECT query.",
+      "Return a very short analysis plan followed by one DuckDB SELECT query.",
       "Do not invent query results."
     )
   )

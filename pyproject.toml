@@ -1,0 +1,8 @@
+[project]
+name = "shiny-chat-patterns"
+version = "0.1.0"
+description = "Progressive Shiny and Python chat pattern examples"
+requires-python = ">=3.12"
+dependencies = [
+    "duckdb>=1.5.5",
+]

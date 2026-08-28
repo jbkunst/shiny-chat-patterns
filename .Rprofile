@@ -1,3 +1,4 @@
+source("renv/activate.R")
 options(
   bslib.color_contrast_warnings = FALSE,
   shiny.minified = TRUE,
