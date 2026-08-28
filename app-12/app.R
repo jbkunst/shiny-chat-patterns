@@ -13,7 +13,7 @@ prompt_sistema <- paste(readLines("prompt.md", warn = FALSE), collapse = "\n")
 
 # user interface ----------------------------------------------------------
 ui <- page_sidebar(
-  title = "App 12 · Chat orientador",
+  title = "App 12 · Tools para actualizar la aplicación",
   fillable = TRUE,
   sidebar = sidebar(
     shinychat::chat_ui("chat", messages = saludo, placeholder = "Busca una serie..."),
@@ -31,6 +31,20 @@ ui <- page_sidebar(
 server <- function(input, output) {
   serie_actual   <- reactiveVal(NULL)
   datos_actuales <- reactiveVal(NULL)
+
+  output$titulo <- renderText({
+    if (is.null(serie_actual())) "Busca y consulta una serie" else serie_actual()$spanish_title
+  })
+
+  output$plot <- renderPlot({
+    req(datos_actuales())
+    bcchr::plot_series(datos_actuales())
+  })
+
+  output$table <- renderTable({
+    req(datos_actuales())
+    transform(datos_actuales(), date = format(date, "%Y-%m-%d"))
+  }, striped = TRUE, hover = TRUE)
 
   buscar_series <- function(texto) {
     terminos <- texto |> iconv(to = "ASCII//TRANSLIT") |> str_to_lower() |> str_split("\\s+") |> unlist()
@@ -53,20 +67,6 @@ server <- function(input, output) {
 
     "Dashboard actualizado."
   }
-
-  output$titulo <- renderText({
-    if (is.null(serie_actual())) "Busca y consulta una serie" else serie_actual()$spanish_title
-  })
-
-  output$plot <- renderPlot({
-    req(datos_actuales())
-    bcchr::plot_series(datos_actuales())
-  })
-
-  output$table <- renderTable({
-    req(datos_actuales())
-    transform(datos_actuales(), date = format(date, "%Y-%m-%d"))
-  }, striped = TRUE, hover = TRUE)
 
   # tools -----------------------------------------------------------------
   chat <- ellmer::chat_openai(model = "gpt-5-nano", system_prompt = prompt_sistema)

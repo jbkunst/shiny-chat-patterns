@@ -5,13 +5,13 @@ library(shinychat)
 
 # user interface ----------------------------------------------------------
 ui <- page_sidebar(
-  title = "App 11 · Chat sin tools",
+  title = "App 11 · Chat sobre series del Banco Central",
   fillable = TRUE,
   sidebar = sidebar(
     shinychat::chat_ui(
       "chat",
-      messages = "Hola, soy un chat sin acceso al dashboard.",
-      placeholder = "Escribe un mensaje..."
+      messages = "Hola. Puedes preguntarme sobre series del Banco Central de Chile.",
+      placeholder = "Pregunta por una serie..."
     ),
     width = 400
   ),
@@ -29,7 +29,10 @@ server <- function(input, output) {
 
   chat <- ellmer::chat_openai(
     model = "gpt-5-nano",
-    system_prompt = "Responde brevemente en español. No tienes acceso al dashboard ni a sus datos."
+    system_prompt = paste(
+      "Eres un asistente sobre series estadísticas del Banco Central de Chile.",
+      "Responde brevemente en español y ayuda a formular preguntas sobre ellas."
+    )
   )
 
   observeEvent(input$chat_user_input, {

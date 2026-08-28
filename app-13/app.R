@@ -13,7 +13,7 @@ prompt_sistema <- paste(readLines("prompt.md", warn = FALSE), collapse = "\n")
 
 # user interface ----------------------------------------------------------
 ui <- page_sidebar(
-  title = "App 13 · Comprender la vista",
+  title = "App 13 · Tools que devuelven contexto",
   fillable = TRUE,
   sidebar = sidebar(
     shinychat::chat_ui("chat", messages = saludo, placeholder = "Pregunta por la serie visible..."),

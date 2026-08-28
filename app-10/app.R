@@ -87,14 +87,17 @@ server <- function(input, output) {
   output$titulo <- renderText({
     if (is.null(serie_actual())) "Busca y consulta una serie" else serie_actual()$spanish_title
   })
+
   output$plot <- renderPlot({
     req(datos_actuales())
     bcchr::plot_series(datos_actuales())
   })
+
   output$table <- renderTable({
     req(datos_actuales())
     transform(datos_actuales(), date = format(date, "%Y-%m-%d"))
   }, striped = TRUE, hover = TRUE)
+
 }
 
 shinyApp(ui, server)
