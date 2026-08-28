@@ -84,6 +84,22 @@ R y Python usan entornos separados y reproducibles:
 - `renv.lock` fija las dependencias de las apps R.
 - `uv.lock` fija las dependencias de las apps Python.
 
+Como alternativa a `renv::restore()`, instala manualmente los paquetes R directos:
+
+```r
+install.packages(c(
+  "bslib", "callr", "countrycode", "datos", "DBI", "dbplyr", "dplyr",
+  "duckdb", "ellmer", "forecast", "gapminder", "ggplot2", "mapgl",
+  "nycflights13", "remotes", "rnaturalearthdata", "sf", "shiny",
+  "shinychat", "stringr", "tinyplot"
+))
+
+remotes::install_github("jbkunst/bcchr")
+```
+
+Esta alternativa instala versiones actuales. Para reproducir exactamente el entorno
+probado del repositorio, prefiere `renv::restore()`.
+
 ## Variables de entorno
 
 Las apps con chat necesitan `OPENAI_API_KEY`. Las apps 10 a 13 necesitan
