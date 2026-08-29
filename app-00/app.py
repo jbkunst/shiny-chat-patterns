@@ -8,7 +8,7 @@ from shiny import App, Inputs, Outputs, Session, render, ui
 
 
 # data --------------------------------------------------------------------
-repo_dir = Path(__file__).parent.parent
+repo_dir = Path(__file__).resolve().parent.parent
 pasajeros = pd.read_csv(repo_dir / "data" / "air-passengers.csv", parse_dates=["fecha"])
 
 
@@ -23,8 +23,8 @@ app_ui = ui.page_sidebar(
         ui.card_header(ui.output_text("plot_title")),
         ui.output_plot("plot"),
     ),
-    fillable=True,
     title="App 00 · Widgets y outputs",
+    fillable=True,
     theme=ui.Theme.from_brand(repo_dir / "_brand.yml"),
 )
 

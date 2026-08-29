@@ -45,7 +45,7 @@ ui <- page_sidebar(
 )
 
 # server ------------------------------------------------------------------
-server <- function(input, output) {
+server <- function(input, output, session) {
   titulo_actual   <- reactiveVal("Todos los países")
   consulta_actual <- reactiveVal("SELECT * FROM paises") # paises, tal cual
 

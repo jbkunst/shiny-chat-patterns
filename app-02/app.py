@@ -9,7 +9,7 @@ from shiny import App, Inputs, Outputs, Session, reactive, render, ui
 
 
 # data --------------------------------------------------------------------
-repo_dir = Path(__file__).parent.parent
+repo_dir = Path(__file__).resolve().parent.parent
 paises = pd.read_csv(repo_dir / "data" / "paises.csv")
 continentes = ["Todos", *sorted(paises["continente"].unique())]
 
@@ -53,8 +53,8 @@ app_ui = ui.page_sidebar(
         col_widths=(4, 4, 4, 6, 6),
         row_heights=(1, 3),
     ),
-    fillable=True,
     title="App 02 · Chat sin tools",
+    fillable=True,
     theme=ui.Theme.from_brand(repo_dir / "_brand.yml"),
 )
 

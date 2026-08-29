@@ -16,7 +16,7 @@ from shiny import App, Inputs, Outputs, Session, reactive, render, ui
 
 
 # database ----------------------------------------------------------------
-app_dir = Path(__file__).parent
+app_dir = Path(__file__).resolve().parent
 repo_dir = app_dir.parent
 paises = pd.read_csv(repo_dir / "data" / "paises.csv")
 
@@ -91,11 +91,11 @@ app_ui = ui.page_sidebar(
         col_widths=(4, 4, 4, 6, 6),
         row_heights=(1, 3),
     ),
-    fillable=True,
     title=ui.tags.span(
         "App 06 · Tools de interfaz",
         ui.tags.small(" · ", ui.output_text("titulo", inline=True)),
     ),
+    fillable=True,
     theme=ui.Theme.from_brand(repo_dir / "_brand.yml"),
 )
 

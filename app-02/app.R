@@ -31,7 +31,7 @@ ui <- page_sidebar(
 )
 
 # server ------------------------------------------------------------------
-server <- function(input, output) {
+server <- function(input, output, session) {
   data <- reactive({
     if (input$continente == "Todos") paises
     else paises[paises$continente == input$continente, ]
