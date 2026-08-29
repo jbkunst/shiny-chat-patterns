@@ -5,6 +5,7 @@ Imports:
     brand.yml,
     bslib,
     ellmer,
+    ragg,
     shiny,
     shinychat,
     tinyplot

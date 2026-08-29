@@ -425,16 +425,15 @@
         "R (>= 4.1.0)"
       ],
       "Config/roxygen2/version": "8.1.0",
+      "Author": "Joshua Kunst [aut, cre], Ignacio Rossi [aut]",
+      "Maintainer": "Joshua Kunst <jbkunst@gmail.com>",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
       "RemoteRepo": "bcchr",
       "RemoteUsername": "jbkunst",
       "RemotePkgRef": "jbkunst/bcchr",
       "RemoteRef": "HEAD",
-      "RemoteSha": "a48a9b57db0bdb18785d4b4ff45b94a43bf8c09a",
-      "NeedsCompilation": "no",
-      "Author": "Joshua Kunst [aut, cre], Ignacio Rossi [aut]",
-      "Maintainer": "Joshua Kunst <jbkunst@gmail.com>"
+      "RemoteSha": "a48a9b57db0bdb18785d4b4ff45b94a43bf8c09a"
     },
     "blob": {
       "Package": "blob",
@@ -3213,6 +3212,39 @@
       "Author": "Hadley Wickham [aut, cre] (ORCID: <https://orcid.org/0000-0003-4757-117X>), Lionel Henry [aut], Posit Software, PBC [cph, fnd] (ROR: <https://ror.org/03wc8by49>)",
       "Maintainer": "Hadley Wickham <hadley@posit.co>",
       "Repository": "CRAN"
+    },
+    "ragg": {
+      "Package": "ragg",
+      "Version": "1.5.2",
+      "Source": "Repository",
+      "Priority": null,
+      "Depends": [
+        null
+      ],
+      "Imports": [
+        "systemfonts (>= 1.0.3)",
+        "textshaping (>= 0.3.0)"
+      ],
+      "LinkingTo": [
+        "systemfonts",
+        "textshaping"
+      ],
+      "Suggests": [
+        "covr",
+        "graphics",
+        "grid",
+        "testthat (>= 3.0.0)"
+      ],
+      "Enhances": [
+        null
+      ],
+      "License": "MIT + file LICENSE",
+      "License_is_FOSS": null,
+      "License_restricts_use": null,
+      "OS_type": null,
+      "NeedsCompilation": "yes",
+      "Repository": "CRAN",
+      "Type": "source"
     },
     "rapidjsonr": {
       "Package": "rapidjsonr",

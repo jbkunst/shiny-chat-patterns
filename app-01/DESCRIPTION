@@ -4,6 +4,7 @@ Description: Construye un dashboard pequeño de países con un filtro manual,
 Imports:
     brand.yml,
     bslib,
+    ragg,
     shiny,
     tinyplot
 Encoding: UTF-8

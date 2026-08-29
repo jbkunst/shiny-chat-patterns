@@ -12,6 +12,7 @@ Imports:
     mapgl,
     rnaturalearthdata,
     sf,
+    ragg,
     shiny,
     shinychat,
     tinyplot
