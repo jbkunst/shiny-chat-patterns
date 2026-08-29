@@ -11,5 +11,6 @@
 __pycache__/
 *.py[cod]
 *.sqlite
+*.duckdb
 .posit/publish/*
 rsconnect/
