@@ -1,0 +1,304 @@
+---
+title: Shiny + chat
+subtitle: Patrones progresivos para conectar conversación, datos e interfaz
+author: Joshua Kunst
+date: 2026-09-03
+date-format: MMMM YYYY
+lang: es
+include-after-body: assets/cover.html
+resources:
+  - assets/**
+format:
+  revealjs:
+    theme: [default, assets/theme.scss]
+    css: assets/slides.css
+    width: 1600
+    height: 900
+    margin: 0
+    center: false
+    center-title-slide: false
+    controls: false
+    progress: true
+    slide-number: false
+    transition: fade
+    background-transition: fade
+    auto-stretch: false
+    hash: true
+    code-overflow: scroll
+    code-block-height: 560px
+    highlight-style: github-dark
+    embed-resources: false
+---
+
+## Una idea por vez
+<div class="cards" style="--cards: 3">
+<article>
+<small>01 · conservar</small>
+<h3>La misma app</h3>
+<p>Datos, estructura y comportamiento visibles cambian lo mínimo.</p>
+</article>
+<article aria-current="true">
+<small>02 · agregar</small>
+<h3>Un patrón</h3>
+<p>Cada paso incorpora una capacidad que se reconoce en el diff.</p>
+</article>
+<article>
+<small>03 · comparar</small>
+<h3>R y Python</h3>
+<p>La misma idea con una implementación idiomática en cada lenguaje.</p>
+</article>
+</div>
+
+## El recorrido
+<p class="eyebrow">app-00 → app-08</p>
+
+<div class="route" aria-label="Recorrido principal del taller">
+<span>00<br>widgets</span>
+<span>01<br>dashboard</span>
+<span>02<br>chat</span>
+<span>03<br>contexto</span>
+<span>04<br>SQL</span>
+<span>05<br>reactividad</span>
+<span>06<br>interfaz</span>
+<span>07<br>query</span>
+<span>08<br>mapa</span>
+</div>
+
+## 00 · Widgets y outputs
+<div class="placeholder">
+<div>
+Primera demo reservada para Shinylive
+<code>app-00 · sin API key · integración al final</code>
+</div>
+</div>
+
+## 00 → 01 · El cambio aparece en el diff
+<div class="diff" aria-label="Comparación entre app-00 y app-01">
+<section class="diff-pane">
+<header>app-00/app.py</header>
+<pre><code><span>ui.input_slider("n", ...)</span>
+<span class="diff-line removed">- ui.input_checkbox("forecast", ...)</span>
+<span></span>
+<span>frame = pasajeros.head(input.n())</span>
+<span class="diff-line removed">- axis.plot(frame["fecha"], ...)</span></code></pre>
+</section>
+<section class="diff-pane">
+<header>app-01/app.py</header>
+<pre><code><span>ui.input_selectize("continentes", ...)</span>
+<span class="diff-line added">+ ui.output_text("n_filas")</span>
+<span></span>
+<span class="diff-line added">+ @reactive.calc</span>
+<span class="diff-line added">+ def data(): ...</span></code></pre>
+</section>
+</div>
+
+## 01 · Dashboard reactivo
+:::: {.app-layout}
+::: {.app-copy}
+<p class="app-number">Patrón 01</p>
+<p class="change">Los controles manuales comparten un único estado reactivo.</p>
+<p class="keeps">Todavía no hay chat. El dashboard establece la línea base que conservaremos.</p>
+:::
+::: {.pattern-box}
+<div class="language-pair"><span>Python</span><span>R</span></div>
+
+```python
+@reactive.calc
+def data():
+    return paises[
+        paises["continente"].isin(input.continentes())
+    ]
+
+@render.text
+def n_filas():
+    return f"{len(data()):,} países"
+```
+
+:::
+::::
+
+## 02 · Chat sin acceso a los datos
+:::: {.app-layout}
+::: {.app-copy}
+<p class="app-number">Patrón 02</p>
+<p class="change">Agregamos conversación, pero mantenemos una frontera explícita.</p>
+<p class="keeps">El modelo puede responder; aún no conoce los filtros ni los valores visibles.</p>
+:::
+::: {.pattern-box}
+<div class="language-pair"><span>Python</span><span>R</span></div>
+
+```python
+chat_client = ChatOpenAI(
+    system_prompt="Ayuda a explorar la app."
+)
+
+@chat_ui.on_user_submit
+async def _(user_input: str):
+    response = await chat_client.stream_async(user_input)
+    await chat_ui.append_message_stream(response)
+```
+
+:::
+::::
+
+## 03 · Una tool aporta contexto real
+:::: {.app-layout}
+::: {.app-copy}
+<p class="app-number">Patrón 03</p>
+<p class="change">El modelo consulta un resumen calculado desde los países visibles.</p>
+<p class="keeps">La tool lee el estado; todavía no modifica el dashboard.</p>
+:::
+::: {.pattern-box}
+<div class="language-pair"><span>Python</span><span>R</span></div>
+
+```python
+def resumir_datos_visibles() -> dict:
+    """Resume los países visibles en el dashboard."""
+    frame = data()
+    return {
+        "n_paises": len(frame),
+        "vida_promedio": frame["vida"].mean(),
+        "poblacion_total": frame["poblacion"].sum(),
+    }
+
+chat_client.register_tool(resumir_datos_visibles)
+```
+
+:::
+::::
+
+## 04 · SQL de solo lectura
+:::: {.app-layout}
+::: {.app-copy}
+<p class="app-number">Patrón 04</p>
+<p class="change">La tool acepta consultas acotadas y devuelve resultados verificables.</p>
+<p class="keeps">Solo <code>SELECT</code>, una tabla conocida y un límite de filas.</p>
+:::
+::: {.pattern-box}
+<div class="language-pair"><span>Python</span><span>R</span></div>
+
+```python
+def consultar_paises(consulta: str) -> list[dict]:
+    """Ejecuta una consulta SELECT sobre la tabla paises."""
+    consulta = validar_select(consulta)
+    return con.execute(consulta).fetchdf().to_dict("records")
+
+chat_client.register_tool(consultar_paises)
+```
+
+:::
+::::
+
+## 05 · La tool actualiza Shiny
+:::: {.app-layout}
+::: {.app-copy}
+<p class="app-number">Patrón 05</p>
+<p class="change">La conversación deja de ser paralela y modifica el estado reactivo.</p>
+<p class="keeps">La validación ocurre antes de cambiar lo que ve la persona.</p>
+:::
+::: {.pattern-box}
+<div class="language-pair"><span>Python</span><span>R</span></div>
+
+```python
+async def actualizar_dashboard(
+    consulta: str,
+    titulo: str,
+) -> str:
+    """Actualiza los datos visibles usando SQL validado."""
+    consulta = validar_select(consulta)
+    consulta_reactiva.set(consulta)
+    titulo_reactivo.set(titulo)
+    return "Dashboard actualizado"
+```
+
+:::
+::::
+
+## 06 · Tools de interfaz
+:::: {.app-layout}
+::: {.app-copy}
+<p class="app-number">Patrón 06</p>
+<p class="change">Una tool puede abrir una tabla o un gráfico sin recargar la app.</p>
+<p class="keeps">El modal es resultado de la conversación y también contexto para el modelo.</p>
+:::
+::: {.pattern-box}
+<div class="language-pair"><span>Python</span><span>R</span></div>
+
+```python
+async def mostrar_tabla(
+    n: int,
+    titulo: str,
+) -> str:
+    """Abre una tabla con hasta 20 países visibles."""
+    n = max(1, min(n, 20))
+    tabla_modal.set(data().head(n))
+    ui.modal_show(modal_tabla)
+    return f"Mostrando {n} filas"
+```
+
+:::
+::::
+
+## 07 · Inputs tradicionales vs consulta
+<div class="app-layout">
+<div class="app-copy">
+<p class="app-number">Patrón 07</p>
+<p class="change">Dos caminos expresan una intención y llegan al mismo resultado.</p>
+<p class="keeps">Los filtros siguen siendo útiles; el chat amplía las consultas posibles.</p>
+</div>
+<div class="cards" style="--cards: 2">
+<article>
+<small>Camino A</small>
+<h3>Inputs</h3>
+<p>Predecible, visible y rápido para las preguntas conocidas.</p>
+</article>
+<article aria-current="true">
+<small>Camino B</small>
+<h3>Chat + query</h3>
+<p>Flexible para combinar condiciones difíciles de anticipar.</p>
+</article>
+</div>
+</div>
+
+## 08 · Tool, mapa y cámara
+:::: {.app-layout}
+::: {.app-copy}
+<p class="app-number">Patrón 08</p>
+<p class="change">El chat controla el dato y también la perspectiva desde la que se observa.</p>
+<p class="keeps">La cámara se actualiza como proxy: el globo existente no se reconstruye.</p>
+:::
+::: {.pattern-box}
+<div class="language-pair"><span>Python</span><span>R</span></div>
+
+```python
+async def ir_a_pais(pais: str, zoom: float = 4) -> str:
+    """Centra la cámara del globo en un país."""
+    coordenadas = validar_pais(pais)
+    map.widget.update_geos(
+        projection_rotation=coordenadas,
+        projection_scale=zoom,
+    )
+    return f"Cámara centrada en {pais}"
+```
+
+:::
+::::
+
+## Espacio para las demos con API {.section-slide}
+::: {.section-subtitle}
+Las apps con modelos se incorporarán como demos desplegadas o grabadas. Ninguna clave se incluirá en el
+navegador ni en el repositorio.
+:::
+
+## Slot reutilizable para una demo
+<div class="placeholder">
+<div>
+Demo de Shiny, video corto o captura interactiva
+<code>Reemplazar este bloque cuando exista un backend seguro</code>
+</div>
+</div>
+
+## Cierre {.section-slide}
+::: {.section-subtitle}
+La interfaz no desaparece cuando llega el chat. Gana una nueva forma de expresar intención.
+:::

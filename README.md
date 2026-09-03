@@ -2,6 +2,61 @@
 
 Ejemplos progresivos de patrones para construir aplicaciones Shiny con chat y tools.
 
+## Sobre el taller
+
+**Shiny + chat: patrones para conectar conversación, datos e interfaz** es un taller práctico que
+recorre, paso a paso, distintas formas de incorporar modelos de lenguaje en una aplicación Shiny.
+Partiremos desde un dashboard reactivo pequeño y agregaremos conversación, acceso controlado a datos,
+consultas SQL, actualización del estado de la app y acciones sobre la interfaz.
+
+Cada capacidad se presenta como una aplicación independiente que cambia una sola idea respecto de la
+anterior. Esto permite identificar con claridad qué código habilita cada patrón, cuándo resulta útil y
+qué validaciones necesita. El objetivo no es reemplazar la interfaz tradicional con un chat, sino
+entender cómo ambas formas de interacción pueden complementarse.
+
+| | |
+|---|---|
+| **Duración** | 3 horas, con una pausa intermedia |
+| **Nivel** | Intermedio; no se requiere experiencia avanzada en Shiny |
+| **Audiencia** | Personas que hayan construido al menos una aplicación Shiny |
+| **Conocimientos previos** | Reactividad básica y estructura de interfaz/servidor |
+| **Experiencia con IA** | No se requiere experiencia previa con LLMs, chat o tools |
+| **Materiales** | Ejemplos equivalentes en Shiny para R y Shiny para Python |
+
+### Objetivos
+
+Al finalizar el taller, quienes participen podrán:
+
+- integrar un chat en una aplicación Shiny y reconocer qué contexto puede utilizar el modelo;
+- definir tools pequeñas, explícitas y validadas para consultar datos reales;
+- permitir que una tool actualice valores reactivos y ejecute acciones de interfaz;
+- combinar controles tradicionales con consultas expresadas en lenguaje natural; y
+- reconocer los límites de seguridad entre el navegador, la aplicación y servicios externos.
+
+### Contenidos
+
+**Bloque 1 · De una app reactiva a una conversación con contexto**
+
+- Dashboard y reactividad como punto de partida.
+- Chat sin acceso a los datos de la aplicación.
+- Primera tool para consultar los datos visibles.
+- Consultas SQL de solo lectura y validación de argumentos.
+
+**Pausa**
+
+**Bloque 2 · Cuando el chat puede actuar sobre la aplicación**
+
+- Actualización del estado reactivo desde una tool.
+- Acciones de interfaz: tablas, gráficos y modales.
+- Comparación entre filtros tradicionales y consultas por chat.
+- Control de una visualización geográfica y su cámara.
+
+La presentación vive en `slides/` y se publicará en
+<https://jkunst.com/shiny-chat-patterns/>. El QMD, el tema y los scripts se mantienen juntos para que
+la carpeta pueda renderizarse y publicarse como una unidad.
+
+## Sobre el repositorio
+
 La idea es que cada aplicación agregue **una sola pieza nueva** y conserve el
 mismo dominio de datos durante el recorrido principal. La secuencia también
 puede usarse como base para demostraciones o talleres.
@@ -24,10 +79,6 @@ en Shiny para R y Shiny para Python.
 | `app-06` | Tools de interfaz | El chat abre contenido en modales y recibe su resultado |
 | `app-07` | Inputs vs query | Compara filtros tradicionales con una consulta solicitada por chat |
 | `app-08` | Tool + mapa | El chat filtra un globo y controla su variable y cámara |
-| `app-10` | Explorador manual | Busca localmente y consulta una serie del Banco Central de Chile |
-| `app-11` | Chat sin tools | Integra el chat, todavía sin acceso al catálogo ni al dashboard |
-| `app-12` | Tools para actualizar | El chat encuentra una serie y actualiza el gráfico y la tabla |
-| `app-13` | Tools con contexto | El chat describe, resume e inspecciona la serie visible |
 
 Cada carpeta entre `app-00` y `app-08` incluye un `DESCRIPTION` con su título,
 resumen y paquetes de R utilizados.
@@ -47,31 +98,17 @@ equivalente práctico de un proxy: no reconstruye el mapa al cambiar el centro.
 Los códigos de país y las coordenadas de cámara provienen del catálogo
 Gapminder incluido en Plotly.
 
-## Agentes y orquestación
+## Alcance
 
-| App | Tema |
-|---|---|
-| `app-20` | Flujo lineal con dos agentes |
-| `app-21` | Una función orquestadora coordina dos agentes persistentes y DuckDB |
+El taller y este README documentan por ahora el recorrido estable entre `app-00` y `app-08`. El
+repositorio podrá seguir creciendo con nuevos dashboards, fuentes de datos y patrones de agentes u
+orquestación. Esas extensiones se incorporarán a la documentación cuando formen una nueva secuencia
+progresiva y autocontenida.
 
 ## Instalar
 
-Se necesita R 4.6.1 y `uv`. `uv` instala automáticamente una versión de Python
-compatible con `pyproject.toml`.
-
-Instala `uv` en Windows:
-
-```powershell
-winget install --id astral-sh.uv -e
-```
-
-En macOS o Linux:
-
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
-
-Después de clonar el repositorio, restaura ambos entornos desde la raíz:
+Se necesita R 4.6.1 y [`uv`](https://docs.astral.sh/uv/). Después de clonar el repositorio, restaura
+los entornos desde la raíz:
 
 ```console
 Rscript -e "if (!requireNamespace('renv', quietly = TRUE)) install.packages('renv')"
@@ -79,37 +116,20 @@ Rscript -e "renv::restore()"
 uv sync
 ```
 
-R y Python usan entornos separados y reproducibles:
+Los entornos son independientes y reproducibles:
 
 - `renv.lock` fija las dependencias de las apps R.
 - `uv.lock` fija las dependencias de las apps Python.
 
-Como alternativa a `renv::restore()`, instala manualmente los paquetes R directos:
+## Configurar la API
 
-```r
-install.packages(c(
-  "brand.yml", "bslib", "callr", "countrycode", "datos", "DBI", "dbplyr", "dplyr",
-  "duckdb", "ellmer", "forecast", "gapminder", "ggplot2", "mapgl",
-  "nycflights13", "remotes", "rnaturalearthdata", "sf", "shiny",
-  "shinychat", "stringr", "tinyplot"
-))
-
-remotes::install_github("jbkunst/bcchr")
-```
-
-Esta alternativa instala versiones actuales. Para reproducir exactamente el entorno
-probado del repositorio, prefiere `renv::restore()`.
-
-## Variables de entorno
-
-Las apps con chat necesitan `OPENAI_API_KEY`. Las apps 10 a 13 necesitan
-`BCCH_TOKEN` para descargar observaciones del Banco Central de Chile.
+Las apps con chat, desde `app-02`, necesitan `OPENAI_API_KEY`. `app-00` y `app-01` funcionan sin una
+clave.
 
 Para R, crea un archivo `.Renviron` en la raíz:
 
 ```dotenv
 OPENAI_API_KEY=tu_clave_de_openai
-BCCH_TOKEN=tu_token_del_banco_central
 ```
 
 Para ejecutar las apps Python desde PowerShell:
@@ -126,21 +146,16 @@ export OPENAI_API_KEY="tu_clave_de_openai"
 
 `.Renviron` y `.env` están excluidos de Git. No guardes claves reales en el repositorio.
 
-## Ejecutar en R
+## Ejecutar una app
 
-Cada aplicación es independiente y tiene su propio `app.R`. Desde la raíz:
+Cada aplicación es independiente. Para ejecutar la versión R desde la raíz:
 
 ```r
 shiny::runApp("app-00")
 ```
 
-## Ejecutar en Python
-
-Usa `uv run` para ejecutar la app dentro del entorno fijado por `uv.lock`:
+Para ejecutar la versión Python dentro del entorno fijado por `uv.lock`:
 
 ```console
 uv run shiny run --reload app-00/app.py
 ```
-
-`renv::restore()` instala también `bcchr` desde GitHub. `uv sync` instala Shiny,
-Chatlas, DuckDB, Plotly y las demás dependencias Python declaradas por el proyecto.
