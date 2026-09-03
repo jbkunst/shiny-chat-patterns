@@ -157,35 +157,15 @@
 }
 
 .browser-bar {
-  display: grid;
-  grid-template-columns: 90px 1fr 70px;
+  display: flex;
   align-items: center;
+  justify-content: center;
   height: 52px;
   padding: 0 18px;
   border-bottom: 1px solid var(--jk-line);
   color: rgb(169 185 210 / 70%);
   font-family: "IBM Plex Mono", monospace;
   font-size: 11px;
-}
-
-.browser-dots {
-  display: flex;
-  gap: 7px;
-}
-
-.browser-dots i {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: rgb(169 185 210 / 34%);
-}
-
-.browser-dots i:nth-child(2) {
-  background: var(--jk-blue-bright);
-}
-
-.browser-dots i:nth-child(3) {
-  background: var(--jk-accent);
 }
 
 .browser-address {
@@ -195,22 +175,17 @@
   white-space: nowrap;
 }
 
-.browser-status {
-  color: #80d7aa;
-  text-align: right;
-  text-transform: uppercase;
-}
-
 .shiny-shell {
   display: grid;
-  grid-template-columns: 218px 1fr;
+  grid-template-columns: 190px 1fr;
   height: calc(100% - 52px);
 }
 
 .shiny-sidebar {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px;
+  justify-content: center;
   padding: 28px 22px;
   border-right: 1px solid var(--jk-line);
   background: rgb(9 29 51 / 86%);
@@ -219,88 +194,40 @@
 }
 
 .shiny-wordmark {
-  margin-bottom: 18px;
+  margin-bottom: 10px;
   color: var(--jk-ink);
   font-size: 22px;
   font-weight: 300;
 }
 
-.fake-input {
-  padding: 10px;
-  border: 1px solid var(--jk-line);
-  border-radius: 7px;
-  background: rgb(242 246 255 / 6%);
-  color: rgb(242 246 255 / 78%);
-}
-
-.fake-slider {
-  position: relative;
-  height: 4px;
-  margin: 10px 3px 16px;
-  border-radius: 4px;
-  background: rgb(169 185 210 / 24%);
-}
-
-.fake-slider::before {
-  display: block;
-  width: 52%;
-  height: 100%;
-  border-radius: inherit;
-  background: var(--jk-accent);
-  content: "";
-}
-
-.fake-slider i {
-  position: absolute;
-  top: 50%;
-  left: 52%;
-  width: 13px;
-  height: 13px;
-  border-radius: 50%;
-  background: var(--jk-accent);
-  transform: translate(-50%, -50%);
-}
-
-.fake-check {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.fake-check i {
-  width: 13px;
-  height: 13px;
-  border: 1px solid var(--jk-line);
-  border-radius: 3px;
-}
-
 .fake-chat {
   display: grid;
-  gap: 8px;
-  margin-top: auto;
-  padding-top: 18px;
+  gap: 10px;
+  margin-top: 8px;
+  padding-top: 20px;
   border-top: 1px solid var(--jk-line);
-  opacity: .25;
-  transition: opacity 420ms ease;
 }
 
 .fake-chat span {
-  width: 88%;
-  height: 30px;
+  width: 90%;
+  height: 44px;
   border-radius: 8px 8px 8px 2px;
   background: var(--jk-soft);
 }
 
-.fake-chat span:nth-child(2) {
+.fake-chat span:nth-child(even) {
   width: 76%;
   margin-left: auto;
+  border-radius: 8px 8px 2px;
   background: rgb(98 168 255 / 28%);
 }
 
-.workshop-cover[data-phase="chat"] .fake-chat,
-.workshop-cover[data-phase="tool"] .fake-chat,
-.workshop-cover[data-phase="agent"] .fake-chat {
-  opacity: 1;
+.fake-chat span:nth-child(3) {
+  width: 72%;
+}
+
+.fake-chat span:nth-child(5) {
+  width: 82%;
 }
 
 .shiny-main {
