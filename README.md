@@ -6,9 +6,9 @@ Ejemplos progresivos de patrones para construir aplicaciones Shiny con chat y to
 
 **Shiny + chat con ellmer: patrones para conectar conversación, datos e interfaz** es un taller
 práctico que recorre, paso a paso, distintas formas de incorporar modelos de lenguaje en una
-aplicación Shiny. Usaremos `ellmer` en R y su equivalente, Chatlas, en Python. Partiremos desde un
-dashboard reactivo pequeño y agregaremos conversación, acceso controlado a datos, consultas SQL,
-actualización del estado de la app y acciones sobre la interfaz.
+aplicación Shiny para R usando `ellmer`. Partiremos desde un dashboard reactivo pequeño y agregaremos
+conversación, acceso controlado a datos, consultas SQL, actualización del estado de la app y acciones
+sobre la interfaz.
 
 Cada capacidad se presenta como una aplicación independiente que cambia una sola idea respecto de la
 anterior. Esto permite identificar con claridad qué código habilita cada patrón, cuándo resulta útil y
@@ -19,10 +19,10 @@ entender cómo ambas formas de interacción pueden complementarse.
 |---|---|
 | **Duración** | 3 horas, con una pausa intermedia |
 | **Nivel** | Intermedio; no se requiere experiencia avanzada en Shiny |
-| **Audiencia** | Personas que hayan construido al menos una aplicación Shiny |
-| **Conocimientos previos** | Reactividad básica y estructura de interfaz/servidor |
+| **Audiencia** | Personas que hayan construido al menos una aplicación con R y Shiny |
+| **Conocimientos previos** | R, reactividad básica y estructura de interfaz/servidor |
 | **Experiencia con IA** | No se requiere experiencia previa con LLMs, chat o tools |
-| **Materiales** | Shiny para R con `ellmer` y Shiny para Python con `chatlas` |
+| **Materiales** | Aplicaciones progresivas en Shiny para R con `ellmer` |
 
 ### Objetivos
 
