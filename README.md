@@ -4,10 +4,11 @@ Ejemplos progresivos de patrones para construir aplicaciones Shiny con chat y to
 
 ## Sobre el taller
 
-**Shiny + chat: patrones para conectar conversación, datos e interfaz** es un taller práctico que
-recorre, paso a paso, distintas formas de incorporar modelos de lenguaje en una aplicación Shiny.
-Partiremos desde un dashboard reactivo pequeño y agregaremos conversación, acceso controlado a datos,
-consultas SQL, actualización del estado de la app y acciones sobre la interfaz.
+**Shiny + chat con ellmer: patrones para conectar conversación, datos e interfaz** es un taller
+práctico que recorre, paso a paso, distintas formas de incorporar modelos de lenguaje en una
+aplicación Shiny. Usaremos `ellmer` en R y su equivalente, Chatlas, en Python. Partiremos desde un
+dashboard reactivo pequeño y agregaremos conversación, acceso controlado a datos, consultas SQL,
+actualización del estado de la app y acciones sobre la interfaz.
 
 Cada capacidad se presenta como una aplicación independiente que cambia una sola idea respecto de la
 anterior. Esto permite identificar con claridad qué código habilita cada patrón, cuándo resulta útil y
@@ -21,7 +22,7 @@ entender cómo ambas formas de interacción pueden complementarse.
 | **Audiencia** | Personas que hayan construido al menos una aplicación Shiny |
 | **Conocimientos previos** | Reactividad básica y estructura de interfaz/servidor |
 | **Experiencia con IA** | No se requiere experiencia previa con LLMs, chat o tools |
-| **Materiales** | Ejemplos equivalentes en Shiny para R y Shiny para Python |
+| **Materiales** | Shiny para R con `ellmer` y Shiny para Python con `chatlas` |
 
 ### Objetivos
 
@@ -64,7 +65,8 @@ puede usarse como base para demostraciones o talleres.
 Todas las apps usan `page_sidebar()` para mantener una estructura consistente
 y concentrar cada ejemplo en el patrón que introduce. Desde `app-00` hasta
 `app-08`, cada carpeta contiene `app.R` y `app.py` para comparar la misma idea
-en Shiny para R y Shiny para Python.
+en ambos lenguajes. Las versiones de chat usan `ellmer` en Shiny para R y
+`chatlas` en Shiny para Python.
 
 ## Recorrido principal
 

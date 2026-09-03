@@ -1,5 +1,5 @@
 ---
-title: Shiny + chat
+title: Shiny + chat con ellmer
 subtitle: Patrones progresivos para conectar conversación, datos e interfaz
 author: Joshua Kunst
 date: 2026-09-03
