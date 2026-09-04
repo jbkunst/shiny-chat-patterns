@@ -54,13 +54,13 @@ code_block <- function(path, descriptions = NULL) {
 }
 ```
 
-## Una idea por vez
+## Una idea por vez {.opening-slide}
 
 1. **Conservar.** Partimos siempre desde la misma aplicación.
 2. **Agregar.** Incorporamos una sola capacidad en cada paso.
 3. **Explicar.** Revisamos el cambio directamente en R.
 
-## El recorrido
+## El recorrido {.opening-slide}
 
 - **Shiny · app-00 → app-01.** Widgets, outputs y reactividad.
 - **Chat + ellmer · app-02 → app-04.** Conversación, contexto y SQL.
