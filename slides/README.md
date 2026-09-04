@@ -11,6 +11,7 @@ La presentación vive completa en esta carpeta y se publica en
 - `assets/slides.css`: portada, layouts, componentes y estilos de código.
 - `assets/cover.html`: estructura de la visualización animada de portada.
 - `assets/cover.js`: animación inspirada en el landing de jkunst.com.
+- `_extensions/mcanouil/codefrag/`: navegación progresiva por anotaciones de código.
 - `shinylive/`: salida local reservada para las demos interactivas; está ignorada por Git.
 
 ## Render local
@@ -27,6 +28,23 @@ quarto preview slides/index.qmd
 
 Quarto escribe `slides/index.html` y sus dependencias junto al QMD. Las rutas son relativas para que la
 presentación funcione bajo `/shiny-chat-patterns/`.
+
+## Código R anotado
+
+`index.qmd` define `code_block()`, que lee un script R y conecta rangos de líneas con explicaciones de
+Quarto. La llamada debe usar `results: asis`:
+
+````markdown
+```{r}
+#| results: asis
+code_block("../app-03/app.R", c(
+  "1-4" = "Carga los datos compartidos por la aplicación.",
+  "20-28" = "La tool consulta el estado reactivo."
+))
+```
+````
+
+Los rangos se muestran progresivamente gracias a la extensión local `codefrag`.
 
 ## Demo de app-00 pendiente
 

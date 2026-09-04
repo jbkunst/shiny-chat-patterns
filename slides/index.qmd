@@ -25,9 +25,34 @@ format:
     hash: true
     code-overflow: scroll
     code-block-height: 560px
+    code-annotations: select
     highlight-style: github-dark
     embed-resources: false
+revealjs-plugins:
+  - codefrag
 ---
+
+```{r}
+#| label: setup-code-block
+#| include: false
+# Inserta un archivo R como Markdown. Las descripciones nombradas agregan
+# anotaciones y pasos de resaltado para los rangos de líneas indicados.
+code_block <- function(path, descriptions = NULL) {
+  path <- file.path(dirname(knitr::current_input(dir = TRUE)), path)
+  code <- readLines(path, encoding = "UTF-8", warn = FALSE)
+
+  if (is.null(descriptions)) {
+    return(cat("```r", paste(code, collapse = "\n"), "```", sep = "\n"))
+  }
+
+  ranges <- names(descriptions)
+  first_lines <- as.integer(sub("-.*", "", ranges))
+  code[first_lines] <- paste(code[first_lines], sprintf("# <%d>", seq_along(descriptions)))
+  fence <- sprintf('```{.r code-line-numbers="|%s"}', paste(ranges, collapse = "|"))
+  notes <- sprintf("%d. **%d.** %s", seq_along(descriptions), seq_along(descriptions), descriptions)
+  cat(fence, paste(code, collapse = "\n"), "```", "", notes, sep = "\n")
+}
+```
 
 ## Una idea por vez
 <div class="cards" style="--cards: 3">

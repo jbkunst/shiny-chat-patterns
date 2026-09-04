@@ -29,6 +29,14 @@ jobs:
         with:
           version: 1.10.18
 
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - name: Install render dependencies
+        run: Rscript -e 'install.packages("rmarkdown")'
+
       - name: Render presentation
         run: quarto render slides/index.qmd
 
