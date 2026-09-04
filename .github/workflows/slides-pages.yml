@@ -35,7 +35,7 @@ jobs:
           use-public-rspm: true
 
       - name: Install render dependencies
-        run: Rscript -e 'install.packages("rmarkdown")'
+        run: Rscript -e 'install.packages(c("rmarkdown", "shinylive"))'
 
       - name: Render presentation
         run: quarto render slides/index.qmd
