@@ -29,7 +29,7 @@
 }
 
 .reveal .slides {
-  position: relative;
+  position: absolute !important;
   z-index: 1;
   width: 1600px;
   height: 900px;
@@ -39,6 +39,7 @@
 .reveal .slides > section {
   box-sizing: border-box;
   height: 100%;
+  margin-left: 0 !important;
   text-align: left;
 }
 
