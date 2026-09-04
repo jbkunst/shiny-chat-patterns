@@ -54,13 +54,13 @@ code_block <- function(path, descriptions = NULL) {
 }
 ```
 
-## Una idea por vez
+## Una idea por vez {.content-slide}
 
 1. **Conservar.** Partimos siempre desde la misma aplicación.
 2. **Agregar.** Incorporamos una sola capacidad en cada paso.
 3. **Explicar.** Revisamos el cambio directamente en R.
 
-## El recorrido
+## El recorrido {.content-slide}
 
 - **Shiny · app-00 → app-01.** Widgets, outputs y reactividad.
 - **Chat + ellmer · app-02 → app-04.** Conversación, contexto y SQL.
@@ -71,7 +71,7 @@ code_block <- function(path, descriptions = NULL) {
 Primero, una interfaz reactiva: inputs, outputs y un estado que conecta ambos.
 :::
 
-## 00 · Widgets y outputs
+## 00 · Widgets y outputs {.content-slide}
 <div class="placeholder">
 <div>
 Primera demo reservada para Shinylive
@@ -79,7 +79,7 @@ Primera demo reservada para Shinylive
 </div>
 </div>
 
-## 00 → 01 · El cambio aparece en el diff
+## 00 → 01 · El cambio aparece en el diff {.content-slide}
 <div class="diff" aria-label="Comparación entre app-00 y app-01">
 <section class="diff-pane">
 <header>app-00/app.R</header>
@@ -99,7 +99,7 @@ Primera demo reservada para Shinylive
 </section>
 </div>
 
-## 01 · Dashboard reactivo
+## 01 · Dashboard reactivo {.content-slide}
 :::: {.app-layout}
 ::: {.app-copy}
 <p class="app-number">Patrón 01</p>
@@ -126,7 +126,7 @@ output$n_filas <- renderText(nrow(data()))
 Después, una conversación con un modelo: cliente, prompt y respuesta.
 :::
 
-## ellmer antes de Shiny
+## ellmer antes de Shiny {.content-slide}
 :::: {.app-layout}
 ::: {.app-copy}
 <p class="app-number">Antes de la interfaz</p>
@@ -151,7 +151,7 @@ chat$chat("¿Qué puedes hacer?")
 Ahora conectamos conversación, datos reactivos y acciones de interfaz, una capacidad por vez.
 :::
 
-## 02 · Chat sin acceso a los datos
+## 02 · Chat sin acceso a los datos {.content-slide}
 :::: {.app-layout}
 ::: {.app-copy}
 <p class="app-number">Patrón 02</p>
@@ -175,7 +175,7 @@ observeEvent(input$chat_user_input, {
 :::
 ::::
 
-## 03 · Una tool aporta contexto real
+## 03 · Una tool aporta contexto real {.content-slide}
 :::: {.app-layout}
 ::: {.app-copy}
 <p class="app-number">Patrón 03</p>
@@ -204,7 +204,7 @@ chat$register_tool(tool(
 :::
 ::::
 
-## 04 · SQL de solo lectura
+## 04 · SQL de solo lectura {.content-slide}
 :::: {.app-layout}
 ::: {.app-copy}
 <p class="app-number">Patrón 04</p>
@@ -231,7 +231,7 @@ chat$register_tool(tool(
 :::
 ::::
 
-## 05 · La tool actualiza Shiny
+## 05 · La tool actualiza Shiny {.content-slide}
 :::: {.app-layout}
 ::: {.app-copy}
 <p class="app-number">Patrón 05</p>
@@ -256,7 +256,7 @@ actualizar_dashboard <- function(consulta, titulo) {
 :::
 ::::
 
-## 06 · Tools de interfaz
+## 06 · Tools de interfaz {.content-slide}
 :::: {.app-layout}
 ::: {.app-copy}
 <p class="app-number">Patrón 06</p>
@@ -284,7 +284,7 @@ mostrar_tabla <- function(n, titulo) {
 :::
 ::::
 
-## 07 · Inputs tradicionales vs consulta
+## 07 · Inputs tradicionales vs consulta {.content-slide}
 <div class="app-layout">
 <div class="app-copy">
 <p class="app-number">Patrón 07</p>
@@ -305,7 +305,7 @@ mostrar_tabla <- function(n, titulo) {
 </div>
 </div>
 
-## 08 · Tool, mapa y cámara
+## 08 · Tool, mapa y cámara {.content-slide}
 :::: {.app-layout}
 ::: {.app-copy}
 <p class="app-number">Patrón 08</p>
@@ -347,7 +347,7 @@ Las apps con modelos se incorporarán como demos desplegadas o grabadas. Ninguna
 navegador ni en el repositorio.
 :::
 
-## Slot reutilizable para una demo
+## Slot reutilizable para una demo {.content-slide}
 <div class="placeholder">
 <div>
 Demo de Shiny, video corto o captura interactiva

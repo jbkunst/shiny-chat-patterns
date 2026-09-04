@@ -43,7 +43,7 @@
   text-align: left;
 }
 
-.reveal .slides > section:not(#title-slide) {
+.reveal .slides > section.content-slide {
   padding: 154px 96px 72px;
   background: var(--jk-paper);
   color: var(--jk-text);
@@ -59,7 +59,7 @@
   background: var(--jk-blue);
 }
 
-.reveal .slides > section:not(#title-slide) h2 {
+.reveal .slides > section.content-slide h2 {
   position: absolute;
   top: 0;
   right: 96px;
@@ -77,7 +77,7 @@
   line-height: 1.05;
 }
 
-.reveal .slides > section:not(#title-slide) h3 {
+.reveal .slides > section.content-slide h3 {
   margin: 0 0 24px;
   color: var(--jk-blue);
   font-size: 34px;
@@ -85,20 +85,20 @@
   letter-spacing: -.025em;
 }
 
-.reveal .slides > section:not(#title-slide) p,
-.reveal .slides > section:not(#title-slide) li {
+.reveal .slides > section.content-slide p,
+.reveal .slides > section.content-slide li {
   color: var(--jk-copy);
   font-size: 29px;
   font-weight: 300;
   line-height: 1.42;
 }
 
-.reveal .slides > section:not(#title-slide) strong {
+.reveal .slides > section.content-slide strong {
   color: var(--jk-text);
 }
 
-.reveal .slides > section:not(#title-slide) a,
-.reveal .slides > section:not(#title-slide) code {
+.reveal .slides > section.content-slide a,
+.reveal .slides > section.content-slide code {
   color: var(--jk-blue);
 }
 
