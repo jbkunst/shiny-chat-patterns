@@ -2,7 +2,7 @@
 title: Shiny + chat con ellmer
 subtitle: Patrones progresivos para conectar conversación, datos e interfaz
 author: LatinR 2026
-date: Joshua Kunst · noviembre 2026
+date: "Joshua Kunst · noviembre de 2026"
 lang: es
 include-after-body: assets/cover.html
 resources:
