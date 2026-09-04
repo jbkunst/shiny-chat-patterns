@@ -294,8 +294,8 @@
   width: 900px;
   height: 520px;
   border-radius: 50%;
-  background: radial-gradient(ellipse, rgb(5 14 27 / 54%) 0 52%, transparent 76%);
-  backdrop-filter: blur(4px);
+  background: radial-gradient(ellipse, rgb(5 14 27 / 38%) 0 52%, transparent 76%);
+  backdrop-filter: blur(2px);
   content: "";
   mask-image: radial-gradient(ellipse, #000 0 54%, transparent 78%);
   pointer-events: none;
