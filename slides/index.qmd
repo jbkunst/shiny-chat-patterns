@@ -1,5 +1,5 @@
 ---
-title: Shiny + chat con ellmer
+title: Shiny + ellmer
 subtitle: Patrones progresivos para conectar conversación, datos e interfaz
 author: LatinR 2026
 date: "Joshua Kunst · noviembre de 2026"
@@ -88,6 +88,11 @@ code_block <- function(path, descriptions = NULL) {
 <span>08<br>mapa</span>
 </div>
 
+## Shiny {.section-slide}
+::: {.section-subtitle}
+Primero, una interfaz reactiva: inputs, outputs y un estado que conecta ambos.
+:::
+
 ## 00 · Widgets y outputs
 <div class="placeholder">
 <div>
@@ -140,6 +145,36 @@ def n_filas():
 
 :::
 ::::
+
+## ellmer {.section-slide}
+::: {.section-subtitle}
+Después, una conversación con un modelo: cliente, prompt y respuesta.
+:::
+
+## ellmer antes de Shiny
+:::: {.app-layout}
+::: {.app-copy}
+<p class="app-number">Antes de la interfaz</p>
+<p class="change">ellmer organiza la conversación con el modelo.</p>
+<p class="keeps">La clave se lee desde el entorno; nunca se escribe en el código ni en las slides.</p>
+:::
+::: {.pattern-box}
+
+```r
+chat <- ellmer::chat_openai(
+  system_prompt = "Ayuda a explorar los datos."
+)
+
+chat$chat("¿Qué puedes hacer?")
+```
+
+:::
+::::
+
+## Shiny + ellmer {.section-slide}
+::: {.section-subtitle}
+Ahora conectamos conversación, datos reactivos y acciones de interfaz, una capacidad por vez.
+:::
 
 ## 02 · Chat sin acceso a los datos
 :::: {.app-layout}
