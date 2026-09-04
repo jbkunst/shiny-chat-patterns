@@ -12,7 +12,7 @@ La presentación vive completa en esta carpeta y se publica en
 - `assets/cover.html`: estructura de la visualización animada de portada.
 - `assets/cover.js`: animación de portada inspirada en el landing de jkunst.com.
 - `_extensions/mcanouil/codefrag/`: navegación progresiva por anotaciones de código.
-- `shinylive/`: salida local reservada para las demos interactivas; está ignorada por Git.
+- La demo de `app-00` se ejecuta en el navegador mediante Shinylive.
 
 ## Arquitectura visual
 
@@ -55,10 +55,10 @@ code_block("../app-03/app.R", c(
 
 Los rangos se muestran progresivamente gracias a la extensión local `codefrag`.
 
-## Demo de app-00 pendiente
+## Demo de app-00
 
-La slide de `app-00` deja preparado el espacio para una demo que no requiere API key. La integración con
-Shinylive se hará al final, una vez estabilizados el diseño y la historia del taller.
+La primera slide de `app-00` muestra el archivo mediante `code_block()`. La siguiente ejecuta la misma
+interfaz con Shinylive, usando `AirPassengers` para incluir los datos dentro del navegador.
 
 No se exportarán con Shinylive las apps que necesitan `OPENAI_API_KEY`: cualquier secreto incluido en una
 app que corre en el navegador queda expuesto.

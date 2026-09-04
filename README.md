@@ -6,11 +6,11 @@ Ejemplos progresivos de patrones para construir aplicaciones Shiny con chat y to
 
 **Shiny + ellmer: patrones para conectar conversación, datos e interfaz** es un taller
 práctico que recorre, paso a paso, distintas formas de incorporar modelos de lenguaje en una
-aplicación Shiny para R usando `ellmer`. Partiremos desde una aplicación simple y agregaremos
+aplicación Shiny usando `ellmer`. Partiremos desde una aplicación simple y agregaremos
 conversación, acceso controlado a datos, consultas SQL, actualización del estado y acciones sobre la
 interfaz, para finalizar con un dashboard conversacional que controla gráficos, tablas y mapas.
 
-Cada capacidad se presenta como una aplicación independiente que cambia una sola idea respecto de la
+Cada patrón se presenta como una aplicación independiente que cambia una sola idea respecto de la
 anterior. Esto permite identificar con claridad qué código habilita cada patrón, cuándo resulta útil y
 qué validaciones necesita. El objetivo no es reemplazar la interfaz tradicional con un chat, sino
 entender cómo ambas formas de interacción pueden complementarse.
@@ -22,7 +22,7 @@ entender cómo ambas formas de interacción pueden complementarse.
 | **Audiencia** | Personas que hayan construido al menos una aplicación con R y Shiny |
 | **Conocimientos previos** | R, reactividad básica y estructura de interfaz/servidor |
 | **Experiencia con IA** | No se requiere experiencia previa con LLMs, chat o tools |
-| **Materiales** | Aplicaciones progresivas en Shiny para R con `ellmer` |
+| **Materiales** | Aplicaciones progresivas en Shiny con `ellmer` |
 
 ### Objetivos
 
@@ -65,8 +65,7 @@ puede usarse como base para demostraciones o talleres.
 Todas las apps usan `page_sidebar()` para mantener una estructura consistente
 y concentrar cada ejemplo en el patrón que introduce. Desde `app-00` hasta
 `app-08`, cada carpeta contiene `app.R` y `app.py` para comparar la misma idea
-en ambos lenguajes. Las versiones de chat usan `ellmer` en Shiny para R y
-`chatlas` en Shiny para Python.
+en ambos lenguajes. Las versiones de chat usan `ellmer` y `chatlas`, respectivamente.
 
 ## Recorrido principal
 

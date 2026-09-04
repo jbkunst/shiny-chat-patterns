@@ -7,6 +7,9 @@ lang: es
 include-after-body: assets/cover.html
 resources:
   - assets/**
+filters:
+  - shinylive
+embed-resources: false
 format:
   revealjs:
     theme: [default, assets/theme.scss]
@@ -24,10 +27,9 @@ format:
     auto-stretch: false
     hash: true
     code-overflow: scroll
-    code-block-height: 560px
+    code-block-height: 650px
     code-annotations: select
     highlight-style: github
-    embed-resources: false
 revealjs-plugins:
   - codefrag
 ---
@@ -72,10 +74,70 @@ Primero, una interfaz reactiva con inputs, outputs y un estado que conecta ambos
 
 ## 00 · Widgets y outputs
 
-<div class="demo-slot">
-  <p>Espacio reservado para una demo de Shinylive</p>
-  <code>app-00 · sin API key · integración posterior</code>
-</div>
+```{r}
+#| echo: false
+#| results: asis
+code_block(
+  "../app-00/app.R",
+  c(
+    "1-3" = "Carga las dependencias de la aplicación.",
+    "8-19" = "Construye la interfaz con sidebar y gráfico.",
+    "22-43" = "Conecta los inputs con los outputs reactivos."
+  )
+)
+```
+
+## 00 · La app
+
+```{shinylive-r}
+#| standalone: true
+#| components: [viewer]
+#| viewerHeight: 650
+library(shiny)
+library(bslib)
+library(forecast)
+
+# data --------------------------------------------------------------------
+pasajeros <- data.frame(pasajeros = as.numeric(AirPassengers))
+
+# user interface ----------------------------------------------------------
+ui <- page_sidebar(
+  title = "App 00 · Widgets y outputs",
+  sidebar = sidebar(
+    textInput("title", "Título", value = "Pasajeros aéreos"),
+    sliderInput("n", "Cantidad de puntos", min = 24, max = 144, value = 48, step = 24),
+    checkboxInput("forecast", "Mostrar pronóstico", value = FALSE)
+  ),
+  card(
+    card_header(textOutput("plot_title")),
+    plotOutput("plot")
+  )
+)
+
+# server ------------------------------------------------------------------
+server <- function(input, output, session) {
+  output$plot_title <- renderText(paste0(input$title, " (", input$n, " observaciones)"))
+
+  output$plot <- renderPlot({
+    series <- ts(head(pasajeros$pasajeros, input$n), start = c(1949, 1), frequency = 12)
+
+    if (input$forecast) {
+      plot(
+        forecast::forecast(series),
+        col = "#0E4F5A", fcol = "#0E4F5A", shadecols = c("#DCECEE", "#A9CED2"),
+        main = "", xlab = NULL, ylab = "Pasajeros (miles)"
+      )
+    } else {
+      plot(
+        series,
+        col = "#0E4F5A", lwd = 2, main = "", xlab = NULL, ylab = "Pasajeros (miles)"
+      )
+    }
+  })
+}
+
+shinyApp(ui, server)
+```
 
 ## 00 a 01 · El cambio en el diff
 
@@ -133,10 +195,18 @@ ellmer organiza la conversación con el modelo.
 La clave se lee desde el entorno y nunca se escribe en el código.
 :::
 ::: {.column width="58%"}
-```{r}
-#| echo: false
-#| results: asis
-code_block("../app-02/interactive-console.R")
+```r
+library(ellmer)
+
+chat <- chat_openai(
+  model = "gpt-5-nano",
+  system_prompt = paste(
+    "Responde brevemente en español sobre los países de Gapminder en su último año.",
+    "No inventes resultados numéricos."
+  )
+)
+
+live_console(chat)
 ```
 :::
 ::::
