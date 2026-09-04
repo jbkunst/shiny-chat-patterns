@@ -20,11 +20,13 @@
   ];
   const points = Array.from({ length: 52 }, (_, index) => ({
     seed: index / 51,
-    phase: (index * 2.399) % (Math.PI * 2),
-    noise: Math.sin(index * 17.17) * .5 + Math.cos(index * 7.31) * .5
+    phase: (index * 2.399) % (Math.PI * 2)
   }));
+
   let width = 0;
   let height = 0;
+  let active = false;
+  let frame = null;
 
   const ease = (value) => value < .5
     ? 4 * value * value * value
@@ -68,12 +70,14 @@
   function drawGrid() {
     context.strokeStyle = "rgba(169, 185, 210, .09)";
     context.lineWidth = 1;
+
     for (let x = 30; x < width - 20; x += 54) {
       context.beginPath();
       context.moveTo(x, 26);
       context.lineTo(x, height - 35);
       context.stroke();
     }
+
     for (let y = 38; y < height - 30; y += 52) {
       context.beginPath();
       context.moveTo(24, y);
@@ -82,7 +86,7 @@
     }
   }
 
-  function draw(now) {
+  function draw(now = 0) {
     const duration = 4800;
     const timeline = reducedMotion ? 0 : now % (scenes.length * duration);
     const current = Math.floor(timeline / duration);
@@ -100,6 +104,7 @@
 
     context.clearRect(0, 0, width, height);
     drawGrid();
+
     positions.forEach(([x, y], index) => {
       context.beginPath();
       context.arc(x, y, index % 9 === 0 ? 4 : 2.2, 0, Math.PI * 2);
@@ -114,18 +119,37 @@
     sceneName.textContent = visible[1];
     toolName.textContent = visible[2];
 
-    if (!reducedMotion) requestAnimationFrame(draw);
+    if (active && !reducedMotion) frame = requestAnimationFrame(draw);
   }
 
   function updateVisibility() {
     const currentSlide = window.Reveal?.getCurrentSlide();
-    cover.classList.toggle("is-visible", currentSlide?.id === "title-slide");
+    active = currentSlide?.id === "title-slide";
+    cover.classList.toggle("is-visible", active);
+
+    if (active) {
+      resize();
+      if (frame === null) frame = requestAnimationFrame(draw);
+    } else if (frame !== null) {
+      cancelAnimationFrame(frame);
+      frame = null;
+    }
   }
 
-  addEventListener("resize", resize, { passive: true });
-  window.Reveal?.on("ready", updateVisibility);
-  window.Reveal?.on("slidechanged", updateVisibility);
-  resize();
-  updateVisibility();
-  requestAnimationFrame(draw);
+  function connectReveal() {
+    if (!window.Reveal) {
+      requestAnimationFrame(connectReveal);
+      return;
+    }
+
+    window.Reveal.on("ready", updateVisibility);
+    window.Reveal.on("slidechanged", updateVisibility);
+    updateVisibility();
+  }
+
+  addEventListener("resize", () => {
+    if (active) resize();
+  }, { passive: true });
+
+  connectReveal();
 })();

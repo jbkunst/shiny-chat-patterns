@@ -7,12 +7,21 @@ La presentación vive completa en esta carpeta y se publica en
 
 - `index.qmd`: fuente Quarto y contenido del taller.
 - `index.html`: presentación renderizada por Quarto.
-- `assets/theme.scss`: variables del tema RevealJS.
-- `assets/slides.css`: portada, layouts, componentes y estilos de código.
+- `assets/theme.scss`: variables tipográficas y cromáticas de RevealJS.
+- `assets/slides.css`: tres estilos de slide y componentes de contenido.
 - `assets/cover.html`: estructura de la visualización animada de portada.
-- `assets/cover.js`: animación inspirada en el landing de jkunst.com.
+- `assets/cover.js`: animación de portada inspirada en el landing de jkunst.com.
 - `_extensions/mcanouil/codefrag/`: navegación progresiva por anotaciones de código.
 - `shinylive/`: salida local reservada para las demos interactivas; está ignorada por Git.
+
+## Arquitectura visual
+
+- La portada es la slide de título generada por Quarto y contiene la única superficie oscura.
+- Los capítulos se declaran explícitamente con `.section-slide`.
+- Cualquier otra slide usa automáticamente el estilo claro de contenido.
+
+Las columnas, los bloques de código, los diffs y los espacios de demo son componentes internos. No
+definen variantes adicionales de slide.
 
 ## Render local
 
