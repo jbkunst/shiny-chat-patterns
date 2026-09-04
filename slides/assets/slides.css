@@ -3,13 +3,17 @@
 
 :root {
   --jk-night: #071426;
+  --jk-blue: #174a70;
   --jk-blue-bright: #276dc3;
   --jk-accent: #62a8ff;
   --jk-ink: #f2f6ff;
   --jk-muted: #a9b9d2;
   --jk-soft: rgb(169 185 210 / 16%);
   --jk-line: rgb(169 185 210 / 24%);
-  --jk-card: rgb(12 34 59 / 86%);
+  --jk-paper: #f4f5f2;
+  --jk-text: #203034;
+  --jk-copy: #536267;
+  --jk-rule: #d9e1e1;
 }
 
 #quarto-draft-alert,
@@ -19,8 +23,8 @@
 }
 
 .reveal {
-  background: var(--jk-night);
-  color: var(--jk-ink);
+  background: var(--jk-paper);
+  color: var(--jk-text);
   font-family: "IBM Plex Sans", sans-serif;
 }
 
@@ -35,69 +39,66 @@
 .reveal .slides > section {
   box-sizing: border-box;
   height: 100%;
-  padding: 132px 96px 72px;
-  background:
-    radial-gradient(circle at 92% 8%, rgb(39 109 195 / 16%), transparent 34%),
-    linear-gradient(135deg, #071426 0%, #0b1f36 100%);
-  color: var(--jk-ink);
   text-align: left;
 }
 
-.reveal .slides > section:not(#title-slide)::before {
-  position: absolute;
-  top: 38px;
-  left: 96px;
-  color: var(--jk-accent);
-  content: "jk";
-  font-size: 23px;
-  font-weight: 500;
-  letter-spacing: -.07em;
-}
-
-.reveal .slides > section:not(#title-slide)::after {
-  position: absolute;
-  top: 45px;
-  left: 140px;
-  color: rgb(169 185 210 / 64%);
-  content: "SHINY · CHAT · PATTERNS";
-  font-size: 15px;
-  font-weight: 500;
-  letter-spacing: .12em;
+.reveal .slides > section:not(#title-slide) {
+  padding: 154px 96px 72px;
+  background: var(--jk-paper);
+  color: var(--jk-text);
 }
 
 .reveal .progress {
   height: 5px;
-  color: var(--jk-accent);
+  background: rgb(23 74 112 / 12%);
+  color: var(--jk-blue);
 }
 
 .reveal .progress span {
-  background: linear-gradient(90deg, var(--jk-blue-bright), var(--jk-accent));
+  background: var(--jk-blue);
 }
 
-.reveal .slides > section h2 {
-  width: 82%;
-  margin: 24px 0 46px;
-  color: var(--jk-ink);
-  font-size: 70px;
+.reveal .slides > section:not(#title-slide) h2 {
+  position: absolute;
+  top: 0;
+  right: 96px;
+  left: 96px;
+  display: flex;
+  width: auto;
+  height: 108px;
+  margin: 0;
+  align-items: center;
+  border-bottom: 2px solid rgb(23 74 112 / 58%);
+  color: var(--jk-blue);
+  font-size: 50px;
   font-weight: 300;
-  letter-spacing: -.05em;
-  line-height: .98;
+  letter-spacing: -.032em;
+  line-height: 1.05;
 }
 
-.reveal .slides > section h3 {
+.reveal .slides > section:not(#title-slide) h3 {
   margin: 0 0 24px;
-  color: var(--jk-ink);
+  color: var(--jk-blue);
   font-size: 34px;
   font-weight: 400;
   letter-spacing: -.025em;
 }
 
-.reveal .slides > section p,
-.reveal .slides > section li {
-  color: rgb(242 246 255 / 78%);
+.reveal .slides > section:not(#title-slide) p,
+.reveal .slides > section:not(#title-slide) li {
+  color: var(--jk-copy);
   font-size: 29px;
   font-weight: 300;
   line-height: 1.42;
+}
+
+.reveal .slides > section:not(#title-slide) strong {
+  color: var(--jk-text);
+}
+
+.reveal .slides > section:not(#title-slide) a,
+.reveal .slides > section:not(#title-slide) code {
+  color: var(--jk-blue);
 }
 
 .reveal strong {
@@ -358,10 +359,11 @@
 /* Reusable layouts ------------------------------------------------------ */
 .section-slide {
   display: flex !important;
+  padding: 0 120px !important;
   flex-direction: column;
   justify-content: center;
-  background: #f7f8fa !important;
-  color: #10253d !important;
+  background: var(--jk-paper) !important;
+  color: var(--jk-text) !important;
 }
 
 .reveal .slides > section.section-slide::before,
@@ -371,8 +373,12 @@
 }
 
 .section-slide h2 {
+  position: static !important;
+  display: block !important;
   width: 78% !important;
+  height: auto !important;
   margin: 0 0 30px !important;
+  border: 0 !important;
   color: #10253d !important;
   font-size: 86px !important;
   font-weight: 300 !important;
@@ -406,7 +412,7 @@
 
 .eyebrow {
   margin: 0 0 18px !important;
-  color: var(--jk-accent) !important;
+  color: var(--jk-blue) !important;
   font-size: 17px !important;
   font-weight: 500 !important;
   letter-spacing: .14em;
@@ -423,19 +429,19 @@
 .cards article {
   min-height: 230px;
   padding: 30px;
-  border: 1px solid var(--jk-line);
+  border: 1px solid var(--jk-rule);
   border-radius: 14px;
-  background: var(--jk-card);
+  background: #fff;
 }
 
 .cards article[aria-current="true"] {
-  border-color: var(--jk-accent);
-  box-shadow: inset 0 4px 0 var(--jk-accent);
+  border-color: var(--jk-blue);
+  background: rgb(23 74 112 / 5%);
 }
 
 .cards small,
 .app-number {
-  color: var(--jk-accent);
+  color: var(--jk-blue);
   font-size: 15px;
   font-weight: 500;
   letter-spacing: .11em;
@@ -462,8 +468,8 @@
 .route span {
   position: relative;
   padding: 18px 8px;
-  border-top: 2px solid var(--jk-line);
-  color: var(--jk-muted);
+  border-top: 2px solid var(--jk-rule);
+  color: var(--jk-copy);
   font: 14px "IBM Plex Mono", monospace;
   text-align: center;
 }
@@ -475,7 +481,7 @@
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: var(--jk-blue-bright);
+  background: var(--jk-blue);
   content: "";
   transform: translateX(-50%);
 }
@@ -493,23 +499,23 @@
 
 .app-copy .change {
   margin: 26px 0;
-  color: var(--jk-ink);
+  color: var(--jk-text);
   font-size: 35px;
   font-weight: 300;
   line-height: 1.2;
 }
 
 .app-copy .keeps {
-  color: var(--jk-muted);
+  color: var(--jk-copy);
   font-size: 22px;
 }
 
 .pattern-box {
   min-height: 430px;
   padding: 34px;
-  border: 1px solid var(--jk-line);
+  border: 1px solid var(--jk-rule);
   border-radius: 16px;
-  background: rgb(5 17 31 / 70%);
+  background: #fff;
 }
 
 .pattern-box pre {
@@ -530,15 +536,15 @@
 
 .language-pair span {
   padding: 7px 11px;
-  border: 1px solid var(--jk-line);
+  border: 1px solid var(--jk-rule);
   border-radius: 999px;
-  color: var(--jk-muted);
+  color: var(--jk-copy);
   font: 13px "IBM Plex Mono", monospace;
 }
 
 .language-pair span:first-child {
-  border-color: rgb(98 168 255 / 48%);
-  color: var(--jk-accent);
+  border-color: rgb(23 74 112 / 42%);
+  color: var(--jk-blue);
 }
 
 .diff {
@@ -550,25 +556,27 @@
 
 .diff-pane {
   overflow: hidden;
-  border: 1px solid var(--jk-line);
+  border: 1px solid var(--jk-rule);
   border-radius: 14px;
-  background: rgb(5 17 31 / 82%);
+  background: #fff;
 }
 
 .diff-pane header {
   padding: 14px 20px;
-  border-bottom: 1px solid var(--jk-line);
-  color: var(--jk-muted);
+  border-bottom: 1px solid var(--jk-rule);
+  color: var(--jk-copy);
   font: 15px "IBM Plex Mono", monospace;
 }
 
 .diff-pane pre {
   margin: 0;
   padding: 22px;
+  background: #f8fafb;
   box-shadow: none;
 }
 
 .diff-pane code {
+  color: #314254 !important;
   font-size: 18px;
   line-height: 1.6;
 }
@@ -580,23 +588,23 @@
 }
 
 .diff-line.added {
-  background: rgb(47 140 91 / 20%);
-  color: #a7e8c3;
+  background: rgb(47 140 91 / 12%);
+  color: #246b46;
 }
 
 .diff-line.removed {
-  background: rgb(190 74 74 / 20%);
-  color: #f2b8b8;
+  background: rgb(190 74 74 / 10%);
+  color: #9b3e3e;
 }
 
 .placeholder {
   display: grid;
   min-height: 350px;
   place-items: center;
-  border: 1px dashed rgb(98 168 255 / 48%);
+  border: 1px dashed rgb(23 74 112 / 38%);
   border-radius: 16px;
-  background: rgb(98 168 255 / 5%);
-  color: var(--jk-muted);
+  background: rgb(23 74 112 / 3%);
+  color: var(--jk-copy);
   font-size: 25px;
   text-align: center;
 }
