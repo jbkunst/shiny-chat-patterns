@@ -22,17 +22,16 @@ entender cómo ambas formas de interacción pueden complementarse.
 | **Audiencia** | Personas que hayan construido al menos una aplicación con R y Shiny |
 | **Conocimientos previos** | R, reactividad básica y estructura de interfaz/servidor |
 | **Experiencia con IA** | No se requiere experiencia previa con LLMs, chat o tools |
-| **Materiales** | Aplicaciones progresivas en Shiny con `ellmer` |
 
 ### Objetivos
 
 Al finalizar el taller, quienes participen podrán:
 
-- integrar un chat en una aplicación Shiny y reconocer qué contexto puede utilizar el modelo;
-- definir tools pequeñas, explícitas y validadas para consultar datos reales;
-- permitir que una tool actualice valores reactivos y ejecute acciones de interfaz;
-- combinar controles tradicionales con consultas expresadas en lenguaje natural; y
-- reconocer los límites de seguridad entre el navegador, la aplicación y servicios externos.
+- Integrar un chat en una aplicación Shiny y reconocer qué contexto puede utilizar el modelo.
+- Definir tools pequeñas, explícitas y validadas para consultar datos reales.
+- Permitir que una tool actualice valores reactivos y ejecute acciones de interfaz.
+- Combinar controles tradicionales con consultas expresadas en lenguaje natural.
+- Reconocer los límites de seguridad entre el navegador, la aplicación y servicios externos.
 
 ### Contenidos
 
@@ -58,9 +57,9 @@ la carpeta pueda renderizarse y publicarse como una unidad.
 
 ## Sobre el repositorio
 
-La idea es que cada aplicación agregue **una sola pieza nueva** y conserve el
-mismo dominio de datos durante el recorrido principal. La secuencia también
-puede usarse como base para demostraciones o talleres.
+`app-00` establece la aplicación de partida. Desde `app-01` hasta `app-08`, cada aplicación incorpora
+**una sola idea nueva** y conserva tanto como sea posible del paso anterior. Así, el cambio relevante
+se reconoce directamente en el código y la secuencia puede usarse en demostraciones o talleres.
 
 Todas las apps usan `page_sidebar()` para mantener una estructura consistente
 y concentrar cada ejemplo en el patrón que introduce. Desde `app-00` hasta
