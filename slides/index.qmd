@@ -67,9 +67,9 @@ code_block <- function(path, descriptions = NULL) {
 <p>Cada paso incorpora una capacidad que se reconoce en el diff.</p>
 </article>
 <article>
-<small>03 · comparar</small>
-<h3>R y Python</h3>
-<p>La misma idea con una implementación idiomática en cada lenguaje.</p>
+<small>03 · proyectar</small>
+<h3>R de principio a fin</h3>
+<p>El código visible coincide con las aplicaciones que usamos en el taller.</p>
 </article>
 </div>
 
@@ -104,20 +104,20 @@ Primera demo reservada para Shinylive
 ## 00 → 01 · El cambio aparece en el diff
 <div class="diff" aria-label="Comparación entre app-00 y app-01">
 <section class="diff-pane">
-<header>app-00/app.py</header>
-<pre><code><span>ui.input_slider("n", ...)</span>
-<span class="diff-line removed">- ui.input_checkbox("forecast", ...)</span>
+<header>app-00/app.R</header>
+<pre><code><span>sliderInput("n", ...)</span>
+<span class="diff-line removed">- checkboxInput("forecast", ...)</span>
 <span></span>
-<span>frame = pasajeros.head(input.n())</span>
-<span class="diff-line removed">- axis.plot(frame["fecha"], ...)</span></code></pre>
+<span>series <- head(pasajeros$pasajeros, input$n)</span>
+<span class="diff-line removed">- plot(forecast::forecast(series), ...)</span></code></pre>
 </section>
 <section class="diff-pane">
-<header>app-01/app.py</header>
-<pre><code><span>ui.input_selectize("continentes", ...)</span>
-<span class="diff-line added">+ ui.output_text("n_filas")</span>
+<header>app-01/app.R</header>
+<pre><code><span>selectInput("continente", ...)</span>
+<span class="diff-line added">+ textOutput("n_filas")</span>
 <span></span>
-<span class="diff-line added">+ @reactive.calc</span>
-<span class="diff-line added">+ def data(): ...</span></code></pre>
+<span class="diff-line added">+ data <- reactive({ ... })</span>
+<span class="diff-line added">+ output$n_filas <- renderText(nrow(data()))</span></code></pre>
 </section>
 </div>
 
@@ -129,18 +129,15 @@ Primera demo reservada para Shinylive
 <p class="keeps">Todavía no hay chat. El dashboard establece la línea base que conservaremos.</p>
 :::
 ::: {.pattern-box}
-<div class="language-pair"><span>Python</span><span>R</span></div>
+<div class="language-pair"><span>R</span></div>
 
-```python
-@reactive.calc
-def data():
-    return paises[
-        paises["continente"].isin(input.continentes())
-    ]
+```r
+data <- reactive({
+  if (input$continente == "Todos") paises
+  else paises[paises$continente == input$continente, ]
+})
 
-@render.text
-def n_filas():
-    return f"{len(data()):,} países"
+output$n_filas <- renderText(nrow(data()))
 ```
 
 :::
@@ -184,17 +181,17 @@ Ahora conectamos conversación, datos reactivos y acciones de interfaz, una capa
 <p class="keeps">El modelo puede responder; aún no conoce los filtros ni los valores visibles.</p>
 :::
 ::: {.pattern-box}
-<div class="language-pair"><span>Python</span><span>R</span></div>
+<div class="language-pair"><span>R</span></div>
 
-```python
-chat_client = ChatOpenAI(
-    system_prompt="Ayuda a explorar la app."
+```r
+chat <- ellmer::chat_openai(
+  system_prompt = "Ayuda a explorar la app."
 )
 
-@chat_ui.on_user_submit
-async def _(user_input: str):
-    response = await chat_client.stream_async(user_input)
-    await chat_ui.append_message_stream(response)
+observeEvent(input$chat_user_input, {
+  stream <- chat$stream_async(input$chat_user_input)
+  shinychat::chat_append("chat", stream)
+})
 ```
 
 :::
@@ -208,19 +205,22 @@ async def _(user_input: str):
 <p class="keeps">La tool lee el estado; todavía no modifica el dashboard.</p>
 :::
 ::: {.pattern-box}
-<div class="language-pair"><span>Python</span><span>R</span></div>
+<div class="language-pair"><span>R</span></div>
 
-```python
-def resumir_datos_visibles() -> dict:
-    """Resume los países visibles en el dashboard."""
-    frame = data()
-    return {
-        "n_paises": len(frame),
-        "vida_promedio": frame["vida"].mean(),
-        "poblacion_total": frame["poblacion"].sum(),
-    }
+```r
+resumir_datos_visibles <- function() {
+  df <- isolate(data())
+  list(
+    registros = nrow(df),
+    poblacion_total = sum(df$poblacion),
+    esperanza_promedio = round(mean(df$esperanza_de_vida), 1)
+  )
+}
 
-chat_client.register_tool(resumir_datos_visibles)
+chat$register_tool(tool(
+  resumir_datos_visibles,
+  "Resume los países visibles en el dashboard."
+))
 ```
 
 :::
@@ -234,15 +234,20 @@ chat_client.register_tool(resumir_datos_visibles)
 <p class="keeps">Solo <code>SELECT</code>, una tabla conocida y un límite de filas.</p>
 :::
 ::: {.pattern-box}
-<div class="language-pair"><span>Python</span><span>R</span></div>
+<div class="language-pair"><span>R</span></div>
 
-```python
-def consultar_paises(consulta: str) -> list[dict]:
-    """Ejecuta una consulta SELECT sobre la tabla paises."""
-    consulta = validar_select(consulta)
-    return con.execute(consulta).fetchdf().to_dict("records")
+```r
+consultar_paises <- function(consulta) {
+  DBI::dbGetQuery(con, validar_select(consulta))
+}
 
-chat_client.register_tool(consultar_paises)
+chat$register_tool(tool(
+  consultar_paises,
+  "Ejecuta una consulta SELECT sobre la tabla paises.",
+  arguments = list(
+    consulta = type_string("Consulta SELECT sin punto y coma.")
+  )
+))
 ```
 
 :::
@@ -256,18 +261,18 @@ chat_client.register_tool(consultar_paises)
 <p class="keeps">La validación ocurre antes de cambiar lo que ve la persona.</p>
 :::
 ::: {.pattern-box}
-<div class="language-pair"><span>Python</span><span>R</span></div>
+<div class="language-pair"><span>R</span></div>
 
-```python
-async def actualizar_dashboard(
-    consulta: str,
-    titulo: str,
-) -> str:
-    """Actualiza los datos visibles usando SQL validado."""
-    consulta = validar_select(consulta)
-    consulta_reactiva.set(consulta)
-    titulo_reactivo.set(titulo)
-    return "Dashboard actualizado"
+```r
+actualizar_dashboard <- function(consulta, titulo) {
+  consulta <- validar_select(consulta)
+  resultado <- DBI::dbGetQuery(con, consulta)
+
+  consulta_actual(consulta)
+  titulo_actual(titulo)
+
+  list(mensaje = "Dashboard actualizado.", registros = nrow(resultado))
+}
 ```
 
 :::
@@ -281,18 +286,21 @@ async def actualizar_dashboard(
 <p class="keeps">El modal es resultado de la conversación y también contexto para el modelo.</p>
 :::
 ::: {.pattern-box}
-<div class="language-pair"><span>Python</span><span>R</span></div>
+<div class="language-pair"><span>R</span></div>
 
-```python
-async def mostrar_tabla(
-    n: int,
-    titulo: str,
-) -> str:
-    """Abre una tabla con hasta 20 países visibles."""
-    n = max(1, min(n, 20))
-    tabla_modal.set(data().head(n))
-    ui.modal_show(modal_tabla)
-    return f"Mostrando {n} filas"
+```r
+mostrar_tabla <- function(n, titulo) {
+  n <- max(1L, min(as.integer(n), 100L))
+  resultado <- head(isolate(data()), n)
+  output$tabla_modal <- renderTable(resultado)
+
+  showModal(modalDialog(
+    title = titulo,
+    tableOutput("tabla_modal")
+  ))
+
+  resultado
+}
 ```
 
 :::
@@ -327,17 +335,29 @@ async def mostrar_tabla(
 <p class="keeps">La cámara se actualiza como proxy: el globo existente no se reconstruye.</p>
 :::
 ::: {.pattern-box}
-<div class="language-pair"><span>Python</span><span>R</span></div>
+<div class="language-pair"><span>R</span></div>
 
-```python
-async def ir_a_pais(pais: str, zoom: float = 4) -> str:
-    """Centra la cámara del globo en un país."""
-    coordenadas = validar_pais(pais)
-    map.widget.update_geos(
-        projection_rotation=coordenadas,
-        projection_scale=zoom,
+```r
+ir_a_pais <- function(pais, zoom = 4) {
+  ubicacion <- DBI::dbGetQuery(
+    con,
+    paste(
+      "SELECT DISTINCT p.pais, g.longitud, g.latitud",
+      "FROM paises p JOIN paises_geo g USING (codigo)",
+      "WHERE lower(p.pais) = lower(?)"
+    ),
+    params = list(pais)
+  )
+  if (!nrow(ubicacion)) stop("No encontré ese país.")
+
+  mapgl::maplibre_proxy("map", session) |>
+    mapgl::fly_to(
+      center = c(ubicacion$longitud[1], ubicacion$latitud[1]),
+      zoom = zoom
     )
-    return f"Cámara centrada en {pais}"
+
+  paste("Mapa centrado en", ubicacion$pais[1])
+}
 ```
 
 :::
