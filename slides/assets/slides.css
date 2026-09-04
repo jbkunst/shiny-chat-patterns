@@ -3,7 +3,6 @@
 
 :root {
   --jk-night: #071426;
-  --jk-blue: #174a70;
   --jk-blue-bright: #276dc3;
   --jk-accent: #62a8ff;
   --jk-ink: #f2f6ff;
@@ -360,25 +359,49 @@
 .section-slide {
   display: flex !important;
   flex-direction: column;
-  justify-content: flex-end;
-  background:
-    linear-gradient(125deg, rgb(7 20 38 / 95%), rgb(23 74 112 / 72%)),
-    radial-gradient(circle at 86% 14%, rgb(98 168 255 / 48%), transparent 42%) !important;
+  justify-content: center;
+  background: #f7f8fa !important;
+  color: #10253d !important;
+}
+
+.reveal .slides > section.section-slide::before,
+.reveal .slides > section.section-slide::after {
+  display: none;
+  content: none;
 }
 
 .section-slide h2 {
-  width: 88% !important;
-  margin-bottom: 18px !important;
-  font-size: 96px !important;
-  font-weight: 200 !important;
+  width: 78% !important;
+  margin: 0 0 30px !important;
+  color: #10253d !important;
+  font-size: 86px !important;
+  font-weight: 300 !important;
+  letter-spacing: -.045em !important;
+  line-height: 1.02 !important;
+}
+
+.section-slide h2::after {
+  display: block;
+  width: 112px;
+  height: 5px;
+  margin-top: 28px;
+  border-radius: 999px;
+  background: var(--jk-blue-bright);
+  content: "";
 }
 
 .section-subtitle {
-  max-width: 880px;
-  color: var(--jk-muted);
-  font-size: 31px;
+  max-width: 920px;
+  color: #5f7185;
+  font-size: 30px;
   font-weight: 300;
-  line-height: 1.35;
+  line-height: 1.4;
+}
+
+.section-subtitle p {
+  color: inherit !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
 }
 
 .eyebrow {
@@ -505,8 +528,7 @@
   margin-bottom: 22px;
 }
 
-.language-pair span,
-.tag {
+.language-pair span {
   padding: 7px 11px;
   border: 1px solid var(--jk-line);
   border-radius: 999px;
@@ -514,8 +536,7 @@
   font: 13px "IBM Plex Mono", monospace;
 }
 
-.language-pair span:first-child,
-.tag.accent {
+.language-pair span:first-child {
   border-color: rgb(98 168 255 / 48%);
   color: var(--jk-accent);
 }
@@ -566,34 +587,6 @@
 .diff-line.removed {
   background: rgb(190 74 74 / 20%);
   color: #f2b8b8;
-}
-
-.live-frame {
-  position: relative;
-  width: 100%;
-  height: 640px;
-  overflow: hidden;
-  border: 1px solid var(--jk-line);
-  border-radius: 16px;
-  background: #f7f8f8;
-}
-
-.live-frame iframe {
-  width: 100%;
-  height: 100%;
-  border: 0;
-}
-
-.live-label {
-  position: absolute;
-  z-index: 2;
-  top: 12px;
-  right: 14px;
-  padding: 7px 10px;
-  border-radius: 999px;
-  background: var(--jk-blue);
-  color: #fff;
-  font: 12px "IBM Plex Mono", monospace;
 }
 
 .placeholder {
