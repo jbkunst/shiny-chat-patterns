@@ -119,7 +119,7 @@
 
   function updateVisibility() {
     const currentSlide = window.Reveal?.getCurrentSlide();
-    cover.classList.toggle("is-hidden", currentSlide?.id !== "title-slide");
+    cover.classList.toggle("is-visible", currentSlide?.id === "title-slide");
   }
 
   addEventListener("resize", resize, { passive: true });

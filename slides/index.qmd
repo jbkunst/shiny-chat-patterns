@@ -55,38 +55,16 @@ code_block <- function(path, descriptions = NULL) {
 ```
 
 ## Una idea por vez
-<div class="cards" style="--cards: 3">
-<article>
-<small>01 · conservar</small>
-<h3>La misma app</h3>
-<p>Datos, estructura y comportamiento visibles cambian lo mínimo.</p>
-</article>
-<article aria-current="true">
-<small>02 · agregar</small>
-<h3>Un patrón</h3>
-<p>Cada paso incorpora una capacidad que se reconoce en el diff.</p>
-</article>
-<article>
-<small>03 · proyectar</small>
-<h3>R de principio a fin</h3>
-<p>El código visible coincide con las aplicaciones que usamos en el taller.</p>
-</article>
-</div>
+
+1. **Conservar.** Partimos siempre desde la misma aplicación.
+2. **Agregar.** Incorporamos una sola capacidad en cada paso.
+3. **Explicar.** Revisamos el cambio directamente en R.
 
 ## El recorrido
-<p class="eyebrow">app-00 → app-08</p>
 
-<div class="route" aria-label="Recorrido principal del taller">
-<span>00<br>widgets</span>
-<span>01<br>dashboard</span>
-<span>02<br>chat</span>
-<span>03<br>contexto</span>
-<span>04<br>SQL</span>
-<span>05<br>reactividad</span>
-<span>06<br>interfaz</span>
-<span>07<br>query</span>
-<span>08<br>mapa</span>
-</div>
+- **Shiny · app-00 → app-01.** Widgets, outputs y reactividad.
+- **Chat + ellmer · app-02 → app-04.** Conversación, contexto y SQL.
+- **Integración · app-05 → app-08.** Datos, interfaz, consultas y mapas.
 
 ## Shiny {.section-slide}
 ::: {.section-subtitle}

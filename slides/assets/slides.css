@@ -125,8 +125,9 @@
   background:
     radial-gradient(circle at 76% 42%, rgb(39 109 195 / 32%), transparent 38%),
     linear-gradient(135deg, #071426 0%, #123254 56%, #174a70 100%);
-  opacity: 1;
+  opacity: 0;
   transition: opacity 320ms ease, visibility 320ms ease;
+  visibility: hidden;
 }
 
 .workshop-cover::after {
@@ -137,9 +138,10 @@
   pointer-events: none;
 }
 
-.workshop-cover.is-hidden {
-  opacity: 0;
-  visibility: hidden;
+.workshop-cover.is-visible,
+.reveal:has(#title-slide.present) > .workshop-cover {
+  opacity: 1;
+  visibility: visible;
 }
 
 .browser-frame {
@@ -411,18 +413,9 @@
   line-height: inherit !important;
 }
 
-.eyebrow {
-  margin: 0 0 18px !important;
-  color: var(--jk-blue) !important;
-  font-size: 17px !important;
-  font-weight: 500 !important;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-}
-
 .cards {
   display: grid;
-  grid-template-columns: repeat(var(--cards, 3), minmax(0, 1fr));
+  grid-template-columns: repeat(var(--cards, 2), minmax(0, 1fr));
   gap: 22px;
   width: 100%;
 }
@@ -457,34 +450,6 @@
 .cards p {
   margin: 0 !important;
   font-size: 22px !important;
-}
-
-.route {
-  display: grid;
-  grid-template-columns: repeat(9, minmax(0, 1fr));
-  gap: 8px;
-  margin-top: 80px;
-}
-
-.route span {
-  position: relative;
-  padding: 18px 8px;
-  border-top: 2px solid var(--jk-rule);
-  color: var(--jk-copy);
-  font: 14px "IBM Plex Mono", monospace;
-  text-align: center;
-}
-
-.route span::before {
-  position: absolute;
-  top: -7px;
-  left: 50%;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: var(--jk-blue);
-  content: "";
-  transform: translateX(-50%);
 }
 
 .app-layout {
