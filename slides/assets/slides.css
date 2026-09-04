@@ -49,10 +49,6 @@
   color: var(--jk-text);
 }
 
-.reveal .slides > section.opening-slide {
-  top: -70px !important;
-}
-
 .reveal .progress {
   height: 5px;
   background: rgb(23 74 112 / 12%);
