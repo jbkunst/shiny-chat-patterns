@@ -102,8 +102,6 @@ Primero, una interfaz reactiva con inputs, outputs y un estado que conecta ambos
 
 :::: {.columns}
 ::: {.column width="36%"}
-<p class="pattern-label">Patrón 01</p>
-
 Los controles manuales comparten un único estado reactivo.
 
 Todavía no hay chat. Este dashboard establece la línea base.
@@ -135,12 +133,10 @@ ellmer organiza la conversación con el modelo.
 La clave se lee desde el entorno y nunca se escribe en el código.
 :::
 ::: {.column width="58%"}
-```r
-chat <- ellmer::chat_openai(
-  system_prompt = "Ayuda a explorar los datos."
-)
-
-chat$chat("¿Qué puedes hacer?")
+```{r}
+#| echo: false
+#| results: asis
+code_block("../app-02/interactive-console.R")
 ```
 :::
 ::::
@@ -153,8 +149,6 @@ Conectamos conversación, datos reactivos y acciones de interfaz, una capacidad 
 
 :::: {.columns}
 ::: {.column width="36%"}
-<p class="pattern-label">Patrón 02</p>
-
 Agregamos conversación, pero mantenemos una frontera explícita.
 
 El modelo responde sin conocer filtros ni valores visibles.
@@ -177,8 +171,6 @@ observeEvent(input$chat_user_input, {
 
 :::: {.columns}
 ::: {.column width="36%"}
-<p class="pattern-label">Patrón 03</p>
-
 El modelo consulta un resumen calculado desde los países visibles.
 
 La tool lee el estado. Todavía no modifica el dashboard.
@@ -206,8 +198,6 @@ chat$register_tool(tool(
 
 :::: {.columns}
 ::: {.column width="36%"}
-<p class="pattern-label">Patrón 04</p>
-
 La tool acepta consultas acotadas y devuelve resultados verificables.
 
 Solo `SELECT`, una tabla conocida y un límite de filas.
@@ -233,8 +223,6 @@ chat$register_tool(tool(
 
 :::: {.columns}
 ::: {.column width="36%"}
-<p class="pattern-label">Patrón 05</p>
-
 La conversación modifica el estado reactivo que alimenta el dashboard.
 
 La validación ocurre antes de cambiar lo que ve la persona.
@@ -258,8 +246,6 @@ actualizar_dashboard <- function(consulta, titulo) {
 
 :::: {.columns}
 ::: {.column width="36%"}
-<p class="pattern-label">Patrón 06</p>
-
 Una tool abre una tabla o un gráfico sin recargar la aplicación.
 
 El modal también entrega contexto de vuelta al modelo.
@@ -312,8 +298,6 @@ consulta_actual <- reactiveVal(
 
 :::: {.columns}
 ::: {.column width="34%"}
-<p class="pattern-label">Patrón 08</p>
-
 El chat controla el dato y la perspectiva desde la que se observa.
 
 La cámara se actualiza como proxy. El globo no se reconstruye.

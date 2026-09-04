@@ -102,7 +102,7 @@
     code span.vs { color: #032f62; } /* VerbatimString */
     code span.wa { color: #ff5555; } /* Warning */
   </style>
-  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-e959d90fcbc4d488d8e4d778774353b8.css">
+  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-19cc4efda8e691f803e21b7d20e76c0e.css">
   <link rel="stylesheet" href="assets/slides.css">
   <link href="index_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="index_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
@@ -273,9 +273,6 @@ app-01/app.R
 <h2>01 · Dashboard reactivo</h2>
 <div class="columns">
 <div class="column" style="width:36%;">
-<p class="pattern-label">
-Patrón 01
-</p>
 <p>Los controles manuales comparten un único estado reactivo.</p>
 <p>Todavía no hay chat. Este dashboard establece la línea base.</p>
 </div><div class="column" style="width:64%;">
@@ -301,11 +298,17 @@ Antes de la interfaz
 <p>ellmer organiza la conversación con el modelo.</p>
 <p>La clave se lee desde el entorno y nunca se escribe en el código.</p>
 </div><div class="column" style="width:58%;">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="" aria-label="1"></a>chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat_openai</span>(</span>
-<span id="cb2-2"><a href="" aria-label="2"></a>  <span class="at">system_prompt =</span> <span class="st">"Ayuda a explorar los datos."</span></span>
-<span id="cb2-3"><a href="" aria-label="3"></a>)</span>
-<span id="cb2-4"><a href="" aria-label="4"></a></span>
-<span id="cb2-5"><a href="" aria-label="5"></a>chat<span class="sc">$</span><span class="fu">chat</span>(<span class="st">"¿Qué puedes hacer?"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="" aria-label="1"></a><span class="fu">library</span>(ellmer)</span>
+<span id="cb2-2"><a href="" aria-label="2"></a></span>
+<span id="cb2-3"><a href="" aria-label="3"></a>chat <span class="ot">&lt;-</span> <span class="fu">chat_openai</span>(</span>
+<span id="cb2-4"><a href="" aria-label="4"></a>  <span class="at">model =</span> <span class="st">"gpt-5-nano"</span>,</span>
+<span id="cb2-5"><a href="" aria-label="5"></a>  <span class="at">system_prompt =</span> <span class="fu">paste</span>(</span>
+<span id="cb2-6"><a href="" aria-label="6"></a>    <span class="st">"Responde brevemente en español sobre los países de Gapminder en su último año."</span>,</span>
+<span id="cb2-7"><a href="" aria-label="7"></a>    <span class="st">"No inventes resultados numéricos."</span></span>
+<span id="cb2-8"><a href="" aria-label="8"></a>  )</span>
+<span id="cb2-9"><a href="" aria-label="9"></a>)</span>
+<span id="cb2-10"><a href="" aria-label="10"></a></span>
+<span id="cb2-11"><a href="" aria-label="11"></a><span class="fu">live_console</span>(chat)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div></div>
 </section>
 <section id="shiny-ellmer" class="slide level2 section-slide">
@@ -316,9 +319,6 @@ Antes de la interfaz
 <h2>02 · Chat sin acceso a los datos</h2>
 <div class="columns">
 <div class="column" style="width:36%;">
-<p class="pattern-label">
-Patrón 02
-</p>
 <p>Agregamos conversación, pero mantenemos una frontera explícita.</p>
 <p>El modelo responde sin conocer filtros ni valores visibles.</p>
 </div><div class="column" style="width:64%;">
@@ -336,9 +336,6 @@ Patrón 02
 <h2>03 · Una tool aporta contexto real</h2>
 <div class="columns">
 <div class="column" style="width:36%;">
-<p class="pattern-label">
-Patrón 03
-</p>
 <p>El modelo consulta un resumen calculado desde los países visibles.</p>
 <p>La tool lee el estado. Todavía no modifica el dashboard.</p>
 </div><div class="column" style="width:64%;">
@@ -361,9 +358,6 @@ Patrón 03
 <h2>04 · SQL de solo lectura</h2>
 <div class="columns">
 <div class="column" style="width:36%;">
-<p class="pattern-label">
-Patrón 04
-</p>
 <p>La tool acepta consultas acotadas y devuelve resultados verificables.</p>
 <p>Solo <code>SELECT</code>, una tabla conocida y un límite de filas.</p>
 </div><div class="column" style="width:64%;">
@@ -384,9 +378,6 @@ Patrón 04
 <h2>05 · La tool actualiza Shiny</h2>
 <div class="columns">
 <div class="column" style="width:36%;">
-<p class="pattern-label">
-Patrón 05
-</p>
 <p>La conversación modifica el estado reactivo que alimenta el dashboard.</p>
 <p>La validación ocurre antes de cambiar lo que ve la persona.</p>
 </div><div class="column" style="width:64%;">
@@ -405,9 +396,6 @@ Patrón 05
 <h2>06 · Tools de interfaz</h2>
 <div class="columns">
 <div class="column" style="width:36%;">
-<p class="pattern-label">
-Patrón 06
-</p>
 <p>Una tool abre una tabla o un gráfico sin recargar la aplicación.</p>
 <p>El modal también entrega contexto de vuelta al modelo.</p>
 </div><div class="column" style="width:64%;">
@@ -445,9 +433,6 @@ Patrón 06
 <h2>08 · Tool, mapa y cámara</h2>
 <div class="columns">
 <div class="column" style="width:34%;">
-<p class="pattern-label">
-Patrón 08
-</p>
 <p>El chat controla el dato y la perspectiva desde la que se observa.</p>
 <p>La cámara se actualiza como proxy. El globo no se reconstruye.</p>
 </div><div class="column" style="width:66%;">
