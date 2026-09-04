@@ -30,4 +30,3 @@ attributes:
     code-line-fragment-indices:
       type: string
       description: "Comma-separated fragment indices assigned to each line-highlight step, starting with the original code as step 0 (e.g. \"0,2,4,6\"). Requires `code-line-numbers`. Non-numeric tokens emit a console warning and the affected step is left unchanged."
-
