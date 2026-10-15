@@ -8,6 +8,9 @@ library(tinyplot)
 
 # database ----------------------------------------------------------------
 paises <- utils::read.csv(file.path("..", "data", "paises.csv"), fileEncoding = "UTF-8")
+pib_inicial <- range(paises$pib_per_capita)
+esperanza_inicial <- range(paises$esperanza_de_vida)
+poblacion_inicial <- c(0, ceiling(max(paises$poblacion) / 1e6))
 
 con <- DBI::dbConnect(duckdb::duckdb(), dbdir = ":memory:")
 DBI::dbWriteTable(con, "paises", paises)
@@ -28,7 +31,7 @@ prompt_sistema <- paste(readLines("prompt.md", warn = FALSE), collapse = "\n")
 
 # user interface ----------------------------------------------------------
 ui <- page_sidebar(
-  title = tagList("App 07 · Inputs vs query", tags$small(" · ", textOutput("titulo", inline = TRUE))),
+  title = "App 07 · Inputs vs query",
   sidebar = sidebar(
     accordion(
       accordion_panel(
@@ -36,11 +39,12 @@ ui <- page_sidebar(
         selectInput("continente", "Continente", sort(unique(paises$continente)), multiple = TRUE),
         selectInput("pais", "País", paises$pais, multiple = TRUE),
         sliderInput("pib", "PIB per cápita", min(paises$pib_per_capita), max(paises$pib_per_capita),
-          value = range(paises$pib_per_capita)),
+          value = pib_inicial),
         sliderInput("esperanza", "Esperanza de vida", floor(min(paises$esperanza_de_vida)),
-          ceiling(max(paises$esperanza_de_vida)), value = range(paises$esperanza_de_vida)),
-        sliderInput("poblacion", "Población (millones)", 0, ceiling(max(paises$poblacion) / 1e6),
-          value = c(0, ceiling(max(paises$poblacion) / 1e6)))
+          ceiling(max(paises$esperanza_de_vida)), value = esperanza_inicial),
+        sliderInput("poblacion", "Población (millones)*", 0, ceiling(max(paises$poblacion) / 1e6),
+          value = poblacion_inicial),
+        tags$small("* La población es muy asimétrica; la mayoría de los países queda a la izquierda.")
       ),
       accordion_panel(
         "Consulta con chat",
@@ -66,8 +70,26 @@ ui <- page_sidebar(
 # server ------------------------------------------------------------------
 server <- function(input, output, session) {
   modo <- reactiveVal("inputs")
-  titulo_actual <- reactiveVal("Todos los países")
   consulta_actual <- reactiveVal("SELECT * FROM paises")
+  reiniciando_inputs <- reactiveVal(FALSE)
+
+  filtros_en_inicio <- function() {
+    !length(input$continente) &&
+      !length(input$pais) &&
+      isTRUE(all.equal(input$pib, pib_inicial)) &&
+      isTRUE(all.equal(input$esperanza, esperanza_inicial)) &&
+      isTRUE(all.equal(input$poblacion, poblacion_inicial))
+  }
+
+  reiniciar_inputs <- function() {
+    if (isolate(filtros_en_inicio())) return(invisible())
+    reiniciando_inputs(TRUE)
+    updateSelectInput(session, "continente", selected = character(0))
+    updateSelectInput(session, "pais", selected = character(0))
+    updateSliderInput(session, "pib", value = pib_inicial)
+    updateSliderInput(session, "esperanza", value = esperanza_inicial)
+    updateSliderInput(session, "poblacion", value = poblacion_inicial)
+  }
 
   data_inputs <- reactive({
     df <- paises
@@ -86,13 +108,15 @@ server <- function(input, output, session) {
   observeEvent(
     list(input$continente, input$pais, input$pib, input$esperanza, input$poblacion),
     {
+      if (reiniciando_inputs()) {
+        if (filtros_en_inicio()) reiniciando_inputs(FALSE)
+        return()
+      }
       modo("inputs")
-      titulo_actual("Filtros tradicionales")
     },
     ignoreInit = TRUE
   )
 
-  output$titulo          <- renderText(titulo_actual())
   output$n_filas         <- renderText(nrow(data()))
   output$vida            <- renderText(paste0(round(mean(data()$esperanza_de_vida), 1), " años"))
   output$poblacion_total <- renderText(paste0(round(sum(data()$poblacion) / 1e6), " millones"))
@@ -109,13 +133,13 @@ server <- function(input, output, session) {
     DBI::dbGetQuery(con, validar_select(consulta))
   }
 
-  actualizar_dashboard <- function(consulta, titulo) {
+  actualizar_dashboard <- function(consulta) {
     consulta <- validar_select(consulta)
     resultado <- DBI::dbGetQuery(con, consulta)
     if (!all(names(paises) %in% names(resultado))) stop("La consulta debe devolver todas las columnas.")
 
+    reiniciar_inputs()
     consulta_actual(consulta)
-    titulo_actual(titulo)
     modo("query")
 
     list(mensaje = "Dashboard actualizado mediante query.", registros = nrow(resultado))
@@ -177,8 +201,7 @@ server <- function(input, output, session) {
     actualizar_dashboard,
     "Filtra, ordena o reinicia los datos mostrados mediante una query.",
     arguments = list(
-      consulta = type_string("SELECT * FROM paises con WHERE u ORDER BY, sin punto y coma."),
-      titulo = type_string("Título breve que describe los datos mostrados.")
+      consulta = type_string("SELECT * FROM paises con WHERE u ORDER BY, sin punto y coma.")
     )
   ))
 
@@ -193,7 +216,7 @@ server <- function(input, output, session) {
 
   chat$register_tool(tool(
     mostrar_grafico,
-    "Abre en un modal un gráfico de puntos con los datos visibles en el dashboard.",
+    "Grafica los datos visibles en un modal y devuelve la imagen al modelo.",
     arguments = list(
       x = type_enum(c("poblacion", "esperanza_de_vida", "pib_per_capita"), "Columna para el eje x."),
       y = type_enum(c("poblacion", "esperanza_de_vida", "pib_per_capita"), "Columna para el eje y."),

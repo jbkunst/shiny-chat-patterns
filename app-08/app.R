@@ -62,7 +62,7 @@ prompt_sistema <- paste(readLines("prompt.md", warn = FALSE), collapse = "\n")
 
 # user interface ----------------------------------------------------------
 ui <- page_sidebar(
-  title = tagList("App 08 · Tool + mapa", tags$small(" · ", textOutput("titulo", inline = TRUE))),
+  title = "App 08 · Tool + mapa",
   sidebar = sidebar(
     shinychat::chat_ui("chat", messages = saludo, placeholder = "Filtra o controla el mapa..."),
     width = 400
@@ -80,7 +80,6 @@ ui <- page_sidebar(
 
 # server ------------------------------------------------------------------
 server <- function(input, output, session) {
-  titulo_actual <- reactiveVal("Todos los países")
   consulta_actual <- reactiveVal("SELECT * FROM paises")
   variable_mapa <- reactiveVal("esperanza_de_vida")
 
@@ -93,7 +92,6 @@ server <- function(input, output, session) {
     DBI::dbGetQuery(con, consulta) |> sf::st_as_sf(wkt = "wkt", crs = 4326)
   })
 
-  output$titulo    <- renderText(titulo_actual())
   output$n_filas   <- renderText(nrow(data()))
   output$vida      <- renderText(paste0(round(mean(data()$esperanza_de_vida), 1), " años"))
   output$poblacion <- renderText(paste0(round(sum(data()$poblacion) / 1e6), " millones"))
@@ -127,14 +125,12 @@ server <- function(input, output, session) {
     DBI::dbGetQuery(con, validar_select(consulta))
   }
 
-  actualizar_dashboard <- function(consulta, titulo) {
+  actualizar_dashboard <- function(consulta) {
     consulta <- validar_select(consulta)
     resultado <- DBI::dbGetQuery(con, consulta)
     if (!all(names(paises) %in% names(resultado))) stop("La consulta debe devolver todas las columnas.")
 
     consulta_actual(consulta)
-    titulo_actual(titulo)
-
     list(
       mensaje = "Dashboard y mapa actualizados.",
       registros = nrow(resultado),
@@ -178,8 +174,7 @@ server <- function(input, output, session) {
     actualizar_dashboard,
     "Filtra, ordena o reinicia los datos reactivos mostrados en el dashboard y el mapa.",
     arguments = list(
-      consulta = type_string("SELECT * FROM paises con WHERE u ORDER BY, sin punto y coma."),
-      titulo = type_string("Título breve que describe los datos mostrados.")
+      consulta = type_string("SELECT * FROM paises con WHERE u ORDER BY, sin punto y coma.")
     )
   ))
 

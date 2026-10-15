@@ -98,10 +98,7 @@ app_ui = ui.page_sidebar(
         col_widths=(4, 4, 4, 6, 6),
         row_heights=(1, 3),
     ),
-    title=ui.tags.span(
-        "App 08 · Tool + mapa",
-        ui.tags.small(" · ", ui.output_text("titulo", inline=True)),
-    ),
+    title="App 08 · Tool + mapa",
     fillable=True,
     theme=ui.Theme.from_brand(repo_dir / "_brand.yml"),
 )
@@ -109,7 +106,6 @@ app_ui = ui.page_sidebar(
 
 # server ------------------------------------------------------------------
 def server(input: Inputs, output: Outputs, session: Session):
-    titulo_actual = reactive.value("Todos los países")
     consulta_actual = reactive.value("SELECT * FROM paises")
     variable_mapa = reactive.value("esperanza_de_vida")
     camara_mapa = reactive.value({"latitud": 15.0, "longitud": 0.0, "zoom": 1.0})
@@ -117,10 +113,6 @@ def server(input: Inputs, output: Outputs, session: Session):
     @reactive.calc
     def data():
         return con.execute(consulta_actual()).fetchdf()
-
-    @render.text
-    def titulo():
-        return titulo_actual()
 
     @render.text
     def n_filas():
@@ -197,10 +189,6 @@ def server(input: Inputs, output: Outputs, session: Session):
             str,
             Field(description="SELECT * FROM paises con WHERE u ORDER BY, sin punto y coma."),
         ],
-        titulo: Annotated[
-            str,
-            Field(description="Título breve que describe los datos mostrados."),
-        ],
     ) -> dict:
         """Filtra, ordena o reinicia los datos mostrados en el dashboard y el mapa."""
         consulta = validar_select(consulta)
@@ -210,7 +198,6 @@ def server(input: Inputs, output: Outputs, session: Session):
 
         async with reactive.lock():
             consulta_actual.set(consulta)
-            titulo_actual.set(titulo)
             await reactive.flush()
 
         return {

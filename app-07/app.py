@@ -19,6 +19,15 @@ from shiny import App, Inputs, Outputs, Session, reactive, render, ui
 app_dir = Path(__file__).resolve().parent
 repo_dir = app_dir.parent
 paises = pd.read_csv(repo_dir / "data" / "paises.csv")
+pib_inicial = (
+    float(paises["pib_per_capita"].min()),
+    float(paises["pib_per_capita"].max()),
+)
+esperanza_inicial = (
+    float(paises["esperanza_de_vida"].min()),
+    float(paises["esperanza_de_vida"].max()),
+)
+poblacion_inicial = (0, int(paises["poblacion"].max() / 1e6 + 1))
 
 con = duckdb.connect(":memory:")
 con.register("paises_origen", paises)
@@ -80,27 +89,24 @@ app_ui = ui.page_sidebar(
                     "PIB per cápita",
                     min=float(paises["pib_per_capita"].min()),
                     max=float(paises["pib_per_capita"].max()),
-                    value=(
-                        float(paises["pib_per_capita"].min()),
-                        float(paises["pib_per_capita"].max()),
-                    ),
+                    value=pib_inicial,
                 ),
                 ui.input_slider(
                     "esperanza",
                     "Esperanza de vida",
                     min=int(paises["esperanza_de_vida"].min()),
                     max=int(paises["esperanza_de_vida"].max() + 1),
-                    value=(
-                        float(paises["esperanza_de_vida"].min()),
-                        float(paises["esperanza_de_vida"].max()),
-                    ),
+                    value=esperanza_inicial,
                 ),
                 ui.input_slider(
                     "poblacion",
-                    "Población (millones)",
+                    "Población (millones)*",
                     min=0,
                     max=int(paises["poblacion"].max() / 1e6 + 1),
-                    value=(0, int(paises["poblacion"].max() / 1e6 + 1)),
+                    value=poblacion_inicial,
+                ),
+                ui.tags.small(
+                    "* La población es muy asimétrica; la mayoría de los países queda a la izquierda."
                 ),
             ),
             ui.accordion_panel(
@@ -140,10 +146,7 @@ app_ui = ui.page_sidebar(
         col_widths=(4, 4, 4, 6, 6),
         row_heights=(1, 3),
     ),
-    title=ui.tags.span(
-        "App 07 · Inputs vs query",
-        ui.tags.small(" · ", ui.output_text("titulo", inline=True)),
-    ),
+    title="App 07 · Inputs vs query",
     fillable=True,
     theme=ui.Theme.from_brand(repo_dir / "_brand.yml"),
 )
@@ -152,12 +155,32 @@ app_ui = ui.page_sidebar(
 # server ------------------------------------------------------------------
 def server(input: Inputs, output: Outputs, session: Session):
     modo = reactive.value("inputs")
-    titulo_actual = reactive.value("Todos los países")
     consulta_actual = reactive.value("SELECT * FROM paises")
+    reiniciando_inputs = reactive.value(False)
     tabla_modal = reactive.value(pd.DataFrame())
     grafico_modal = reactive.value(
         {"data": pd.DataFrame(), "x": "poblacion", "y": "esperanza_de_vida", "color": ""}
     )
+
+    def filtros_en_inicio() -> bool:
+        return (
+            not input.continente()
+            and not input.pais()
+            and tuple(input.pib()) == pib_inicial
+            and tuple(input.esperanza()) == esperanza_inicial
+            and tuple(input.poblacion()) == poblacion_inicial
+        )
+
+    def reiniciar_inputs() -> None:
+        with reactive.isolate():
+            if filtros_en_inicio():
+                return
+        reiniciando_inputs.set(True)
+        ui.update_select("continente", selected=[], session=session)
+        ui.update_select("pais", selected=[], session=session)
+        ui.update_slider("pib", value=pib_inicial, session=session)
+        ui.update_slider("esperanza", value=esperanza_inicial, session=session)
+        ui.update_slider("poblacion", value=poblacion_inicial, session=session)
 
     @reactive.calc
     def data_inputs():
@@ -186,12 +209,11 @@ def server(input: Inputs, output: Outputs, session: Session):
         ignore_init=True,
     )
     def _():
+        if reiniciando_inputs():
+            if filtros_en_inicio():
+                reiniciando_inputs.set(False)
+            return
         modo.set("inputs")
-        titulo_actual.set("Filtros tradicionales")
-
-    @render.text
-    def titulo():
-        return titulo_actual()
 
     @render.text
     def n_filas():
@@ -254,10 +276,6 @@ def server(input: Inputs, output: Outputs, session: Session):
             str,
             Field(description="SELECT * FROM paises con WHERE u ORDER BY, sin punto y coma."),
         ],
-        titulo: Annotated[
-            str,
-            Field(description="Título breve que describe los datos mostrados."),
-        ],
     ) -> dict:
         """Filtra, ordena o reinicia los datos mostrados mediante una query."""
         consulta = validar_select(consulta)
@@ -266,8 +284,8 @@ def server(input: Inputs, output: Outputs, session: Session):
             raise ValueError("La consulta debe devolver todas las columnas.")
 
         async with reactive.lock():
+            reiniciar_inputs()
             consulta_actual.set(consulta)
-            titulo_actual.set(titulo)
             modo.set("query")
             await reactive.flush()
 
@@ -313,7 +331,7 @@ def server(input: Inputs, output: Outputs, session: Session):
         ],
         titulo: Annotated[str, Field(description="Título breve del modal.")],
     ):
-        """Abre en un modal un gráfico de puntos con los datos visibles en el dashboard."""
+        """Grafica los datos visibles en un modal y devuelve la imagen al modelo."""
         with reactive.isolate():
             frame = data().copy()
 

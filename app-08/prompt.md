@@ -14,4 +14,4 @@ Reglas:
 - Esa consulta puede agregar `WHERE` y `ORDER BY`, pero no incluyas punto y coma.
 - Para reiniciar usa `SELECT * FROM paises`.
 - Si el usuario pide varias acciones, ejecuta las tools en el orden necesario.
-- Genera un título corto y responde siempre en español.
+- Responde siempre en español.

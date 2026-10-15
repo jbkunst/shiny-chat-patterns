@@ -28,7 +28,7 @@ prompt_sistema <- paste(readLines("prompt.md", warn = FALSE), collapse = "\n")
 
 # user interface ----------------------------------------------------------
 ui <- page_sidebar(
-  title = tagList("App 05 · Tool + reactividad", tags$small(" · ", textOutput("titulo", inline = TRUE))),
+  title = "App 05 · Tool + reactividad",
   sidebar = sidebar(
     shinychat::chat_ui("chat", messages = saludo, placeholder = "Filtra u ordena el dashboard..."),
     width = 400
@@ -46,12 +46,10 @@ ui <- page_sidebar(
 
 # server ------------------------------------------------------------------
 server <- function(input, output, session) {
-  titulo_actual   <- reactiveVal("Todos los países")
   consulta_actual <- reactiveVal("SELECT * FROM paises") # paises, tal cual
 
   data <- reactive(DBI::dbGetQuery(con, consulta_actual()))
 
-  output$titulo    <- renderText(titulo_actual())
   output$n_filas   <- renderText(nrow(data()))
   output$vida      <- renderText(paste0(round(mean(data()$esperanza_de_vida), 1), " años"))
   output$poblacion <- renderText(paste0(round(sum(data()$poblacion) / 1e6), " millones"))
@@ -68,14 +66,12 @@ server <- function(input, output, session) {
     DBI::dbGetQuery(con, validar_select(consulta))
   }
 
-  actualizar_dashboard <- function(consulta, titulo) {
+  actualizar_dashboard <- function(consulta) {
     consulta <- validar_select(consulta)
     resultado <- DBI::dbGetQuery(con, consulta)
     if (!all(names(paises) %in% names(resultado))) stop("La consulta debe devolver todas las columnas.")
 
     consulta_actual(consulta)
-    titulo_actual(titulo)
-
     list(mensaje = "Dashboard actualizado.", registros = nrow(resultado))
   }
 
@@ -94,8 +90,7 @@ server <- function(input, output, session) {
     actualizar_dashboard,
     "Filtra, ordena o reinicia los datos reactivos mostrados en el dashboard.",
     arguments = list(
-      consulta = type_string("SELECT * FROM paises con WHERE u ORDER BY, sin punto y coma."),
-      titulo = type_string("Título breve que describe los datos mostrados.")
+      consulta = type_string("SELECT * FROM paises con WHERE u ORDER BY, sin punto y coma.")
     )
   ))
 
