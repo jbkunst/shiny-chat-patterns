@@ -538,6 +538,67 @@ body:has(.section-slide.present) .reveal {
   font-size: 19px;
 }
 
+.tool-families {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 34px;
+  margin-top: 46px;
+}
+
+.tool-families::before {
+  position: absolute;
+  top: 52px;
+  right: 8%;
+  left: 8%;
+  height: 2px;
+  background: var(--rule);
+  content: "";
+}
+
+.tool-stage {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.tool-stage > span {
+  display: grid;
+  width: 58px;
+  height: 58px;
+  margin-bottom: 34px;
+  border: 2px solid var(--blue);
+  border-radius: 50%;
+  place-content: center;
+  background: var(--paper);
+  color: var(--blue);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.tool-stage > strong {
+  color: var(--text);
+  font-size: 34px;
+  font-weight: 500;
+}
+
+.tool-stage > code {
+  margin-top: 14px;
+  color: var(--blue);
+  font-size: 18px;
+}
+
+.tool-stage > small {
+  margin-top: 20px;
+  color: var(--muted);
+  font-size: 21px;
+  font-weight: 300;
+  line-height: 1.4;
+}
+
 .reveal [data-tippy-root] {
   max-width: min(480px, calc(100% - 96px)) !important;
 }

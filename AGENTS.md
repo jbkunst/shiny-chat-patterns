@@ -29,11 +29,15 @@ literal línea por línea.
   abren modales.
 - `app-07`: compara filtros tradicionales con una consulta solicitada por chat.
 - `app-08`: integra una tool con un globo y actualizaciones de cámara tipo proxy.
-- `app-10`: explorador manual de series del Banco Central de Chile.
-- `app-11`: integra un chat sin tools ni acceso a los datos de la app.
-- `app-12`: agrega tools para encontrar y mostrar una serie.
-- `app-13`: agrega tools para describir y resumir la serie visible.
-- `app-20` en adelante: orquestación, agentes y bots especializados.
+- `app-91-colombia-territorial`: caso territorial con datos departamentales de
+  Colombia y chat flotante.
+- `app-92-banrep-sdmx`: caso económico que consulta series de Banrep mediante
+  SDMX REST/XML.
+- `app-10-experimental`: explorador manual de series del Banco Central de Chile.
+- `app-11-experimental`: integra un chat sin tools ni acceso a los datos de la app.
+- `app-12-experimental`: agrega tools para encontrar y mostrar una serie.
+- `app-13-experimental`: agrega tools para describir y resumir la serie visible.
+- `app-20-experimental` en adelante: orquestación, agentes y bots especializados.
 
 Agrega una app intermedia en vez de introducir varios conceptos nuevos en el
 mismo paso.

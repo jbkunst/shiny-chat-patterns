@@ -107,7 +107,7 @@
     code span.vs { color: #032f62; } /* VerbatimString */
     code span.wa { color: #ff5555; } /* Warning */
   </style>
-  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-19cc4efda8e691f803e21b7d20e76c0e.css">
+  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-9d0275aadcbda4bc4e8bcba8127e95e5.css">
   <link rel="stylesheet" href="assets/slides.css">
   <link href="index_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="index_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
@@ -355,31 +355,6 @@ LatinR 2026
 <span id="cb1-49"><a href="" aria-label="49"></a></span>
 <span id="cb1-50"><a href="" aria-label="50"></a>shinyApp(ui, server)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="a-01-el-cambio-en-el-diff" class="slide level2">
-<h2>00 a 01 · El cambio en el diff</h2>
-<div class="code-diff" aria-label="Comparación entre app-00 y app-01">
-<article>
-<header>
-app-00/app.R
-</header>
-<pre><code><span>sliderInput("n", ...)</span>
-<span class="removed">- checkboxInput("forecast", ...)</span>
-<span></span>
-<span>series &lt;- head(pasajeros$pasajeros, input$n)</span>
-<span class="removed">- plot(forecast::forecast(series), ...)</span></code></pre>
-</article>
-<article>
-<header>
-app-01/app.R
-</header>
-<pre><code><span>selectInput("continente", ...)</span>
-<span class="added">+ textOutput("n_filas")</span>
-<span></span>
-<span class="added">+ data &lt;- reactive({ ... })</span>
-<span class="added">+ output$n_filas &lt;- renderText(nrow(data()))</span></code></pre>
-</article>
-</div>
-</section>
 <section id="dashboard-reactivo" class="slide level2">
 <h2>01 · Dashboard reactivo</h2>
 <div class="columns">
@@ -411,16 +386,19 @@ Antes de la interfaz
 </div><div class="column" style="width:58%;">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="" aria-label="1"></a><span class="fu">library</span>(ellmer)</span>
 <span id="cb3-2"><a href="" aria-label="2"></a></span>
-<span id="cb3-3"><a href="" aria-label="3"></a>chat <span class="ot">&lt;-</span> <span class="fu">chat_openai</span>(</span>
-<span id="cb3-4"><a href="" aria-label="4"></a>  <span class="at">model =</span> <span class="st">"gpt-5-nano"</span>,</span>
-<span id="cb3-5"><a href="" aria-label="5"></a>  <span class="at">system_prompt =</span> <span class="fu">paste</span>(</span>
-<span id="cb3-6"><a href="" aria-label="6"></a>    <span class="st">"Responde brevemente en español sobre los países de Gapminder en su último año."</span>,</span>
-<span id="cb3-7"><a href="" aria-label="7"></a>    <span class="st">"No inventes resultados numéricos."</span></span>
-<span id="cb3-8"><a href="" aria-label="8"></a>  )</span>
-<span id="cb3-9"><a href="" aria-label="9"></a>)</span>
-<span id="cb3-10"><a href="" aria-label="10"></a></span>
-<span id="cb3-11"><a href="" aria-label="11"></a><span class="fu">live_console</span>(chat)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-3"><a href="" aria-label="3"></a>chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat_openai</span>(<span class="at">model =</span> <span class="st">"gpt-5-nano"</span>, <span class="at">system_prompt =</span> <span class="st">"Eres un bot muy alegre."</span>)</span>
+<span id="cb3-4"><a href="" aria-label="4"></a></span>
+<span id="cb3-5"><a href="" aria-label="5"></a>chat<span class="sc">$</span><span class="fu">chat</span>(<span class="st">"Salúdame"</span>)</span>
+<span id="cb3-6"><a href="" aria-label="6"></a></span>
+<span id="cb3-7"><a href="" aria-label="7"></a>chat<span class="sc">$</span><span class="fu">chat</span>(<span class="st">"¿Cuánto es 2 elevado a 4?"</span>)</span>
+<span id="cb3-8"><a href="" aria-label="8"></a></span>
+<span id="cb3-9"><a href="" aria-label="9"></a><span class="fu">live_console</span>(chat)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div></div>
+</section>
+<section id="una-conversación-en-positron" class="slide level2">
+<h2>Una conversación en Positron</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="" aria-label="1"></a><span class="fu">source</span>(<span class="st">"R/01_ellmer.R"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>live_console(chat)</code> abre la conversación en la consola interactiva. Antes de sumar una interfaz, podemos observar el cliente, el prompt y el historial.</p>
 </section>
 <section id="shiny-ellmer" class="slide level2 section-slide">
 <h2>Shiny + ellmer</h2>
@@ -433,14 +411,14 @@ Antes de la interfaz
 <p>Agregamos conversación, pero mantenemos una frontera explícita.</p>
 <p>El modelo responde sin conocer filtros ni valores visibles.</p>
 </div><div class="column" style="width:64%;">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="" aria-label="1"></a>chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat_openai</span>(</span>
-<span id="cb4-2"><a href="" aria-label="2"></a>  <span class="at">system_prompt =</span> <span class="st">"Ayuda a explorar la app."</span></span>
-<span id="cb4-3"><a href="" aria-label="3"></a>)</span>
-<span id="cb4-4"><a href="" aria-label="4"></a></span>
-<span id="cb4-5"><a href="" aria-label="5"></a><span class="fu">observeEvent</span>(input<span class="sc">$</span>chat_user_input, {</span>
-<span id="cb4-6"><a href="" aria-label="6"></a>  stream <span class="ot">&lt;-</span> chat<span class="sc">$</span><span class="fu">stream_async</span>(input<span class="sc">$</span>chat_user_input)</span>
-<span id="cb4-7"><a href="" aria-label="7"></a>  shinychat<span class="sc">::</span><span class="fu">chat_append</span>(<span class="st">"chat"</span>, stream)</span>
-<span id="cb4-8"><a href="" aria-label="8"></a>})</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="" aria-label="1"></a>chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat_openai</span>(</span>
+<span id="cb5-2"><a href="" aria-label="2"></a>  <span class="at">system_prompt =</span> <span class="st">"Ayuda a explorar la app."</span></span>
+<span id="cb5-3"><a href="" aria-label="3"></a>)</span>
+<span id="cb5-4"><a href="" aria-label="4"></a></span>
+<span id="cb5-5"><a href="" aria-label="5"></a><span class="fu">observeEvent</span>(input<span class="sc">$</span>chat_user_input, {</span>
+<span id="cb5-6"><a href="" aria-label="6"></a>  stream <span class="ot">&lt;-</span> chat<span class="sc">$</span><span class="fu">stream_async</span>(input<span class="sc">$</span>chat_user_input)</span>
+<span id="cb5-7"><a href="" aria-label="7"></a>  shinychat<span class="sc">::</span><span class="fu">chat_append</span>(<span class="st">"chat"</span>, stream)</span>
+<span id="cb5-8"><a href="" aria-label="8"></a>})</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div></div>
 </section>
 <section id="una-tool-aporta-contexto-real" class="slide level2">
@@ -450,19 +428,19 @@ Antes de la interfaz
 <p>El modelo consulta un resumen calculado desde los países visibles.</p>
 <p>La tool lee el estado. Todavía no modifica el dashboard.</p>
 </div><div class="column" style="width:64%;">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="" aria-label="1"></a>resumir_datos_visibles <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
-<span id="cb5-2"><a href="" aria-label="2"></a>  df <span class="ot">&lt;-</span> <span class="fu">isolate</span>(<span class="fu">data</span>())</span>
-<span id="cb5-3"><a href="" aria-label="3"></a>  <span class="fu">list</span>(</span>
-<span id="cb5-4"><a href="" aria-label="4"></a>    <span class="at">registros =</span> <span class="fu">nrow</span>(df),</span>
-<span id="cb5-5"><a href="" aria-label="5"></a>    <span class="at">poblacion_total =</span> <span class="fu">sum</span>(df<span class="sc">$</span>poblacion),</span>
-<span id="cb5-6"><a href="" aria-label="6"></a>    <span class="at">esperanza_promedio =</span> <span class="fu">round</span>(<span class="fu">mean</span>(df<span class="sc">$</span>esperanza_de_vida), <span class="dv">1</span>)</span>
-<span id="cb5-7"><a href="" aria-label="7"></a>  )</span>
-<span id="cb5-8"><a href="" aria-label="8"></a>}</span>
-<span id="cb5-9"><a href="" aria-label="9"></a></span>
-<span id="cb5-10"><a href="" aria-label="10"></a>chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
-<span id="cb5-11"><a href="" aria-label="11"></a>  resumir_datos_visibles,</span>
-<span id="cb5-12"><a href="" aria-label="12"></a>  <span class="st">"Resume los países visibles en el dashboard."</span></span>
-<span id="cb5-13"><a href="" aria-label="13"></a>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="" aria-label="1"></a>resumir_datos_visibles <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb6-2"><a href="" aria-label="2"></a>  df <span class="ot">&lt;-</span> <span class="fu">isolate</span>(<span class="fu">data</span>())</span>
+<span id="cb6-3"><a href="" aria-label="3"></a>  <span class="fu">list</span>(</span>
+<span id="cb6-4"><a href="" aria-label="4"></a>    <span class="at">registros =</span> <span class="fu">nrow</span>(df),</span>
+<span id="cb6-5"><a href="" aria-label="5"></a>    <span class="at">poblacion_total =</span> <span class="fu">sum</span>(df<span class="sc">$</span>poblacion),</span>
+<span id="cb6-6"><a href="" aria-label="6"></a>    <span class="at">esperanza_promedio =</span> <span class="fu">round</span>(<span class="fu">mean</span>(df<span class="sc">$</span>esperanza_de_vida), <span class="dv">1</span>)</span>
+<span id="cb6-7"><a href="" aria-label="7"></a>  )</span>
+<span id="cb6-8"><a href="" aria-label="8"></a>}</span>
+<span id="cb6-9"><a href="" aria-label="9"></a></span>
+<span id="cb6-10"><a href="" aria-label="10"></a>chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
+<span id="cb6-11"><a href="" aria-label="11"></a>  resumir_datos_visibles,</span>
+<span id="cb6-12"><a href="" aria-label="12"></a>  <span class="st">"Resume los países visibles en el dashboard."</span></span>
+<span id="cb6-13"><a href="" aria-label="13"></a>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div></div>
 </section>
 <section id="sql-de-solo-lectura" class="slide level2">
@@ -472,17 +450,17 @@ Antes de la interfaz
 <p>La tool acepta consultas acotadas y devuelve resultados verificables.</p>
 <p>Solo <code>SELECT</code>, una tabla conocida y un límite de filas.</p>
 </div><div class="column" style="width:64%;">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="" aria-label="1"></a>consultar_paises <span class="ot">&lt;-</span> <span class="cf">function</span>(consulta) {</span>
-<span id="cb6-2"><a href="" aria-label="2"></a>  DBI<span class="sc">::</span><span class="fu">dbGetQuery</span>(con, <span class="fu">validar_select</span>(consulta))</span>
-<span id="cb6-3"><a href="" aria-label="3"></a>}</span>
-<span id="cb6-4"><a href="" aria-label="4"></a></span>
-<span id="cb6-5"><a href="" aria-label="5"></a>chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
-<span id="cb6-6"><a href="" aria-label="6"></a>  consultar_paises,</span>
-<span id="cb6-7"><a href="" aria-label="7"></a>  <span class="st">"Ejecuta una consulta SELECT sobre la tabla paises."</span>,</span>
-<span id="cb6-8"><a href="" aria-label="8"></a>  <span class="at">arguments =</span> <span class="fu">list</span>(</span>
-<span id="cb6-9"><a href="" aria-label="9"></a>    <span class="at">consulta =</span> <span class="fu">type_string</span>(<span class="st">"Consulta SELECT sin punto y coma."</span>)</span>
-<span id="cb6-10"><a href="" aria-label="10"></a>  )</span>
-<span id="cb6-11"><a href="" aria-label="11"></a>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="" aria-label="1"></a>consultar_paises <span class="ot">&lt;-</span> <span class="cf">function</span>(consulta) {</span>
+<span id="cb7-2"><a href="" aria-label="2"></a>  DBI<span class="sc">::</span><span class="fu">dbGetQuery</span>(con, <span class="fu">validar_select</span>(consulta))</span>
+<span id="cb7-3"><a href="" aria-label="3"></a>}</span>
+<span id="cb7-4"><a href="" aria-label="4"></a></span>
+<span id="cb7-5"><a href="" aria-label="5"></a>chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
+<span id="cb7-6"><a href="" aria-label="6"></a>  consultar_paises,</span>
+<span id="cb7-7"><a href="" aria-label="7"></a>  <span class="st">"Ejecuta una consulta SELECT sobre la tabla paises."</span>,</span>
+<span id="cb7-8"><a href="" aria-label="8"></a>  <span class="at">arguments =</span> <span class="fu">list</span>(</span>
+<span id="cb7-9"><a href="" aria-label="9"></a>    <span class="at">consulta =</span> <span class="fu">type_string</span>(<span class="st">"Consulta SELECT sin punto y coma."</span>)</span>
+<span id="cb7-10"><a href="" aria-label="10"></a>  )</span>
+<span id="cb7-11"><a href="" aria-label="11"></a>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div></div>
 </section>
 <section id="la-tool-actualiza-shiny" class="slide level2">
@@ -492,15 +470,14 @@ Antes de la interfaz
 <p>La conversación modifica el estado reactivo que alimenta el dashboard.</p>
 <p>La validación ocurre antes de cambiar lo que ve la persona.</p>
 </div><div class="column" style="width:64%;">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="" aria-label="1"></a>actualizar_dashboard <span class="ot">&lt;-</span> <span class="cf">function</span>(consulta, titulo) {</span>
-<span id="cb7-2"><a href="" aria-label="2"></a>  consulta <span class="ot">&lt;-</span> <span class="fu">validar_select</span>(consulta)</span>
-<span id="cb7-3"><a href="" aria-label="3"></a>  resultado <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbGetQuery</span>(con, consulta)</span>
-<span id="cb7-4"><a href="" aria-label="4"></a></span>
-<span id="cb7-5"><a href="" aria-label="5"></a>  <span class="fu">consulta_actual</span>(consulta)</span>
-<span id="cb7-6"><a href="" aria-label="6"></a>  <span class="fu">titulo_actual</span>(titulo)</span>
-<span id="cb7-7"><a href="" aria-label="7"></a></span>
-<span id="cb7-8"><a href="" aria-label="8"></a>  <span class="fu">list</span>(<span class="at">mensaje =</span> <span class="st">"Dashboard actualizado."</span>, <span class="at">registros =</span> <span class="fu">nrow</span>(resultado))</span>
-<span id="cb7-9"><a href="" aria-label="9"></a>}</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="" aria-label="1"></a>actualizar_dashboard <span class="ot">&lt;-</span> <span class="cf">function</span>(consulta) {</span>
+<span id="cb8-2"><a href="" aria-label="2"></a>  consulta <span class="ot">&lt;-</span> <span class="fu">validar_select</span>(consulta)</span>
+<span id="cb8-3"><a href="" aria-label="3"></a>  resultado <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbGetQuery</span>(con, consulta)</span>
+<span id="cb8-4"><a href="" aria-label="4"></a></span>
+<span id="cb8-5"><a href="" aria-label="5"></a>  <span class="fu">consulta_actual</span>(consulta)</span>
+<span id="cb8-6"><a href="" aria-label="6"></a></span>
+<span id="cb8-7"><a href="" aria-label="7"></a>  <span class="fu">list</span>(<span class="at">mensaje =</span> <span class="st">"Dashboard actualizado."</span>, <span class="at">registros =</span> <span class="fu">nrow</span>(resultado))</span>
+<span id="cb8-8"><a href="" aria-label="8"></a>}</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div></div>
 </section>
 <section id="tools-de-interfaz" class="slide level2">
@@ -510,34 +487,18 @@ Antes de la interfaz
 <p>Una tool abre una tabla o un gráfico sin recargar la aplicación.</p>
 <p>El modal también entrega contexto de vuelta al modelo.</p>
 </div><div class="column" style="width:64%;">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="" aria-label="1"></a>mostrar_tabla <span class="ot">&lt;-</span> <span class="cf">function</span>(n, titulo) {</span>
-<span id="cb8-2"><a href="" aria-label="2"></a>  n <span class="ot">&lt;-</span> <span class="fu">max</span>(<span class="dv">1</span>L, <span class="fu">min</span>(<span class="fu">as.integer</span>(n), <span class="dv">100</span>L))</span>
-<span id="cb8-3"><a href="" aria-label="3"></a>  resultado <span class="ot">&lt;-</span> <span class="fu">head</span>(<span class="fu">isolate</span>(<span class="fu">data</span>()), n)</span>
-<span id="cb8-4"><a href="" aria-label="4"></a>  output<span class="sc">$</span>tabla_modal <span class="ot">&lt;-</span> <span class="fu">renderTable</span>(resultado)</span>
-<span id="cb8-5"><a href="" aria-label="5"></a></span>
-<span id="cb8-6"><a href="" aria-label="6"></a>  <span class="fu">showModal</span>(<span class="fu">modalDialog</span>(</span>
-<span id="cb8-7"><a href="" aria-label="7"></a>    <span class="at">title =</span> titulo,</span>
-<span id="cb8-8"><a href="" aria-label="8"></a>    <span class="fu">tableOutput</span>(<span class="st">"tabla_modal"</span>)</span>
-<span id="cb8-9"><a href="" aria-label="9"></a>  ))</span>
-<span id="cb8-10"><a href="" aria-label="10"></a></span>
-<span id="cb8-11"><a href="" aria-label="11"></a>  resultado</span>
-<span id="cb8-12"><a href="" aria-label="12"></a>}</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-</div></div>
-</section>
-<section id="inputs-tradicionales-y-chat" class="slide level2">
-<h2>07 · Inputs tradicionales y chat</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<h3 id="inputs">Inputs</h3>
-<p>Predecibles y visibles para preguntas conocidas.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="" aria-label="1"></a><span class="fu">selectInput</span>(<span class="st">"continente"</span>, <span class="st">"Continente"</span>, continentes)</span>
-<span id="cb9-2"><a href="" aria-label="2"></a><span class="fu">sliderInput</span>(<span class="st">"esperanza"</span>, <span class="st">"Esperanza de vida"</span>, <span class="dv">40</span>, <span class="dv">85</span>, <span class="fu">c</span>(<span class="dv">60</span>, <span class="dv">85</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-</div><div class="column" style="width:50%;">
-<h3 id="chat-query">Chat + query</h3>
-<p>Flexible para combinar condiciones difíciles de anticipar.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="" aria-label="1"></a>consulta_actual <span class="ot">&lt;-</span> <span class="fu">reactiveVal</span>(</span>
-<span id="cb10-2"><a href="" aria-label="2"></a>  <span class="st">"SELECT * FROM paises"</span></span>
-<span id="cb10-3"><a href="" aria-label="3"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="" aria-label="1"></a>mostrar_tabla <span class="ot">&lt;-</span> <span class="cf">function</span>(n, titulo) {</span>
+<span id="cb9-2"><a href="" aria-label="2"></a>  n <span class="ot">&lt;-</span> <span class="fu">max</span>(<span class="dv">1</span>L, <span class="fu">min</span>(<span class="fu">as.integer</span>(n), <span class="dv">100</span>L))</span>
+<span id="cb9-3"><a href="" aria-label="3"></a>  resultado <span class="ot">&lt;-</span> <span class="fu">head</span>(<span class="fu">isolate</span>(<span class="fu">data</span>()), n)</span>
+<span id="cb9-4"><a href="" aria-label="4"></a>  output<span class="sc">$</span>tabla_modal <span class="ot">&lt;-</span> <span class="fu">renderTable</span>(resultado)</span>
+<span id="cb9-5"><a href="" aria-label="5"></a></span>
+<span id="cb9-6"><a href="" aria-label="6"></a>  <span class="fu">showModal</span>(<span class="fu">modalDialog</span>(</span>
+<span id="cb9-7"><a href="" aria-label="7"></a>    <span class="at">title =</span> titulo,</span>
+<span id="cb9-8"><a href="" aria-label="8"></a>    <span class="fu">tableOutput</span>(<span class="st">"tabla_modal"</span>)</span>
+<span id="cb9-9"><a href="" aria-label="9"></a>  ))</span>
+<span id="cb9-10"><a href="" aria-label="10"></a></span>
+<span id="cb9-11"><a href="" aria-label="11"></a>  resultado</span>
+<span id="cb9-12"><a href="" aria-label="12"></a>}</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div></div>
 </section>
 <section id="tool-mapa-y-cámara" class="slide level2">
@@ -547,36 +508,57 @@ Antes de la interfaz
 <p>El chat controla el dato y la perspectiva desde la que se observa.</p>
 <p>La cámara se actualiza como proxy. El globo no se reconstruye.</p>
 </div><div class="column" style="width:66%;">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="" aria-label="1"></a>ir_a_pais <span class="ot">&lt;-</span> <span class="cf">function</span>(pais, <span class="at">zoom =</span> <span class="dv">4</span>) {</span>
-<span id="cb11-2"><a href="" aria-label="2"></a>  ubicacion <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbGetQuery</span>(</span>
-<span id="cb11-3"><a href="" aria-label="3"></a>    con,</span>
-<span id="cb11-4"><a href="" aria-label="4"></a>    <span class="fu">paste</span>(</span>
-<span id="cb11-5"><a href="" aria-label="5"></a>      <span class="st">"SELECT DISTINCT p.pais, g.longitud, g.latitud"</span>,</span>
-<span id="cb11-6"><a href="" aria-label="6"></a>      <span class="st">"FROM paises p JOIN paises_geo g USING (codigo)"</span>,</span>
-<span id="cb11-7"><a href="" aria-label="7"></a>      <span class="st">"WHERE lower(p.pais) = lower(?)"</span></span>
-<span id="cb11-8"><a href="" aria-label="8"></a>    ),</span>
-<span id="cb11-9"><a href="" aria-label="9"></a>    <span class="at">params =</span> <span class="fu">list</span>(pais)</span>
-<span id="cb11-10"><a href="" aria-label="10"></a>  )</span>
-<span id="cb11-11"><a href="" aria-label="11"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">nrow</span>(ubicacion)) <span class="fu">stop</span>(<span class="st">"No encontré ese país."</span>)</span>
-<span id="cb11-12"><a href="" aria-label="12"></a></span>
-<span id="cb11-13"><a href="" aria-label="13"></a>  mapgl<span class="sc">::</span><span class="fu">maplibre_proxy</span>(<span class="st">"map"</span>, session) <span class="sc">|&gt;</span></span>
-<span id="cb11-14"><a href="" aria-label="14"></a>    mapgl<span class="sc">::</span><span class="fu">fly_to</span>(</span>
-<span id="cb11-15"><a href="" aria-label="15"></a>      <span class="at">center =</span> <span class="fu">c</span>(ubicacion<span class="sc">$</span>longitud[<span class="dv">1</span>], ubicacion<span class="sc">$</span>latitud[<span class="dv">1</span>]),</span>
-<span id="cb11-16"><a href="" aria-label="16"></a>      <span class="at">zoom =</span> zoom</span>
-<span id="cb11-17"><a href="" aria-label="17"></a>    )</span>
-<span id="cb11-18"><a href="" aria-label="18"></a></span>
-<span id="cb11-19"><a href="" aria-label="19"></a>  <span class="fu">paste</span>(<span class="st">"Mapa centrado en"</span>, ubicacion<span class="sc">$</span>pais[<span class="dv">1</span>])</span>
-<span id="cb11-20"><a href="" aria-label="20"></a>}</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="" aria-label="1"></a>ir_a_pais <span class="ot">&lt;-</span> <span class="cf">function</span>(pais, <span class="at">zoom =</span> <span class="dv">4</span>) {</span>
+<span id="cb10-2"><a href="" aria-label="2"></a>  ubicacion <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbGetQuery</span>(</span>
+<span id="cb10-3"><a href="" aria-label="3"></a>    con,</span>
+<span id="cb10-4"><a href="" aria-label="4"></a>    <span class="fu">paste</span>(</span>
+<span id="cb10-5"><a href="" aria-label="5"></a>      <span class="st">"SELECT DISTINCT p.pais, g.longitud, g.latitud"</span>,</span>
+<span id="cb10-6"><a href="" aria-label="6"></a>      <span class="st">"FROM paises p JOIN paises_geo g USING (codigo)"</span>,</span>
+<span id="cb10-7"><a href="" aria-label="7"></a>      <span class="st">"WHERE lower(p.pais) = lower(?)"</span></span>
+<span id="cb10-8"><a href="" aria-label="8"></a>    ),</span>
+<span id="cb10-9"><a href="" aria-label="9"></a>    <span class="at">params =</span> <span class="fu">list</span>(pais)</span>
+<span id="cb10-10"><a href="" aria-label="10"></a>  )</span>
+<span id="cb10-11"><a href="" aria-label="11"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">nrow</span>(ubicacion)) <span class="fu">stop</span>(<span class="st">"No encontré ese país."</span>)</span>
+<span id="cb10-12"><a href="" aria-label="12"></a></span>
+<span id="cb10-13"><a href="" aria-label="13"></a>  mapgl<span class="sc">::</span><span class="fu">maplibre_proxy</span>(<span class="st">"map"</span>, session) <span class="sc">|&gt;</span></span>
+<span id="cb10-14"><a href="" aria-label="14"></a>    mapgl<span class="sc">::</span><span class="fu">fly_to</span>(</span>
+<span id="cb10-15"><a href="" aria-label="15"></a>      <span class="at">center =</span> <span class="fu">c</span>(ubicacion<span class="sc">$</span>longitud[<span class="dv">1</span>], ubicacion<span class="sc">$</span>latitud[<span class="dv">1</span>]),</span>
+<span id="cb10-16"><a href="" aria-label="16"></a>      <span class="at">zoom =</span> zoom</span>
+<span id="cb10-17"><a href="" aria-label="17"></a>    )</span>
+<span id="cb10-18"><a href="" aria-label="18"></a></span>
+<span id="cb10-19"><a href="" aria-label="19"></a>  <span class="fu">paste</span>(<span class="st">"Mapa centrado en"</span>, ubicacion<span class="sc">$</span>pais[<span class="dv">1</span>])</span>
+<span id="cb10-20"><a href="" aria-label="20"></a>}</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div></div>
 </section>
-<section id="demos-posteriores" class="slide level2">
-<h2>Demos posteriores</h2>
-<div class="demo-slot">
-<p>
-Demo de Shiny, video corto o captura interactiva
-</p>
-<p><code>Reservado para una integración futura con Shinylive</code></p>
+<section id="cuatro-familias-de-tools" class="slide level2">
+<h2>Cuatro familias de tools</h2>
+<div class="tool-families" role="img" aria-label="Recorrido desde resolver una intención hasta inspeccionar la vista">
+<div class="tool-stage">
+<span>01</span>
+<strong>Resolver</strong>
+<code>resolver_territorio()</code>
+<small>Convierte lenguaje en un identificador válido.</small>
 </div>
+<div class="tool-stage">
+<span>02</span>
+<strong>Consultar</strong>
+<code>consultar_indicadores()</code>
+<small>Obtiene datos reales desde una fuente acotada.</small>
+</div>
+<div class="tool-stage">
+<span>03</span>
+<strong>Visualizar</strong>
+<code>visualizar_indicador()</code>
+<small>Cambia el estado visible de la aplicación.</small>
+</div>
+<div class="tool-stage">
+<span>04</span>
+<strong>Inspeccionar</strong>
+<code>inspeccionar_vista()</code>
+<small>Devuelve contexto estructurado al modelo.</small>
+</div>
+</div>
+<p>El patrón se repite en <code>app-91-colombia-territorial</code> y <code>app-92-banrep-sdmx</code>.</p>
 </section>
 <section id="cierre" class="slide level2 section-slide">
 <h2>Cierre</h2>

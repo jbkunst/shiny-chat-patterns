@@ -57,9 +57,10 @@ la carpeta pueda renderizarse y publicarse como una unidad.
 
 ## Sobre el repositorio
 
-`app-00` establece la aplicación de partida. Desde `app-01` hasta `app-08`, cada aplicación incorpora
-**una sola idea nueva** y conserva tanto como sea posible del paso anterior. Así, el cambio relevante
-se reconoce directamente en el código y la secuencia puede usarse en demostraciones o talleres.
+`app-00` establece el punto de partida y `app-01` presenta el dashboard común de países. Desde
+`app-02` hasta `app-06`, cada aplicación incorpora **una sola idea nueva** y conserva tanto como sea
+posible del paso anterior. `app-07` es una pausa comparativa; `app-08` retoma la línea principal desde
+`app-06` y agrega el mapa. Así, cada cambio se reconoce en el código y puede mostrarse en un taller.
 
 Todas las apps usan `page_sidebar()` para mantener una estructura consistente
 y concentrar cada ejemplo en el patrón que introduce. Desde `app-00` hasta
@@ -68,17 +69,40 @@ en ambos lenguajes. Las versiones de chat usan `ellmer` y `chatlas`, respectivam
 
 ## Recorrido principal
 
-| App | Título | Resumen |
+| App | Rol | Qué incorpora |
 |---|---|---|
-| `app-00` | Widgets y outputs | Widgets básicos conectados a dos outputs mínimos |
-| `app-01` | Dashboard reactivo | Dashboard de países con un filtro manual |
-| `app-02` | Chat sin tools | El chat todavía no tiene acceso a los datos |
-| `app-03` | Tool con contexto | El modelo consulta un resumen de los países visibles |
-| `app-04` | Tool SQL | El modelo consulta DuckDB sin modificar la interfaz |
-| `app-05` | Tool + reactividad | El chat actualiza la consulta que alimenta el dashboard |
-| `app-06` | Tools de interfaz | El chat abre contenido en modales y recibe su resultado |
-| `app-07` | Inputs vs query | Compara filtros tradicionales con una consulta solicitada por chat |
-| `app-08` | Tool + mapa | El chat filtra un globo y controla su variable y cámara |
+| `app-00` | Punto de partida | Presenta widgets y outputs, todavía sin chat |
+| `app-01` | Nueva base | Establece el dashboard reactivo de países y el filtro manual |
+| `app-02` | Incremental | Agrega un chat que todavía no conoce los datos |
+| `app-03` | Incremental | Entrega al modelo un resumen de los países visibles |
+| `app-04` | Incremental | Incorpora DuckDB mediante una tool SQL de solo lectura |
+| `app-05` | Incremental | Permite que la consulta del chat actualice el dashboard |
+| `app-06` | Incremental | Agrega tools que abren modales y retornan datos o imágenes |
+| `app-07` | Comparativa | Contrasta filtros manuales con consultas solicitadas por chat |
+| `app-08` | Retoma `app-06` | Agrega un globo que el chat puede filtrar y controlar |
+
+`app-07` sí agrega la comparación sobre `app-06`, pero funciona como un desvío pedagógico: muestra
+dos formas de controlar el mismo dashboard y no establece la base técnica de `app-08`.
+
+## Casos de aplicación
+
+Estas apps trasladan los patrones del recorrido principal a fuentes colombianas. No continúan la
+secuencia incremental `app-00`–`app-08`; muestran cómo organizar tools por responsabilidad.
+
+| App | Fuente | Patrón |
+|---|---|---|
+| `app-91-colombia-territorial` | DANE, CNPV 2018 | Resuelve territorios, consulta indicadores, actualiza el mapa e inspecciona la vista |
+| `app-92-banrep-sdmx` | Banco de la República | Resuelve un `flow_id`, consulta SDMX REST/XML, grafica la serie e inspecciona sus datos |
+
+`app-91-colombia-territorial` incluye datos departamentales locales para funcionar durante el
+taller. Para reconstruirlos desde el servicio ArcGIS ejecuta, dentro de su carpeta:
+
+```r
+source("prepare-data.R")
+```
+
+`app-92-banrep-sdmx` consulta el servicio público en tiempo de ejecución, por lo que requiere
+conexión a internet además de `OPENAI_API_KEY`.
 
 Cada carpeta entre `app-00` y `app-08` incluye un `DESCRIPTION` con su título,
 resumen y paquetes de R utilizados.
@@ -98,12 +122,15 @@ equivalente práctico de un proxy: no reconstruye el mapa al cambiar el centro.
 Los códigos de país y las coordenadas de cámara provienen del catálogo
 Gapminder incluido en Plotly.
 
+## Aplicaciones experimentales
+
+Las carpetas con sufijo `-experimental` contienen aplicaciones en exploración. Todavía no forman una
+secuencia formal ni están incorporadas al curso.
+
 ## Alcance
 
-El taller y este README documentan por ahora el recorrido estable entre `app-00` y `app-08`. El
-repositorio podrá seguir creciendo con nuevos dashboards, fuentes de datos y patrones de agentes u
-orquestación. Esas extensiones se incorporarán a la documentación cuando formen una nueva secuencia
-progresiva y autocontenida.
+El curso comprende `app-00`–`app-08`. Las aplicaciones experimentales quedan fuera de este alcance
+mientras no sean formalizadas e incorporadas al material del curso.
 
 ## Instalar
 
@@ -130,6 +157,19 @@ Para R, crea un archivo `.Renviron` en la raíz:
 
 ```dotenv
 OPENAI_API_KEY=tu_clave_de_openai
+```
+
+Luego reinicia R. Si el archivo se creó con la sesión abierta, también puedes cargarlo sin reiniciar:
+
+```r
+readRenviron(".Renviron")
+```
+
+Si ya tienes `usethis`, puedes crear o actualizar la variable de forma interactiva. La clave se
+solicita de manera protegida y queda disponible inmediatamente en la sesión actual:
+
+```r
+usethis::use_env_var("OPENAI_API_KEY", scope = "project")
 ```
 
 Para ejecutar las apps Python desde PowerShell:
@@ -159,3 +199,29 @@ Para ejecutar la versión Python dentro del entorno fijado por `uv.lock`:
 ```console
 uv run shiny run --reload app-00/app.py
 ```
+
+## Abrir todas las apps R
+
+El lanzador inicia cada app estable en un proceso de fondo y abre un catálogo Quarto con su título,
+descripción y una vista interactiva. Desde una sesión R en la raíz del repositorio:
+
+```r
+source("R/run_all_apps.R")
+```
+
+Esta única instrucción inicia las apps, prepara el catálogo y lo abre en el navegador. El objeto
+`course` se crea automáticamente. Si vuelves a ejecutarla, primero detiene la ejecución anterior.
+Al terminar el taller, detén todos los procesos con:
+
+```r
+stop_all_apps(course)
+```
+
+La función espera hasta confirmar que los procesos terminaron y sus puertos quedaron libres.
+
+El catálogo requiere Quarto en `PATH`. Las apps usan los puertos `8000` en adelante y el catálogo
+intenta usar el `7999`; si está ocupado, selecciona el siguiente disponible. Todos se pueden cambiar
+mediante los argumentos de `run_all_apps()`.
+
+Las apps se inician una por una para evitar que los ejemplos más pesados compitan por recursos. El
+tiempo máximo de inicio es de 180 segundos y puede ajustarse con `startup_timeout`.

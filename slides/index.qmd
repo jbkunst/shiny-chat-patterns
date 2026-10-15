@@ -139,27 +139,6 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-## 00 a 01 · El cambio en el diff
-
-<div class="code-diff" aria-label="Comparación entre app-00 y app-01">
-<article>
-<header>app-00/app.R</header>
-<pre><code><span>sliderInput("n", ...)</span>
-<span class="removed">- checkboxInput("forecast", ...)</span>
-<span></span>
-<span>series &lt;- head(pasajeros$pasajeros, input$n)</span>
-<span class="removed">- plot(forecast::forecast(series), ...)</span></code></pre>
-</article>
-<article>
-<header>app-01/app.R</header>
-<pre><code><span>selectInput("continente", ...)</span>
-<span class="added">+ textOutput("n_filas")</span>
-<span></span>
-<span class="added">+ data &lt;- reactive({ ... })</span>
-<span class="added">+ output$n_filas &lt;- renderText(nrow(data()))</span></code></pre>
-</article>
-</div>
-
 ## 01 · Dashboard reactivo
 
 :::: {.columns}
@@ -195,21 +174,22 @@ ellmer organiza la conversación con el modelo.
 La clave se lee desde el entorno y nunca se escribe en el código.
 :::
 ::: {.column width="58%"}
-```r
-library(ellmer)
-
-chat <- chat_openai(
-  model = "gpt-5-nano",
-  system_prompt = paste(
-    "Responde brevemente en español sobre los países de Gapminder en su último año.",
-    "No inventes resultados numéricos."
-  )
-)
-
-live_console(chat)
+```{r}
+#| echo: false
+#| results: asis
+code_block("../R/01_ellmer.R")
 ```
 :::
 ::::
+
+## Una conversación en Positron
+
+```r
+source("R/01_ellmer.R")
+```
+
+`live_console(chat)` abre la conversación en la consola interactiva. Antes de sumar una interfaz,
+podemos observar el cliente, el prompt y el historial.
 
 ## Shiny + ellmer {.section-slide}
 
@@ -299,12 +279,11 @@ La validación ocurre antes de cambiar lo que ve la persona.
 :::
 ::: {.column width="64%"}
 ```r
-actualizar_dashboard <- function(consulta, titulo) {
+actualizar_dashboard <- function(consulta) {
   consulta <- validar_select(consulta)
   resultado <- DBI::dbGetQuery(con, consulta)
 
   consulta_actual(consulta)
-  titulo_actual(titulo)
 
   list(mensaje = "Dashboard actualizado.", registros = nrow(resultado))
 }
@@ -334,32 +313,6 @@ mostrar_tabla <- function(n, titulo) {
 
   resultado
 }
-```
-:::
-::::
-
-## 07 · Inputs tradicionales y chat
-
-:::: {.columns}
-::: {.column width="50%"}
-### Inputs
-
-Predecibles y visibles para preguntas conocidas.
-
-```r
-selectInput("continente", "Continente", continentes)
-sliderInput("esperanza", "Esperanza de vida", 40, 85, c(60, 85))
-```
-:::
-::: {.column width="50%"}
-### Chat + query
-
-Flexible para combinar condiciones difíciles de anticipar.
-
-```r
-consulta_actual <- reactiveVal(
-  "SELECT * FROM paises"
-)
 ```
 :::
 ::::
@@ -398,12 +351,39 @@ ir_a_pais <- function(pais, zoom = 4) {
 :::
 ::::
 
-## Demos posteriores
+## Cuatro familias de tools
 
-<div class="demo-slot">
-  <p>Demo de Shiny, video corto o captura interactiva</p>
-  <code>Reservado para una integración futura con Shinylive</code>
+```{=html}
+<div class="tool-families" role="img"
+aria-label="Recorrido desde resolver una intención hasta inspeccionar la vista">
+<div class="tool-stage">
+<span>01</span>
+<strong>Resolver</strong>
+<code>resolver_territorio()</code>
+<small>Convierte lenguaje en un identificador válido.</small>
 </div>
+<div class="tool-stage">
+<span>02</span>
+<strong>Consultar</strong>
+<code>consultar_indicadores()</code>
+<small>Obtiene datos reales desde una fuente acotada.</small>
+</div>
+<div class="tool-stage">
+<span>03</span>
+<strong>Visualizar</strong>
+<code>visualizar_indicador()</code>
+<small>Cambia el estado visible de la aplicación.</small>
+</div>
+<div class="tool-stage">
+<span>04</span>
+<strong>Inspeccionar</strong>
+<code>inspeccionar_vista()</code>
+<small>Devuelve contexto estructurado al modelo.</small>
+</div>
+</div>
+```
+
+El patrón se repite en `app-91-colombia-territorial` y `app-92-banrep-sdmx`.
 
 ## Cierre {.section-slide}
 

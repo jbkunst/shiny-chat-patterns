@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "slides/**"
+      - "app-*/**"
       - ".github/workflows/slides-pages.yml"
   workflow_dispatch:
 
