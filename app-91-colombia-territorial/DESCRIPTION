@@ -1,0 +1,12 @@
+Title: App 91 · Colombia territorial
+Description: Aplica el recorrido resolver, consultar, visualizar e inspeccionar
+    sobre departamentos de Colombia y datos del CNPV 2018.
+Imports:
+    brand.yml,
+    bslib,
+    ellmer,
+    mapgl,
+    sf,
+    shiny,
+    shinychat
+Encoding: UTF-8

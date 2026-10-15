@@ -1,0 +1,14 @@
+Title: App 92 · Banrep + SDMX
+Description: Repite el recorrido resolver, consultar, visualizar e inspeccionar
+    sobre series reales del Banco de la República mediante SDMX REST/XML.
+Imports:
+    brand.yml,
+    bslib,
+    ellmer,
+    httr,
+    shiny,
+    shinychat,
+    tinyplot,
+    xml2
+Encoding: UTF-8
+
