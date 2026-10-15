@@ -1,0 +1,14 @@
+project:
+  type: default
+  output-dir: _site
+
+lang: es
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+    toc-title: Apps
+    toc-location: right
+    page-layout: full

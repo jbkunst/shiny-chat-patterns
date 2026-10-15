@@ -1,0 +1,48 @@
+---
+title: Apps del taller
+subtitle: Shiny + ellmer · patrones progresivos
+execute:
+  echo: false
+  warning: false
+---
+
+Cada ejemplo se ejecuta en un proceso independiente. Puedes probarlo aquí o abrirlo en otra pestaña.
+
+```{r}
+#| results: asis
+root <- Sys.getenv("SHINY_APP_ROOT")
+apps <- strsplit(Sys.getenv("SHINY_APP_NAMES"), ";", fixed = TRUE)[[1]]
+ports <- as.integer(strsplit(Sys.getenv("SHINY_APP_PORTS"), ";", fixed = TRUE)[[1]])
+
+if (!nzchar(root) || !length(apps) || length(apps) != length(ports)) {
+  stop("Inicia este catálogo con R/run_all_apps.R.")
+}
+
+escape_html <- function(text) {
+  text <- gsub("&", "&amp;", text, fixed = TRUE)
+  text <- gsub("<", "&lt;", text, fixed = TRUE)
+  text <- gsub(">", "&gt;", text, fixed = TRUE)
+  gsub('"', "&quot;", text, fixed = TRUE)
+}
+
+for (index in seq_along(apps)) {
+  app <- apps[index]
+  metadata <- read.dcf(file.path(root, app, "DESCRIPTION"))[1, ]
+  title <- unname(metadata["Title"])
+  html_title <- escape_html(title)
+  description <- escape_html(unname(metadata["Description"]))
+  url <- sprintf("http://127.0.0.1:%d", ports[index])
+
+  cat(
+    '\n\n::: {.app-entry .column-page}\n\n',
+    '## ', title, ' {#', app, '}\n\n',
+    '<div class="app-meta"><code>', app, '</code></div>',
+    '<p class="app-description">', description, '</p>',
+    '<div class="iframe-preview">',
+    '<iframe src="', url, '" title="', html_title, '" loading="lazy"></iframe>',
+    '</div>',
+    '\n\n:::\n\n',
+    sep = ""
+  )
+}
+```
