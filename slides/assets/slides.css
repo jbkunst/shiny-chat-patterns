@@ -137,6 +137,102 @@
   font-weight: 600;
 }
 
+.reveal .slides > section.conversation-slide > p:first-of-type {
+  margin: 0 0 42px;
+}
+
+.reveal .slides > section.conversation-slide > pre,
+.reveal .slides > section.conversation-slide > div.sourceCode {
+  margin: 0;
+}
+
+.reveal .slides > section.conversation-slide > p:last-of-type {
+  margin: 36px 0 0;
+}
+
+.reveal .slides > section.conversation-slide h2 code {
+  margin-left: .18em;
+}
+
+.reveal .slides > section.setup-slide h2 code {
+  margin-left: .18em;
+}
+
+.reveal .slides > section.setup-slide > p {
+  margin: 0 0 32px;
+}
+
+.reveal .slides > section.setup-slide > pre,
+.reveal .slides > section.setup-slide > div.sourceCode,
+.reveal .slides > section.setup-slide > div.code-copy-outer-scaffold {
+  margin: 0 0 36px;
+}
+
+.reveal .slides > section.setup-slide > p:last-of-type {
+  margin-bottom: 0;
+}
+
+.reveal .slides > section.app02-overview .fragment > h3 {
+  margin: 0 0 18px;
+}
+
+.reveal .slides > section.app02-overview .fragment > div.code-copy-outer-scaffold {
+  margin: 0 0 22px;
+}
+
+.reveal .slides > section.app02-overview .fragment > p {
+  margin: 0 0 28px;
+}
+
+.reveal .slides > section.app02-overview .fragment > p:last-of-type {
+  margin-bottom: 0;
+}
+
+.reveal .slides > section.tool-families-slide {
+  display: flex !important;
+  box-sizing: border-box;
+  padding: 154px 96px 72px;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.reveal .slides > section.tool-families-slide .incremental {
+  margin: 0 0 36px;
+}
+
+.reveal .slides > section.tool-families-slide .incremental li {
+  margin-bottom: 28px;
+}
+
+/* Workshop progression slide ------------------------------------------- */
+.reveal .slides > section.center:not(.section-slide) {
+  display: flex !important;
+  padding: 154px 160px 72px;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.reveal .slides > section.center:not(.section-slide) ol {
+  margin: 0 0 12px;
+}
+
+.reveal .slides > section.center:not(.section-slide) li {
+  margin-bottom: 28px;
+}
+
+.reveal .slides > section.center:not(.section-slide) .incremental li {
+  margin-bottom: 34px;
+}
+
+.reveal .slides > section.center:not(.section-slide) .incremental {
+  margin: 48px 0;
+}
+
+.reveal .slides > section.center:not(.section-slide) .incremental li::marker,
+.reveal .slides > section.center:not(.section-slide) .incremental li::before {
+  color: var(--blue-bright) !important;
+}
+
 /* Section slide -------------------------------------------------------- */
 .reveal .slides > section.section-slide {
   display: flex !important;
@@ -536,67 +632,6 @@ body:has(.section-slide.present) .reveal {
 .demo-slot code {
   color: var(--muted) !important;
   font-size: 19px;
-}
-
-.tool-families {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 34px;
-  margin-top: 46px;
-}
-
-.tool-families::before {
-  position: absolute;
-  top: 52px;
-  right: 8%;
-  left: 8%;
-  height: 2px;
-  background: var(--rule);
-  content: "";
-}
-
-.tool-stage {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  min-width: 0;
-  align-items: flex-start;
-  flex-direction: column;
-}
-
-.tool-stage > span {
-  display: grid;
-  width: 58px;
-  height: 58px;
-  margin-bottom: 34px;
-  border: 2px solid var(--blue);
-  border-radius: 50%;
-  place-content: center;
-  background: var(--paper);
-  color: var(--blue);
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.tool-stage > strong {
-  color: var(--text);
-  font-size: 34px;
-  font-weight: 500;
-}
-
-.tool-stage > code {
-  margin-top: 14px;
-  color: var(--blue);
-  font-size: 18px;
-}
-
-.tool-stage > small {
-  margin-top: 20px;
-  color: var(--muted);
-  font-size: 21px;
-  font-weight: 300;
-  line-height: 1.4;
 }
 
 .reveal [data-tippy-root] {
