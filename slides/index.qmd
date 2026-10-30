@@ -40,17 +40,27 @@ revealjs-plugins:
 # Inserta un archivo R como Markdown. Las descripciones nombradas agregan
 # anotaciones y pasos de resaltado para los rangos de líneas indicados.
 code_block <- function(path, descriptions = NULL) {
+  # Cuidados de mantenimiento (detalle en README.md):
+  # - path es relativo a este QMD; los rangos corresponden al archivo original completo.
+  # - Conservar .workshop-code en ambos modos: assets/slides.css le aplica fuente de 19 px,
+  #   altura máxima de 683 px y scroll. Los demás ejemplos conservan 20 px y 650 px.
+  # - El CSS también define el ancho, fondo y z-index del tooltip para mantenerlo legible.
+  # - assets/code-tooltips.js, cargado desde assets/cover.html, posiciona el tooltip encima
+  #   del marcador de la copia visible y fuera del contenedor que recorta el código.
+  #   z-index por sí solo no corrige el recorte ni el desplazamiento entre copias de Reveal.
+  # - Al cambiar fuente, altura o Quarto/codefrag, revisar App 02 (pasos 3 y 4), avance,
+  #   retroceso y ventanas de distinto tamaño; comprobar líneas largas y el alto de App 01.
   path <- file.path(dirname(knitr::current_input(dir = TRUE)), path)
   code <- readLines(path, encoding = "UTF-8", warn = FALSE)
 
   if (is.null(descriptions)) {
-    return(cat("```r", paste(code, collapse = "\n"), "```", sep = "\n"))
+    return(cat("```{.r .workshop-code}", paste(code, collapse = "\n"), "```", sep = "\n"))
   }
 
   ranges <- names(descriptions)
   first_lines <- as.integer(sub("-.*", "", ranges))
   code[first_lines] <- paste(code[first_lines], sprintf("# <%d>", seq_along(descriptions)))
-  fence <- sprintf('```{.r code-line-numbers="|%s"}', paste(ranges, collapse = "|"))
+  fence <- sprintf('```{.r .workshop-code code-line-numbers="|%s"}', paste(ranges, collapse = "|"))
   notes <- sprintf("%d. **%d.** %s", seq_along(descriptions), seq_along(descriptions), descriptions)
   cat(fence, paste(code, collapse = "\n"), "```", "", notes, sep = "\n")
 }
@@ -62,14 +72,42 @@ code_block <- function(path, descriptions = NULL) {
 1. **Partimos** de una aplicación existente.
 2. **Agregamos** una sola funcionalidad nueva.
 3. **Explicamos** qué cambia y cómo funciona en el código.
-4. **Seguimos** con el siguiente paso.
+4. **Continuamos** con la siguiente app.
+:::
+
+## El recorrido del taller {.workshop-agenda}
+
+::: {.incremental}
+1. **Preparar la app y conversar**
+
+   ::: {.nonincremental}
+   - **App 00:** inputs y outputs.
+   - **App 01:** dashboard reactivo.
+   - **App 02:** chat sin acceso a los datos.
+   :::
+
+2. **Consultar y actualizar datos**
+
+   ::: {.nonincremental}
+   - **App 03:** primera tool de consulta.
+   - **App 04:** consultas SQL.
+   - **App 05:** actualización del dashboard.
+   :::
+
+3. **Actuar sobre la interfaz**
+
+   ::: {.nonincremental}
+   - **App 06:** tablas y gráficos en modales.
+   - **App 07:** controles tradicionales y chat.
+   - **App 08:** cámara del mapa.
+   :::
 :::
 
 ## `{shiny}` {.section-slide}
 
 `{shiny}` conecta inputs y outputs para crear aplicaciones web interactivas en R.
 
-## App 00 · La estructura mínima de una app
+## App 00 · Conectar inputs y outputs
 
 ```{r}
 #| echo: false
@@ -77,10 +115,10 @@ code_block <- function(path, descriptions = NULL) {
 code_block(
   "../app-00/app.R",
   c(
-    "8-9" = "La UI define la estructura visible de la aplicación.",
+    "9-11" = "La UI define la estructura visible de la aplicación.",
     "12-14" = "Los inputs permiten que la persona interactúe.",
     "16-19" = "Los outputs muestran los resultados.",
-    "22-43" = "El server conecta los inputs con los outputs."
+    "23-43" = "El server conecta los inputs con los outputs."
   )
 )
 ```
@@ -138,7 +176,7 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-## App 01 · Dashboard reactivo
+## App 01 · Filtrar datos con controles {#app-01-dashboard-reactivo}
 
 Esta será la aplicación base que iremos modificando paso a paso.
 
@@ -148,9 +186,9 @@ Esta será la aplicación base que iremos modificando paso a paso.
 code_block(
   "../app-01/app.R",
   c(
-    "5-7" = "Carga los datos compartidos y prepara las opciones del filtro.",
-    "9-22" = "Construye el dashboard con filtro, indicadores, gráfico y tabla.",
-    "24-40" = "Conecta el filtro con los outputs mediante lógica reactiva."
+    "6-7" = "Carga los datos compartidos y prepara las opciones del filtro.",
+    "10-22" = "Construye el dashboard con filtro, indicadores, gráfico y tabla.",
+    "25-41" = "Conecta el filtro con los outputs mediante lógica reactiva."
   )
 )
 ```
@@ -181,20 +219,19 @@ Antes de conectarlo a una aplicación, probamos el cliente y la conversación de
 code_block("../R/01_ellmer.R")
 ```
 
-El código define el cliente, el prompt y el historial. La clave se lee desde el entorno y nunca se escribe
-en el código.
+El cliente conserva el historial entre llamadas a `chat$chat()`. La clave se lee desde el entorno.
 
 ## `{shinychat}` {.section-slide}
 
 `{shinychat}` conecta la conversación de `{ellmer}` con la interfaz reactiva de `{shiny}`.
 
-## App 02 · Chat en la interfaz {.app02-overview}
+## App 02 · Conversar sin acceso a los datos {.app02-overview}
 
 ::: {.fragment}
 ### El chat en la UI
 
 En la UI, `chat_ui()` crea la conversación. El id `chat` la conecta con el server; `messages` muestra
-un saludo inicial y `placeholder` orienta la pregunta.
+un saludo inicial y `placeholder` orienta la pregunta. El modelo todavía no recibe los datos del dashboard.
 
 ```r
 shinychat::chat_ui(
@@ -231,28 +268,27 @@ code_block(
   c(
     "3-4" = "Carga `{ellmer}` y `{shinychat}`.",
     "19" = "Incorpora el chat en la UI con el id `chat`.",
-    "52" = "Crea el objeto de conversación con `{ellmer}`.",
+    "52-58" = "Crea la conversación; todavía no entrega los datos de la app al modelo.",
     "60-63" = "Escucha el input y agrega la respuesta al chat."
   )
 )
 ```
 
-## App 03 · Chat con contexto de los datos
+## App 03 · Leer un resumen de los datos visibles {.pattern-overview}
 
-:::: {.columns}
-::: {.column width="36%"}
-El modelo consulta un resumen calculado desde los países visibles.
+La tool calcula un resumen con campos predefinidos a partir de los países visibles.
 
-La tool lee el estado. Todavía no modifica el dashboard.
-:::
-::: {.column width="64%"}
+`isolate(data())` lee el estado al ejecutar la tool. Esta consulta no modifica el dashboard.
+
 ```r
 resumir_datos_visibles <- function() {
   df <- isolate(data())
   list(
+    continente = isolate(input$continente),
     registros = nrow(df),
     poblacion_total = sum(df$poblacion),
-    esperanza_promedio = round(mean(df$esperanza_de_vida), 1)
+    esperanza_promedio = round(mean(df$esperanza_de_vida), 1),
+    pib_promedio = round(mean(df$pib_per_capita))
   )
 }
 
@@ -261,8 +297,6 @@ chat$register_tool(tool(
   "Resume los países visibles en el dashboard."
 ))
 ```
-:::
-::::
 
 ## App 03 · El código
 
@@ -272,22 +306,21 @@ chat$register_tool(tool(
 code_block(
   "../app-03/app.R",
   c(
-    "56-65" = "Define la tool que resume los datos visibles.",
+    "57-66" = "Define la tool que lee y resume los datos visibles al ejecutarse.",
     "77-80" = "Registra la tool para que el modelo pueda usarla.",
     "82-85" = "Mantiene el flujo de conversación en el chat."
   )
 )
 ```
 
-## App 04 · Chat con consultas SQL
+## App 04 · Pasar del resumen a consultas SQL {.pattern-overview}
 
-:::: {.columns}
-::: {.column width="36%"}
-La tool acepta consultas acotadas y devuelve resultados verificables.
+La tool consulta toda la tabla `paises`; el filtro manual del dashboard no limita esa consulta.
 
-Solo `SELECT`, una tabla conocida y un límite de filas.
-:::
-::: {.column width="64%"}
+El código exige `SELECT`, la palabra `paises` y ningún punto y coma: es una validación básica.
+
+El prompt pide hasta 20 filas al listar registros; ese límite no está impuesto por el código.
+
 ```r
 consultar_paises <- function(consulta) {
   DBI::dbGetQuery(con, validar_select(consulta))
@@ -301,8 +334,6 @@ chat$register_tool(tool(
   )
 ))
 ```
-:::
-::::
 
 ## App 04 · El código
 
@@ -312,34 +343,60 @@ chat$register_tool(tool(
 code_block(
   "../app-04/app.R",
   c(
-    "18-24" = "Valida que la consulta sea un SELECT acotado.",
+    "18-24" = "Comprueba el inicio SELECT, la referencia a paises y la ausencia de punto y coma.",
     "68-70" = "La tool ejecuta la consulta sobre DuckDB.",
     "75-81" = "Registra la tool y describe sus argumentos."
   )
 )
 ```
 
-## App 05 · Chat que actualiza el dashboard
+## App 05 · Pasar de consultar a actualizar la vista {.pattern-overview}
 
-:::: {.columns}
-::: {.column width="36%"}
-La conversación modifica el estado reactivo que alimenta el dashboard.
+Consultar devuelve datos al chat. Actualizar cambia la consulta reactiva que alimenta el dashboard.
 
-La validación ocurre antes de cambiar lo que ve la persona.
-:::
-::: {.column width="64%"}
+Antes de cambiar el estado, la tool comprueba que el resultado conserve todas las columnas.
+
 ```r
 actualizar_dashboard <- function(consulta) {
   consulta <- validar_select(consulta)
   resultado <- DBI::dbGetQuery(con, consulta)
+  if (!all(names(paises) %in% names(resultado))) stop("La consulta debe devolver todas las columnas.")
 
   consulta_actual(consulta)
 
   list(mensaje = "Dashboard actualizado.", registros = nrow(resultado))
 }
 ```
-:::
-::::
+
+## App 05 · Cómo se propaga el cambio {.reactivity-flow-slide}
+
+Al ejecutar `consulta_actual(consulta)`, Shiny invalida los cálculos que dependen de ese estado.
+
+```{mermaid}
+%%{init: {
+  "theme": "base",
+  "flowchart": {"htmlLabels": false},
+  "themeVariables": {
+    "fontFamily": "IBM Plex Sans, sans-serif",
+    "fontSize": "28px",
+    "primaryColor": "#fffefa",
+    "primaryTextColor": "#263338",
+    "primaryBorderColor": "#174a70",
+    "lineColor": "#174a70"
+  }
+}}%%
+flowchart LR
+  T["Tool<br/>actualizar_dashboard()"] -->|Escribe| Q["Estado<br/>consulta_actual()"]
+  Q -->|Invalida| D["Datos<br/>data()"]
+  D -->|Actualiza| O["Indicadores<br/>gráfico y tabla"]
+```
+
+```r
+consulta_actual <- reactiveVal("SELECT * FROM paises")
+data <- reactive(DBI::dbGetQuery(con, consulta_actual()))
+```
+
+Los outputs dependen de `data()` y vuelven a calcularse para mostrar el resultado de la nueva consulta.
 
 ## App 05 · El código
 
@@ -350,21 +407,18 @@ code_block(
   "../app-05/app.R",
   c(
     "49-51" = "El dashboard lee la consulta reactiva actual.",
-    "69-76" = "La tool valida la consulta y actualiza ese estado.",
+    "69-76" = "La tool valida la consulta y sus columnas antes de escribir el estado reactivo.",
     "89-95" = "Registra la tool que puede modificar el dashboard."
   )
 )
 ```
 
-## App 06 · Chat con acciones de interfaz
+## App 06 · Abrir vistas y devolver contexto {.pattern-overview}
 
-:::: {.columns}
-::: {.column width="36%"}
 Una tool abre una tabla o un gráfico sin recargar la aplicación.
 
-El modal también entrega contexto de vuelta al modelo.
-:::
-::: {.column width="64%"}
+La tool devuelve al modelo los datos de la tabla o la imagen del gráfico que muestra en el modal.
+
 ```r
 mostrar_tabla <- function(n, titulo) {
   n <- max(1L, min(as.integer(n), 100L))
@@ -379,8 +433,6 @@ mostrar_tabla <- function(n, titulo) {
   resultado
 }
 ```
-:::
-::::
 
 ## App 06 · El código
 
@@ -391,21 +443,30 @@ code_block(
   "../app-06/app.R",
   c(
     "82-94" = "Define la tool que muestra una tabla en un modal.",
-    "96-120" = "Define la tool que crea un gráfico y devuelve su imagen.",
+    "96-121" = "Define la tool que crea un gráfico y devuelve su imagen al modelo.",
     "142-160" = "Registra las tools de interfaz con sus argumentos."
   )
 )
 ```
 
-## App 08 · Chat que controla un mapa
+## App 07 · El mismo filtro con controles o con chat {.comparison-slide}
 
-:::: {.columns}
-::: {.column width="34%"}
-El chat controla el dato y la perspectiva desde la que se observa.
+Comparamos dos formas de expresar la misma intención sobre el dashboard.
 
-La cámara se actualiza como proxy. El globo no se reconstruye.
-:::
-::: {.column width="66%"}
+| Controles tradicionales | Chat |
+|---|---|
+| América; esperanza de vida: 70–80 años. | «Muestra América con esperanza de vida de 70 a 80 años». |
+
+Ambos caminos alimentan `data()`. La interacción más reciente determina el modo activo.
+
+Esta es una comparación de interfaces. App 08 retoma la consulta y la actualización para agregar el mapa.
+
+## App 08 · Mover la cámara mediante un proxy {.pattern-overview}
+
+`ir_a_pais()` mueve la cámara sin cambiar el filtro de países ni el indicador del mapa.
+
+El proxy conserva el mapa al viajar. Los cambios de filtro o color usan el render reactivo.
+
 ```r
 ir_a_pais <- function(pais, zoom = 4) {
   ubicacion <- DBI::dbGetQuery(
@@ -428,8 +489,6 @@ ir_a_pais <- function(pais, zoom = 4) {
   paste("Mapa centrado en", ubicacion$pais[1])
 }
 ```
-:::
-::::
 
 ## App 08 · El código
 
@@ -439,8 +498,8 @@ ir_a_pais <- function(pais, zoom = 4) {
 code_block(
   "../app-08/app.R",
   c(
-    "143-160" = "La tool actualiza la cámara del mapa mediante un proxy.",
-    "181-199" = "Registra la tool que permite viajar hacia un país.",
+    "148-160" = "La tool actualiza la cámara del mapa existente mediante un proxy.",
+    "192-199" = "Registra ir_a_pais y describe sus argumentos.",
     "201-204" = "Mantiene el flujo del chat con las tools."
   )
 )
@@ -449,14 +508,14 @@ code_block(
 ## Cuatro familias de tools {.tool-families-slide}
 
 ::: {.incremental}
-1. **Resolver** — `resolver_territorio()` convierte lenguaje en un identificador válido.
-2. **Consultar** — `consultar_indicadores()` obtiene datos reales desde una fuente acotada.
-3. **Visualizar** — `visualizar_indicador()` cambia el estado visible de la aplicación.
-4. **Inspeccionar** — `inspeccionar_vista()` devuelve contexto estructurado al modelo.
+1. **Resolver** — `resolver_cliente()` convierte un nombre en el ID de un cliente del CRM.
+2. **Consultar** — `consultar_stock()` obtiene existencias desde un sistema de inventario.
+3. **Visualizar** — `mostrar_ruta()` dibuja un recorrido en un mapa de logística.
+4. **Inspeccionar** — `inspeccionar_seleccion()` devuelve los filtros activos de un dashboard.
 :::
 
 ::: {.fragment}
-El patrón se repite en `app-91-colombia-territorial` y `app-92-banrep-sdmx`.
+Son ejemplos ilustrativos de nombres para otros contextos: CRM, inventario, logística y dashboards.
 :::
 
 ## Cierre {.section-slide}
