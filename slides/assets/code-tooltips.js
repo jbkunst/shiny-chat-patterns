@@ -1,8 +1,7 @@
 /*
  * Ajuste local para code_block() + Quarto/codefrag; se carga desde assets/cover.html.
- * Reveal crea y desplaza una copia del código por cada paso de resaltado. Tippy conserva
- * como referencia el marcador original: en pasos posteriores puede quedar fuera de vista.
- * Por eso usamos el marcador de la copia activa y actualizamos la posición con su scroll.
+ * code-highlights.js conserva una sola copia del código. También admitimos el motor anterior,
+ * que crea una copia por paso: en ese caso la referencia debe seguir el marcador de la copia activa.
  * El tooltip se monta en la slide para evitar el recorte del código; z-index por sí solo
  * no evita ese recorte. La posición superior no usa flip y se calcula en coordenadas de
  * la slide para compensar tanto CSS zoom como transform: scale(). Su apariencia vive en slides.css.
@@ -22,16 +21,28 @@
   function configureTooltips() {
     document.querySelectorAll(".code-annotation-anchor").forEach((anchor) => {
       if (!anchor._tippy) return;
+      const pre = anchor.closest("pre");
+      const slide = anchor.closest("section");
+      const singleCopy = pre.dataset.workshopHighlights ||
+        pre.closest("div.sourceCode")?.dataset.workshopHighlights;
+      const reference = () => singleCopy ? anchor : visibleAnchor(anchor);
       const onShow = anchor._tippy.props.onShow;
       anchor._tippy.setProps({
-        appendTo: anchor.closest("section"),
+        appendTo: slide,
         placement: "top-end",
         maxWidth: 480,
         offset: [0, 12],
         zIndex: 100,
-        getReferenceClientRect: () => visibleAnchor(anchor).getBoundingClientRect(),
+        getReferenceClientRect: () => reference().getBoundingClientRect(),
         onShow(instance) {
-          const marker = visibleAnchor(anchor);
+          anchor.dispatchEvent(new CustomEvent("workshop-annotation", { bubbles: true }));
+          if (singleCopy) {
+            // The range is already highlighted. Quarto's extra gutter overlay causes horizontal overflow.
+            window.tippy.hideAll();
+            anchor.classList.add("code-annotation-active");
+            return;
+          }
+          const marker = reference();
           const code = marker.closest("code");
           const bounds = code.getBoundingClientRect();
           const line = marker.getBoundingClientRect();
@@ -52,10 +63,9 @@
               phase: "beforeWrite",
               requires: ["computeStyles"],
               fn({ state }) {
-                const slide = anchor.closest("section");
                 const bounds = slide.getBoundingClientRect();
                 const scale = bounds.width / slide.offsetWidth;
-                const line = visibleAnchor(anchor).getBoundingClientRect();
+                const line = reference().getBoundingClientRect();
                 const width = state.elements.popper.offsetWidth;
                 const height = state.elements.popper.offsetHeight;
                 const left = Math.max(16, Math.min(
@@ -77,13 +87,23 @@
       });
     });
 
-    // Scroll events come from the active clone, rather than Tippy's original reference.
-    document.querySelectorAll("pre.code-annotation-code code").forEach((code) => {
-      code.addEventListener("scroll", () => {
-        code.closest("pre").querySelectorAll(".code-annotation-anchor").forEach((anchor) => {
-          if (anchor._tippy?.state.isVisible) anchor._tippy.popperInstance?.update();
+    // Popper follows scroll natively for a single copy. Legacy clones need explicit updates.
+    document.querySelectorAll("pre.code-annotation-code").forEach((pre) => {
+      if (pre.dataset.workshopHighlights || pre.closest("div.sourceCode")?.dataset.workshopHighlights) return;
+      const anchors = Array.from(pre.querySelectorAll(".code-annotation-anchor"));
+      let frame = null;
+      const update = () => {
+        if (frame !== null) return;
+        frame = requestAnimationFrame(() => {
+          frame = null;
+          anchors.forEach((anchor) => {
+            if (anchor._tippy?.state.isVisible) anchor._tippy.popperInstance?.update();
+          });
         });
-      }, { passive: true });
+      };
+      pre.querySelectorAll("code").forEach((code) => {
+        code.addEventListener("scroll", update, { passive: true });
+      });
     });
   }
 

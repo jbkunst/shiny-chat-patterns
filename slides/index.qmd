@@ -39,15 +39,15 @@ revealjs-plugins:
 #| include: false
 # Inserta un archivo R como Markdown. Las descripciones nombradas agregan
 # anotaciones y pasos de resaltado para los rangos de líneas indicados.
-code_block <- function(path, descriptions = NULL) {
+code_block <- function(path, descriptions = NULL, single_copy = TRUE) {
   # Cuidados de mantenimiento (detalle en README.md):
   # - path es relativo a este QMD; los rangos corresponden al archivo original completo.
   # - Conservar .workshop-code en ambos modos: assets/slides.css le aplica fuente de 19 px,
   #   altura máxima de 683 px y scroll. Los demás ejemplos conservan 20 px y 650 px.
   # - El CSS también define el ancho, fondo y z-index del tooltip para mantenerlo legible.
-  # - assets/code-tooltips.js, cargado desde assets/cover.html, posiciona el tooltip encima
-  #   del marcador de la copia visible y fuera del contenedor que recorta el código.
-  #   z-index por sí solo no corrige el recorte ni el desplazamiento entre copias de Reveal.
+  # - assets/code-highlights.js resalta un único bloque; single_copy = FALSE recupera las copias de Reveal.
+  # - assets/code-tooltips.js mantiene el tooltip encima del marcador y fuera del contenedor con scroll.
+  #   Ambos scripts se cargan desde assets/cover.html; z-index por sí solo no corrige el recorte.
   # - Al cambiar fuente, altura o Quarto/codefrag, revisar App 02 (pasos 3 y 4), avance,
   #   retroceso y ventanas de distinto tamaño; comprobar líneas largas y el alto de App 01.
   path <- file.path(dirname(knitr::current_input(dir = TRUE)), path)
@@ -60,7 +60,10 @@ code_block <- function(path, descriptions = NULL) {
   ranges <- names(descriptions)
   first_lines <- as.integer(sub("-.*", "", ranges))
   code[first_lines] <- paste(code[first_lines], sprintf("# <%d>", seq_along(descriptions)))
-  fence <- sprintf('```{.r .workshop-code code-line-numbers="|%s"}', paste(ranges, collapse = "|"))
+  attribute <- if (single_copy) "data-workshop-highlights" else "code-line-numbers"
+  steps <- paste(ranges, collapse = "|")
+  if (!single_copy) steps <- paste0("|", steps)
+  fence <- sprintf('```{.r .workshop-code %s="%s"}', attribute, steps)
   notes <- sprintf("%d. **%d.** %s", seq_along(descriptions), seq_along(descriptions), descriptions)
   cat(fence, paste(code, collapse = "\n"), "```", "", notes, sep = "\n")
 }

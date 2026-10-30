@@ -11,6 +11,7 @@ La presentación vive completa en esta carpeta y se publica en
 - `assets/slides.css`: tres estilos de slide y componentes de contenido.
 - `assets/cover.html`: estructura de la visualización animada de portada.
 - `assets/cover.js`: animación de portada inspirada en el landing de jkunst.com.
+- `assets/code-highlights.js`: resaltado y scroll de los archivos completos con una sola copia del código.
 - `assets/code-tooltips.js`: posición de las anotaciones durante el resaltado y el scroll.
 - `_extensions/mcanouil/codefrag/`: navegación progresiva por anotaciones de código.
 - La demo de `app-00` se ejecuta en el navegador mediante Shinylive.
@@ -67,12 +68,13 @@ Los rangos se muestran progresivamente gracias a la extensión local `codefrag`.
 
 ### Parámetros y estilo de `code_block()`
 
-La firma actual es `code_block(path, descriptions = NULL)`:
+La firma actual es `code_block(path, descriptions = NULL, single_copy = TRUE)`:
 
 | Parámetro | Uso |
 |---|---|
 | `path` | Ruta al script R, relativa a `index.qmd`. Se incluye el archivo completo en UTF-8. |
 | `descriptions` | Vector de explicaciones nombradas por línea o rango, como `"19"` o `"60-63"`. |
+| `single_copy` | Usa un solo bloque HTML; con `FALSE` recupera el resaltado estándar de Quarto. |
 
 Con `descriptions = NULL`, muestra el archivo sin anotaciones ni pasos de resaltado. Los rangos usan
 los números de línea del archivo original; al editar una app, revisa las llamadas correspondientes.
@@ -91,19 +93,41 @@ necesidad concreta, tendría sentido agregar:
 Estos parámetros todavía no están implementados. Recortar líneas exigiría además conservar la
 numeración original y ajustar la relación entre rangos, anotaciones y pasos de `codefrag`.
 
+### Rendimiento de archivos largos
+
+Por defecto, el helper emite `data-workshop-highlights` en lugar de `code-line-numbers`. Así Quarto
+conserva una sola copia del archivo. `codefrag` sigue creando los avances de las anotaciones y
+`assets/code-highlights.js` aplica las clases de resaltado al bloque existente al avanzar o retroceder.
+Los rangos y las líneas originales se conservan; el archivo completo sigue disponible para el scroll.
+
+El desplazamiento usa el scroll suave del navegador y respeta la preferencia de movimiento reducido.
+Al entrar a una slide, redimensionar la ventana o preparar las páginas de impresión, centra la selección
+sin animación. Los marcadores numerados también permiten seleccionar el paso correspondiente.
+
+El tooltip conserva la referencia a su marcador y usa el seguimiento nativo de Popper durante el scroll.
+Con el motor anterior, conserva los marcadores de las copias y agrupa sus eventos de scroll en una
+actualización por bloque y frame, evitando buscar los mismos elementos en cada evento.
+Con una sola copia, el resaltado pertenece a `code-highlights.js`; se evita el borde adicional de Quarto
+porque su gutter puede desbordar el ancho del código y crear una barra horizontal.
+
+Para volver al motor anterior en un bloque, usa `code_block(..., single_copy = FALSE)`. Cambiar el valor
+por defecto de la función recupera ese comportamiento para todas las llamadas que no lo especifican.
+Ese motor crea una copia completa del archivo por paso, por lo que su coste crece con las líneas y
+la cantidad de anotaciones. La extensión instalada se conserva sin modificaciones.
+
 ### Por qué existe el ajuste de tooltips
 
-Reveal crea una copia del código por cada paso de resaltado y desplaza esa copia al avanzar. El
-tooltip de Quarto puede seguir vinculado al marcador del bloque original, que no necesariamente
-está visible. Esto afecta especialmente a anotaciones que aparecen lejos del inicio del archivo.
+El tooltip debe seguir el marcador mientras se desplaza el código. Con el motor estándar de Quarto,
+Reveal crea además una copia del código por cada paso y el marcador original puede quedar fuera
+de vista. El ajuste admite tanto ese motor como el resaltado de una sola copia.
 
 `assets/code-tooltips.js`, cargado desde `assets/cover.html`, coordina cinco aspectos:
 
-1. Usa el marcador de la copia activa como referencia de posición.
+1. Usa el marcador como referencia; con el motor anterior, sigue el de la copia activa.
 2. Monta el tooltip en la slide para evitar el recorte de los contenedores con scroll u overflow.
 3. Mantiene el tooltip encima de la línea, con el cambio automático de lado (`flip`) desactivado.
 4. Convierte las coordenadas a la escala de la slide, incluido el uso de CSS `zoom` o `transform`.
-5. Recalcula la posición durante el scroll y recupera el marcador al volver a una slide.
+5. Recalcula la posición durante el scroll y coordina la selección con `code-highlights.js`.
 
 El `z-index` y la apariencia se definen en `assets/slides.css`. Subir solo el `z-index` no resuelve
 el recorte por overflow ni una referencia vinculada a la copia equivocada. El ajuste vive fuera de
@@ -117,6 +141,8 @@ Al modificar el helper, los estilos o las versiones de Quarto/codefrag, comproba
 - Las líneas largas de `value_box()`: deben caber sin scroll horizontal.
 - App 01, cuyo texto introductorio comparte el espacio vertical con el bloque de código.
 - Los ejemplos que no usan `code_block()`: deben conservar su tamaño original.
+- Los clics en los marcadores numerados y la exportación mediante `?print-pdf`.
+- `single_copy = FALSE`, para conservar una alternativa al actualizar Quarto o `codefrag`.
 - Las tildes y eñes: si aparecen secuencias como `<U+00F3>`, revisar la configuración UTF-8 de R.
 
 El ajuste depende de los selectores de los fragmentos y de la instancia `_tippy` que crea Quarto.
