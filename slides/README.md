@@ -49,6 +49,10 @@ quarto preview slides/index.qmd
 Quarto escribe `slides/index.html` y sus dependencias junto al QMD. Las rutas son relativas para que la
 presentación funcione bajo `/shiny-chat-patterns/`.
 
+Para imprimir, abre la presentación con `?print-pdf`. El CSS de `html.reveal-print` devuelve `.slides`
+al flujo normal de la página: conservar la posición absoluta del modo de pantalla colapsa su contenedor
+y puede producir un PDF vacío. Esta regla se aplica únicamente a la vista de impresión.
+
 ## Código R anotado
 
 `index.qmd` define `code_block()`, que lee un script R y conecta rangos de líneas con explicaciones de

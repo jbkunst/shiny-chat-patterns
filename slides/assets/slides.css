@@ -52,6 +52,11 @@
   text-align: left;
 }
 
+/* Print pages need normal flow; the screen layout's absolute position collapses their parent. */
+html.reveal-print .reveal .slides {
+  position: static !important;
+}
+
 .reveal .slides > section {
   box-sizing: border-box;
   height: 100%;
