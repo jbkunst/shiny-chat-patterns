@@ -7,7 +7,7 @@ pasajeros <- utils::read.csv(file.path("..", "data", "air-passengers.csv"))
 
 # user interface ----------------------------------------------------------
 ui <- page_sidebar(
-  title = "App 00 · Widgets y outputs",
+  title = "App 00 · La estructura mínima de una app",
   sidebar = sidebar(
     textInput("title", "Título", value = "Pasajeros aéreos"),
     sliderInput("n", "Cantidad de puntos", min = 24, max = 144, value = 48, step = 24),
