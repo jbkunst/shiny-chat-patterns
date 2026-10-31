@@ -2657,8 +2657,8 @@
       "RemoteHost": "api.github.com",
       "RemoteRepo": "mcptools",
       "RemoteUsername": "posit-dev",
-      "RemoteRef": "ff94da04ccb5e6e86a56537c9d2dcb0e0532067b",
-      "RemoteSha": "ff94da04ccb5e6e86a56537c9d2dcb0e0532067b",
+      "RemoteRef": "714803bdfce903707a27d9c4740591d87f601aae",
+      "RemoteSha": "714803bdfce903707a27d9c4740591d87f601aae",
       "NeedsCompilation": "no",
       "Author": "Simon Couch [aut, cre] (ORCID: <https://orcid.org/0000-0001-5676-5107>), Winston Chang [aut] (ORCID: <https://orcid.org/0000-0002-1576-2126>), Charlie Gao [aut] (ORCID: <https://orcid.org/0000-0002-0750-061X>), Posit Software, PBC [cph, fnd] (ROR: <https://ror.org/03wc8by49>)",
       "Maintainer": "Simon Couch <simon.couch@posit.co>"

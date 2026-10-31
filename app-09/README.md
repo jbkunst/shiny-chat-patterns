@@ -17,9 +17,21 @@ shiny::runApp("app-09")
 ```
 
 `renv.lock` fija la revisión de `posit-dev/mcptools` comprobada con este endpoint HTTP:
-`ff94da04ccb5e6e86a56537c9d2dcb0e0532067b`.
+`714803bdfce903707a27d9c4740591d87f601aae`. Esta revisión conserva los campos JSON `null` al ocultar
+datos sensibles, y evita un fallo del cliente al procesar algunas respuestas del servidor.
 
-Prueba: «Consulta el crecimiento del PIB real de Chile para 2025–2028 y grafícalo».
+Si `renv::restore()` falla en Windows al extraer el archivo `AGENTS.md` de esa dependencia, la instalación
+con `remotes` permite completar la compilación del paquete. Con el entorno del proyecto activo:
+
+```r
+install.packages("remotes") # Solo si aún no está instalado.
+remotes::install_github(
+  "posit-dev/mcptools@714803bdfce903707a27d9c4740591d87f601aae",
+  dependencies = FALSE, upgrade = "never", build_vignettes = FALSE
+)
+```
+
+Prueba: «Consulta la población de Chile entre 2020 y 2025 y grafícala».
 El chat muestra las llamadas MCP y la llamada local de gráficos. La tabla permite comparar los valores
 graficados con los devueltos por la consulta. Comprueba indicador, unidad y años de proyección.
 La prueba completa verificó que el gráfico coincide con la consulta a la precisión publicada por WEO.
@@ -41,7 +53,13 @@ en conversaciones independientes, sin y con MCP. Conserva respuestas y llamadas 
 argumentos, resultados y errores. `data/comparacion.rds` guarda los mismos datos en formato R.
 No contiene claves ni razonamiento interno del modelo. Las slides leen el JSON sin consultar la API.
 
-Las cifras y los metadatos se comprobaron contra los resultados guardados de las herramientas.
+Las preguntas son población de Chile y desempleo de España en 2025. El prompt solo pide una respuesta
+breve en español con año, unidad y fuente; no menciona MCP, herramientas ni el taller. La respuesta
+sin MCP puede acertar de memoria: la comparación permite revisar precisión y procedencia de los datos.
+
+Las cifras de las respuestas con MCP se contrastan con los resultados guardados de las herramientas,
+respetando la precisión mostrada y la escala (personas o millones de personas).
+Las respuestas sin MCP se conservan tal como las dio el modelo; no se presentan como datos verificados.
 Para repetir esa comprobación sin internet ni llamadas al modelo, ejecuta dentro de `app-09`:
 
 ```r

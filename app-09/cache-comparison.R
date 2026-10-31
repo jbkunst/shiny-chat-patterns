@@ -5,11 +5,8 @@ library(jsonlite)
 # prompt ------------------------------------------------------------------
 prompt <- paste(readLines("comparison-prompt.md", warn = FALSE), collapse = "\n")
 preguntas <- c(
-  "¿Cuál es el identificador, la agencia y la versión actual del conjunto World Economic Outlook del FMI?",
-  paste(
-    "Consulta en WEO la proyección de crecimiento del PIB real de Chile para 2027 y 2028.",
-    "Indica ambos valores, la unidad y la fuente."
-  )
+  "Según el FMI, ¿cuánta población tenía Chile en 2025?",
+  "Según el FMI, ¿cuál fue la tasa de desempleo de España en 2025?"
 )
 
 # tools -------------------------------------------------------------------
@@ -37,6 +34,7 @@ ejecutar <- function(pregunta, usar_mcp) {
 }
 
 casos <- lapply(preguntas, function(pregunta) {
+  cat("Comparando:", pregunta, "\n")
   sin_mcp <- ejecutar(pregunta, FALSE)
   con_mcp <- ejecutar(pregunta, TRUE)
   stopifnot(length(sin_mcp$llamadas) == 0L, length(con_mcp$llamadas) > 0L)

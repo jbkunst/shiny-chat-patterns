@@ -1,28 +1,255 @@
 {
-  "generado_utc": "2026-10-31 04:53:40 UTC",
+  "generado_utc": "2026-10-31 05:18:16 UTC",
   "modelo": "gpt-5-nano",
   "endpoint": "https://imf.caseyjhand.com/mcp",
-  "prompt": "Responde en español, en un máximo de 35 palabras.\nSolo afirma cifras o metadatos actuales si los verificas con las herramientas disponibles.\nSi no tienes herramientas, reconoce la limitación sin pedir permisos ni inventar resultados.\nSi hay tools MCP, usa el catálogo y las dimensiones antes de consultar observaciones.\nEn `imf_get_database`, omite `limit` y `offset` salvo que indiques también `dimension_id`.\nPara proyecciones, indica que lo son y conserva la unidad y la fuente.",
+  "prompt": "Responde en español, en un máximo de 35 palabras.\nIndica el año, la unidad y la fuente del dato.",
   "casos": [
     {
-      "pregunta": "¿Cuál es el identificador, la agencia y la versión actual del conjunto World Economic Outlook del FMI?",
+      "pregunta": "Según el FMI, ¿cuánta población tenía Chile en 2025?",
       "sin_mcp": {
-        "respuesta": "No puedo verificarlo sin herramientas; no puedo confirmar identificador, agencia ni versión actuales del conjunto World Economic Outlook. Necesitaría acceder al catálogo del FMI para darte datos exactos.",
+        "respuesta": "2025; unidad: personas; fuente: FMI (WEO). No dispongo de la cifra exacta aquí. ¿Quieres que la busque y te la comparta?",
         "llamadas": []
       },
       "con_mcp": {
-        "respuesta": "Identificador: WEO; Agencia: IMF.RES; Versión actual: 9.0.0.",
+        "respuesta": "2025: 20,037 millones de personas. Unidad: personas. Fuente: FMI, World Economic Outlook (WEO).",
         "llamadas": [
           {
             "nombre": "imf_list_databases",
             "argumentos": {
-              "filter": "World Economic Outlook",
+              "filter": "population",
               "include_vintages": false,
               "limit": 50,
               "offset": 0
             },
             "resultado": {
               "dataflows": [
+                {
+                  "id": "GS_SDO",
+                  "agency_id": "IMF.STA",
+                  "version": "1.0.0",
+                  "name": "Gender Statistics (GS) Social, demographic and other",
+                  "description": "Data on Gender-disaggregated on selected population characteristics."
+                }
+              ],
+              "total_count": 1,
+              "returned_count": 1,
+              "offset": 0
+            },
+            "error": null
+          },
+          {
+            "nombre": "imf_list_databases",
+            "argumentos": {
+              "filter": null,
+              "include_vintages": false,
+              "limit": 50,
+              "offset": 0
+            },
+            "resultado": {
+              "dataflows": [
+                {
+                  "id": "NSDP",
+                  "agency_id": "IMF.STA",
+                  "version": "7.0.0",
+                  "name": "National Summary Data Page (NSDP)",
+                  "description": "Dataset of key macroeconomic indicators that participating countries commit to publishing on the National Summary Data Page (NSDP)."
+                },
+                {
+                  "id": "WPCPER",
+                  "agency_id": "IMF.STA",
+                  "version": "6.0.0",
+                  "name": "Crypto-based Parallel Exchange Rates (Working Paper dataset WP-CPER)",
+                  "description": "This dataset provides a cross-country indicator of parallel exchange rates based on crypto markets. Parallel exchange rates are measured as the price of bitcoin on the local market relative to the U.S…"
+                },
+                {
+                  "id": "ER",
+                  "agency_id": "IMF.STA",
+                  "version": "4.0.1",
+                  "name": "Exchange Rates (ER)",
+                  "description": "This dataset contains historical exchange rate data between the US Dollar, Special Drawing Rights (SDR), Euro, and various national currencies. It includes both period average and end-of-period exchan…"
+                },
+                {
+                  "id": "FD",
+                  "agency_id": "IMF.STA",
+                  "version": "6.0.0",
+                  "name": "Fiscal Decentralization (FD)",
+                  "description": "The Fiscal Decentralization dataset includes fiscal decentralization indicators for a sample of IMF member countries.  The following indicators are included in the dataset: Revenue and Expenditure Dec…"
+                },
+                {
+                  "id": "ANEA",
+                  "agency_id": "IMF.STA",
+                  "version": "6.0.1",
+                  "name": "National Economic Accounts (NEA), Annual Data",
+                  "description": "This dataset presents national, official estimates of annual expenditure-based Gross Domestic Product (GDP), by economy.   Estimates are presented in nominal terms (current prices) and volume terms (w…"
+                },
+                {
+                  "id": "GFS_COFOG",
+                  "agency_id": "IMF.STA",
+                  "version": "11.0.0",
+                  "name": "GFS Government Expenditures by Function",
+                  "description": "The Government Finance Statistics (GFS) employs the Classification of the Functions of Government (COFOG) to group government expenditure by the purpose for which funds are used (e.g., health, educati…"
+                },
+                {
+                  "id": "FAS",
+                  "agency_id": "IMF.STA",
+                  "version": "8.0.0",
+                  "name": "Financial Access Survey (FAS)",
+                  "description": "The Financial Access Survey (FAS) dataset includes annual statistics on financial service access and usage. Selected data series are disaggregated by gender (male and female), the type of financial se…"
+                },
+                {
+                  "id": "GS_ATF",
+                  "agency_id": "IMF.STA",
+                  "version": "1.0.0",
+                  "name": "Gender Statistics (GS) Access to Finance (ATF)",
+                  "description": "Gender-disaggregated data on access to and use of financial services."
+                },
+                {
+                  "id": "IL",
+                  "agency_id": "IMF.STA",
+                  "version": "13.0.1",
+                  "name": "International Liquidity (IL)",
+                  "description": "International liquidity consists of all the resources that are available to the monetary authorities of countries for the purpose of meeting balance of payments financing needs. "
+                },
+                {
+                  "id": "MPFT",
+                  "agency_id": "IMF.RES",
+                  "version": "7.0.1",
+                  "name": "Monetary Policy Frameworks Toolkit (MPFT)",
+                  "description": "Monetary policy framework comprises the structures in place that enable and guide the conduct of monetary policy. In this project, we provide a multidimensional characterization of monetary policy fra…"
+                },
+                {
+                  "id": "TEG",
+                  "agency_id": "IMF.STA",
+                  "version": "3.0.2",
+                  "name": "Trade in Low Carbon Technology Goods (TEG)",
+                  "description": "This dataset provides information on the bilateral trade flows of low-carbon technology products, as well as country and world aggregates . Low carbon technology products produce less pollution than t…"
+                },
+                {
+                  "id": "IRFCL",
+                  "agency_id": "IMF.STA",
+                  "version": "12.0.0",
+                  "name": "International Reserves and Foreign Currency Liquidity (IRFCL)",
+                  "description": "The International Reserves and Foreign Currency Liquidity (IRFCL, or the “Reserves Data Template”) dataset includes data on the amount and composition of countries’ official reserve assets, other fore…"
+                },
+                {
+                  "id": "ENVTX",
+                  "agency_id": "IMF.STA",
+                  "version": "1.0.2",
+                  "name": "Environmental Taxes",
+                  "description": "This dataset tracks government revenue from taxes imposed on activities that negatively impact the environment. These taxes are categorized into four types: energy taxes (including fuel for transport)…"
+                },
+                {
+                  "id": "PSBS",
+                  "agency_id": "IMF.FAD",
+                  "version": "2.0.0",
+                  "name": "Public Sector Balance Sheet (PSBS)",
+                  "description": "The Public Sector Balance Sheet (PSBS) Database shows comprehensive estimates of public sector assets and liabilities that formed the basis for the analysis presented in the October 2018 edition of th…"
+                },
+                {
+                  "id": "EQ",
+                  "agency_id": "IMF.RES",
+                  "version": "2.0.0",
+                  "name": "Export Quality (EQ)",
+                  "description": "This dataset provides export quality indicators for over 800 products across 166 countries from 1963 to 2014, resulting in over 1.7 million observations.  Higher index values indicate higher quality,…"
+                },
+                {
+                  "id": "GDD",
+                  "agency_id": "IMF.FAD",
+                  "version": "2.0.0",
+                  "name": "Global Debt Database (GDD)",
+                  "description": "The Global Debt Database (GDD) is the result of a multiyear investigative process that started with the October 2016 Fiscal Monitor. The dataset comprises total gross debt of the (private and public)…"
+                },
+                {
+                  "id": "MFS_FMP",
+                  "agency_id": "IMF.STA",
+                  "version": "3.0.0",
+                  "name": "Monetary and Financial Statistics (MFS): Financial Market Prices",
+                  "description": "The Monetary and Financial Statistics (MFS), Financial Market Prices dataset presents country-specific information on share prices, providing insights into equity markets. These data are compiled usin…"
+                },
+                {
+                  "id": "QNEA",
+                  "agency_id": "IMF.STA",
+                  "version": "7.0.0",
+                  "name": "National Economic Accounts (NEA), Quarterly Data",
+                  "description": "This dataset provides a snapshot of the economic activity of various countries on a quarterly basis.  It offers quarterly measurements of key indicators like Gross Domestic Product (GDP), consumption,…"
+                },
+                {
+                  "id": "ECFIE",
+                  "agency_id": "IMF.RES",
+                  "version": "2.0.3",
+                  "name": "Earnings-Calls-based Firm Inflation Expectations (ECFIE)",
+                  "description": "The Earnings-Calls-based Firm Inflation Expectations (ECFIE) index is a proxy for firms’ near-term inflation expectations, constructed through text analysis of earnings call transcripts from publicly…"
+                },
+                {
+                  "id": "ISORA_LATEST_DATA_PUB",
+                  "agency_id": "ISORA",
+                  "version": "5.0.0",
+                  "name": "ISORA Latest Data",
+                  "description": "ISORA data beginning FY2018 to current - For report year 2024 (ISORA2025)"
+                },
+                {
+                  "id": "GS_CGI",
+                  "agency_id": "IMF.STA",
+                  "version": "3.0.0",
+                  "name": "Gender Statistics (GS) Composite Gender Indices (CGI)",
+                  "description": "Data on five composite measures of gender equality."
+                },
+                {
+                  "id": "FSIBSIS",
+                  "agency_id": "IMF.STA",
+                  "version": "18.0.0",
+                  "name": "Financial Soundness Indicators (FSI), Balance Sheet, Income Statement and Memorandum Series",
+                  "description": "The Financial Soundness Indicators (FSIs), developed by the IMF together with the international community, are aimed at supporting macroprudential analysis—the surveillance and assessment of the stren…"
+                },
+                {
+                  "id": "MFS_NSRF",
+                  "agency_id": "IMF.STA",
+                  "version": "1.0.3",
+                  "name": "Monetary and Financial Statistics (MFS),  Non-Standard Data",
+                  "description": "The Monetary and Financial Statistics (MFS), Non-standard dataset provides discontinued, vintage country-reported financial data that are not harmonized and use country-specific terms."
+                },
+                {
+                  "id": "IIP",
+                  "agency_id": "IMF.STA",
+                  "version": "13.0.0",
+                  "name": "International Investment Position (IIP)",
+                  "description": "The International Investment Position (IIP) is a statistical statement that shows at a point in time the value of financial assets of residents of an economy that are claims on nonresidents or are gol…"
+                },
+                {
+                  "id": "GS_ED",
+                  "agency_id": "IMF.STA",
+                  "version": "3.0.0",
+                  "name": "Gender Statistics (GS) Education",
+                  "description": "Gender-disaggregated data on educational outcomes."
+                },
+                {
+                  "id": "CRBRATE",
+                  "agency_id": "IMF.STA",
+                  "version": "2.0.2",
+                  "name": "Carbon Rates",
+                  "description": "This dataset provides information on the Effective Carbon Rate (ECR), which represents the combined value of fuel excise taxes, carbon taxes, and tradeable permits that place a price on carbon emissio…"
+                },
+                {
+                  "id": "ED",
+                  "agency_id": "IMF.RES",
+                  "version": "1.0.0",
+                  "name": "Export Diversification (ED)",
+                  "description": "Covers 200 countries with data from 1962 to 2014. It has three main indicators: the Export Diversification Index, which can be disaggregated into sub-indices covering the Extensive Margin and the Inte…"
+                },
+                {
+                  "id": "ITS",
+                  "agency_id": "IMF.RES",
+                  "version": "3.0.1",
+                  "name": "International Trade in Services (ITS)",
+                  "description": "Using the IMF’s Balance of Payments Statistics database as a source, the statistics provided here are the first of its kind providing a compilation of detailed historic and new data on world trade in…"
+                },
+                {
+                  "id": "FSI_COUNTRY_METADATA_TABLE_2",
+                  "agency_id": "IMF.STA",
+                  "version": "1.0.0",
+                  "name": "Financial Soundness Indicators (FSI), Country Metadata Table 2",
+                  "description": "FSIs metadata (Table 2) provides an overview of the underlying definitions, consolidation bases, intra‑group adjustments, and accounting standards for the Financial Soundness Indicators. This metadata…"
+                },
                 {
                   "id": "UNFCCC",
                   "agency_id": "IMF.STA",
@@ -31,11 +258,438 @@
                   "description": "This dataset provides National Greenhouse Gas Emissions Inventories by the sector of origin and National Mitigation Targets as determined by the countries.  Annual country-level estimates of net emiss…"
                 },
                 {
+                  "id": "FDI",
+                  "agency_id": "IMF.MCM",
+                  "version": "1.0.0",
+                  "name": "Financial Development Index (FDI)",
+                  "description": "The dataset contains nine indices that summarize how developed financial institutions and financial markets  are in terms of their depth, access, and efficiency. These indices are aggregated into an…"
+                },
+                {
+                  "id": "GS_HEALTH",
+                  "agency_id": "IMF.STA",
+                  "version": "5.0.0",
+                  "name": "Gender Statistics (GS) Health",
+                  "description": "Gender-disaggregated data on health outcomes."
+                },
+                {
+                  "id": "WPAIAX",
+                  "agency_id": "IMF.STA",
+                  "version": "2.0.0",
+                  "name": "AI Adoption Index (AIAX)",
+                  "description": "The AI Adoption Index (AIAX) measures the prevalence of emerging AI skills in online job postings across economies and occupations. The dataset contains monthly economy-level indicators for 110 econom…"
+                },
+                {
+                  "id": "ISORA_2018_DATA_PUB",
+                  "agency_id": "ISORA",
+                  "version": "2.0.0",
+                  "name": "ISORA 2018 Data",
+                  "description": "ISORA data for FY2016 and FY2017"
+                },
+                {
+                  "id": "FSIC",
+                  "agency_id": "IMF.STA",
+                  "version": "13.0.1",
+                  "name": "Financial Soundness Indicators (FSI), Core and Additional Indicators",
+                  "description": "The Financial Soundness Indicators (FSIs), developed by the IMF together with the international community, are aimed at supporting macroprudential analysis—the surveillance and assessment of the stren…"
+                },
+                {
+                  "id": "ISORA_2016_DATA_PUB",
+                  "agency_id": "ISORA",
+                  "version": "2.0.0",
+                  "name": "ISORA 2016 Data",
+                  "description": "ISORA data for FY2014 and FY2015"
+                },
+                {
+                  "id": "GFS_SOO",
+                  "agency_id": "IMF.STA",
+                  "version": "12.0.0",
+                  "name": "GFS Statement of Operations ",
+                  "description": "The Government Finance Statistics (GFS) includes a comprehensive report of all government revenues and expenditures, the government net lending / net borrowing (i.e. the government surplus / deficit)…"
+                },
+                {
+                  "id": "GFS_SSUC",
+                  "agency_id": "IMF.STA",
+                  "version": "10.0.0",
+                  "name": "GFS Statement of Sources and Uses of Cash",
+                  "description": "The Government Finance Statistics (GFS) includes a cash‐based summary showing how a government obtains and uses its cash resources over a reporting period. This covers inflows (e.g., tax receipts, gra…"
+                },
+                {
+                  "id": "ESG_FINANCE_ISSUER",
+                  "agency_id": "IMF.STA",
+                  "version": "2.0.3",
+                  "name": "Sustainable Bonds by Type of Issuer",
+                  "description": "This dataset contains information on sustainable debt instruments, including green bonds, social bonds, sustainability bonds, and sustainability-linked bonds, categorized by the type of issuer.  These…"
+                },
+                {
+                  "id": "CPI_WCA",
+                  "agency_id": "IMF.STA",
+                  "version": "3.0.0",
+                  "name": "Consumer Price Index (CPI), World and Country Aggregates (CPI_WCA)",
+                  "description": "This dataset provides monthly price indexes at world and country aggregate levels, based on published national CPIs all-item indexes. For monthly indexes the transformation type “period average” indic…"
+                },
+                {
+                  "id": "WPFXI",
+                  "agency_id": "IMF.STA",
+                  "version": "1.0.2",
+                  "name": "Working Paper Foreign Exchange Intervention (WPFXI) A Dataset of Public Data and Proxies",
+                  "description": "This dataset provides data on official and estimated foreign exchange intervention (FXI) for 120 countries since 2000.   Suggested citation: Adler, G., K. S. Chang, R. C. Mano and Y.Shao, 2024, \"Forei…"
+                },
+                {
+                  "id": "FFS",
+                  "agency_id": "IMF.STA",
+                  "version": "1.0.2",
+                  "name": "Fossil Fuel Subsidies",
+                  "description": "This dataset measures the extent to which fossil fuel prices paid by consumers are below their full financial and social costs. This is expressed as an aggregate value for each type of fuel and each e…"
+                },
+                {
+                  "id": "MFS_FC",
+                  "agency_id": "IMF.STA",
+                  "version": "9.0.0",
+                  "name": "Monetary and Financial Statistics (MFS), Financial Corporations",
+                  "description": "The Monetary and Financial Statistics (MFS), Financial Corporations dataset consolidates balance sheets of central banks, ODCs, and OFCs to analyze net financing by financial corporations to nonreside…"
+                },
+                {
+                  "id": "MFS_IR",
+                  "agency_id": "IMF.STA",
+                  "version": "9.0.0",
+                  "name": "Monetary and Financial Statistics (MFS), Interest Rate",
+                  "description": "The Monetary and Financial Statistics (MFS), Interest Rates dataset presents country-specific interest rate data across sectors and instruments, based on nationally defined methodologies."
+                },
+                {
+                  "id": "ESG_FINANCE",
+                  "agency_id": "IMF.STA",
+                  "version": "2.0.3",
+                  "name": "Sustainable Bonds",
+                  "description": "This dataset contains information on sustainable debt instruments, including green bonds, social bonds, sustainability bonds, and sustainability-linked bonds. These are fixed-income securities aimed a…"
+                },
+                {
+                  "id": "FM",
+                  "agency_id": "IMF.FAD",
+                  "version": "5.0.0",
+                  "name": "Fiscal Monitor (FM)",
+                  "description": "The Fiscal Monitor surveys and analyzes the latest public finance developments, it updates fiscal implications of the crisis and medium-term fiscal projections, and assesses policies to put public fin…"
+                },
+                {
+                  "id": "AEA",
+                  "agency_id": "IMF.STA",
+                  "version": "7.0.0",
+                  "name": "Air Emissions Accounts (AEA)",
+                  "description": "Annual and quarterly greenhouse gas emissions by activity and by country and region.  Regional estimates are presented by industry and household for four gases - carbon dioxide, methane, nitrous oxide…"
+                },
+                {
+                  "id": "FLTRI",
+                  "agency_id": "IMF.STA",
+                  "version": "2.0.1",
+                  "name": "Forward Looking Transition Risk Indicators",
+                  "description": "This dataset measures the impact of evolving carbon costs on firms’ financial indicators under different transition scenarios. The impacts are aggregated across countries and industries. Carbon Cost t…"
+                },
+                {
+                  "id": "BOP_AGG",
+                  "agency_id": "IMF.STA",
+                  "version": "9.0.1",
+                  "name": "Balance of Payments and International Investment Position Statistics (BOP/IIP), World and Country Group Aggregates",
+                  "description": "The World and Country Group Aggregates (historically called BOPSY) is an annual publication, released each November, of major balance of payments and international investment position components for c…"
+                },
+                {
                   "id": "WHDREO",
                   "agency_id": "IMF.WHD",
                   "version": "5.0.0",
                   "name": "Western Hemisphere Regional Economic Outlook (WHDREO)",
                   "description": "The WHD Regional Economic Outlook (REO) provides information on recent economic developments and prospects for countries in the Western Hemisphere. Data for the Western Hemisphere REO are prepared in…"
+                }
+              ],
+              "total_count": 105,
+              "returned_count": 50,
+              "offset": 0,
+              "notice": "Showing 1–50 of 105 matching dataflows. Call again with offset=50 for the next page, raise limit (max 200), or narrow with filter.",
+              "truncated": true,
+              "shown": 50,
+              "cap": 50
+            },
+            "error": null
+          },
+          {
+            "nombre": "imf_list_databases",
+            "argumentos": {
+              "filter": null,
+              "include_vintages": false,
+              "limit": 50,
+              "offset": 50
+            },
+            "resultado": {
+              "dataflows": [
+                {
+                  "id": "FSICDM",
+                  "agency_id": "IMF.STA",
+                  "version": "7.0.0",
+                  "name": "Financial Soundness Indicators (FSI), Concentration and Distribution Measures",
+                  "description": "The Financial Soundness Indicators (FSIs), developed by the IMF together with the international community, are aimed at supporting macroprudential analysis—the surveillance and assessment of the stren…"
+                },
+                {
+                  "id": "CPI",
+                  "agency_id": "IMF.STA",
+                  "version": "5.0.0",
+                  "name": "Consumer Price Index (CPI)",
+                  "description": "The Consumer Price Index (CPI) dataset includes the national consumer price indexes by economy. In addition to the all items, headline index, detailed indexes by Division (e.g. Food and Non-alcoholic…"
+                },
+                {
+                  "id": "PIP",
+                  "agency_id": "IMF.STA",
+                  "version": "5.0.0",
+                  "name": "Portfolio Investment Positions by Counterpart Economy (formerly CPIS)",
+                  "description": "The Portfolio Investment Positions by Counterpart Economy dataset (formerly Coordinated Portfolio Investment Survey, or CPIS) is a voluntary data collection exercise conducted under the auspices of th…"
+                },
+                {
+                  "id": "PCPS",
+                  "agency_id": "IMF.RES",
+                  "version": "9.0.0",
+                  "name": "Primary Commodity Price System (PCPS)",
+                  "description": "Indices of market prices for fuel and non-fuel commodities, and actual market prices for fuel and non-fuel commodities."
+                },
+                {
+                  "id": "BOP",
+                  "agency_id": "IMF.STA",
+                  "version": "21.0.0",
+                  "name": "Balance of Payments (BOP)",
+                  "description": "The Balance of Payments (BOP) is a statistical statement that summarizes transactions between residents and nonresidents during a period. It consists of the goods and services account, the primary inc…"
+                },
+                {
+                  "id": "MCDREO",
+                  "agency_id": "IMF.MCD",
+                  "version": "8.0.0",
+                  "name": "Middle East and Central Asia Regional Economic Outlook (MCDREO) ",
+                  "description": "The Middle East and Central Asia Department Regional Economic Outlook (MCDREO) provides information on recent economic developments and prospects for 32 countries and territories: Afghanistan, Algeria…"
+                },
+                {
+                  "id": "LS",
+                  "agency_id": "IMF.STA",
+                  "version": "9.0.0",
+                  "name": "Labor Statistics (LS)",
+                  "description": "Labor Force Statistics provide information on various aspects of labor markets including employment rates, unemployment rates, labor force participation. Data are obtained from national statistical or…"
+                },
+                {
+                  "id": "MFS_DC",
+                  "agency_id": "IMF.STA",
+                  "version": "8.0.0",
+                  "name": "Monetary and Financial Statistics (MFS), Depository Corporations",
+                  "description": "The Monetary and Financial Statistics (MFS), Depository Corporations dataset consolidates central bank and other depository corporations balance sheets to analyze broad money and depository corporatio…"
+                },
+                {
+                  "id": "CSR",
+                  "agency_id": "IMF.SPR",
+                  "version": "3.0.0",
+                  "name": "Comprehensive Surveillance Review (CSR)",
+                  "description": "2026 Comprehensive Surveillance Review (CSR) conducted stakeholder surveys of Country Authorities, IMF Executive Directors, and IMF Mission Chiefs. 2026 CSR Survey Data reports the results of these su…"
+                },
+                {
+                  "id": "ESG_FINANCE_CURRENCY",
+                  "agency_id": "IMF.STA",
+                  "version": "3.0.3",
+                  "name": "Sustainable Bonds by Type of Currency",
+                  "description": "This dataset contains information on sustainable debt instruments, including green bonds, social bonds, sustainability bonds, and sustainability-linked bonds, categorized by the currency in which they…"
+                },
+                {
+                  "id": "NDGAIN",
+                  "agency_id": "IMF.STA",
+                  "version": "1.0.1",
+                  "name": "IMF-Adapted ND-GAIN Index (NDGAIN)",
+                  "description": "The ND-GAIN index is a global free open-source index, that measures a country’s current vulnerability to climate disruptions and assesses a country’s readiness to leverage private and public sector in…"
+                },
+                {
+                  "id": "EER",
+                  "agency_id": "IMF.STA",
+                  "version": "6.0.0",
+                  "name": "Effective Exchange Rate (EER)",
+                  "description": "The Effective Exchange Rate (EER) dataset includes annual, quarterly and monthly nominal and real effective exchange rates by economy.  Nominal effective exchange rates (NEERs) measure the value of a…"
+                },
+                {
+                  "id": "GFS_SFCP",
+                  "agency_id": "IMF.STA",
+                  "version": "10.0.0",
+                  "name": "GFS Stocks and Flows by Counterparty",
+                  "description": "The Government Finance Statistics (GFS) includes the government transactions and stock positions in financial assets and liabilities by counterparty. The counterpart sectors include nonfinancial corpo…"
+                },
+                {
+                  "id": "PPI",
+                  "agency_id": "IMF.STA",
+                  "version": "3.0.0",
+                  "name": "Producer Price Index (PPI)",
+                  "description": "Producer Price Indexes (PPI) measures the average change over time in the selling prices received by domestic producers for their output. "
+                },
+                {
+                  "id": "GS_LEPM",
+                  "agency_id": "IMF.STA",
+                  "version": "2.0.0",
+                  "name": "Gender Statistics (GS) Leadership and empowerment (LEPM)",
+                  "description": "Data on the proportion of women in leadership positions."
+                },
+                {
+                  "id": "GS_SDO",
+                  "agency_id": "IMF.STA",
+                  "version": "1.0.0",
+                  "name": "Gender Statistics (GS) Social, demographic and other",
+                  "description": "Data on Gender-disaggregated on selected population characteristics."
+                },
+                {
+                  "id": "DIP",
+                  "agency_id": "IMF.STA",
+                  "version": "12.0.1",
+                  "name": "Direct Investment Positions by Counterpart Economy (formerly CDIS)",
+                  "description": "The Direct Investment Positions by Counterpart Economy dataset is based on information collected through an IMF-led global initiative on direct investment positions statistics (the Coordinated Direct…"
+                },
+                {
+                  "id": "QGDP_WCA",
+                  "agency_id": "IMF.STA",
+                  "version": "4.0.0",
+                  "name": "Quarterly Gross Domestic Product (GDP), World and Country Aggregates",
+                  "description": "This dataset provides a snapshot of the economic activity of the world and selected country aggregates on a quarterly basis.  It offers quarterly measurements of Gross Domestic Product (GDP). Quarterl…"
+                },
+                {
+                  "id": "ICSD",
+                  "agency_id": "IMF.FAD",
+                  "version": "1.0.0",
+                  "name": "Investment and Capital Stock Dataset (ICSD)",
+                  "description": "This dataset provides comprehensive data for investment and capital stock for the general government, private sector and public-private partnerships, across the Fund member countries."
+                },
+                {
+                  "id": "IIPCC",
+                  "agency_id": "IMF.STA",
+                  "version": "13.0.0",
+                  "name": "Currency Composition of the International Investment Position (IIPCC)",
+                  "description": "The Currency Composition of International Investment Positions dataset provides a snapshot of the currency breakdown of a country's foreign financial assets and liabilities at a specific date. This in…"
+                },
+                {
+                  "id": "CFBL",
+                  "agency_id": "IMF.STA",
+                  "version": "1.0.3",
+                  "name": "Carbon Footprint of Bank Loans",
+                  "description": "This dataset is designed to measure the carbon footprint of bank loans, which is a crucial component for understanding the environmental impact of financial portfolios. Bank loans provide finance to i…"
+                },
+                {
+                  "id": "HPD",
+                  "agency_id": "IMF.FAD",
+                  "version": "1.0.0",
+                  "name": "Historical Public Debt (HPD)",
+                  "description": "The Historical Public Debt Database contains unbalanced panel data on Gross Domestic Product, Gross Government Debt, and Debt to GDP Ratio for 187 countries. The series spans the years 1800 through 20…"
+                },
+                {
+                  "id": "GS_LI",
+                  "agency_id": "IMF.STA",
+                  "version": "1.0.0",
+                  "name": "Gender Statistics (GS) Labor and Income ",
+                  "description": "Gender-disaggregated data on labor and income by age, marital status and other characteristics."
+                },
+                {
+                  "id": "WORLD",
+                  "agency_id": "IMF.FAD",
+                  "version": "3.0.1",
+                  "name": "World Revenue Longitudinal Database (WoRLD)",
+                  "description": "The IMF's World Revenue Longitudinal Database (WoRLD) is a comprehensive dataset that tracks government revenue trends since the early 1980s. With data for 195 countries, including 191 IMF member coun…"
+                },
+                {
+                  "id": "SRD",
+                  "agency_id": "IMF.RES",
+                  "version": "1.0.0",
+                  "name": "Structural Reform Database (SRD)",
+                  "description": "The SRD contains data on a wide range of structural policies across different countries. These policies are things that affect how markets function, like labor laws, regulations on businesses, and tra…"
+                },
+                {
+                  "id": "COFER",
+                  "agency_id": "IMF.STA",
+                  "version": "7.0.1",
+                  "name": "Currency Composition of Official Foreign Exchange Reserves (COFER)",
+                  "description": "The Currency Composition of Official Foreign Exchange Reserves (COFER) dataset includes the world total of official foreign exchange reserves by currency. The currencies identified are: U.S. dollar, E…"
+                },
+                {
+                  "id": "SPE",
+                  "agency_id": "IMF.STA",
+                  "version": "13.0.0",
+                  "name": "Special Purpose Entities (SPEs)",
+                  "description": "Special Purpose Entities (SPEs) dataset provide detailed information on cross-border transactions and financial positions related to resident SPEs. "
+                },
+                {
+                  "id": "QGFS",
+                  "agency_id": "IMF.STA",
+                  "version": "12.0.0",
+                  "name": "Quarterly Government Finance Statistics (QGFS)",
+                  "description": "The Government Finance Statistics (GFS) includes government revenues and expenditures, government net lending / net borrowing (the surplus / deficit) financing transactions and balance sheet data on g…"
+                },
+                {
+                  "id": "NA_MAIN",
+                  "agency_id": "IMF.STA",
+                  "version": "1.0.0",
+                  "name": "National Accounts Main Aggregates (SDMX)",
+                  "description": "This dataset is published in accordance with the SDMX Global Data Structure Definition (DSD) for National Accounts. The National Accounts dataset presents national, official estimates of annual and qu…"
+                },
+                {
+                  "id": "CCI",
+                  "agency_id": "IMF.STA",
+                  "version": "4.0.1",
+                  "name": "Climate Change Indicators",
+                  "description": "This dataset provides information on global climate and weather patterns, providing insights into temperature variations, land cover accounts, and shifts in mean sea levels."
+                },
+                {
+                  "id": "FA",
+                  "agency_id": "IMF.STA",
+                  "version": "8.0.0",
+                  "name": "Fund Accounts (FA)",
+                  "description": "The Fund Accounts dataset provides information on IMF member countries' transactions with, and accounts with the Fund. "
+                },
+                {
+                  "id": "MFS_CBS",
+                  "agency_id": "IMF.STA",
+                  "version": "24.0.0",
+                  "name": "Monetary and Financial Statistics (MFS), Central Bank Data",
+                  "description": "The Monetary and Financial Statistics (MFS), Central Bank dataset offers an analytical perspective on the central bank’s balance sheet, focusing on the monetary base and the central bank’s financial r…"
+                },
+                {
+                  "id": "PI_WCA",
+                  "agency_id": "IMF.STA",
+                  "version": "1.0.0",
+                  "name": "Production Indexes, World and Country Group Aggregates",
+                  "description": "The Production Indexes dataset presents data on industrial production, construction, and retail sales indexes. These statistics are widely used to monitor economic activity."
+                },
+                {
+                  "id": "SDG",
+                  "agency_id": "IMF.STA",
+                  "version": "2.0.1",
+                  "name": "IMF Reported SDG Data",
+                  "description": "This dataset contains data from the International Monetary Fund (IMF) that is used to monitor progress on the Sustainable Development Goals (SDGs). It includes key economic and financial indicators, s…"
+                },
+                {
+                  "id": "TAXFIT",
+                  "agency_id": "IMF.FAD",
+                  "version": "3.0.1",
+                  "name": "Tax and Benefits Analysis Tool (TAXFIT)",
+                  "description": "TaxFit is a microsimulation model that computes taxes and benefits— including income taxes, social security contributions, social assistance, care, family, and in-work-benefits — for households whose…"
+                },
+                {
+                  "id": "MFS_MA",
+                  "agency_id": "IMF.STA",
+                  "version": "10.0.1",
+                  "name": "Monetary and Financial Statistics (MFS), Monetary Aggregates",
+                  "description": "The Monetary and Financial Statistics (MFS), Monetary Aggregates dataset presents monetary aggregates based on standardized SRF data, while also reflecting country-specific components aligned with nat…"
+                },
+                {
+                  "id": "CO2EEIEM",
+                  "agency_id": "IMF.STA",
+                  "version": "2.0.2",
+                  "name": "Carbon Emission Per Unit of Output (CO2EEIEM)",
+                  "description": "This dataset provides annual estimates of carbon dioxide (CO2) emissions for 66 countries across 45 industries from 1995 to 2018. It details both aggregate emissions and emissions intensity, specifica…"
+                },
+                {
+                  "id": "GFS_BS",
+                  "agency_id": "IMF.STA",
+                  "version": "12.0.0",
+                  "name": "GFS Balance Sheet",
+                  "description": "The Government Finance Statistics (GFS) includes a statement of the government’s stocks of assets, liabilities, and net worth. As recommended by GFSM 2014, it reflects the financial position at the en…"
+                },
+                {
+                  "id": "IMTS",
+                  "agency_id": "IMF.STA",
+                  "version": "1.0.0",
+                  "name": "International Trade in Goods (by partner country) (IMTS)",
+                  "description": "The International trade in goods by partner country dataset (formerly Direction of Trade Statistics (DOTS)) includes goods (merchandise) export and import statistics disaggregated according to a count…"
                 },
                 {
                   "id": "WEO",
@@ -45,6 +699,13 @@
                   "description": "The World Economic Outlook (WEO) database is created during the biannual WEO exercise, which begins in January and June of each year and results in the April and September/October WEO publication. Sel…"
                 },
                 {
+                  "id": "MFS_ODC",
+                  "agency_id": "IMF.STA",
+                  "version": "10.0.0",
+                  "name": "Monetary and Financial Statistics (MFS), Other Depository Corporations",
+                  "description": "The Monetary and Financial Statistics (MFS), Other Depository Corporations (ODCs) dataset presents the sectoral balance sheet of the ODCs highlighting the liabilities of ODCs sector that are included…"
+                },
+                {
                   "id": "APDREO",
                   "agency_id": "IMF.APD",
                   "version": "6.0.0",
@@ -52,16 +713,370 @@
                   "description": "APD Regional Economic Outlook (REO) provides information on recent economic developments and prospects for countries in Asia and the Pacific. Data for the REO for Asia and Pacific is prepared in conju…"
                 },
                 {
-                  "id": "AFRREO",
-                  "agency_id": "IMF.AFR",
-                  "version": "7.0.0",
-                  "name": "Sub-Saharan Africa Regional Economic Outlook (AFRREO)",
-                  "description": "Sub-Saharan Africa Regional Economic Outlook (REO) provides information on recent economic developments and prospects for countries in sub-Saharan Africa. Data for the REO for sub-Saharan Africa are p…"
+                  "id": "RSUI",
+                  "agency_id": "IMF.WHD",
+                  "version": "1.0.0",
+                  "name": "Reported Social Unrest Index (RSUI)",
+                  "description": "This dataset provides two measures of social unrest derived from media reports. One is the “A” index from the paper, and the “events” series.\nSuggested citation: \"Barrett, P., Appendino, M., Nguyen, K…"
+                },
+                {
+                  "id": "GENENVPROEXP",
+                  "agency_id": "IMF.STA",
+                  "version": "1.0.2",
+                  "name": "Government Environmental Protection Expenditures",
+                  "description": "This dataset captures government spending on environmental protection efforts such as pollution abatement, biodiversity conservation, and waste management. These expenditures are classified according…"
+                },
+                {
+                  "id": "CTOT",
+                  "agency_id": "IMF.RES",
+                  "version": "5.0.1",
+                  "name": "Commodity Terms of Trade (CTOT)",
+                  "description": "CTOT is a comprehensive database of country-specific commodity price indices for 182 economies covering the period from 1962 onwards. For each country, the change in the international price of up to 4…"
+                },
+                {
+                  "id": "INFORMRISK",
+                  "agency_id": "IMF.STA",
+                  "version": "1.0.4",
+                  "name": "Climate-Driven INFORM Risk Indicator",
+                  "description": "This dataset provides information on the Climate-driven INFORM Risk Indicator, which helps assess the risk of climate-driven hazards. It can be used to support decisions related to prevention, prepare…"
+                },
+                {
+                  "id": "ITG",
+                  "agency_id": "IMF.STA",
+                  "version": "4.0.0",
+                  "name": "International Trade in Goods (ITG)",
+                  "description": "Trade in goods includes all goods which add to, or subtract from, the stock of material resources of a country by entering its economic territory (imports) or leaving it (exports). Goods are physical,…"
+                },
+                {
+                  "id": "RE",
+                  "agency_id": "IMF.STA",
+                  "version": "2.0.1",
+                  "name": "Renewable Energy",
+                  "description": "This dataset provides information on electricity generation and installed capacity, categorized by energy type (renewable and non-renewable) and five technology types (Fossil fuels, Hydropower, Solar…"
+                },
+                {
+                  "id": "GS_LGRGHTS",
+                  "agency_id": "IMF.STA",
+                  "version": "1.0.1",
+                  "name": "Gender Statistics (GS) Legal Rights",
+                  "description": "Data on the legal rights that affects women's economic empowerment."
+                },
+                {
+                  "id": "GPT",
+                  "agency_id": "IMF.SPR",
+                  "version": "3.0.0",
+                  "name": "IMF Global Policy Tracker: How Countries are Responding to the Economic Impact of the War in the Middle East",
+                  "description": "The IMF Global Policy Tracker is a cross-country database of policy measures announced in response to the war in the Middle East. The tracker captures fiscal measures, pricing interventions, monetary…"
                 }
               ],
-              "total_count": 5,
-              "returned_count": 5,
+              "total_count": 105,
+              "returned_count": 50,
+              "offset": 50,
+              "notice": "Showing 51–100 of 105 matching dataflows. Call again with offset=100 for the next page, raise limit (max 200), or narrow with filter.",
+              "truncated": true,
+              "shown": 50,
+              "cap": 50
+            },
+            "error": null
+          },
+          {
+            "nombre": "imf_get_database",
+            "argumentos": {
+              "dataflow_id": "WEO",
+              "agency_id": null,
+              "version": null,
+              "codelist_filter": null,
+              "available_only": false,
+              "dimension_id": null,
+              "limit": 50,
               "offset": 0
+            },
+            "resultado": null,
+            "error": "Error: Input validation error: Invalid arguments for tool imf_get_database: dimension_id: dimension_id is required when limit or offset is provided.\n\nRecovery: Provide dimension_id.\n\n(reason invalid_arguments · request 1WP8W-J4EAF)"
+          },
+          {
+            "nombre": "imf_get_database",
+            "argumentos": {
+              "dataflow_id": "WEO",
+              "agency_id": null,
+              "version": null,
+              "codelist_filter": null,
+              "available_only": true,
+              "dimension_id": "INDICATOR",
+              "limit": 50,
+              "offset": 0
+            },
+            "resultado": {
+              "dataflow_id": "WEO",
+              "agency_id": "IMF.RES",
+              "version": "9.0.0",
+              "dsd_version": "9.0.0",
+              "structure_ref": "DSD_WEO",
+              "name": "World Economic Outlook (WEO)",
+              "description": "The World Economic Outlook (WEO) database is created during the biannual WEO exercise, which begins in January and June of each year and results in the April and September/October WEO publication. Selected series from the publication are available in a database format. ",
+              "available_only": true,
+              "series_count": 8202,
+              "time_period_start": "1980-01-01",
+              "time_period_end": "2032-01-01",
+              "dimension_id": "INDICATOR",
+              "key_format": "COUNTRY.INDICATOR.FREQUENCY",
+              "truncated": true,
+              "dimensions": [
+                {
+                  "id": "INDICATOR",
+                  "name": "Indicator",
+                  "position": 1,
+                  "codelist": [
+                    {
+                      "id": "BCA",
+                      "name": "Current account balance (credit less debit), US dollar"
+                    },
+                    {
+                      "id": "BCA_NGDPD",
+                      "name": "Current account balance (credit less debit), Percent of GDP"
+                    },
+                    {
+                      "id": "BF",
+                      "name": "Financial account balance (assets less liabilities), US dollar"
+                    },
+                    {
+                      "id": "BFD",
+                      "name": "Direct investment, Net (assets minus liabilities), US dollar"
+                    },
+                    {
+                      "id": "BFF",
+                      "name": "Financial derivatives and employee stock options, Net (assets minus liabilities), US dollar"
+                    },
+                    {
+                      "id": "BFO",
+                      "name": "Other investment, Net (assets minus liabilities), US dollar"
+                    },
+                    {
+                      "id": "BFP",
+                      "name": "Portfolio investment, Net (assets minus liabilities), US dollar"
+                    },
+                    {
+                      "id": "BFRA",
+                      "name": "Change in reserve assets, Net (assets minus liabilities), US dollar"
+                    },
+                    {
+                      "id": "BM",
+                      "name": "Imports of goods and services, US dollar"
+                    },
+                    {
+                      "id": "BX",
+                      "name": "Exports of goods and services, US dollar"
+                    },
+                    {
+                      "id": "D",
+                      "name": "External debt, US dollar"
+                    },
+                    {
+                      "id": "DS",
+                      "name": "External debt: total debt service, US dollar"
+                    },
+                    {
+                      "id": "DSI",
+                      "name": "External debt: total debt service, interest, US dollar"
+                    },
+                    {
+                      "id": "DSI_BX",
+                      "name": "External debt: total debt service, interest, Percent of exports of goods and services"
+                    },
+                    {
+                      "id": "DSI_NGDPD",
+                      "name": "External debt: total debt service, interest, Percent of GDP"
+                    },
+                    {
+                      "id": "DSP",
+                      "name": "External debt: total debt service, amortization, US dollar"
+                    },
+                    {
+                      "id": "DSP_BX",
+                      "name": "External debt: total debt service, amortization, Percent of exports of goods and services"
+                    },
+                    {
+                      "id": "DSP_NGDPD",
+                      "name": "External debt: total debt service, amortization, Percent of GDP"
+                    },
+                    {
+                      "id": "DS_BX",
+                      "name": "External debt: total debt service, Percent of exports of goods and services"
+                    },
+                    {
+                      "id": "DS_NGDPD",
+                      "name": "External debt: total debt service, Percent of GDP"
+                    },
+                    {
+                      "id": "D_BX",
+                      "name": "External debt, Percent of exports of goods and services"
+                    },
+                    {
+                      "id": "D_NGDPD",
+                      "name": "External debt, Percent of GDP"
+                    },
+                    {
+                      "id": "GGR",
+                      "name": "Revenue, General government, Domestic currency"
+                    },
+                    {
+                      "id": "GGR_NGDP",
+                      "name": "Revenue, General government, Percent of GDP"
+                    },
+                    {
+                      "id": "GGSB",
+                      "name": "Structural balance, General government, Domestic currency"
+                    },
+                    {
+                      "id": "GGSB_NPGDP",
+                      "name": "Structural balance, General government, Percent"
+                    },
+                    {
+                      "id": "GGX",
+                      "name": "Expenditure, General government, Domestic currency"
+                    },
+                    {
+                      "id": "GGXCNL",
+                      "name": "Net lending (+) / net borrowing (-), General government, Domestic currency"
+                    },
+                    {
+                      "id": "GGXCNL_NGDP",
+                      "name": "Net lending (+) / net borrowing (-), General government, Percent of GDP"
+                    },
+                    {
+                      "id": "GGXONLB",
+                      "name": "Primary net lending (+) / net borrowing (-), General government, Domestic currency"
+                    },
+                    {
+                      "id": "GGXONLB_NGDP",
+                      "name": "Primary net lending (+) / net borrowing (-), General government, Percent of GDP"
+                    },
+                    {
+                      "id": "GGXWDG",
+                      "name": "Gross debt, General government, Domestic currency"
+                    },
+                    {
+                      "id": "GGXWDG_NGDP",
+                      "name": "Gross debt, General government, Percent of GDP"
+                    },
+                    {
+                      "id": "GGXWDN",
+                      "name": "Net debt, General government, Domestic currency"
+                    },
+                    {
+                      "id": "GGXWDN_NGDP",
+                      "name": "Net debt, General government, Percent of GDP"
+                    },
+                    {
+                      "id": "GGX_NGDP",
+                      "name": "Expenditure, General government, Percent of GDP"
+                    },
+                    {
+                      "id": "LE",
+                      "name": "Employed persons, Persons for countries / Index for country groups"
+                    },
+                    {
+                      "id": "LP",
+                      "name": "Population, Persons for countries / Index for country groups"
+                    },
+                    {
+                      "id": "LUR",
+                      "name": "Unemployment rate"
+                    },
+                    {
+                      "id": "NGAP_NPGDP",
+                      "name": "Output gap, Percent of potential GDP"
+                    },
+                    {
+                      "id": "NGDP",
+                      "name": "Gross domestic product (GDP), Current prices, Domestic currency"
+                    },
+                    {
+                      "id": "NGDPD",
+                      "name": "Gross domestic product (GDP), Current prices, US dollar"
+                    },
+                    {
+                      "id": "NGDPDPC",
+                      "name": "Gross domestic product (GDP), Current prices, Per capita, US dollar"
+                    },
+                    {
+                      "id": "NGDPPC",
+                      "name": "Gross domestic product (GDP), Current prices, Per capita, Domestic currency"
+                    },
+                    {
+                      "id": "NGDPRPC",
+                      "name": "Gross domestic product (GDP), Constant prices, Per capita, Domestic currency"
+                    },
+                    {
+                      "id": "NGDPRPPPPC",
+                      "name": "Gross domestic product (GDP), Constant prices, Per capita, purchasing power parity (PPP) international dollar, ICP benchmark 2021"
+                    },
+                    {
+                      "id": "NGDP_D",
+                      "name": "Gross domestic product (GDP), Price deflator, Index"
+                    },
+                    {
+                      "id": "NGDP_FY",
+                      "name": "Gross domestic product (GDP), Current prices, Fiscal year, Domestic currency"
+                    },
+                    {
+                      "id": "NGDP_R",
+                      "name": "Gross domestic product (GDP), Constant prices, Domestic currency"
+                    },
+                    {
+                      "id": "NGDP_RPCH",
+                      "name": "Gross domestic product (GDP), Constant prices, Percent change"
+                    }
+                  ],
+                  "codelist_truncated": true,
+                  "available_count": 145,
+                  "unfiltered_count": 145,
+                  "matched_count": 145,
+                  "returned_count": 50,
+                  "offset": 0,
+                  "next_offset": 50
+                }
+              ],
+              "source": "Source: International Monetary Fund, World Economic Outlook (WEO), https://data.imf.org/"
+            },
+            "error": null
+          },
+          {
+            "nombre": "imf_query_dataset",
+            "argumentos": {
+              "dataflow_id": "WEO",
+              "agency_id": "IMF.RES",
+              "version": "9.0.0",
+              "key": "CHL.LP.A",
+              "start_period": "2025",
+              "end_period": "2025",
+              "last_n_observations": 1,
+              "canvas_id": null,
+              "output_mode": "auto"
+            },
+            "resultado": {
+              "dataflow_id": "WEO",
+              "key": "CHL.LP.A",
+              "start_period": "2025",
+              "end_period": "2025",
+              "last_n_observations": 1,
+              "observations": [
+                {
+                  "series_key": "CHL.LP.A",
+                  "time_period": "2025",
+                  "value": 20036669,
+                  "status": null
+                }
+              ],
+              "series_attributes": {
+                "unit": null,
+                "scale": "6",
+                "decimals": 3
+              },
+              "observation_count": 1,
+              "staged": false,
+              "truncated": false,
+              "source": "Source: International Monetary Fund, World Economic Outlook (WEO), https://data.imf.org/"
             },
             "error": null
           }
@@ -69,13 +1084,13 @@
       }
     },
     {
-      "pregunta": "Consulta en WEO la proyección de crecimiento del PIB real de Chile para 2027 y 2028. Indica ambos valores, la unidad y la fuente.",
+      "pregunta": "Según el FMI, ¿cuál fue la tasa de desempleo de España en 2025?",
       "sin_mcp": {
-        "respuesta": "No tengo acceso a las bases del FMI en momento para verificar el WEO; no puedo confirmar los valores de 2027 y 2028. Si dispones de la herramienta MCP, indícame y te guío para extraerlos.",
+        "respuesta": "2025, tasa de desempleo de España, unidad: %, fuente: FMI — World Economic Outlook. Nota: no puedo confirmar el valor exacto sin consultar datos en tiempo real.",
         "llamadas": []
       },
       "con_mcp": {
-        "respuesta": "Proyección WEO, Chile: 2027 = 2.611%, 2028 = 2.417%. Unidad: porcentaje (crecimiento interanual del PIB real). Fuente: IMF, World Economic Outlook (WEO).",
+        "respuesta": "España (2025): 10.51% (unidad: porcentaje). Fuente: FMI, World Economic Outlook (WEO).",
         "llamadas": [
           {
             "nombre": "imf_list_databases",
@@ -131,8 +1146,23 @@
               "codelist_filter": null,
               "available_only": false,
               "dimension_id": null,
-              "limit": null,
-              "offset": null
+              "limit": 50,
+              "offset": 0
+            },
+            "resultado": null,
+            "error": "Error: Input validation error: Invalid arguments for tool imf_get_database: dimension_id: dimension_id is required when limit or offset is provided.\n\nRecovery: Provide dimension_id.\n\n(reason invalid_arguments · request IVTY0-BVVSQ)"
+          },
+          {
+            "nombre": "imf_get_database",
+            "argumentos": {
+              "dataflow_id": "WEO",
+              "agency_id": null,
+              "version": null,
+              "codelist_filter": null,
+              "available_only": false,
+              "dimension_id": "INDICATOR",
+              "limit": 50,
+              "offset": 0
             },
             "resultado": {
               "dataflow_id": "WEO",
@@ -142,222 +1172,10 @@
               "structure_ref": "DSD_WEO",
               "name": "World Economic Outlook (WEO)",
               "description": "The World Economic Outlook (WEO) database is created during the biannual WEO exercise, which begins in January and June of each year and results in the April and September/October WEO publication. Selected series from the publication are available in a database format. ",
+              "dimension_id": "INDICATOR",
               "key_format": "COUNTRY.INDICATOR.FREQUENCY",
               "truncated": true,
               "dimensions": [
-                {
-                  "id": "COUNTRY",
-                  "name": "Country",
-                  "position": 0,
-                  "codelist": [
-                    {
-                      "id": "GX123",
-                      "name": "Other Advanced Economies (Advanced Economies excluding G7 and Euro Area countries)"
-                    },
-                    {
-                      "id": "AFG",
-                      "name": "Afghanistan, Islamic Republic of"
-                    },
-                    {
-                      "id": "ALB",
-                      "name": "Albania"
-                    },
-                    {
-                      "id": "DZA",
-                      "name": "Algeria"
-                    },
-                    {
-                      "id": "ASM",
-                      "name": "American Samoa"
-                    },
-                    {
-                      "id": "AND",
-                      "name": "Andorra, Principality of"
-                    },
-                    {
-                      "id": "AGO",
-                      "name": "Angola"
-                    },
-                    {
-                      "id": "AIA",
-                      "name": "Anguilla, United Kingdom-British Overseas Territory"
-                    },
-                    {
-                      "id": "ATG",
-                      "name": "Antigua and Barbuda"
-                    },
-                    {
-                      "id": "ARG",
-                      "name": "Argentina"
-                    },
-                    {
-                      "id": "ARM",
-                      "name": "Armenia, Republic of"
-                    },
-                    {
-                      "id": "ABW",
-                      "name": "Aruba, Kingdom of the Netherlands"
-                    },
-                    {
-                      "id": "AUS",
-                      "name": "Australia"
-                    },
-                    {
-                      "id": "AUT",
-                      "name": "Austria"
-                    },
-                    {
-                      "id": "AZE",
-                      "name": "Azerbaijan, Republic of"
-                    },
-                    {
-                      "id": "BHS",
-                      "name": "Bahamas, The"
-                    },
-                    {
-                      "id": "BHR",
-                      "name": "Bahrain, Kingdom of"
-                    },
-                    {
-                      "id": "BGD",
-                      "name": "Bangladesh"
-                    },
-                    {
-                      "id": "BRB",
-                      "name": "Barbados"
-                    },
-                    {
-                      "id": "BLR",
-                      "name": "Belarus, Republic of"
-                    },
-                    {
-                      "id": "BEL",
-                      "name": "Belgium"
-                    },
-                    {
-                      "id": "BLZ",
-                      "name": "Belize"
-                    },
-                    {
-                      "id": "BEN",
-                      "name": "Benin"
-                    },
-                    {
-                      "id": "BMU",
-                      "name": "Bermuda"
-                    },
-                    {
-                      "id": "BTN",
-                      "name": "Bhutan"
-                    },
-                    {
-                      "id": "BOL",
-                      "name": "Bolivia"
-                    },
-                    {
-                      "id": "BIH",
-                      "name": "Bosnia and Herzegovina"
-                    },
-                    {
-                      "id": "BWA",
-                      "name": "Botswana"
-                    },
-                    {
-                      "id": "BRA",
-                      "name": "Brazil"
-                    },
-                    {
-                      "id": "VGB",
-                      "name": "British Virgin Islands"
-                    },
-                    {
-                      "id": "BRN",
-                      "name": "Brunei Darussalam"
-                    },
-                    {
-                      "id": "BGR",
-                      "name": "Bulgaria"
-                    },
-                    {
-                      "id": "BFA",
-                      "name": "Burkina Faso"
-                    },
-                    {
-                      "id": "BDI",
-                      "name": "Burundi"
-                    },
-                    {
-                      "id": "CPV",
-                      "name": "Cabo Verde"
-                    },
-                    {
-                      "id": "KHM",
-                      "name": "Cambodia"
-                    },
-                    {
-                      "id": "CMR",
-                      "name": "Cameroon"
-                    },
-                    {
-                      "id": "CAN",
-                      "name": "Canada"
-                    },
-                    {
-                      "id": "CYM",
-                      "name": "Cayman Islands"
-                    },
-                    {
-                      "id": "CAF",
-                      "name": "Central African Republic"
-                    },
-                    {
-                      "id": "TCD",
-                      "name": "Chad"
-                    },
-                    {
-                      "id": "CHL",
-                      "name": "Chile"
-                    },
-                    {
-                      "id": "CHN",
-                      "name": "China, People's Republic of"
-                    },
-                    {
-                      "id": "COL",
-                      "name": "Colombia"
-                    },
-                    {
-                      "id": "COM",
-                      "name": "Comoros, Union of the"
-                    },
-                    {
-                      "id": "COD",
-                      "name": "Congo, Democratic Republic of the"
-                    },
-                    {
-                      "id": "COG",
-                      "name": "Congo, Republic of"
-                    },
-                    {
-                      "id": "COK",
-                      "name": "Cook Islands"
-                    },
-                    {
-                      "id": "CRI",
-                      "name": "Costa Rica"
-                    },
-                    {
-                      "id": "HRV",
-                      "name": "Croatia, Republic of"
-                    }
-                  ],
-                  "codelist_truncated": true,
-                  "unfiltered_count": 344,
-                  "matched_count": 344,
-                  "returned_count": 50,
-                  "offset": 0,
-                  "next_offset": 50
-                },
                 {
                   "id": "INDICATOR",
                   "name": "Indicator",
@@ -570,154 +1388,6 @@
                   "returned_count": 50,
                   "offset": 0,
                   "next_offset": 50
-                },
-                {
-                  "id": "FREQUENCY",
-                  "name": "Frequency",
-                  "position": 2,
-                  "codelist": [
-                    {
-                      "id": "A",
-                      "name": "Annual"
-                    },
-                    {
-                      "id": "D",
-                      "name": "Daily"
-                    },
-                    {
-                      "id": "M",
-                      "name": "Monthly"
-                    },
-                    {
-                      "id": "Q",
-                      "name": "Quarterly"
-                    },
-                    {
-                      "id": "S",
-                      "name": "Half-yearly, semester"
-                    },
-                    {
-                      "id": "W",
-                      "name": "Weekly"
-                    },
-                    {
-                      "id": "A2",
-                      "name": "Biennial"
-                    },
-                    {
-                      "id": "A3",
-                      "name": "Triennial"
-                    },
-                    {
-                      "id": "A4",
-                      "name": "Quadrennial"
-                    },
-                    {
-                      "id": "A5",
-                      "name": "Quinquennial"
-                    },
-                    {
-                      "id": "A10",
-                      "name": "Decennial"
-                    },
-                    {
-                      "id": "A20",
-                      "name": "Bidecennial"
-                    },
-                    {
-                      "id": "A30",
-                      "name": "Tridecennial"
-                    },
-                    {
-                      "id": "A_3",
-                      "name": "Three times a year"
-                    },
-                    {
-                      "id": "M2",
-                      "name": "Bimonthly"
-                    },
-                    {
-                      "id": "M_2",
-                      "name": "Semimonthly"
-                    },
-                    {
-                      "id": "M_3",
-                      "name": "Three times a month"
-                    },
-                    {
-                      "id": "W2",
-                      "name": "Biweekly"
-                    },
-                    {
-                      "id": "W3",
-                      "name": "Triweekly"
-                    },
-                    {
-                      "id": "W4",
-                      "name": "Four-weekly"
-                    },
-                    {
-                      "id": "W_2",
-                      "name": "Semiweekly"
-                    },
-                    {
-                      "id": "W_3",
-                      "name": "Three times a week"
-                    },
-                    {
-                      "id": "D_2",
-                      "name": "Twice a day"
-                    },
-                    {
-                      "id": "H",
-                      "name": "Hourly"
-                    },
-                    {
-                      "id": "H2",
-                      "name": "Bihourly"
-                    },
-                    {
-                      "id": "H3",
-                      "name": "Trihourly"
-                    },
-                    {
-                      "id": "B",
-                      "name": "Daily – business week"
-                    },
-                    {
-                      "id": "N",
-                      "name": "Minutely"
-                    },
-                    {
-                      "id": "I",
-                      "name": "Irregular"
-                    },
-                    {
-                      "id": "OA",
-                      "name": "Occasional annual"
-                    },
-                    {
-                      "id": "OM",
-                      "name": "Occasional monthly"
-                    },
-                    {
-                      "id": "_O",
-                      "name": "Other"
-                    },
-                    {
-                      "id": "_U",
-                      "name": "Unspecified"
-                    },
-                    {
-                      "id": "_Z",
-                      "name": "Not applicable"
-                    }
-                  ],
-                  "codelist_truncated": false,
-                  "unfiltered_count": 34,
-                  "matched_count": 34,
-                  "returned_count": 34,
-                  "offset": 0
                 }
               ],
               "source": "Source: International Monetary Fund, World Economic Outlook (WEO), https://data.imf.org/"
@@ -730,38 +1400,32 @@
               "dataflow_id": "WEO",
               "agency_id": null,
               "version": null,
-              "key": "CHL.NGDP_RPCH.A",
-              "start_period": "2027",
-              "end_period": "2028",
+              "key": "ESP.LUR.A",
+              "start_period": "2025",
+              "end_period": "2025",
               "last_n_observations": null,
               "canvas_id": null,
               "output_mode": "auto"
             },
             "resultado": {
               "dataflow_id": "WEO",
-              "key": "CHL.NGDP_RPCH.A",
-              "start_period": "2027",
-              "end_period": "2028",
+              "key": "ESP.LUR.A",
+              "start_period": "2025",
+              "end_period": "2025",
               "observations": [
                 {
-                  "series_key": "CHL.NGDP_RPCH.A",
-                  "time_period": "2027",
-                  "value": 2.610688,
-                  "status": null
-                },
-                {
-                  "series_key": "CHL.NGDP_RPCH.A",
-                  "time_period": "2028",
-                  "value": 2.416871,
+                  "series_key": "ESP.LUR.A",
+                  "time_period": "2025",
+                  "value": 10.5075,
                   "status": null
                 }
               ],
               "series_attributes": {
-                "unit": "PT",
+                "unit": null,
                 "scale": "0",
                 "decimals": 3
               },
-              "observation_count": 2,
+              "observation_count": 1,
               "staged": false,
               "truncated": false,
               "source": "Source: International Monetary Fund, World Economic Outlook (WEO), https://data.imf.org/"
