@@ -29,6 +29,9 @@ literal línea por línea.
   abren modales.
 - `app-07`: compara filtros tradicionales con una consulta solicitada por chat.
 - `app-08`: integra una tool con un globo y actualizaciones de cámara tipo proxy.
+- `app-09`: extensión en R con un MCP comunitario de datos del FMI y una tool local de gráficos.
+  La comparación sin y con MCP usa respuestas reales cacheadas; no se consulta al modelo al renderizar slides.
+  La versión Python queda pendiente hasta revisar el ejemplo R.
 - `app-91-colombia-territorial`: caso territorial con datos departamentales de
   Colombia y chat flotante.
 - `app-92-banrep-sdmx`: caso económico que consulta series de Banrep mediante
@@ -85,7 +88,8 @@ Conserva su identidad visual; no los simplifiques para hacerlos iguales a las ap
 - Carga todas las librerías e imports al inicio. Cada script debe poder ejecutarse de forma independiente.
 - En los ejemplos 02–04, pregunta sin tools, regístralas y vuelve a preguntar en la misma conversación.
 - Mantén equivalentes las consolas auxiliares R/Python de App 02–04 y usa los datos compartidos.
-- Divide las slides en los tres capítulos del recorrido. Los capítulos son azules; los paquetes, claros.
+- Divide las slides en los tres capítulos principales y una extensión MCP después de App 08.
+  Los capítulos son azules; los paquetes, claros.
 - App 01–08 terminan con cómo ejecutar la app, qué hacer y qué observar. App 00 usa solo Shinylive.
 
 ## Estilo de código

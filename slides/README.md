@@ -29,6 +29,13 @@ al HTML de esa app embebida, sin cambiar la escala de las slides ni la app local
 En las demos, los subtítulos tienen 48 px de margen superior y 16 px inferior. Su selector debe superar
 la especificidad del estilo general de `h3`, para conservar la separación entre acción y observación.
 
+Después de App 08 hay un cuarto capítulo de extensión: MCP y App 09, por ahora solo en R.
+Incluye una definición breve, una comparación real cacheada sin y con MCP, el código de la app y
+«Ejecutar y explorar». El servidor remoto es comunitario; los datos estadísticos provienen del FMI.
+La tabla se construye desde `app-09/data/comparacion.json`. Sus respuestas, metadatos y valores fueron
+contrastados con las llamadas guardadas; `app-09/verify-comparison.R` permite repetir esa comprobación
+sin usar el modelo ni conectarse al servidor. La caché no representa una consulta en tiempo real.
+
 - La portada, los capítulos y el cierre comparten el fondo azul oscuro.
 - Los capítulos se declaran explícitamente con `.section-slide`.
 - Las introducciones de paquetes agregan `.package-slide` para conservar el fondo claro.

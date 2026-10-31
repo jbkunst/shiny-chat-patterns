@@ -250,6 +250,10 @@ LatinR 2026
 <li><strong>App 07:</strong> controles tradicionales y chat.</li>
 <li><strong>App 08:</strong> cámara del mapa.</li>
 </ul></li>
+<li class="fragment"><p><strong>Conectar herramientas externas</strong></p>
+<ul>
+<li><strong>App 09:</strong> MCP con datos del FMI y un gráfico local.</li>
+</ul></li>
 </ol>
 </section>
 <section id="preparar-y-conversar" class="slide level2 section-slide">
@@ -1738,6 +1742,136 @@ LatinR 2026
 <p>«Colorea el mapa por población.» Después: «Vuela a Colombia».</p>
 <h3 id="observa-7">Observa</h3>
 <p>El cambio de color vuelve a renderizar el mapa. El vuelo mueve la cámara mediante un proxy.</p>
+</section>
+<section id="conectar-herramientas-con-mcp" class="slide level2 section-slide">
+<h2>04 · Conectar herramientas con MCP</h2>
+<p>App 09 · Consultar un servicio externo y graficar sus datos con R.</p>
+</section>
+<section id="qué-agrega-mcp" class="slide level2 pattern-overview">
+<h2>¿Qué agrega MCP?</h2>
+<p><a href="https://modelcontextprotocol.io/docs/learn/architecture">MCP</a> es un protocolo para descubrir y ejecutar herramientas de otros servicios desde nuestra aplicación.</p>
+<ul>
+<li>Hasta ahora definimos las tools en R; con MCP recibimos sus nombres, argumentos y descripciones del servidor.</li>
+<li><code>{mcptools}</code> las convierte en tools de <code>{ellmer}</code>. El modelo decide cuándo llamarlas.</li>
+<li>El servidor consulta los datos; el modelo usa el resultado para responder.</li>
+</ul>
+<p>Usaremos un <a href="https://github.com/cyanheads/imf-mcp-server">servidor comunitario de datos del FMI</a>, sin clave propia. El modelo sigue necesitando <code>OPENAI_API_KEY</code>.</p>
+</section>
+<section id="el-mismo-modelo-sin-y-con-mcp" class="slide level2 mcp-comparison">
+<h2>El mismo modelo, sin y con MCP</h2>
+<p>Respuestas reales guardadas en caché: misma pregunta, mismo prompt y conversaciones independientes.</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 26%">
+<col style="width: 41%">
+<col style="width: 31%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Pregunta</th>
+<th style="text-align: left;">Sin MCP</th>
+<th style="text-align: left;">Con MCP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">¿Cuál es el identificador, la agencia y la versión actual del conjunto World Economic Outlook del FMI?</td>
+<td style="text-align: left;">No puedo verificarlo sin herramientas; no puedo confirmar identificador, agencia ni versión actuales del conjunto World Economic Outlook. Necesitaría acceder al catálogo del FMI para darte datos exactos.</td>
+<td style="text-align: left;">Identificador: WEO; Agencia: IMF.RES; Versión actual: 9.0.0.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Consulta en WEO la proyección de crecimiento del PIB real de Chile para 2027 y 2028. Indica ambos valores, la unidad y la fuente.</td>
+<td style="text-align: left;">No tengo acceso a las bases del FMI en momento para verificar el WEO; no puedo confirmar los valores de 2027 y 2028. Si dispones de la herramienta MCP, indícame y te guío para extraerlos.</td>
+<td style="text-align: left;">Proyección WEO, Chile: 2027 = 2.611%, 2028 = 2.417%. Unidad: porcentaje (crecimiento interanual del PIB real). Fuente: IMF, World Economic Outlook (WEO).</td>
+</tr>
+</tbody>
+</table>
+<p>Modelo: gpt-5-nano · Caché: 2026-10-31 04:53:40 UTC.</p>
+<p>Las respuestas y sus llamadas se conservan en <code>app-09/data/comparacion.json</code>; el render no consulta al modelo.</p>
+</section>
+<section id="app-09-datos-remotos-gráfico-local" class="slide level2 pattern-overview">
+<h2>App 09 · Datos remotos, gráfico local</h2>
+<p>El MCP ofrece tools para descubrir bases, resolver códigos y consultar series; no dibuja el gráfico.</p>
+<p>Nuestra tool <code>graficar_serie()</code> recibe las observaciones recuperadas y actualiza el gráfico y la tabla.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="" aria-label="1"></a>chat <span class="ot">&lt;-</span> <span class="fu">chat_openai</span>(<span class="at">model =</span> <span class="st">"gpt-5-nano"</span>, <span class="at">system_prompt =</span> prompt_sistema)</span>
+<span id="cb23-2"><a href="" aria-label="2"></a>chat<span class="sc">$</span><span class="fu">set_tools</span>(mcptools<span class="sc">::</span><span class="fu">mcp_tools</span>(<span class="st">"mcp.json"</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<p>El registro de <code>graficar_serie()</code> conserva el patrón de las apps anteriores.</p>
+</section>
+<section id="app-09-el-código" class="slide level2">
+<h2>App 09 · El código</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode numberSource r workshop-code number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="" aria-label="1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb24-2"><a href="" aria-label="2"></a><span class="fu">library</span>(bslib)</span>
+<span id="cb24-3"><a href="" aria-label="3"></a><span class="fu">library</span>(ellmer)</span>
+<span id="cb24-4"><a href="" aria-label="4"></a><span class="fu">library</span>(shinychat)</span>
+<span id="cb24-5"><a href="" aria-label="5"></a><span class="fu">library</span>(mcptools)</span>
+<span id="cb24-6"><a href="" aria-label="6"></a><span class="fu">library</span>(tinyplot)</span>
+<span id="cb24-7"><a href="" aria-label="7"></a></span>
+<span id="cb24-8"><a href="" aria-label="8"></a><span class="co"># prompt ------------------------------------------------------------------</span></span>
+<span id="cb24-9"><a href="" aria-label="9"></a>saludo <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">readLines</span>(<span class="st">"greeting.md"</span>, <span class="at">warn =</span> <span class="cn">FALSE</span>), <span class="at">collapse =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb24-10"><a href="" aria-label="10"></a>prompt_sistema <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">readLines</span>(<span class="st">"prompt.md"</span>, <span class="at">warn =</span> <span class="cn">FALSE</span>), <span class="at">collapse =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb24-11"><a href="" aria-label="11"></a></span>
+<span id="cb24-12"><a href="" aria-label="12"></a><span class="co"># user interface ----------------------------------------------------------</span></span>
+<span id="cb24-13"><a href="" aria-label="13"></a>ui <span class="ot">&lt;-</span> <span class="fu">page_sidebar</span>(</span>
+<span id="cb24-14"><a href="" aria-label="14"></a>  <span class="at">title =</span> <span class="st">"App 09 · MCP + datos del FMI"</span>,</span>
+<span id="cb24-15"><a href="" aria-label="15"></a>  <span class="at">sidebar =</span> <span class="fu">sidebar</span>(</span>
+<span id="cb24-16"><a href="" aria-label="16"></a>    shinychat<span class="sc">::</span><span class="fu">chat_ui</span>(<span class="st">"chat"</span>, <span class="at">messages =</span> saludo, <span class="at">placeholder =</span> <span class="st">"Consulta una serie del FMI..."</span>),</span>
+<span id="cb24-17"><a href="" aria-label="17"></a>    <span class="at">width =</span> <span class="dv">400</span></span>
+<span id="cb24-18"><a href="" aria-label="18"></a>  ),</span>
+<span id="cb24-19"><a href="" aria-label="19"></a>  <span class="fu">plotOutput</span>(<span class="st">"plot"</span>, <span class="at">height =</span> <span class="st">"400px"</span>),</span>
+<span id="cb24-20"><a href="" aria-label="20"></a>  <span class="fu">tableOutput</span>(<span class="st">"table"</span>),</span>
+<span id="cb24-21"><a href="" aria-label="21"></a>  <span class="at">fillable =</span> <span class="cn">FALSE</span></span>
+<span id="cb24-22"><a href="" aria-label="22"></a>)</span>
+<span id="cb24-23"><a href="" aria-label="23"></a></span>
+<span id="cb24-24"><a href="" aria-label="24"></a><span class="co"># server ------------------------------------------------------------------</span></span>
+<span id="cb24-25"><a href="" aria-label="25"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output, session) {</span>
+<span id="cb24-26"><a href="" aria-label="26"></a>  grafico_actual <span class="ot">&lt;-</span> <span class="fu">reactiveVal</span>(<span class="cn">NULL</span>)</span>
+<span id="cb24-27"><a href="" aria-label="27"></a></span>
+<span id="cb24-28"><a href="" aria-label="28"></a>  output<span class="sc">$</span>plot <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({</span>
+<span id="cb24-29"><a href="" aria-label="29"></a>    grafico <span class="ot">&lt;-</span> <span class="fu">req</span>(<span class="fu">grafico_actual</span>())</span>
+<span id="cb24-30"><a href="" aria-label="30"></a>    <span class="fu">tinyplot</span>(</span>
+<span id="cb24-31"><a href="" aria-label="31"></a>      valor <span class="sc">~</span> anio <span class="sc">|</span> pais, <span class="at">data =</span> grafico<span class="sc">$</span>datos, <span class="at">type =</span> <span class="st">"b"</span>, <span class="at">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb24-32"><a href="" aria-label="32"></a>      <span class="at">main =</span> grafico<span class="sc">$</span>titulo, <span class="at">xlab =</span> <span class="st">"Año"</span>, <span class="at">ylab =</span> grafico<span class="sc">$</span>unidad</span>
+<span id="cb24-33"><a href="" aria-label="33"></a>    )</span>
+<span id="cb24-34"><a href="" aria-label="34"></a>  })</span>
+<span id="cb24-35"><a href="" aria-label="35"></a>  output<span class="sc">$</span>table <span class="ot">&lt;-</span> <span class="fu">renderTable</span>({ <span class="fu">req</span>(<span class="fu">grafico_actual</span>())<span class="sc">$</span>datos }, <span class="at">digits =</span> <span class="dv">3</span>, <span class="at">striped =</span> <span class="cn">TRUE</span>, <span class="at">hover =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb24-36"><a href="" aria-label="36"></a></span>
+<span id="cb24-37"><a href="" aria-label="37"></a>  <span class="co"># tool ------------------------------------------------------------------</span></span>
+<span id="cb24-38"><a href="" aria-label="38"></a>  graficar_serie <span class="ot">&lt;-</span> <span class="cf">function</span>(anios, valores, paises, titulo, unidad) {</span>
+<span id="cb24-39"><a href="" aria-label="39"></a>    datos <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">anio =</span> anios, <span class="at">valor =</span> valores, <span class="at">pais =</span> paises)</span>
+<span id="cb24-40"><a href="" aria-label="40"></a>    <span class="fu">grafico_actual</span>(<span class="fu">list</span>(<span class="at">datos =</span> datos, <span class="at">titulo =</span> titulo, <span class="at">unidad =</span> unidad))</span>
+<span id="cb24-41"><a href="" aria-label="41"></a>    datos</span>
+<span id="cb24-42"><a href="" aria-label="42"></a>  }</span>
+<span id="cb24-43"><a href="" aria-label="43"></a></span>
+<span id="cb24-44"><a href="" aria-label="44"></a>  <span class="co"># chat ------------------------------------------------------------------</span></span>
+<span id="cb24-45"><a href="" aria-label="45"></a>  chat <span class="ot">&lt;-</span> <span class="fu">chat_openai</span>(<span class="at">model =</span> <span class="st">"gpt-5-nano"</span>, <span class="at">system_prompt =</span> prompt_sistema)</span>
+<span id="cb24-46"><a href="" aria-label="46"></a>  chat<span class="sc">$</span><span class="fu">set_tools</span>(mcptools<span class="sc">::</span><span class="fu">mcp_tools</span>(<span class="st">"mcp.json"</span>))</span>
+<span id="cb24-47"><a href="" aria-label="47"></a>  chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
+<span id="cb24-48"><a href="" aria-label="48"></a>    graficar_serie,</span>
+<span id="cb24-49"><a href="" aria-label="49"></a>    <span class="st">"Grafica series anuales recuperadas del MCP y muestra sus datos en el dashboard."</span>,</span>
+<span id="cb24-50"><a href="" aria-label="50"></a>    <span class="at">arguments =</span> <span class="fu">list</span>(</span>
+<span id="cb24-51"><a href="" aria-label="51"></a>      <span class="at">anios =</span> <span class="fu">type_array</span>(<span class="fu">type_integer</span>(), <span class="st">"Año de cada observación."</span>),</span>
+<span id="cb24-52"><a href="" aria-label="52"></a>      <span class="at">valores =</span> <span class="fu">type_array</span>(<span class="fu">type_number</span>(), <span class="st">"Valores exactos devueltos por el MCP, en el mismo orden."</span>),</span>
+<span id="cb24-53"><a href="" aria-label="53"></a>      <span class="at">paises =</span> <span class="fu">type_array</span>(<span class="fu">type_string</span>(), <span class="st">"País de cada observación, en el mismo orden."</span>),</span>
+<span id="cb24-54"><a href="" aria-label="54"></a>      <span class="at">titulo =</span> <span class="fu">type_string</span>(<span class="st">"Título con el indicador y la fuente consultada."</span>),</span>
+<span id="cb24-55"><a href="" aria-label="55"></a>      <span class="at">unidad =</span> <span class="fu">type_string</span>(<span class="st">"Unidad indicada por la fuente, por ejemplo porcentaje."</span>)</span>
+<span id="cb24-56"><a href="" aria-label="56"></a>    )</span>
+<span id="cb24-57"><a href="" aria-label="57"></a>  ))</span>
+<span id="cb24-58"><a href="" aria-label="58"></a></span>
+<span id="cb24-59"><a href="" aria-label="59"></a>  <span class="fu">observeEvent</span>(input<span class="sc">$</span>chat_user_input, {</span>
+<span id="cb24-60"><a href="" aria-label="60"></a>    stream <span class="ot">&lt;-</span> chat<span class="sc">$</span><span class="fu">stream_async</span>(input<span class="sc">$</span>chat_user_input, <span class="at">tool_mode =</span> <span class="st">"sequential"</span>, <span class="at">stream =</span> <span class="st">"content"</span>)</span>
+<span id="cb24-61"><a href="" aria-label="61"></a>    shinychat<span class="sc">::</span><span class="fu">chat_append</span>(<span class="st">"chat"</span>, stream)</span>
+<span id="cb24-62"><a href="" aria-label="62"></a>  })</span>
+<span id="cb24-63"><a href="" aria-label="63"></a>}</span>
+<span id="cb24-64"><a href="" aria-label="64"></a></span>
+<span id="cb24-65"><a href="" aria-label="65"></a><span class="fu">shinyApp</span>(ui, server)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="app-09-ejecutar-y-explorar" class="slide level2 app-demo">
+<h2>App 09 · Ejecutar y explorar</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="" aria-label="1"></a>shiny<span class="sc">::</span><span class="fu">runApp</span>(<span class="st">"app-09"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<h3 id="pide-3">Pide</h3>
+<p>«Consulta el crecimiento del PIB real de Chile para 2025–2028 y grafícalo».</p>
+<h3 id="observa-8">Observa</h3>
+<p>El chat muestra las tools remotas del MCP y la llamada local a <code>graficar_serie()</code>. Comprueba el indicador, las unidades y qué años son proyecciones.</p>
 </section>
 <section id="cuatro-familias-de-tools" class="slide level2 tool-families-slide">
 <h2>Cuatro familias de tools</h2>

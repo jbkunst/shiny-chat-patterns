@@ -104,6 +104,12 @@ code_block <- function(path, descriptions = NULL, single_copy = TRUE) {
    - **App 07:** controles tradicionales y chat.
    - **App 08:** cámara del mapa.
    :::
+
+4. **Conectar herramientas externas**
+
+   ::: {.nonincremental}
+   - **App 09:** MCP con datos del FMI y un gráfico local.
+   :::
 :::
 
 ## 01 · Preparar y conversar {.section-slide}
@@ -667,6 +673,81 @@ shiny::runApp("app-08")
 ### Observa
 
 El cambio de color vuelve a renderizar el mapa. El vuelo mueve la cámara mediante un proxy.
+
+## 04 · Conectar herramientas con MCP {.section-slide}
+
+App 09 · Consultar un servicio externo y graficar sus datos con R.
+
+## ¿Qué agrega MCP? {.pattern-overview}
+
+[MCP](https://modelcontextprotocol.io/docs/learn/architecture) es un protocolo para descubrir y ejecutar
+herramientas de otros servicios desde nuestra aplicación.
+
+- Hasta ahora definimos las tools en R; con MCP recibimos sus nombres, argumentos y descripciones
+  del servidor.
+- `{mcptools}` las convierte en tools de `{ellmer}`. El modelo decide cuándo llamarlas.
+- El servidor consulta los datos; el modelo usa el resultado para responder.
+
+Usaremos un [servidor comunitario de datos del FMI](https://github.com/cyanheads/imf-mcp-server),
+sin clave propia. El modelo sigue necesitando `OPENAI_API_KEY`.
+
+## El mismo modelo, sin y con MCP {.mcp-comparison}
+
+Respuestas reales guardadas en caché: misma pregunta, mismo prompt y conversaciones independientes.
+
+```{r}
+#| echo: false
+#| results: asis
+comparacion <- jsonlite::read_json("../app-09/data/comparacion.json")
+filas <- lapply(comparacion$casos, function(caso) {
+  data.frame(
+    Pregunta = caso$pregunta,
+    "Sin MCP" = caso$sin_mcp$respuesta,
+    "Con MCP" = caso$con_mcp$respuesta,
+    check.names = FALSE
+  )
+})
+cat("\n", knitr::kable(do.call(rbind, filas), format = "pipe", row.names = FALSE), "\n", sep = "\n")
+cat("\n\n", "Modelo: ", comparacion$modelo, " · Caché: ", comparacion$generado_utc, ".", sep = "")
+```
+
+Las respuestas y sus llamadas se conservan en `app-09/data/comparacion.json`; el render no consulta al modelo.
+
+## App 09 · Datos remotos, gráfico local {.pattern-overview}
+
+El MCP ofrece tools para descubrir bases, resolver códigos y consultar series; no dibuja el gráfico.
+
+Nuestra tool `graficar_serie()` recibe las observaciones recuperadas y actualiza el gráfico y la tabla.
+
+```r
+chat <- chat_openai(model = "gpt-5-nano", system_prompt = prompt_sistema)
+chat$set_tools(mcptools::mcp_tools("mcp.json"))
+```
+
+El registro de `graficar_serie()` conserva el patrón de las apps anteriores.
+
+## App 09 · El código
+
+```{r}
+#| echo: false
+#| results: asis
+code_block("../app-09/app.R")
+```
+
+## App 09 · Ejecutar y explorar {.app-demo}
+
+```r
+shiny::runApp("app-09")
+```
+
+### Pide
+
+«Consulta el crecimiento del PIB real de Chile para 2025–2028 y grafícalo».
+
+### Observa
+
+El chat muestra las tools remotas del MCP y la llamada local a `graficar_serie()`.
+Comprueba el indicador, las unidades y qué años son proyecciones.
 
 ## Cuatro familias de tools {.tool-families-slide}
 

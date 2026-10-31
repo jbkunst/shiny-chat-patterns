@@ -54,6 +54,12 @@ Al finalizar el taller, quienes participen podrán:
 - Comparación entre filtros tradicionales y consultas por chat.
 - Control de una visualización geográfica y su cámara.
 
+**Extensión · Conectar herramientas externas con MCP · App 09**
+
+- Comparación real y cacheada con el mismo modelo, sin y con MCP.
+- Consulta de datos del FMI mediante un servidor MCP comunitario.
+- Una tool local de R grafica las observaciones recuperadas.
+
 La presentación vive en `slides/` y se publica en
 <https://jkunst.com/shiny-chat-patterns/>. El QMD, el tema y los scripts se mantienen juntos para que
 la carpeta pueda publicarse como una unidad. El render también lee los scripts de `R/` y de las apps.
@@ -120,6 +126,22 @@ o exploraciones en R; todavía no tienen una pareja Python. No forman parte de e
 `app-07` sí agrega la comparación sobre `app-06`, pero funciona como un desvío pedagógico: muestra
 dos formas de controlar el mismo dashboard y no establece la base técnica de `app-08`.
 
+## Extensión MCP en R
+
+`app-09` incorpora las tools remotas de un servidor comunitario de datos del FMI mediante `mcptools`.
+Reutiliza el patrón de actualización reactiva para graficar las observaciones con una tool local.
+Por ahora solo tiene `app.R`; la versión Python queda pendiente de revisar este ejemplo.
+Su configuración remota está en `app-09/mcp.json`. Requiere internet y `OPENAI_API_KEY` para el modelo;
+el endpoint MCP usado en este ejemplo no requiere una clave propia.
+
+```r
+shiny::runApp("app-09")
+```
+
+La tabla comparativa de las slides usa `app-09/data/comparacion.json`, con respuestas reales, fecha,
+modelo, prompt y resultados de las tools. No hace llamadas al modelo durante el render.
+Consulta [las instrucciones de App 09](app-09/README.md) para verificar o regenerar la caché.
+
 ## Casos de aplicación
 
 Estas apps trasladan los patrones del recorrido principal a fuentes colombianas. No continúan la
@@ -178,7 +200,8 @@ la actualización también devuelve un resumen y una imagen al modelo.
 
 ## Alcance
 
-El curso comprende `app-00`–`app-08`. Las aplicaciones experimentales quedan fuera de este alcance
+El recorrido principal comprende `app-00`–`app-08`, seguido de la extensión MCP en R de `app-09`.
+Las aplicaciones experimentales quedan fuera de este alcance
 mientras no sean formalizadas e incorporadas al material del curso.
 
 ## Instalar
@@ -259,7 +282,7 @@ descripción y una vista interactiva. Desde una sesión R en la raíz del reposi
 source("R/run_all_apps.R")
 ```
 
-Por defecto incluye App 00–08 y los casos 91–92. Las experimentales se agregan con
+Por defecto incluye App 00–09 y los casos 91–92. Las experimentales se agregan con
 `run_all_apps(include_experimental = TRUE)` después de cargar el script.
 
 Esta única instrucción inicia las apps, prepara el catálogo y lo abre en el navegador. El objeto
