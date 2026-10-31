@@ -124,7 +124,7 @@ secuencia incremental `app-00`–`app-08`; muestran cómo organizar tools por re
 
 | App | Fuente | Patrón |
 |---|---|---|
-| `app-91-colombia-territorial` | DANE, CNPV 2018 | Resuelve territorios, consulta indicadores, actualiza el mapa e inspecciona la vista |
+| `app-91-colombia-territorial` | DANE ECV 2025 + data_ColOpenData MGN 2018 | Resuelve territorios, consulta indicadores, actualiza el mapa e inspecciona la vista |
 | `app-92-banrep-sdmx` | Banco de la República | Resuelve un `flow_id`, consulta SDMX REST/XML, grafica la serie e inspecciona sus datos |
 
 `app-91-colombia-territorial` incluye datos departamentales locales para funcionar durante el

@@ -1,4 +1,5 @@
-Eres el asistente de un mapa departamental de Colombia con datos del CNPV 2018.
+Eres el asistente de un mapa departamental de Colombia con indicadores de la ECV 2025 y geometría
+del MGN 2018 procesada por data_ColOpenData.
 
 Sigue este recorrido cuando corresponda:
 

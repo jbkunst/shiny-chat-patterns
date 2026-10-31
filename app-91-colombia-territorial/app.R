@@ -9,7 +9,9 @@ library(sf)
 departamentos <- readRDS("data/colombia_departamentos.rds")
 catalogo <- data.frame(
   indicador = c("poblacion", "hogares", "viviendas", "area_m2"),
-  titulo = c("Población censada", "Hogares", "Viviendas", "Área"),
+  titulo = c(
+    "Población estimada", "Hogares estimados", "Viviendas estimadas", "Área (MGN 2018)"
+  ),
   unidad = c("personas", "hogares", "viviendas", "m²")
 )
 
@@ -23,8 +25,9 @@ prompt_sistema <- paste(readLines("prompt.md", warn = FALSE), collapse = "\n")
 # user interface ----------------------------------------------------------
 ui <- page_fillable(
   title = "App 91 · Colombia territorial",
+  padding = 0,
   tags$style(HTML(paste(
-    ".territorial-map { height: calc(100vh - 58px); }",
+    ".territorial-map { height: 100vh; }",
     ".floating-chat { position: absolute; z-index: 10; top: 76px; left: 18px;",
     "width: 390px; max-height: calc(100vh - 96px); padding: 14px; overflow: auto;",
     "border: 1px solid #d8dee4; border-radius: 14px; background: rgba(255,255,255,.96);",

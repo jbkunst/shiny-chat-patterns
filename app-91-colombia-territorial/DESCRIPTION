@@ -1,6 +1,7 @@
 Title: App 91 · Colombia territorial
 Description: Aplica el recorrido resolver, consultar, visualizar e inspeccionar
-    sobre departamentos de Colombia y datos del CNPV 2018.
+    sobre departamentos de Colombia, indicadores de la ECV 2025 y geometría
+    del MGN 2018 procesada por data_ColOpenData.
 Imports:
     brand.yml,
     bslib,
