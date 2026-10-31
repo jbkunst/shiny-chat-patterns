@@ -34,7 +34,7 @@ Los títulos de las apps nombran la capacidad que se incorpora. App 05 incluye u
 cadena tool → estado reactivo → datos → outputs. App 07 compara el mismo filtro mediante controles
 y chat. Los nombres de la slide de familias de tools son ejemplos ilustrativos de otros contextos.
 
-## Ejemplos de tools en la consola de R
+## Ejemplos de consola en R y Python
 
 Antes de App 03, `R/02_ellmer_tool.R` consulta el pronóstico de una ciudad para una fecha explícita.
 La primera versión prioriza mostrar la función, sus argumentos y el registro de la tool.
@@ -48,7 +48,11 @@ El buscador toma la primera coincidencia global; el resultado incluye región y 
 La versión de dos tools agrega validaciones y tiempos de espera para las consultas HTTP.
 El horizonte válido incluye hoy y los próximos 15 días. Los datos conservan las unidades de la API.
 
-El equivalente Python del primer ejemplo está en `python/02_chatlas_tool.py` y usa `chatlas`.
+Los ejemplos `R/01_ellmer.R` a `R/04_ellmer_imagen.R` tienen sus parejas en `python/`:
+`01_chatlas.py`, `02_chatlas_tool.py`, `03_chatlas_dos_tools.py` y `04_chatlas_imagen.py`.
+El cuarto muestra un gráfico aleatorio y permite inspeccionar el objeto de imagen que recibe el modelo.
+Las dos versiones usan doce puntos, uno alejado, y letras aleatorias; no generan las mismas coordenadas.
+Todos los imports y librerías se cargan al inicio. Los ejemplos 02–04 comparan antes y después del registro.
 Desde la raíz del repositorio, ejecútalo con `uv run python python/02_chatlas_tool.py`.
 Configura `OPENAI_API_KEY` en el entorno de Python; Python no carga `.Renviron` automáticamente.
 

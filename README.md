@@ -67,6 +67,39 @@ y concentrar cada ejemplo en el patrón que introduce. Desde `app-00` hasta
 `app-08`, cada carpeta contiene `app.R` y `app.py` para comparar la misma idea
 en ambos lenguajes. Las versiones de chat usan `ellmer` y `chatlas`, respectivamente.
 
+## Ejemplos de consola
+
+Los ejemplos de consola también tienen versiones equivalentes en R (`ellmer`) y Python (`chatlas`).
+Ejecuta los scripts desde la raíz del repositorio y carga primero todas sus librerías o imports.
+
+| Patrón | R | Python |
+|---|---|---|
+| Conversación e historial | `R/01_ellmer.R` | `python/01_chatlas.py` |
+| Pronóstico con una tool | `R/02_ellmer_tool.R` | `python/02_chatlas_tool.py` |
+| Fecha actual y pronóstico con dos tools | `R/03_ellmer_dos_tools.R` | `python/03_chatlas_dos_tools.py` |
+| Imagen de puntos aleatorios | `R/04_ellmer_imagen.R` | `python/04_chatlas_imagen.py` |
+
+En los ejemplos 02–04 se pregunta primero sin tools, se registran y se vuelve a preguntar en la misma
+conversación. Las llamadas directas permiten inspeccionar los resultados sin llamar al modelo.
+El ejemplo de imagen muestra el gráfico en una sesión interactiva y devuelve esa misma imagen al agente.
+Cada llamada genera puntos nuevos; los generadores aleatorios de R y Python producen muestras distintas.
+
+```r
+source("R/02_ellmer_tool.R", encoding = "UTF-8")
+```
+
+```console
+uv run python python/02_chatlas_tool.py
+```
+
+Las consolas auxiliares de `app-02`, `app-03` y `app-04` tienen `interactive-console.R` y
+`interactive-console.py`. Las de datos comparten `data/paises.csv` con las apps; la de SQL comparte
+también `app-04/prompt.md`. Desde la raíz, usa `source("app-03/interactive-console.R")` o
+`uv run python app-03/interactive-console.py` para abrir la conversación.
+
+Los scripts de preparación de datos, el lanzador del catálogo y las apps experimentales son utilidades
+o exploraciones en R; todavía no tienen una pareja Python. No forman parte de estos ejemplos de consola.
+
 ## Recorrido principal
 
 | App | Rol | Qué incorpora |

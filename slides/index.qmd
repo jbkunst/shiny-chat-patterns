@@ -445,6 +445,19 @@ code_block(
 )
 ```
 
+## Una tool que devuelve una imagen · Probar en R {.conversation-slide}
+
+Generamos puntos aleatorios y devolvemos su gráfico al modelo. En una sesión interactiva vemos la misma imagen.
+La llamada directa permite inspeccionar el objeto devuelto; después comparamos el chat sin y con la tool.
+
+```{r}
+#| echo: false
+#| results: asis
+code_block("../R/04_ellmer_imagen.R")
+```
+
+El equivalente Python está en `python/04_chatlas_imagen.py`. App 06 agrega la visualización en un modal.
+
 ## App 06 · Abrir vistas y devolver contexto {.pattern-overview}
 
 Una tool abre una tabla o un gráfico sin recargar la aplicación.
