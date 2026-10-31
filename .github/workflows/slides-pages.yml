@@ -40,9 +40,11 @@ jobs:
           use-public-rspm: true
 
       - name: Install render dependencies
+        shell: Rscript {0}
         run: |
-          Rscript -e 'install.packages(c("rmarkdown", "shinylive"), repos = Sys.getenv("RSPM", "https://cloud.r-project.org"))'
-          Rscript -e 'stopifnot(requireNamespace("rmarkdown"), requireNamespace("shinylive"))'
+          packages <- c("rmarkdown", "shinylive", "shiny", "bslib", "forecast")
+          install.packages(packages, repos = Sys.getenv("RSPM", "https://cloud.r-project.org"))
+          stopifnot(all(vapply(packages, requireNamespace, logical(1), quietly = TRUE)))
 
       - name: Render presentation
         run: quarto render slides/index.qmd
