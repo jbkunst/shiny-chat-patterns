@@ -277,6 +277,20 @@ code_block(
 )
 ```
 
+## Una tool con `{ellmer}` · Consultar el pronóstico {.conversation-slide}
+
+Copia el ejemplo completo en R: requiere `{ellmer}`, `{httr2}` y la clave de OpenAI.
+`consultar_pronostico(ciudad, fecha)` consulta una ciudad y una fecha explícita.
+
+```{r}
+#| echo: false
+#| results: asis
+code_block("../R/02_ellmer_tool.R")
+```
+
+Primero pregunta sin tools; después registra la función y vuelve a preguntar para obtener datos de la API.
+Fuente: [Open-Meteo](https://open-meteo.com/en/docs), sin clave para este uso no comercial.
+
 ## App 03 · Leer un resumen de los datos visibles {.pattern-overview}
 
 La tool calcula un resumen con campos predefinidos a partir de los países visibles.
@@ -352,6 +366,21 @@ code_block(
   )
 )
 ```
+
+## Dos tools con `{ellmer}` · Interpretar «en tres días» {.conversation-slide}
+
+Retomamos el pronóstico y agregamos `consultar_fecha_actual()`, usando UTC como referencia.
+Esta versión también incorpora validaciones de ciudad y fecha.
+Ejecuta este script completo en R: conserva la consulta y el registro de la primera tool.
+
+```{r}
+#| echo: false
+#| results: asis
+code_block("../R/03_ellmer_dos_tools.R")
+```
+
+Compara la respuesta sin tools con la respuesta después de registrarlas: fecha actual y luego pronóstico.
+App 05 también registra dos tools y agrega una capacidad distinta: modificar el dashboard.
 
 ## App 05 · Pasar de consultar a actualizar la vista {.pattern-overview}
 
