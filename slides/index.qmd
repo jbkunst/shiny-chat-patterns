@@ -106,7 +106,11 @@ code_block <- function(path, descriptions = NULL, single_copy = TRUE) {
    :::
 :::
 
-## `{shiny}` {.section-slide}
+## 01 · Preparar y conversar {.section-slide}
+
+App 00–02 · De inputs y outputs a una conversación en Shiny.
+
+## `{shiny}` {.section-slide .package-slide}
 
 `{shiny}` conecta inputs y outputs para crear aplicaciones web interactivas en R.
 
@@ -127,12 +131,18 @@ code_block(
 ```
 
 
-## App 00 · Demo
+## App 00 · Probémosla {.app-demo-live}
+
+```r
+shiny::runApp("app-00")
+```
+
+Cambia el título y la cantidad de puntos; activa el pronóstico. Observa el gráfico y su encabezado.
 
 ```{shinylive-r}
 #| standalone: true
 #| components: [viewer]
-#| viewerHeight: 650
+#| viewerHeight: 450
 library(shiny)
 library(bslib)
 library(forecast)
@@ -196,7 +206,21 @@ code_block(
 )
 ```
 
-## `{ellmer}` {.section-slide}
+## App 01 · Probémosla {.app-demo}
+
+```r
+shiny::runApp("app-01")
+```
+
+### Haz
+
+Selecciona Europa y luego Asia en el filtro de continente.
+
+### Observa
+
+Los indicadores, el gráfico y la tabla cambian juntos: todos dependen de los mismos datos reactivos.
+
+## `{ellmer}` {.section-slide .package-slide}
 
 `{ellmer}` conecta R con modelos de lenguaje para construir conversaciones con contexto.
 
@@ -224,7 +248,7 @@ code_block("../R/01_ellmer.R")
 
 El cliente conserva el historial entre llamadas a `chat$chat()`. La clave se lee desde el entorno.
 
-## `{shinychat}` {.section-slide}
+## `{shinychat}` {.section-slide .package-slide}
 
 `{shinychat}` conecta la conversación de `{ellmer}` con la interfaz reactiva de `{shiny}`.
 
@@ -277,6 +301,24 @@ code_block(
 )
 ```
 
+## App 02 · Probémosla {.app-demo}
+
+```r
+shiny::runApp("app-02")
+```
+
+### Pregunta
+
+«¿Cuántos países se muestran en el dashboard?»
+
+### Observa
+
+El chat puede conversar, pero todavía no puede consultar los datos ni conocer el filtro seleccionado.
+
+## 02 · Consultar y actualizar {.section-slide}
+
+App 03–05 · Dar acceso a los datos y modificar el estado reactivo.
+
 ## Una tool con `{ellmer}` {.conversation-slide .tool-console-slide}
 
 Consulta un pronóstico por ciudad y fecha. Copia y ejecuta el bloque completo en R.
@@ -326,6 +368,20 @@ code_block(
 )
 ```
 
+## App 03 · Probémosla {.app-demo}
+
+```r
+shiny::runApp("app-03")
+```
+
+### Haz y pregunta
+
+Selecciona Europa y pregunta: «¿Cuántos países se muestran y cuál es su esperanza de vida promedio?»
+
+### Observa
+
+El resumen del chat coincide con los indicadores. Cambia a Asia y vuelve a preguntar.
+
 ## App 04 · Pasar del resumen a consultas SQL {.pattern-overview}
 
 La tool consulta toda la tabla `paises`; el filtro manual del dashboard no limita esa consulta.
@@ -358,6 +414,20 @@ code_block(
   )
 )
 ```
+
+## App 04 · Probémosla {.app-demo}
+
+```r
+shiny::runApp("app-04")
+```
+
+### Pregunta
+
+«Lista todos los países de Europa con su esperanza de vida, de mayor a menor.»
+
+### Observa
+
+La tool consulta la tabla completa y devuelve el resultado al chat. La vista del dashboard permanece igual.
 
 ## Dos tools con `{ellmer}` {.conversation-slide .tool-console-slide}
 
@@ -443,6 +513,24 @@ code_block(
 )
 ```
 
+## App 05 · Probémosla {.app-demo}
+
+```r
+shiny::runApp("app-05")
+```
+
+### Pide
+
+«Muestra solo los países de Europa en el dashboard.» Luego: «Reinicia el dashboard».
+
+### Observa
+
+La tool cambia el estado reactivo: se actualizan los indicadores, el gráfico y la tabla.
+
+## 03 · Actuar sobre la interfaz {.section-slide}
+
+App 06–08 · Abrir vistas, comparar controles y mover la cámara del mapa.
+
 ## Una tool que devuelve una imagen {.conversation-slide .tool-console-slide}
 
 Generamos puntos aleatorios: nosotros vemos el gráfico y el modelo recibe la misma imagen.
@@ -488,6 +576,20 @@ code_block(
 )
 ```
 
+## App 06 · Probémosla {.app-demo}
+
+```r
+shiny::runApp("app-06")
+```
+
+### Pide
+
+«Abre una tabla con 10 países.» Después: «Grafica PIB per cápita versus esperanza de vida por continente».
+
+### Observa
+
+Las tools abren modales. Pregunta «¿Qué patrón ves?» para usar la imagen devuelta al modelo.
+
 ## App 07 · El mismo filtro con controles o con chat {.comparison-slide}
 
 Comparamos dos formas de expresar la misma intención sobre el dashboard.
@@ -497,6 +599,21 @@ Comparamos dos formas de expresar la misma intención sobre el dashboard.
 | América; esperanza de vida: 70–80 años. | «Muestra América con esperanza de vida de 70 a 80 años». |
 
 Ambos caminos alimentan `data()`. La interacción más reciente determina el modo activo.
+
+## App 07 · Probémosla {.app-demo}
+
+```r
+shiny::runApp("app-07")
+```
+
+### Compara
+
+Con los controles, selecciona Américas y esperanza de vida entre 70 y 80 años.
+Luego pide al chat: «Muestra Américas con esperanza de vida entre 70 y 80 años».
+
+### Observa
+
+Ambos caminos muestran los mismos países. Cambia un filtro manual para volver al modo de controles.
 
 ## App 08 · Mover la cámara mediante un proxy {.pattern-overview}
 
@@ -541,6 +658,20 @@ code_block(
   )
 )
 ```
+
+## App 08 · Probémosla {.app-demo}
+
+```r
+shiny::runApp("app-08")
+```
+
+### Pide
+
+«Colorea el mapa por población.» Después: «Vuela a Colombia».
+
+### Observa
+
+El cambio de color vuelve a renderizar el mapa. El vuelo mueve la cámara mediante un proxy.
 
 ## Cuatro familias de tools {.tool-families-slide}
 

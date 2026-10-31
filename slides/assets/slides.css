@@ -236,6 +236,29 @@ html.reveal-print .reveal .slides {
   opacity: 1;
 }
 
+.reveal .slides > section.app-demo > .code-copy-outer-scaffold {
+  margin: 0 0 40px;
+}
+
+.reveal .slides > section.app-demo h3 {
+  margin: 32px 0 12px;
+  font-size: 25px;
+  font-weight: 500;
+}
+
+.reveal .slides > section.app-demo > p {
+  margin: 0;
+}
+
+.reveal .slides > section.app-demo-live > p {
+  margin: 16px 0;
+  font-size: 25px;
+}
+
+.reveal .app-demo-live pre > code.sourceCode {
+  padding: 14px 24px;
+}
+
 .reveal .slides > section.reactivity-flow-slide > .code-copy-outer-scaffold {
   margin: 0;
 }
@@ -408,13 +431,15 @@ html.reveal-print .reveal .slides {
   padding: 0 120px;
   flex-direction: column;
   justify-content: center;
-  background: var(--paper);
-  color: var(--text);
+  background:
+    radial-gradient(circle at 78% 44%, rgb(98 168 255 / 22%), transparent 31%),
+    linear-gradient(135deg, var(--night) 0%, var(--night-soft) 58%, var(--blue) 100%);
+  color: #edf3fb;
 }
 
-body:has(.section-slide.present),
-body:has(.section-slide.present) .reveal {
-  background: var(--paper);
+body:has(.section-slide.present:not(.package-slide)),
+body:has(.section-slide.present:not(.package-slide)) .reveal {
+  background: var(--night);
 }
 
 .reveal .slides > section.section-slide h2 {
@@ -422,7 +447,7 @@ body:has(.section-slide.present) .reveal {
   width: 82%;
   margin: 0;
   padding-left: 34px;
-  color: var(--blue);
+  color: #edf3fb;
   font-size: 112px;
   font-weight: 300;
   letter-spacing: -.05em;
@@ -443,10 +468,28 @@ body:has(.section-slide.present) .reveal {
 .reveal .slides > section.section-slide > p {
   max-width: 980px;
   margin: 34px 0 0 34px;
-  color: var(--muted);
+  color: #a9b9d2;
   font-size: 31px;
   font-weight: 300;
   line-height: 1.42;
+}
+
+.reveal .slides > section.package-slide {
+  background: var(--paper);
+  color: var(--text);
+}
+
+body:has(.package-slide.present),
+body:has(.package-slide.present) .reveal {
+  background: var(--paper);
+}
+
+.reveal .slides > section.package-slide h2 {
+  color: var(--blue);
+}
+
+.reveal .slides > section.package-slide > p {
+  color: var(--muted);
 }
 
 /* Cover ---------------------------------------------------------------- */

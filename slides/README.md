@@ -18,8 +18,14 @@ La presentación vive completa en esta carpeta y se publica en
 
 ## Arquitectura visual
 
-- La portada es la slide de título generada por Quarto y contiene la única superficie oscura.
+El recorrido se divide en tres capítulos: preparar y conversar (App 00–02), consultar y actualizar
+(App 03–05) y actuar sobre la interfaz (App 06–08). Cada app termina con «Probémosla»: comando de R,
+acción o pregunta sugerida y comportamiento a observar. Ejecuta los comandos desde la raíz del repositorio.
+App 00 conserva además la demo Shinylive en la misma slide, con un visor de 450 px.
+
+- La portada, los capítulos y el cierre comparten el fondo azul oscuro.
 - Los capítulos se declaran explícitamente con `.section-slide`.
+- Las introducciones de paquetes agregan `.package-slide` para conservar el fondo claro.
 - Cualquier otra slide usa automáticamente el estilo claro de contenido.
 
 Las columnas, los bloques de código, los diffs y los espacios de demo son componentes internos. No
