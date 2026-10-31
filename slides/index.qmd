@@ -367,20 +367,15 @@ code_block(
 )
 ```
 
-## Dos tools con `{ellmer}` · Interpretar «en tres días» {.conversation-slide}
+## Dos tools con `{ellmer}` {.conversation-slide .two-tools-slide}
 
-Retomamos el pronóstico y agregamos `consultar_fecha_actual()`, usando UTC como referencia.
-Esta versión también incorpora validaciones de ciudad y fecha.
-Ejecuta este script completo en R: conserva la consulta y el registro de la primera tool.
+«¿Lloverá en Madrid dentro de tres días?» → consultar la fecha actual y luego el pronóstico.
 
 ```{r}
 #| echo: false
 #| results: asis
 code_block("../R/03_ellmer_dos_tools.R")
 ```
-
-Compara la respuesta sin tools con la respuesta después de registrarlas: fecha actual y luego pronóstico.
-App 05 también registra dos tools y agrega una capacidad distinta: modificar el dashboard.
 
 ## App 05 · Pasar de consultar a actualizar la vista {.pattern-overview}
 
@@ -402,25 +397,38 @@ actualizar_dashboard <- function(consulta) {
 
 ## App 05 · Cómo se propaga el cambio {.reactivity-flow-slide}
 
-Al ejecutar `consulta_actual(consulta)`, Shiny invalida los cálculos que dependen de ese estado.
+La tool cambia el estado. Shiny propaga el cambio hasta los outputs.
 
-```{mermaid}
-%%{init: {
-  "theme": "base",
-  "flowchart": {"htmlLabels": false},
-  "themeVariables": {
-    "fontFamily": "IBM Plex Sans, sans-serif",
-    "fontSize": "28px",
-    "primaryColor": "#fffefa",
-    "primaryTextColor": "#263338",
-    "primaryBorderColor": "#174a70",
-    "lineColor": "#174a70"
-  }
-}}%%
-flowchart LR
-  T["Tool<br/>actualizar_dashboard()"] -->|Escribe| Q["Estado<br/>consulta_actual()"]
-  Q -->|Invalida| D["Datos<br/>data()"]
-  D -->|Actualiza| O["Indicadores<br/>gráfico y tabla"]
+```{=html}
+<div class="reactivity-flow" role="group" aria-label="Tool, estado, datos y outputs">
+  <div class="reactivity-step">
+    <span class="reactivity-number">01 / ACCIÓN</span>
+    <strong>La tool escribe</strong>
+    <code>actualizar_dashboard()</code>
+    <span>Recibe una consulta SQL.</span>
+  </div>
+  <span class="reactivity-arrow" aria-hidden="true">→</span>
+  <div class="reactivity-step reactivity-state">
+    <span class="reactivity-number">02 / ESTADO</span>
+    <strong>Guarda la consulta</strong>
+    <code>consulta_actual()</code>
+    <span>Invalida sus dependientes.</span>
+  </div>
+  <span class="reactivity-arrow" aria-hidden="true">→</span>
+  <div class="reactivity-step">
+    <span class="reactivity-number">03 / DATOS</span>
+    <strong>Recalcula los datos</strong>
+    <code>data()</code>
+    <span>Ejecuta la nueva consulta.</span>
+  </div>
+  <span class="reactivity-arrow" aria-hidden="true">→</span>
+  <div class="reactivity-step">
+    <span class="reactivity-number">04 / OUTPUTS</span>
+    <strong>Actualiza la vista</strong>
+    <span class="reactivity-output">Indicadores · gráfico · tabla</span>
+    <span>Muestran el nuevo resultado.</span>
+  </div>
+</div>
 ```
 
 ```r
@@ -428,7 +436,9 @@ consulta_actual <- reactiveVal("SELECT * FROM paises")
 data <- reactive(DBI::dbGetQuery(con, consulta_actual()))
 ```
 
-Los outputs dependen de `data()` y vuelven a calcularse para mostrar el resultado de la nueva consulta.
+::: {.reactivity-takeaway}
+Una escritura en `consulta_actual()` activa toda la cadena reactiva.
+:::
 
 ## App 05 · El código
 

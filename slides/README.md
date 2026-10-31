@@ -30,9 +30,10 @@ Las slides explicativas de las apps usan texto arriba y código debajo, a todo e
 En App 02, los fragmentos de UI y server ocupan el mismo espacio y se muestran uno por vez.
 Los archivos completos presentados con `code_block()` conservan sus estilos propios.
 
-Los títulos de las apps nombran la capacidad que se incorpora. App 05 incluye un diagrama de la
-cadena tool → estado reactivo → datos → outputs. App 07 compara el mismo filtro mediante controles
-y chat. Los nombres de la slide de familias de tools son ejemplos ilustrativos de otros contextos.
+Los títulos de las apps nombran la capacidad que se incorpora. App 05 incluye un diagrama HTML/CSS de
+la cadena tool → estado reactivo → datos → outputs, con el estado destacado. App 07 compara el mismo filtro
+mediante controles y chat. Los nombres de la slide de familias de tools son ejemplos ilustrativos
+de otros contextos.
 
 ## Ejemplos de consola en R y Python
 
@@ -53,6 +54,8 @@ Los ejemplos `R/01_ellmer.R` a `R/04_ellmer_imagen.R` tienen sus parejas en `pyt
 El cuarto muestra un gráfico aleatorio y permite inspeccionar el objeto de imagen que recibe el modelo.
 Las dos versiones usan doce puntos, uno alejado, y letras aleatorias; no generan las mismas coordenadas.
 Todos los imports y librerías se cargan al inicio. Los ejemplos 02–04 comparan antes y después del registro.
+La slide de dos tools conserva una sola frase introductoria y limita el código a 590 px de alto.
+El código admite ajuste de línea para evitar scroll horizontal; el script completo sigue disponible.
 Desde la raíz del repositorio, ejecútalo con `uv run python python/02_chatlas_tool.py`.
 Configura `OPENAI_API_KEY` en el entorno de Python; Python no carga `.Renviron` automáticamente.
 

@@ -201,9 +201,6 @@
       margin-right: 0; 
     }
   </style>
-  <script src="index_files/libs/quarto-diagram/mermaid.min.js"></script>
-  <script src="index_files/libs/quarto-diagram/mermaid-init.js"></script>
-  <link href="index_files/libs/quarto-diagram/mermaid.css" rel="stylesheet">
 </head>
 <body class="quarto-light">
   <div class="reveal">
@@ -887,9 +884,9 @@ LatinR 2026
 </dd>
 </dl>
 </section>
-<section id="dos-tools-con-ellmer-interpretar-en-tres-días" class="slide level2 conversation-slide">
-<h2>Dos tools con <code>{ellmer}</code> · Interpretar «en tres días»</h2>
-<p>Retomamos el pronóstico y agregamos <code>consultar_fecha_actual()</code>, usando UTC como referencia. Esta versión también incorpora validaciones de ciudad y fecha. Ejecuta este script completo en R: conserva la consulta y el registro de la primera tool.</p>
+<section id="dos-tools-con-ellmer" class="slide level2 conversation-slide two-tools-slide">
+<h2>Dos tools con <code>{ellmer}</code></h2>
+<p>«¿Lloverá en Madrid dentro de tres días?» → consultar la fecha actual y luego el pronóstico.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource r workshop-code number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="" aria-label="1"></a><span class="fu">library</span>(ellmer)</span>
 <span id="cb9-2"><a href="" aria-label="2"></a><span class="fu">library</span>(httr2)</span>
 <span id="cb9-3"><a href="" aria-label="3"></a></span>
@@ -949,33 +946,33 @@ LatinR 2026
 <span id="cb9-57"><a href="" aria-label="57"></a>chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat_openai</span>(</span>
 <span id="cb9-58"><a href="" aria-label="58"></a>  <span class="at">model =</span> <span class="st">"gpt-5-nano"</span>,</span>
 <span id="cb9-59"><a href="" aria-label="59"></a>  <span class="at">system_prompt =</span> <span class="fu">paste</span>(</span>
-<span id="cb9-60"><a href="" aria-label="60"></a>    <span class="st">"Responde en español. Para fechas relativas, consulta primero consultar_fecha_actual y calcula la fecha."</span>,</span>
-<span id="cb9-61"><a href="" aria-label="61"></a>    <span class="st">"Después usa consultar_pronostico. No inventes datos meteorológicos."</span>,</span>
-<span id="cb9-62"><a href="" aria-label="62"></a>    <span class="st">"Si no tienes las tools necesarias disponibles, explica que no puedes obtener el pronóstico."</span></span>
-<span id="cb9-63"><a href="" aria-label="63"></a>  )</span>
-<span id="cb9-64"><a href="" aria-label="64"></a>)</span>
-<span id="cb9-65"><a href="" aria-label="65"></a></span>
-<span id="cb9-66"><a href="" aria-label="66"></a><span class="co"># Sin registrar las tools: todavía no puede consultar la fecha ni el pronóstico.</span></span>
-<span id="cb9-67"><a href="" aria-label="67"></a>chat<span class="sc">$</span><span class="fu">chat</span>(pregunta)</span>
-<span id="cb9-68"><a href="" aria-label="68"></a></span>
-<span id="cb9-69"><a href="" aria-label="69"></a><span class="co"># Ahora damos acceso a ambas funciones.</span></span>
-<span id="cb9-70"><a href="" aria-label="70"></a>chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
-<span id="cb9-71"><a href="" aria-label="71"></a>  consultar_pronostico,</span>
-<span id="cb9-72"><a href="" aria-label="72"></a>  <span class="st">"Consulta el pronóstico de un día en una ciudad. Usa la primera coincidencia."</span>,</span>
-<span id="cb9-73"><a href="" aria-label="73"></a>  <span class="at">arguments =</span> <span class="fu">list</span>(</span>
-<span id="cb9-74"><a href="" aria-label="74"></a>    <span class="at">ciudad =</span> <span class="fu">type_string</span>(<span class="st">"Nombre de una ciudad, por ejemplo Madrid o Tokio."</span>),</span>
-<span id="cb9-75"><a href="" aria-label="75"></a>    <span class="at">fecha =</span> <span class="fu">type_string</span>(<span class="st">"Fecha AAAA-MM-DD, entre hoy y hoy + 15 días, UTC."</span>)</span>
-<span id="cb9-76"><a href="" aria-label="76"></a>  )</span>
-<span id="cb9-77"><a href="" aria-label="77"></a>))</span>
-<span id="cb9-78"><a href="" aria-label="78"></a></span>
-<span id="cb9-79"><a href="" aria-label="79"></a>chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
-<span id="cb9-80"><a href="" aria-label="80"></a>  consultar_fecha_actual,</span>
-<span id="cb9-81"><a href="" aria-label="81"></a>  <span class="st">"Devuelve la fecha actual en UTC. Úsala para interpretar hoy, mañana o en N días."</span></span>
-<span id="cb9-82"><a href="" aria-label="82"></a>))</span>
-<span id="cb9-83"><a href="" aria-label="83"></a></span>
-<span id="cb9-84"><a href="" aria-label="84"></a><span class="co"># Con ambas tools: consulta la fecha actual y luego el pronóstico.</span></span>
-<span id="cb9-85"><a href="" aria-label="85"></a>chat<span class="sc">$</span><span class="fu">chat</span>(<span class="fu">paste</span>(<span class="st">"Ahora usa las herramientas disponibles para responder."</span>, pregunta))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Compara la respuesta sin tools con la respuesta después de registrarlas: fecha actual y luego pronóstico. App 05 también registra dos tools y agrega una capacidad distinta: modificar el dashboard.</p>
+<span id="cb9-60"><a href="" aria-label="60"></a>    <span class="st">"Responde en español."</span>,</span>
+<span id="cb9-61"><a href="" aria-label="61"></a>    <span class="st">"Para fechas relativas, consulta primero consultar_fecha_actual y calcula la fecha."</span>,</span>
+<span id="cb9-62"><a href="" aria-label="62"></a>    <span class="st">"Después usa consultar_pronostico. No inventes datos meteorológicos."</span>,</span>
+<span id="cb9-63"><a href="" aria-label="63"></a>    <span class="st">"Si faltan tools, explica que no puedes obtener el pronóstico."</span></span>
+<span id="cb9-64"><a href="" aria-label="64"></a>  )</span>
+<span id="cb9-65"><a href="" aria-label="65"></a>)</span>
+<span id="cb9-66"><a href="" aria-label="66"></a></span>
+<span id="cb9-67"><a href="" aria-label="67"></a><span class="co"># Sin registrar las tools: todavía no puede consultar la fecha ni el pronóstico.</span></span>
+<span id="cb9-68"><a href="" aria-label="68"></a>chat<span class="sc">$</span><span class="fu">chat</span>(pregunta)</span>
+<span id="cb9-69"><a href="" aria-label="69"></a></span>
+<span id="cb9-70"><a href="" aria-label="70"></a><span class="co"># Ahora damos acceso a ambas funciones.</span></span>
+<span id="cb9-71"><a href="" aria-label="71"></a>chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
+<span id="cb9-72"><a href="" aria-label="72"></a>  consultar_pronostico,</span>
+<span id="cb9-73"><a href="" aria-label="73"></a>  <span class="st">"Consulta el pronóstico de un día en una ciudad. Usa la primera coincidencia."</span>,</span>
+<span id="cb9-74"><a href="" aria-label="74"></a>  <span class="at">arguments =</span> <span class="fu">list</span>(</span>
+<span id="cb9-75"><a href="" aria-label="75"></a>    <span class="at">ciudad =</span> <span class="fu">type_string</span>(<span class="st">"Nombre de una ciudad, por ejemplo Madrid o Tokio."</span>),</span>
+<span id="cb9-76"><a href="" aria-label="76"></a>    <span class="at">fecha =</span> <span class="fu">type_string</span>(<span class="st">"Fecha AAAA-MM-DD, entre hoy y hoy + 15 días, UTC."</span>)</span>
+<span id="cb9-77"><a href="" aria-label="77"></a>  )</span>
+<span id="cb9-78"><a href="" aria-label="78"></a>))</span>
+<span id="cb9-79"><a href="" aria-label="79"></a></span>
+<span id="cb9-80"><a href="" aria-label="80"></a>chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
+<span id="cb9-81"><a href="" aria-label="81"></a>  consultar_fecha_actual,</span>
+<span id="cb9-82"><a href="" aria-label="82"></a>  <span class="st">"Devuelve la fecha actual en UTC. Úsala para interpretar hoy, mañana o en N días."</span></span>
+<span id="cb9-83"><a href="" aria-label="83"></a>))</span>
+<span id="cb9-84"><a href="" aria-label="84"></a></span>
+<span id="cb9-85"><a href="" aria-label="85"></a><span class="co"># Con ambas tools: consulta la fecha actual y luego el pronóstico.</span></span>
+<span id="cb9-86"><a href="" aria-label="86"></a>chat<span class="sc">$</span><span class="fu">chat</span>(<span class="fu">paste</span>(<span class="st">"Ahora usa las herramientas disponibles para responder."</span>, pregunta))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="app-05-pasar-de-consultar-a-actualizar-la-vista" class="slide level2 pattern-overview">
 <h2>App 05 · Pasar de consultar a actualizar la vista</h2>
@@ -993,37 +990,41 @@ LatinR 2026
 </section>
 <section id="app-05-cómo-se-propaga-el-cambio" class="slide level2 reactivity-flow-slide">
 <h2>App 05 · Cómo se propaga el cambio</h2>
-<p>Al ejecutar <code>consulta_actual(consulta)</code>, Shiny invalida los cálculos que dependen de ese estado.</p>
-<div class="cell" data-reveal="true" data-layout-align="default">
-<div class="cell-output-display">
-<div>
-<p></p><figure class=""><p></p>
-<div>
-<pre class="mermaid mermaid-js">%%{init: {
-  "theme": "base",
-  "flowchart": {"htmlLabels": false},
-  "themeVariables": {
-    "fontFamily": "IBM Plex Sans, sans-serif",
-    "fontSize": "28px",
-    "primaryColor": "#fffefa",
-    "primaryTextColor": "#263338",
-    "primaryBorderColor": "#174a70",
-    "lineColor": "#174a70"
-  }
-}}%%
-flowchart LR
-  T["Tool&lt;br/&gt;actualizar_dashboard()"] --&gt;|Escribe| Q["Estado&lt;br/&gt;consulta_actual()"]
-  Q --&gt;|Invalida| D["Datos&lt;br/&gt;data()"]
-  D --&gt;|Actualiza| O["Indicadores&lt;br/&gt;gráfico y tabla"]
-</pre>
-</div>
-<p></p></figure><p></p>
-</div>
-</div>
+<p>La tool cambia el estado. Shiny propaga el cambio hasta los outputs.</p>
+<div class="reactivity-flow" role="group" aria-label="Tool, estado, datos y outputs">
+  <div class="reactivity-step">
+    <span class="reactivity-number">01 / ACCIÓN</span>
+    <strong>La tool escribe</strong>
+    <code>actualizar_dashboard()</code>
+    <span>Recibe una consulta SQL.</span>
+  </div>
+  <span class="reactivity-arrow" aria-hidden="true">→</span>
+  <div class="reactivity-step reactivity-state">
+    <span class="reactivity-number">02 / ESTADO</span>
+    <strong>Guarda la consulta</strong>
+    <code>consulta_actual()</code>
+    <span>Invalida sus dependientes.</span>
+  </div>
+  <span class="reactivity-arrow" aria-hidden="true">→</span>
+  <div class="reactivity-step">
+    <span class="reactivity-number">03 / DATOS</span>
+    <strong>Recalcula los datos</strong>
+    <code>data()</code>
+    <span>Ejecuta la nueva consulta.</span>
+  </div>
+  <span class="reactivity-arrow" aria-hidden="true">→</span>
+  <div class="reactivity-step">
+    <span class="reactivity-number">04 / OUTPUTS</span>
+    <strong>Actualiza la vista</strong>
+    <span class="reactivity-output">Indicadores · gráfico · tabla</span>
+    <span>Muestran el nuevo resultado.</span>
+  </div>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="" aria-label="1"></a>consulta_actual <span class="ot">&lt;-</span> <span class="fu">reactiveVal</span>(<span class="st">"SELECT * FROM paises"</span>)</span>
 <span id="cb11-2"><a href="" aria-label="2"></a>data <span class="ot">&lt;-</span> <span class="fu">reactive</span>(DBI<span class="sc">::</span><span class="fu">dbGetQuery</span>(con, <span class="fu">consulta_actual</span>()))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Los outputs dependen de <code>data()</code> y vuelven a calcularse para mostrar el resultado de la nueva consulta.</p>
+<div class="reactivity-takeaway">
+<p>Una escritura en <code>consulta_actual()</code> activa toda la cadena reactiva.</p>
+</div>
 </section>
 <section id="app-05-el-código" class="slide level2">
 <h2>App 05 · El código</h2>

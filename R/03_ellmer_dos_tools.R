@@ -57,9 +57,10 @@ consultar_pronostico("Madrid", fecha_ejemplo)
 chat <- ellmer::chat_openai(
   model = "gpt-5-nano",
   system_prompt = paste(
-    "Responde en español. Para fechas relativas, consulta primero consultar_fecha_actual y calcula la fecha.",
+    "Responde en español.",
+    "Para fechas relativas, consulta primero consultar_fecha_actual y calcula la fecha.",
     "Después usa consultar_pronostico. No inventes datos meteorológicos.",
-    "Si no tienes las tools necesarias disponibles, explica que no puedes obtener el pronóstico."
+    "Si faltan tools, explica que no puedes obtener el pronóstico."
   )
 )
 

@@ -222,19 +222,81 @@ html.reveal-print .reveal .slides {
   margin: 0 0 28px;
 }
 
-.reveal .slides > section.reactivity-flow-slide .cell {
-  margin: 36px 0 28px;
+.reveal .slides > section.two-tools-slide > p:first-of-type {
+  margin: 0 0 24px;
 }
 
-.reveal .slides > section.reactivity-flow-slide svg.mermaid-js {
-  display: block;
-  max-width: 100%;
-  height: auto;
-  margin: 0 auto;
+.reveal .slides > section.two-tools-slide pre.workshop-code > code.sourceCode {
+  max-height: 590px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .reveal .slides > section.reactivity-flow-slide > .code-copy-outer-scaffold {
-  margin-bottom: 28px;
+  margin: 0;
+}
+
+.reactivity-flow {
+  display: grid;
+  grid-template-columns: 1fr 28px 1fr 28px 1fr 28px 1fr;
+  align-items: stretch;
+  gap: 12px;
+  margin: 42px 0 36px;
+}
+
+.reactivity-step {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 18px;
+  padding: 24px 18px;
+  border-top: 3px solid var(--rule);
+}
+
+.reactivity-step .reactivity-number {
+  color: var(--blue);
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: .1em;
+}
+
+.reactivity-step strong {
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.reactivity-step code,
+.reactivity-step .reactivity-output {
+  padding: 0;
+  background: transparent;
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+.reactivity-step > span:last-child {
+  color: var(--muted);
+  font-size: 21px;
+  font-weight: 300;
+  line-height: 1.35;
+}
+
+.reactivity-state {
+  border-color: var(--blue);
+  border-radius: 0 0 12px 12px;
+  background: #e5edf1;
+}
+
+.reactivity-arrow {
+  align-self: center;
+  color: var(--blue);
+  font-size: 32px;
+}
+
+.reveal .reactivity-takeaway > p {
+  margin: 26px 0 0;
+  color: var(--blue) !important;
+  font-size: 26px !important;
 }
 
 .reveal .slides > section.comparison-slide > p {
