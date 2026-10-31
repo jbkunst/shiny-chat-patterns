@@ -131,18 +131,12 @@ code_block(
 ```
 
 
-## App 00 · Ejecutar y explorar {.app-demo-live}
-
-```r
-shiny::runApp("app-00")
-```
-
-Cambia el título y la cantidad de puntos; activa el pronóstico. Observa el gráfico y su encabezado.
+## App 00 · Explorar {.app-demo-live}
 
 ```{shinylive-r}
 #| standalone: true
 #| components: [viewer]
-#| viewerHeight: 450
+#| viewerHeight: 650
 library(shiny)
 library(bslib)
 library(forecast)
@@ -153,6 +147,7 @@ pasajeros <- data.frame(pasajeros = as.numeric(AirPassengers))
 # user interface ----------------------------------------------------------
 ui <- page_sidebar(
   title = "App 00 · Widgets y outputs",
+  tags$style("html { zoom: 0.8; }"),
   sidebar = sidebar(
     textInput("title", "Título", value = "Pasajeros aéreos"),
     sliderInput("n", "Cantidad de puntos", min = 24, max = 144, value = 48, step = 24),

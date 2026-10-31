@@ -19,9 +19,11 @@ La presentación vive completa en esta carpeta y se publica en
 ## Arquitectura visual
 
 El recorrido se divide en tres capítulos: preparar y conversar (App 00–02), consultar y actualizar
-(App 03–05) y actuar sobre la interfaz (App 06–08). Cada app termina con «Ejecutar y explorar»: comando de R,
+(App 03–05) y actuar sobre la interfaz (App 06–08). App 01–08 terminan con «Ejecutar y explorar»: comando de R,
 acción o pregunta sugerida y comportamiento a observar. Ejecuta los comandos desde la raíz del repositorio.
-App 00 conserva además la demo Shinylive en la misma slide, con un visor de 450 px.
+App 00 muestra solo la demo Shinylive, con un visor de 650 px y la app al 80 % de escala.
+No incluye comando de ejecución porque ya está funcionando en el navegador. El zoom se aplica
+al HTML de esa app embebida, sin cambiar la escala de las slides ni la app local.
 En las demos, los subtítulos tienen 48 px de margen superior y 16 px inferior. Su selector debe superar
 la especificidad del estilo general de `h3`, para conservar la separación entre acción y observación.
 

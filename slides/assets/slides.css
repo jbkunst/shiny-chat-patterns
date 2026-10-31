@@ -250,13 +250,8 @@ html.reveal-print .reveal .slides {
   margin: 0;
 }
 
-.reveal .slides > section.app-demo-live > p {
-  margin: 16px 0;
-  font-size: 25px;
-}
-
-.reveal .app-demo-live pre > code.sourceCode {
-  padding: 14px 24px;
+.reveal .app-demo-live .shinylive-wrapper {
+  margin: 0;
 }
 
 .reveal .slides > section.reactivity-flow-slide > .code-copy-outer-scaffold {
