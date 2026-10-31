@@ -11,8 +11,8 @@ conversación, acceso controlado a datos, consultas SQL, actualización del esta
 interfaz, para finalizar con un dashboard conversacional que controla gráficos, tablas y mapas.
 
 Cada patrón se presenta como una aplicación independiente que cambia una sola idea respecto de la
-anterior. Esto permite identificar con claridad qué código habilita cada patrón, cuándo resulta útil y
-qué validaciones necesita. El objetivo no es reemplazar la interfaz tradicional con un chat, sino
+anterior. Esto permite identificar con claridad qué código habilita cada patrón y cuándo resulta útil.
+El objetivo no es reemplazar la interfaz tradicional con un chat, sino
 entender cómo ambas formas de interacción pueden complementarse.
 
 | | |
@@ -28,32 +28,35 @@ entender cómo ambas formas de interacción pueden complementarse.
 Al finalizar el taller, quienes participen podrán:
 
 - Integrar un chat en una aplicación Shiny y reconocer qué contexto puede utilizar el modelo.
-- Definir tools pequeñas, explícitas y validadas para consultar datos reales.
+- Definir tools pequeñas con nombres y argumentos explícitos para consultar datos reales.
 - Permitir que una tool actualice valores reactivos y ejecute acciones de interfaz.
 - Combinar controles tradicionales con consultas expresadas en lenguaje natural.
 - Reconocer los límites de seguridad entre el navegador, la aplicación y servicios externos.
 
 ### Contenidos
 
-**Bloque 1 · De una app reactiva a una conversación con contexto**
+**Capítulo 1 · Preparar y conversar · App 00–02**
 
 - Dashboard y reactividad como punto de partida.
 - Chat sin acceso a los datos de la aplicación.
+
+**Capítulo 2 · Consultar y actualizar · App 03–05**
+
 - Primera tool para consultar los datos visibles.
-- Consultas SQL de solo lectura y validación de argumentos.
+- Consultas SQL de solo lectura.
+- Actualización del estado reactivo desde una tool.
 
 **Pausa**
 
-**Bloque 2 · Cuando el chat puede actuar sobre la aplicación**
+**Capítulo 3 · Actuar sobre la interfaz · App 06–08**
 
-- Actualización del estado reactivo desde una tool.
 - Acciones de interfaz: tablas, gráficos y modales.
 - Comparación entre filtros tradicionales y consultas por chat.
 - Control de una visualización geográfica y su cámara.
 
-La presentación vive en `slides/` y se publicará en
+La presentación vive en `slides/` y se publica en
 <https://jkunst.com/shiny-chat-patterns/>. El QMD, el tema y los scripts se mantienen juntos para que
-la carpeta pueda renderizarse y publicarse como una unidad.
+la carpeta pueda publicarse como una unidad. El render también lee los scripts de `R/` y de las apps.
 
 ## Sobre el repositorio
 
@@ -62,7 +65,7 @@ la carpeta pueda renderizarse y publicarse como una unidad.
 posible del paso anterior. `app-07` es una pausa comparativa; `app-08` retoma la línea principal desde
 `app-06` y agrega el mapa. Así, cada cambio se reconoce en el código y puede mostrarse en un taller.
 
-Todas las apps usan `page_sidebar()` para mantener una estructura consistente
+Las apps del recorrido principal usan `page_sidebar()` para mantener una estructura consistente
 y concentrar cada ejemplo en el patrón que introduce. Desde `app-00` hasta
 `app-08`, cada carpeta contiene `app.R` y `app.py` para comparar la misma idea
 en ambos lenguajes. Las versiones de chat usan `ellmer` y `chatlas`, respectivamente.
@@ -121,14 +124,18 @@ dos formas de controlar el mismo dashboard y no establece la base técnica de `a
 
 Estas apps trasladan los patrones del recorrido principal a fuentes colombianas. No continúan la
 secuencia incremental `app-00`–`app-08`; muestran cómo organizar tools por responsabilidad.
+Son casos particulares para motivar con aplicaciones concretas. Sus estilos y layouts son excepciones
+deliberadas a la UI mínima de las apps de enseñanza; no tienen que conservar el mismo dashboard.
 
 | App | Fuente | Patrón |
 |---|---|---|
-| `app-91-colombia-territorial` | DANE ECV 2025 + data_ColOpenData MGN 2018 | Resuelve territorios, consulta indicadores, actualiza el mapa e inspecciona la vista |
-| `app-92-banrep-sdmx` | Banco de la República | Resuelve un `flow_id`, consulta SDMX REST/XML, grafica la serie e inspecciona sus datos |
+| `app-91-colombia-territorial` | ECV 2025 · MGN 2018 | Territorios, indicadores, mapa e inspección |
+| `app-92-banrep-sdmx` | Banco de la República | Series SDMX, gráfico e inspección |
 
 `app-91-colombia-territorial` incluye datos departamentales locales para funcionar durante el
-taller. Para reconstruirlos desde el servicio ArcGIS ejecuta, dentro de su carpeta:
+taller. Su chat flotante es una excepción al sidebar del recorrido principal. Para reconstruir los
+indicadores desde los anexos Excel del DANE y la geometría MGN 2018 de data_ColOpenData, ejecuta
+dentro de su carpeta:
 
 ```r
 source("prepare-data.R")
@@ -147,7 +154,11 @@ comparten esos archivos.
 
 Las apps de países en R y Python leen `data/paises.csv`. El archivo se genera
 con `R/generar-data-paises.R`, de modo que ambas implementaciones trabajan con
-las mismas filas, columnas y valores.
+la misma base de 142 países.
+
+En App 08 queda una diferencia pendiente de equivalencia: la unión con las geometrías en R conserva
+140 países y excluye Reunión y Territorios Palestinos; Python conserva los 142. Esto afecta los totales
+del dashboard de esa app. El recorrido App 01–07 usa los 142 países en ambos lenguajes.
 
 La versión Python de `app-08` usa un globo ortográfico de Plotly. La tool de
 cámara actualiza el widget existente mediante `map.widget.update_geos()`, el
@@ -160,6 +171,11 @@ Gapminder incluido en Plotly.
 Las carpetas con sufijo `-experimental` contienen aplicaciones en exploración. Todavía no forman una
 secuencia formal ni están incorporadas al curso.
 
+App 10, 12 y 13 usan `bcchr`, el catálogo local `data/series_catalog.rds` y `BCCH_TOKEN` para consultar
+el Banco Central de Chile. App 11 solo conversa y requiere `OPENAI_API_KEY`.
+App 13 conserva las tools de búsqueda y actualización de App 12;
+la actualización también devuelve un resumen y una imagen al modelo.
+
 ## Alcance
 
 El curso comprende `app-00`–`app-08`. Las aplicaciones experimentales quedan fuera de este alcance
@@ -167,7 +183,8 @@ mientras no sean formalizadas e incorporadas al material del curso.
 
 ## Instalar
 
-Se necesita R 4.6.1 y [`uv`](https://docs.astral.sh/uv/). Después de clonar el repositorio, restaura
+Se necesita R 4.6.1 y Python 3.12 o posterior, gestionado con [`uv`](https://docs.astral.sh/uv/).
+Después de clonar el repositorio, restaura
 los entornos desde la raíz:
 
 ```console
@@ -241,6 +258,9 @@ descripción y una vista interactiva. Desde una sesión R en la raíz del reposi
 ```r
 source("R/run_all_apps.R")
 ```
+
+Por defecto incluye App 00–08 y los casos 91–92. Las experimentales se agregan con
+`run_all_apps(include_experimental = TRUE)` después de cargar el script.
 
 Esta única instrucción inicia las apps, prepara el catálogo y lo abre en el navegador. El objeto
 `course` se crea automáticamente. Si vuelves a ejecutarla, primero detiene la ejecución anterior.

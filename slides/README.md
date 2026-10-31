@@ -1,14 +1,15 @@
 # Slides del taller
 
-La presentación vive completa en esta carpeta y se publica en
+La fuente visual de la presentación vive en esta carpeta y se publica en
 <https://jkunst.com/shiny-chat-patterns/>.
+El render lee también los ejemplos de `R/` y los `app.R` del recorrido principal.
 
 ## Estructura
 
 - `index.qmd`: fuente Quarto y contenido del taller.
 - `index.html`: presentación renderizada por Quarto.
 - `assets/theme.scss`: variables tipográficas y cromáticas de RevealJS.
-- `assets/slides.css`: tres estilos de slide y componentes de contenido.
+- `assets/slides.css`: estilos de portada, capítulos, paquetes, contenido y demostraciones.
 - `assets/cover.html`: estructura de la visualización animada de portada.
 - `assets/cover.js`: animación de portada inspirada en el landing de jkunst.com.
 - `assets/code-highlights.js`: resaltado y scroll de los archivos completos con una sola copia del código.
@@ -19,7 +20,8 @@ La presentación vive completa en esta carpeta y se publica en
 ## Arquitectura visual
 
 El recorrido se divide en tres capítulos: preparar y conversar (App 00–02), consultar y actualizar
-(App 03–05) y actuar sobre la interfaz (App 06–08). App 01–08 terminan con «Ejecutar y explorar»: comando de R,
+(App 03–05) y actuar sobre la interfaz (App 06–08). App 01–08 terminan con «Ejecutar y explorar»:
+comando de R,
 acción o pregunta sugerida y comportamiento a observar. Ejecuta los comandos desde la raíz del repositorio.
 App 00 muestra solo la demo Shinylive, con un visor de 650 px y la app al 80 % de escala.
 No incluye comando de ejecución porque ya está funcionando en el navegador. El zoom se aplica
@@ -51,11 +53,13 @@ de otros contextos.
 
 Antes de App 03, `R/02_ellmer_tool.R` consulta el pronóstico de una ciudad para una fecha explícita.
 La primera versión prioriza mostrar la función, sus argumentos y el registro de la tool.
-Ambos scripts preguntan primero sin tools, las registran y vuelven a preguntar en la misma conversación.
+Los ejemplos de tools preguntan primero sin ellas, las registran y vuelven a preguntar
+en la misma conversación.
 El prompt pide reconocer la falta de acceso a los datos cuando las tools todavía no están disponibles.
 Antes de App 05, `R/03_ellmer_dos_tools.R` conserva ese ejemplo y agrega la fecha actual para resolver
 preguntas como «dentro de tres días». Ambos scripts son independientes y se pueden copiar completos en R.
-Requieren `ellmer`, `httr2`, conexión a internet y `OPENAI_API_KEY` para la conversación. La llamada
+Las versiones R del clima requieren `ellmer` y `httr2`; las Python usan `chatlas` y la biblioteca estándar.
+Ambas requieren conexión a internet y `OPENAI_API_KEY` para la conversación. La llamada
 directa a la función permite comprobar Open-Meteo sin usar el modelo. Las fechas usan UTC.
 El buscador toma la primera coincidencia global; el resultado incluye región y país.
 La versión de dos tools agrega validaciones y tiempos de espera para las consultas HTTP.
@@ -66,9 +70,10 @@ Los ejemplos `R/01_ellmer.R` a `R/04_ellmer_imagen.R` tienen sus parejas en `pyt
 El cuarto muestra un gráfico aleatorio y permite inspeccionar el objeto de imagen que recibe el modelo.
 Las dos versiones usan doce puntos, uno alejado, y letras aleatorias; no generan las mismas coordenadas.
 Todos los imports y librerías se cargan al inicio. Los ejemplos 02–04 comparan antes y después del registro.
-Las slides de una y dos tools conservan una sola frase introductoria y limitan el código a 590 px de alto.
+Las slides de una tool, dos tools e imagen usan `.tool-console-slide`: una frase introductoria y código
+de hasta 590 px de alto.
 El código admite ajuste de línea para evitar scroll horizontal; el script completo sigue disponible.
-El botón de copiar permanece visible en ambas slides, incluso sin pasar el cursor sobre el código.
+El botón de copiar permanece visible en estas slides, incluso sin pasar el cursor sobre el código.
 Las slides principales se concentran en consultar, actualizar y mostrar resultados. App 04 permite
 listar todos los países y los modales no imponen un máximo de 100 filas. Las tools de gráficos describen
 las columnas permitidas en sus esquemas. El ejemplo de dos tools del clima conserva sus validaciones.
@@ -103,8 +108,8 @@ Quarto. La llamada debe usar `results: asis`:
 ```{r}
 #| results: asis
 code_block("../app-03/app.R", c(
-  "1-4" = "Carga los datos compartidos por la aplicación.",
-  "20-28" = "La tool consulta el estado reactivo."
+  "1-4" = "Carga las librerías de la aplicación y del chat.",
+  "57-66" = "La tool consulta y resume los datos visibles."
 ))
 ```
 ````
@@ -126,8 +131,9 @@ los números de línea del archivo original; al editar una app, revisa las llama
 
 Ambos modos emiten la clase `.workshop-code`. En `assets/slides.css`, esta clase establece fuente de
 19 px y altura máxima de 683 px, aproximadamente un 5 % más que los 650 px originales. Es una altura
-máxima: un archivo corto ocupa menos espacio. Los ejemplos escritos directamente en las slides
-conservan su fuente de 20 px y su altura máxima de 650 px.
+máxima: un archivo corto ocupa menos espacio. `.tool-console-slide` reduce ese máximo a 590 px.
+Los ejemplos escritos directamente en las slides usan fuente de 20 px; `.pattern-overview` limita
+su altura a 540 px y el resto conserva un máximo de 650 px.
 
 Estos valores se mantienen en CSS para conservar una presentación consistente. Si aparece una
 necesidad concreta, tendría sentido agregar:
@@ -204,4 +210,5 @@ app que corre en el navegador queda expuesto.
 ## Publicación
 
 El workflow `.github/workflows/slides-pages.yml` renderiza `slides/index.qmd` y publica esta carpeta con
-GitHub Pages. En la configuración del repositorio, selecciona **GitHub Actions** como fuente de Pages.
+GitHub Pages. Se activa al cambiar las slides, las apps o los scripts de `R/` en `main`, y también
+permite ejecución manual. En la configuración del repositorio, usa **GitHub Actions** como fuente de Pages.

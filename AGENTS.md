@@ -25,7 +25,7 @@ literal línea por línea.
   greeting y el system prompt a archivos Markdown.
 - `app-05`: permite que una tool actualice los datos reactivos mostrados por
   Shiny.
-- `app-06`: agrega tools de interfaz como `show_table()` y `show_chart()` que
+- `app-06`: agrega tools de interfaz como `mostrar_tabla()` y `mostrar_grafico()` que
   abren modales.
 - `app-07`: compara filtros tradicionales con una consulta solicitada por chat.
 - `app-08`: integra una tool con un globo y actualizaciones de cámara tipo proxy.
@@ -36,13 +36,18 @@ literal línea por línea.
 - `app-10-experimental`: explorador manual de series del Banco Central de Chile.
 - `app-11-experimental`: integra un chat sin tools ni acceso a los datos de la app.
 - `app-12-experimental`: agrega tools para encontrar y mostrar una serie.
-- `app-13-experimental`: agrega tools para describir y resumir la serie visible.
+- `app-13-experimental`: conserva las tools de App 12 y devuelve resumen e imagen al modelo al actualizar.
 - `app-20-experimental` en adelante: orquestación, agentes y bots especializados.
 
 Agrega una app intermedia en vez de introducir varios conceptos nuevos en el
 mismo paso.
 
 ## Interfaz
+
+Estas convenciones de UI mínima y continuidad aplican al recorrido de enseñanza `app-00`–`app-08`.
+Los casos `app-91-colombia-territorial` y `app-92-banrep-sdmx` son excepciones deliberadas: pueden
+usar estilos y layouts propios para motivar y mostrar aplicaciones concretas de los patrones.
+Conserva su identidad visual; no los simplifiques para hacerlos iguales a las apps de enseñanza.
 
 - Usa `bslib::page_sidebar()` en R y `ui.page_sidebar()` en Python como
   estructura por defecto.
@@ -65,11 +70,23 @@ mismo paso.
   actualización reactiva, acciones de interfaz u orquestación.
 - Define tools con nombres explícitos, descripciones breves y argumentos
   acotados.
-- Valida los argumentos antes de consultar datos o modificar estado reactivo.
+- Prioriza que cada ejemplo enseñe su capacidad principal. Usa esquemas para describir los argumentos
+  y evita comprobaciones duplicadas o límites de filas que no aporten al patrón.
+- Conserva las restricciones SQL y los controles necesarios para ejecutar la app. El ejemplo avanzado
+  de dos tools del clima conserva las validaciones de ciudad y fecha.
 - Los ejemplos SQL deben ser de solo lectura y estar restringidos a la tabla
   correspondiente.
 - No inventes resultados numéricos cuando una tool pueda obtenerlos desde los
   datos.
+
+## Ejemplos de consola y slides
+
+- Conserva parejas equivalentes entre `R/01_ellmer.R`–`R/04_ellmer_imagen.R` y los scripts de `python/`.
+- Carga todas las librerías e imports al inicio. Cada script debe poder ejecutarse de forma independiente.
+- En los ejemplos 02–04, pregunta sin tools, regístralas y vuelve a preguntar en la misma conversación.
+- Mantén equivalentes las consolas auxiliares R/Python de App 02–04 y usa los datos compartidos.
+- Divide las slides en los tres capítulos del recorrido. Los capítulos son azules; los paquetes, claros.
+- App 01–08 terminan con cómo ejecutar la app, qué hacer y qué observar. App 00 usa solo Shinylive.
 
 ## Estilo de código
 

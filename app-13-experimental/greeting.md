@@ -1,1 +1,1 @@
-Busca una serie o pregunta por la vista: **¿cuál es el último valor?**
+Busca una serie y pide una lectura de su evolución: **resume su promedio, mínimo y máximo**.
