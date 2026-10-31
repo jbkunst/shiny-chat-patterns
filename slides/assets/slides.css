@@ -773,6 +773,12 @@ body:has(.package-slide.present) .reveal {
   font-size: 19px;
 }
 
+/* El resaltado propio no necesita la segunda capa de bordes que crea Quarto al hacer clic. */
+.reveal div.sourceCode[data-workshop-highlights] #code-annotation-line-highlight,
+.reveal div.sourceCode[data-workshop-highlights] #code-annotation-line-highlight-gutter {
+  display: none;
+}
+
 /* La introducción de App 01 también debe caber junto al bloque de 683 px. */
 .reveal #app-01-dashboard-reactivo > p {
   margin: 0 0 12px;
