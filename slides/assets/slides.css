@@ -240,9 +240,9 @@ html.reveal-print .reveal .slides {
   margin: 0 0 40px;
 }
 
-.reveal .slides > section.app-demo h3 {
-  margin: 32px 0 12px;
-  font-size: 25px;
+.reveal .slides > section.app-demo:not(.quarto-title-block):not(.section-slide) h3 {
+  margin: 48px 0 16px;
+  font-size: 28px;
   font-weight: 500;
 }
 

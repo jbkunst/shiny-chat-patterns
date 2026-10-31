@@ -131,7 +131,7 @@ code_block(
 ```
 
 
-## App 00 · Probémosla {.app-demo-live}
+## App 00 · Ejecutar y explorar {.app-demo-live}
 
 ```r
 shiny::runApp("app-00")
@@ -206,7 +206,7 @@ code_block(
 )
 ```
 
-## App 01 · Probémosla {.app-demo}
+## App 01 · Ejecutar y explorar {.app-demo}
 
 ```r
 shiny::runApp("app-01")
@@ -301,7 +301,7 @@ code_block(
 )
 ```
 
-## App 02 · Probémosla {.app-demo}
+## App 02 · Ejecutar y explorar {.app-demo}
 
 ```r
 shiny::runApp("app-02")
@@ -368,7 +368,7 @@ code_block(
 )
 ```
 
-## App 03 · Probémosla {.app-demo}
+## App 03 · Ejecutar y explorar {.app-demo}
 
 ```r
 shiny::runApp("app-03")
@@ -415,7 +415,7 @@ code_block(
 )
 ```
 
-## App 04 · Probémosla {.app-demo}
+## App 04 · Ejecutar y explorar {.app-demo}
 
 ```r
 shiny::runApp("app-04")
@@ -513,7 +513,7 @@ code_block(
 )
 ```
 
-## App 05 · Probémosla {.app-demo}
+## App 05 · Ejecutar y explorar {.app-demo}
 
 ```r
 shiny::runApp("app-05")
@@ -576,7 +576,7 @@ code_block(
 )
 ```
 
-## App 06 · Probémosla {.app-demo}
+## App 06 · Ejecutar y explorar {.app-demo}
 
 ```r
 shiny::runApp("app-06")
@@ -600,7 +600,7 @@ Comparamos dos formas de expresar la misma intención sobre el dashboard.
 
 Ambos caminos alimentan `data()`. La interacción más reciente determina el modo activo.
 
-## App 07 · Probémosla {.app-demo}
+## App 07 · Ejecutar y explorar {.app-demo}
 
 ```r
 shiny::runApp("app-07")
@@ -659,7 +659,7 @@ code_block(
 )
 ```
 
-## App 08 · Probémosla {.app-demo}
+## App 08 · Ejecutar y explorar {.app-demo}
 
 ```r
 shiny::runApp("app-08")
