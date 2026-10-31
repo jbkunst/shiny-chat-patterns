@@ -32,8 +32,9 @@ la especificidad del estilo general de `h3`, para conservar la separación entre
 Después de App 08 hay un cuarto capítulo de extensión: MCP y App 09, por ahora solo en R.
 Incluye una definición breve, una comparación real cacheada sin y con MCP, el código de la app y
 «Ejecutar y explorar». El servidor remoto es comunitario; los datos estadísticos provienen del FMI.
-La tabla se construye desde `app-09/data/comparacion.json`. Sus respuestas, metadatos y valores fueron
-contrastados con las llamadas guardadas; `app-09/verify-comparison.R` permite repetir esa comprobación
+La tabla se construye desde `app-09/data/comparacion.json`, con preguntas de población y desempleo.
+El prompt común no menciona MCP, herramientas ni el taller. Las cifras de las respuestas con MCP se
+contrastan con las llamadas guardadas; `app-09/verify-comparison.R` permite repetir esa comprobación
 sin usar el modelo ni conectarse al servidor. La caché no representa una consulta en tiempo real.
 
 - La portada, los capítulos y el cierre comparten el fondo azul oscuro.
@@ -53,8 +54,8 @@ Los archivos completos presentados con `code_block()` conservan sus estilos prop
 
 Los títulos de las apps nombran la capacidad que se incorpora. App 05 incluye un diagrama HTML/CSS de
 la cadena tool → estado reactivo → datos → outputs, con el estado destacado. App 07 compara el mismo filtro
-mediante controles y chat. Los nombres de la slide de familias de tools son ejemplos ilustrativos
-de otros contextos.
+mediante controles y chat. El recorrido inicial enumera las capacidades sin repetir los números de app.
+App 09 muestra la configuración `mcp.json` y anota las líneas nuevas del cliente y registro de tools.
 
 ## Ejemplos de consola en R y Python
 

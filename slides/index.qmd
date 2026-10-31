@@ -84,31 +84,31 @@ code_block <- function(path, descriptions = NULL, single_copy = TRUE) {
 1. **Preparar la app y conversar**
 
    ::: {.nonincremental}
-   - **App 00:** inputs y outputs.
-   - **App 01:** dashboard reactivo.
-   - **App 02:** chat sin acceso a los datos.
+   - Inputs y outputs.
+   - Dashboard reactivo.
+   - Chat sin acceso a los datos.
    :::
 
 2. **Consultar y actualizar datos**
 
    ::: {.nonincremental}
-   - **App 03:** primera tool de consulta.
-   - **App 04:** consultas SQL.
-   - **App 05:** actualización del dashboard.
+   - Primera tool de consulta.
+   - Consultas SQL.
+   - Actualización del dashboard.
    :::
 
 3. **Actuar sobre la interfaz**
 
    ::: {.nonincremental}
-   - **App 06:** tablas y gráficos en modales.
-   - **App 07:** controles tradicionales y chat.
-   - **App 08:** cámara del mapa.
+   - Tablas y gráficos en modales.
+   - Controles tradicionales y chat.
+   - Cámara del mapa.
    :::
 
 4. **Conectar herramientas externas**
 
    ::: {.nonincremental}
-   - **App 09:** MCP con datos del FMI y un gráfico local.
+   - MCP con datos del FMI y un gráfico local.
    :::
 :::
 
@@ -693,7 +693,7 @@ sin clave propia. El modelo sigue necesitando `OPENAI_API_KEY`.
 
 ## El mismo modelo, sin y con MCP {.mcp-comparison}
 
-Respuestas reales guardadas en caché: misma pregunta, mismo prompt y conversaciones independientes.
+Respuestas reales cacheadas: mismo modelo, mismo prompt neutral y conversaciones independientes.
 
 ```{r}
 #| echo: false
@@ -711,13 +711,29 @@ cat("\n", knitr::kable(do.call(rbind, filas), format = "pipe", row.names = FALSE
 cat("\n\n", "Modelo: ", comparacion$modelo, " · Caché: ", comparacion$generado_utc, ".", sep = "")
 ```
 
-Las respuestas y sus llamadas se conservan en `app-09/data/comparacion.json`; el render no consulta al modelo.
+Compara cifra, año y fuente. Las llamadas se conservan en `app-09/data/comparacion.json`.
 
 ## App 09 · Datos remotos, gráfico local {.pattern-overview}
 
 El MCP ofrece tools para descubrir bases, resolver códigos y consultar series; no dibuja el gráfico.
 
 Nuestra tool `graficar_serie()` recibe las observaciones recuperadas y actualiza el gráfico y la tabla.
+
+`mcp.json` indica a qué servidor conectarse:
+
+```json
+{
+  "mcpServers": {
+    "imf": {
+      "url": "https://imf.caseyjhand.com/mcp"
+    }
+  }
+}
+```
+
+## App 09 · Registrar las herramientas {.pattern-overview}
+
+`mcp_tools()` descubre las tools remotas. Después registramos la función de gráficos definida en R.
 
 ```r
 chat <- chat_openai(model = "gpt-5-nano", system_prompt = prompt_sistema)
@@ -731,7 +747,16 @@ El registro de `graficar_serie()` conserva el patrón de las apps anteriores.
 ```{r}
 #| echo: false
 #| results: asis
-code_block("../app-09/app.R")
+code_block(
+  "../app-09/app.R",
+  c(
+    "5" = "Carga el cliente MCP para descubrir herramientas externas.",
+    "38-42" = "La tool local conserva el patrón de actualización reactiva para graficar los datos.",
+    "45-46" = "Crea el chat y registra las herramientas descubiertas en mcp.json.",
+    "47-57" = "Agrega la tool local de gráficos junto a las herramientas remotas.",
+    "59-62" = "Envía al chat el stream de respuestas, llamadas y resultados de herramientas."
+  )
+)
 ```
 
 ## App 09 · Ejecutar y explorar {.app-demo}
@@ -742,25 +767,12 @@ shiny::runApp("app-09")
 
 ### Pide
 
-«Consulta el crecimiento del PIB real de Chile para 2025–2028 y grafícalo».
+«Consulta la población de Chile entre 2020 y 2025 y grafícala».
 
 ### Observa
 
 El chat muestra las tools remotas del MCP y la llamada local a `graficar_serie()`.
 Comprueba el indicador, las unidades y qué años son proyecciones.
-
-## Cuatro familias de tools {.tool-families-slide}
-
-::: {.incremental}
-1. **Resolver** — `resolver_cliente()` convierte un nombre en el ID de un cliente del CRM.
-2. **Consultar** — `consultar_stock()` obtiene existencias desde un sistema de inventario.
-3. **Visualizar** — `mostrar_ruta()` dibuja un recorrido en un mapa de logística.
-4. **Inspeccionar** — `inspeccionar_seleccion()` devuelve los filtros activos de un dashboard.
-:::
-
-::: {.fragment}
-Son ejemplos ilustrativos de nombres para otros contextos: CRM, inventario, logística y dashboards.
-:::
 
 ## Cierre {.section-slide}
 
