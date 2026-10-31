@@ -34,6 +34,24 @@ Los títulos de las apps nombran la capacidad que se incorpora. App 05 incluye u
 cadena tool → estado reactivo → datos → outputs. App 07 compara el mismo filtro mediante controles
 y chat. Los nombres de la slide de familias de tools son ejemplos ilustrativos de otros contextos.
 
+## Ejemplos de tools en la consola de R
+
+Antes de App 03, `R/02_ellmer_tool.R` consulta el pronóstico de una ciudad para una fecha explícita.
+La primera versión prioriza mostrar la función, sus argumentos y el registro de la tool.
+Ambos scripts preguntan primero sin tools, las registran y vuelven a preguntar en la misma conversación.
+El prompt pide reconocer la falta de acceso a los datos cuando las tools todavía no están disponibles.
+Antes de App 05, `R/03_ellmer_dos_tools.R` conserva ese ejemplo y agrega la fecha actual para resolver
+preguntas como «dentro de tres días». Ambos scripts son independientes y se pueden copiar completos en R.
+Requieren `ellmer`, `httr2`, conexión a internet y `OPENAI_API_KEY` para la conversación. La llamada
+directa a la función permite comprobar Open-Meteo sin usar el modelo. Las fechas usan UTC.
+El buscador toma la primera coincidencia global; el resultado incluye región y país.
+La versión de dos tools agrega validaciones y tiempos de espera para las consultas HTTP.
+El horizonte válido incluye hoy y los próximos 15 días. Los datos conservan las unidades de la API.
+
+El equivalente Python del primer ejemplo está en `python/02_chatlas_tool.py` y usa `chatlas`.
+Desde la raíz del repositorio, ejecútalo con `uv run python python/02_chatlas_tool.py`.
+Configura `OPENAI_API_KEY` en el entorno de Python; Python no carga `.Renviron` automáticamente.
+
 ## Render local
 
 ```console
