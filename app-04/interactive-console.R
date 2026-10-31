@@ -1,10 +1,9 @@
-library(datos)
 library(DBI)
 library(duckdb)
 library(ellmer)
 
 # database ----------------------------------------------------------------
-paises <- datos::paises |> subset(anio == max(anio)) |> dplyr::select(-anio)
+paises <- read.csv("data/paises.csv", fileEncoding = "UTF-8")
 
 con <- DBI::dbConnect(duckdb::duckdb(), dbdir = ":memory:")
 DBI::dbWriteTable(con, "paises", paises)

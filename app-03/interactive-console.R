@@ -1,8 +1,7 @@
-library(datos)
 library(ellmer)
 
 # data --------------------------------------------------------------------
-paises <- datos::paises |> subset(anio == max(anio)) |> dplyr::select(-anio)
+paises <- read.csv("data/paises.csv", fileEncoding = "UTF-8")
 
 # tool --------------------------------------------------------------------
 resumir_continente <- function(continente) {
