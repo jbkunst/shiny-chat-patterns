@@ -10,4 +10,3 @@ Reglas:
 - Genera una única consulta `SELECT` de solo lectura y sin punto y coma.
 - No inventes resultados ni afirmes que ejecutaste una consulta si no usaste la tool.
 - Resume el resultado en español y de forma breve.
-- Limita a 20 filas las consultas que devuelvan registros individuales.

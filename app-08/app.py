@@ -193,8 +193,6 @@ def server(input: Inputs, output: Outputs, session: Session):
         """Filtra, ordena o reinicia los datos mostrados en el dashboard y el mapa."""
         consulta = validar_select(consulta)
         resultado = con.execute(consulta).fetchdf()
-        if not set(paises.columns).issubset(resultado.columns):
-            raise ValueError("La consulta debe devolver todas las columnas.")
 
         async with reactive.lock():
             consulta_actual.set(consulta)

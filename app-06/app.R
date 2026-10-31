@@ -73,14 +73,12 @@ server <- function(input, output, session) {
   actualizar_dashboard <- function(consulta) {
     consulta <- validar_select(consulta)
     resultado <- DBI::dbGetQuery(con, consulta)
-    if (!all(names(paises) %in% names(resultado))) stop("La consulta debe devolver todas las columnas.")
 
     consulta_actual(consulta)
     list(mensaje = "Dashboard actualizado.", registros = nrow(resultado))
   }
 
   mostrar_tabla <- function(n, titulo) {
-    n <- max(1L, min(as.integer(n), 100L))
     df <- isolate(data())
     resultado <- head(df, n)
     output$tabla_modal <- renderTable(resultado, striped = TRUE, hover = TRUE)
@@ -95,9 +93,6 @@ server <- function(input, output, session) {
 
   mostrar_grafico <- function(x, y, color, titulo) {
     df <- isolate(data())
-    columnas <- c(x, y, color)
-    columnas <- columnas[nzchar(columnas)]
-    if (!all(columnas %in% names(df))) stop("Una o más columnas no existen.")
     if (!nrow(df)) stop("No hay datos para graficar.")
     formula <- as.formula(paste(y, "~", x, if (nzchar(color)) paste("|", color) else ""))
 
@@ -143,7 +138,7 @@ server <- function(input, output, session) {
     mostrar_tabla,
     "Abre en un modal una tabla con los datos visibles en el dashboard.",
     arguments = list(
-      n = type_integer("Cantidad de filas, entre 1 y 100."),
+      n = type_integer("Cantidad de filas que quieres mostrar."),
       titulo = type_string("Título breve del modal.")
     )
   ))

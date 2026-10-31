@@ -128,7 +128,6 @@ server <- function(input, output, session) {
   actualizar_dashboard <- function(consulta) {
     consulta <- validar_select(consulta)
     resultado <- DBI::dbGetQuery(con, consulta)
-    if (!all(names(paises) %in% names(resultado))) stop("La consulta debe devolver todas las columnas.")
 
     consulta_actual(consulta)
     list(

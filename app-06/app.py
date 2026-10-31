@@ -174,8 +174,6 @@ def server(input: Inputs, output: Outputs, session: Session):
         """Filtra, ordena o reinicia los datos reactivos mostrados en el dashboard."""
         consulta = validar_select(consulta)
         resultado = con.execute(consulta).fetchdf()
-        if not set(paises.columns).issubset(resultado.columns):
-            raise ValueError("La consulta debe devolver todas las columnas.")
 
         async with reactive.lock():
             consulta_actual.set(consulta)
@@ -184,11 +182,10 @@ def server(input: Inputs, output: Outputs, session: Session):
         return {"mensaje": "Dashboard actualizado.", "registros": len(resultado)}
 
     async def mostrar_tabla(
-        n: Annotated[int, Field(description="Cantidad de filas, entre 1 y 100.")],
+        n: Annotated[int, Field(description="Cantidad de filas que quieres mostrar.")],
         titulo: Annotated[str, Field(description="Título breve del modal.")],
     ) -> list[dict]:
         """Abre en un modal una tabla con los datos visibles en el dashboard."""
-        n = max(1, min(int(n), 100))
         with reactive.isolate():
             resultado = data().head(n)
 
