@@ -1,3 +1,4 @@
+# Ejecuta primero todos los imports al iniciar una consola nueva.
 import json
 from datetime import datetime, timedelta, timezone
 from pprint import pprint
