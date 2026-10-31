@@ -14,5 +14,8 @@ __pycache__/
 *.sqlite
 *.duckdb
 .posit/publish/*
+.posit/assistant/
 rsconnect/
 /slides/shinylive/
+
+/.luarc.json
