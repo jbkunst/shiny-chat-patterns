@@ -6,6 +6,7 @@ on:
     paths:
       - "slides/**"
       - "app-*/**"
+      - "R/**"
       - ".github/workflows/slides-pages.yml"
   workflow_dispatch:
 
