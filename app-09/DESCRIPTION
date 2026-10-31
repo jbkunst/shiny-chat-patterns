@@ -1,0 +1,13 @@
+Title: App 09 · MCP + datos del FMI
+Description: Descubre y consulta herramientas de un servidor MCP comunitario de datos del FMI.
+    Una tool local de R grafica las observaciones recuperadas y actualiza la vista.
+Imports:
+    bslib,
+    ellmer,
+    jsonlite,
+    mcptools,
+    shiny,
+    shinychat,
+    tinyplot
+Remotes: posit-dev/mcptools@ff94da04ccb5e6e86a56537c9d2dcb0e0532067b
+Encoding: UTF-8

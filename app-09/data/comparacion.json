@@ -1,0 +1,775 @@
+{
+  "generado_utc": "2026-10-31 04:53:40 UTC",
+  "modelo": "gpt-5-nano",
+  "endpoint": "https://imf.caseyjhand.com/mcp",
+  "prompt": "Responde en español, en un máximo de 35 palabras.\nSolo afirma cifras o metadatos actuales si los verificas con las herramientas disponibles.\nSi no tienes herramientas, reconoce la limitación sin pedir permisos ni inventar resultados.\nSi hay tools MCP, usa el catálogo y las dimensiones antes de consultar observaciones.\nEn `imf_get_database`, omite `limit` y `offset` salvo que indiques también `dimension_id`.\nPara proyecciones, indica que lo son y conserva la unidad y la fuente.",
+  "casos": [
+    {
+      "pregunta": "¿Cuál es el identificador, la agencia y la versión actual del conjunto World Economic Outlook del FMI?",
+      "sin_mcp": {
+        "respuesta": "No puedo verificarlo sin herramientas; no puedo confirmar identificador, agencia ni versión actuales del conjunto World Economic Outlook. Necesitaría acceder al catálogo del FMI para darte datos exactos.",
+        "llamadas": []
+      },
+      "con_mcp": {
+        "respuesta": "Identificador: WEO; Agencia: IMF.RES; Versión actual: 9.0.0.",
+        "llamadas": [
+          {
+            "nombre": "imf_list_databases",
+            "argumentos": {
+              "filter": "World Economic Outlook",
+              "include_vintages": false,
+              "limit": 50,
+              "offset": 0
+            },
+            "resultado": {
+              "dataflows": [
+                {
+                  "id": "UNFCCC",
+                  "agency_id": "IMF.STA",
+                  "version": "3.0.0",
+                  "name": "Greenhouse Gas Emissions (UNFCCC)",
+                  "description": "This dataset provides National Greenhouse Gas Emissions Inventories by the sector of origin and National Mitigation Targets as determined by the countries.  Annual country-level estimates of net emiss…"
+                },
+                {
+                  "id": "WHDREO",
+                  "agency_id": "IMF.WHD",
+                  "version": "5.0.0",
+                  "name": "Western Hemisphere Regional Economic Outlook (WHDREO)",
+                  "description": "The WHD Regional Economic Outlook (REO) provides information on recent economic developments and prospects for countries in the Western Hemisphere. Data for the Western Hemisphere REO are prepared in…"
+                },
+                {
+                  "id": "WEO",
+                  "agency_id": "IMF.RES",
+                  "version": "9.0.0",
+                  "name": "World Economic Outlook (WEO)",
+                  "description": "The World Economic Outlook (WEO) database is created during the biannual WEO exercise, which begins in January and June of each year and results in the April and September/October WEO publication. Sel…"
+                },
+                {
+                  "id": "APDREO",
+                  "agency_id": "IMF.APD",
+                  "version": "6.0.0",
+                  "name": "Asia and Pacific Regional Economic Outlook (APDREO)",
+                  "description": "APD Regional Economic Outlook (REO) provides information on recent economic developments and prospects for countries in Asia and the Pacific. Data for the REO for Asia and Pacific is prepared in conju…"
+                },
+                {
+                  "id": "AFRREO",
+                  "agency_id": "IMF.AFR",
+                  "version": "7.0.0",
+                  "name": "Sub-Saharan Africa Regional Economic Outlook (AFRREO)",
+                  "description": "Sub-Saharan Africa Regional Economic Outlook (REO) provides information on recent economic developments and prospects for countries in sub-Saharan Africa. Data for the REO for sub-Saharan Africa are p…"
+                }
+              ],
+              "total_count": 5,
+              "returned_count": 5,
+              "offset": 0
+            },
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "pregunta": "Consulta en WEO la proyección de crecimiento del PIB real de Chile para 2027 y 2028. Indica ambos valores, la unidad y la fuente.",
+      "sin_mcp": {
+        "respuesta": "No tengo acceso a las bases del FMI en momento para verificar el WEO; no puedo confirmar los valores de 2027 y 2028. Si dispones de la herramienta MCP, indícame y te guío para extraerlos.",
+        "llamadas": []
+      },
+      "con_mcp": {
+        "respuesta": "Proyección WEO, Chile: 2027 = 2.611%, 2028 = 2.417%. Unidad: porcentaje (crecimiento interanual del PIB real). Fuente: IMF, World Economic Outlook (WEO).",
+        "llamadas": [
+          {
+            "nombre": "imf_list_databases",
+            "argumentos": {
+              "filter": "WEO",
+              "include_vintages": false,
+              "limit": 50,
+              "offset": 0
+            },
+            "resultado": {
+              "dataflows": [
+                {
+                  "id": "WHDREO",
+                  "agency_id": "IMF.WHD",
+                  "version": "5.0.0",
+                  "name": "Western Hemisphere Regional Economic Outlook (WHDREO)",
+                  "description": "The WHD Regional Economic Outlook (REO) provides information on recent economic developments and prospects for countries in the Western Hemisphere. Data for the Western Hemisphere REO are prepared in…"
+                },
+                {
+                  "id": "WEO",
+                  "agency_id": "IMF.RES",
+                  "version": "9.0.0",
+                  "name": "World Economic Outlook (WEO)",
+                  "description": "The World Economic Outlook (WEO) database is created during the biannual WEO exercise, which begins in January and June of each year and results in the April and September/October WEO publication. Sel…"
+                },
+                {
+                  "id": "APDREO",
+                  "agency_id": "IMF.APD",
+                  "version": "6.0.0",
+                  "name": "Asia and Pacific Regional Economic Outlook (APDREO)",
+                  "description": "APD Regional Economic Outlook (REO) provides information on recent economic developments and prospects for countries in Asia and the Pacific. Data for the REO for Asia and Pacific is prepared in conju…"
+                },
+                {
+                  "id": "AFRREO",
+                  "agency_id": "IMF.AFR",
+                  "version": "7.0.0",
+                  "name": "Sub-Saharan Africa Regional Economic Outlook (AFRREO)",
+                  "description": "Sub-Saharan Africa Regional Economic Outlook (REO) provides information on recent economic developments and prospects for countries in sub-Saharan Africa. Data for the REO for sub-Saharan Africa are p…"
+                }
+              ],
+              "total_count": 4,
+              "returned_count": 4,
+              "offset": 0
+            },
+            "error": null
+          },
+          {
+            "nombre": "imf_get_database",
+            "argumentos": {
+              "dataflow_id": "WEO",
+              "agency_id": null,
+              "version": null,
+              "codelist_filter": null,
+              "available_only": false,
+              "dimension_id": null,
+              "limit": null,
+              "offset": null
+            },
+            "resultado": {
+              "dataflow_id": "WEO",
+              "agency_id": "IMF.RES",
+              "version": "9.0.0",
+              "dsd_version": "9.0.0",
+              "structure_ref": "DSD_WEO",
+              "name": "World Economic Outlook (WEO)",
+              "description": "The World Economic Outlook (WEO) database is created during the biannual WEO exercise, which begins in January and June of each year and results in the April and September/October WEO publication. Selected series from the publication are available in a database format. ",
+              "key_format": "COUNTRY.INDICATOR.FREQUENCY",
+              "truncated": true,
+              "dimensions": [
+                {
+                  "id": "COUNTRY",
+                  "name": "Country",
+                  "position": 0,
+                  "codelist": [
+                    {
+                      "id": "GX123",
+                      "name": "Other Advanced Economies (Advanced Economies excluding G7 and Euro Area countries)"
+                    },
+                    {
+                      "id": "AFG",
+                      "name": "Afghanistan, Islamic Republic of"
+                    },
+                    {
+                      "id": "ALB",
+                      "name": "Albania"
+                    },
+                    {
+                      "id": "DZA",
+                      "name": "Algeria"
+                    },
+                    {
+                      "id": "ASM",
+                      "name": "American Samoa"
+                    },
+                    {
+                      "id": "AND",
+                      "name": "Andorra, Principality of"
+                    },
+                    {
+                      "id": "AGO",
+                      "name": "Angola"
+                    },
+                    {
+                      "id": "AIA",
+                      "name": "Anguilla, United Kingdom-British Overseas Territory"
+                    },
+                    {
+                      "id": "ATG",
+                      "name": "Antigua and Barbuda"
+                    },
+                    {
+                      "id": "ARG",
+                      "name": "Argentina"
+                    },
+                    {
+                      "id": "ARM",
+                      "name": "Armenia, Republic of"
+                    },
+                    {
+                      "id": "ABW",
+                      "name": "Aruba, Kingdom of the Netherlands"
+                    },
+                    {
+                      "id": "AUS",
+                      "name": "Australia"
+                    },
+                    {
+                      "id": "AUT",
+                      "name": "Austria"
+                    },
+                    {
+                      "id": "AZE",
+                      "name": "Azerbaijan, Republic of"
+                    },
+                    {
+                      "id": "BHS",
+                      "name": "Bahamas, The"
+                    },
+                    {
+                      "id": "BHR",
+                      "name": "Bahrain, Kingdom of"
+                    },
+                    {
+                      "id": "BGD",
+                      "name": "Bangladesh"
+                    },
+                    {
+                      "id": "BRB",
+                      "name": "Barbados"
+                    },
+                    {
+                      "id": "BLR",
+                      "name": "Belarus, Republic of"
+                    },
+                    {
+                      "id": "BEL",
+                      "name": "Belgium"
+                    },
+                    {
+                      "id": "BLZ",
+                      "name": "Belize"
+                    },
+                    {
+                      "id": "BEN",
+                      "name": "Benin"
+                    },
+                    {
+                      "id": "BMU",
+                      "name": "Bermuda"
+                    },
+                    {
+                      "id": "BTN",
+                      "name": "Bhutan"
+                    },
+                    {
+                      "id": "BOL",
+                      "name": "Bolivia"
+                    },
+                    {
+                      "id": "BIH",
+                      "name": "Bosnia and Herzegovina"
+                    },
+                    {
+                      "id": "BWA",
+                      "name": "Botswana"
+                    },
+                    {
+                      "id": "BRA",
+                      "name": "Brazil"
+                    },
+                    {
+                      "id": "VGB",
+                      "name": "British Virgin Islands"
+                    },
+                    {
+                      "id": "BRN",
+                      "name": "Brunei Darussalam"
+                    },
+                    {
+                      "id": "BGR",
+                      "name": "Bulgaria"
+                    },
+                    {
+                      "id": "BFA",
+                      "name": "Burkina Faso"
+                    },
+                    {
+                      "id": "BDI",
+                      "name": "Burundi"
+                    },
+                    {
+                      "id": "CPV",
+                      "name": "Cabo Verde"
+                    },
+                    {
+                      "id": "KHM",
+                      "name": "Cambodia"
+                    },
+                    {
+                      "id": "CMR",
+                      "name": "Cameroon"
+                    },
+                    {
+                      "id": "CAN",
+                      "name": "Canada"
+                    },
+                    {
+                      "id": "CYM",
+                      "name": "Cayman Islands"
+                    },
+                    {
+                      "id": "CAF",
+                      "name": "Central African Republic"
+                    },
+                    {
+                      "id": "TCD",
+                      "name": "Chad"
+                    },
+                    {
+                      "id": "CHL",
+                      "name": "Chile"
+                    },
+                    {
+                      "id": "CHN",
+                      "name": "China, People's Republic of"
+                    },
+                    {
+                      "id": "COL",
+                      "name": "Colombia"
+                    },
+                    {
+                      "id": "COM",
+                      "name": "Comoros, Union of the"
+                    },
+                    {
+                      "id": "COD",
+                      "name": "Congo, Democratic Republic of the"
+                    },
+                    {
+                      "id": "COG",
+                      "name": "Congo, Republic of"
+                    },
+                    {
+                      "id": "COK",
+                      "name": "Cook Islands"
+                    },
+                    {
+                      "id": "CRI",
+                      "name": "Costa Rica"
+                    },
+                    {
+                      "id": "HRV",
+                      "name": "Croatia, Republic of"
+                    }
+                  ],
+                  "codelist_truncated": true,
+                  "unfiltered_count": 344,
+                  "matched_count": 344,
+                  "returned_count": 50,
+                  "offset": 0,
+                  "next_offset": 50
+                },
+                {
+                  "id": "INDICATOR",
+                  "name": "Indicator",
+                  "position": 1,
+                  "codelist": [
+                    {
+                      "id": "LUR",
+                      "name": "Unemployment rate"
+                    },
+                    {
+                      "id": "PCOALSA",
+                      "name": "Coal, South Africa, Export price, US dollars per metric tonne"
+                    },
+                    {
+                      "id": "DSP",
+                      "name": "External debt: total debt service, amortization, US dollar"
+                    },
+                    {
+                      "id": "DSI",
+                      "name": "External debt: total debt service, interest, US dollar"
+                    },
+                    {
+                      "id": "DSP_NGDPD",
+                      "name": "External debt: total debt service, amortization, Percent of GDP"
+                    },
+                    {
+                      "id": "BX",
+                      "name": "Exports of goods and services, US dollar"
+                    },
+                    {
+                      "id": "BM",
+                      "name": "Imports of goods and services, US dollar"
+                    },
+                    {
+                      "id": "DS",
+                      "name": "External debt: total debt service, US dollar"
+                    },
+                    {
+                      "id": "TTPCH",
+                      "name": "Terms of trade of goods and services, percent change"
+                    },
+                    {
+                      "id": "DSI_NGDPD",
+                      "name": "External debt: total debt service, interest, Percent of GDP"
+                    },
+                    {
+                      "id": "NGDP_RPCHMK",
+                      "name": "Gross domestic product (GDP), Constant prices, Percent"
+                    },
+                    {
+                      "id": "NGDPD",
+                      "name": "Gross domestic product (GDP), Current prices, US dollar"
+                    },
+                    {
+                      "id": "PTEA",
+                      "name": "Tea, Kenyan, Unit prices, US cents per kilogram"
+                    },
+                    {
+                      "id": "DS_NGDPD",
+                      "name": "External debt: total debt service, Percent of GDP"
+                    },
+                    {
+                      "id": "D",
+                      "name": "External debt, US dollar"
+                    },
+                    {
+                      "id": "NGDP_D",
+                      "name": "Gross domestic product (GDP), Price deflator, Index"
+                    },
+                    {
+                      "id": "NGDP_RPCH",
+                      "name": "Gross domestic product (GDP), Constant prices, Percent change"
+                    },
+                    {
+                      "id": "TTTPCH",
+                      "name": "Terms of trade of goods, percent change"
+                    },
+                    {
+                      "id": "NGDP_R",
+                      "name": "Gross domestic product (GDP), Constant prices, Domestic currency"
+                    },
+                    {
+                      "id": "NGDP",
+                      "name": "Gross domestic product (GDP), Current prices, Domestic currency"
+                    },
+                    {
+                      "id": "NGSD_NGDP",
+                      "name": "Gross national savings, Percent of GDP"
+                    },
+                    {
+                      "id": "PSUNO",
+                      "name": "Sunflower oil, Export price, US dollars per metric tonne"
+                    },
+                    {
+                      "id": "PNGASEU",
+                      "name": "Natural gas, EU, Unit prices, US dollars per million metric British thermal units of gas"
+                    },
+                    {
+                      "id": "PZINC",
+                      "name": "Zinc, Unit prices, US dollars per metric tonne"
+                    },
+                    {
+                      "id": "PPPSH",
+                      "name": "Gross domestic product (GDP), Purchasing power parity (PPP) international dollar, percent of world GDP, Percent, ICP benchmarks 2017-2021"
+                    },
+                    {
+                      "id": "D_NGDPD",
+                      "name": "External debt, Percent of GDP"
+                    },
+                    {
+                      "id": "PPPPC",
+                      "name": "Gross domestic product (GDP), Per capita, purchasing power parity (PPP) international dollar, ICP benchmarks 2017-2021"
+                    },
+                    {
+                      "id": "PPPGDP",
+                      "name": "Gross domestic product (GDP), Current prices, Purchasing power parity (PPP) international dollar, ICP benchmarks 2017-2021"
+                    },
+                    {
+                      "id": "DSP_BX",
+                      "name": "External debt: total debt service, amortization, Percent of exports of goods and services"
+                    },
+                    {
+                      "id": "PPORK",
+                      "name": "Swine, Unit prices, US cents per pound"
+                    },
+                    {
+                      "id": "PSAWMAL",
+                      "name": "Hard sawnwood, Dark Red Meranti, Unit prices, US dollars per cubic meter"
+                    },
+                    {
+                      "id": "PORANG",
+                      "name": "Orange, Import price, US dollars per metric tonne"
+                    },
+                    {
+                      "id": "PTIN",
+                      "name": "Tin, Unit prices, US dollars per metric tonne"
+                    },
+                    {
+                      "id": "PPOULT",
+                      "name": "Poultry, Unit prices, US cents per pound"
+                    },
+                    {
+                      "id": "DSI_BX",
+                      "name": "External debt: total debt service, interest, Percent of exports of goods and services"
+                    },
+                    {
+                      "id": "NGDPDPC",
+                      "name": "Gross domestic product (GDP), Current prices, Per capita, US dollar"
+                    },
+                    {
+                      "id": "PSAWORE",
+                      "name": "Soft sawnwood, Export price, US dollars per cubic meter"
+                    },
+                    {
+                      "id": "PROIL",
+                      "name": "Rapeseed oil, Unit prices, US dollars per metric tonne"
+                    },
+                    {
+                      "id": "PLAMB",
+                      "name": "Lamb, Unit prices, US cents per pound"
+                    },
+                    {
+                      "id": "PBARL",
+                      "name": "Barley, Unit prices, US dollars per metric tonne"
+                    },
+                    {
+                      "id": "PLOGORE",
+                      "name": "Soft logs, Export price, US dollars per cubic meter"
+                    },
+                    {
+                      "id": "GGR_NGDP",
+                      "name": "Revenue, General government, Percent of GDP"
+                    },
+                    {
+                      "id": "TRADEPCH",
+                      "name": "Trade of goods and services, Volume, Percent change"
+                    },
+                    {
+                      "id": "PALUM",
+                      "name": "Aluminum, Unit prices, US dollars per metric tonne"
+                    },
+                    {
+                      "id": "PLOGSK",
+                      "name": "Hard logs, import price Japan, Import price, US dollars per cubic meter"
+                    },
+                    {
+                      "id": "PWOOLC",
+                      "name": "Wool, coarse, Unit prices, US cents per kilogram"
+                    },
+                    {
+                      "id": "GGXWDN_NGDP",
+                      "name": "Net debt, General government, Percent of GDP"
+                    },
+                    {
+                      "id": "PFISH",
+                      "name": "Fishmeal, Unit prices, US dollars per metric tonne"
+                    },
+                    {
+                      "id": "NGDPRPC",
+                      "name": "Gross domestic product (GDP), Constant prices, Per capita, Domestic currency"
+                    },
+                    {
+                      "id": "PNGASJP",
+                      "name": "LNG, Asia, Unit prices, US dollars per million metric British thermal units of gas"
+                    }
+                  ],
+                  "codelist_truncated": true,
+                  "unfiltered_count": 145,
+                  "matched_count": 145,
+                  "returned_count": 50,
+                  "offset": 0,
+                  "next_offset": 50
+                },
+                {
+                  "id": "FREQUENCY",
+                  "name": "Frequency",
+                  "position": 2,
+                  "codelist": [
+                    {
+                      "id": "A",
+                      "name": "Annual"
+                    },
+                    {
+                      "id": "D",
+                      "name": "Daily"
+                    },
+                    {
+                      "id": "M",
+                      "name": "Monthly"
+                    },
+                    {
+                      "id": "Q",
+                      "name": "Quarterly"
+                    },
+                    {
+                      "id": "S",
+                      "name": "Half-yearly, semester"
+                    },
+                    {
+                      "id": "W",
+                      "name": "Weekly"
+                    },
+                    {
+                      "id": "A2",
+                      "name": "Biennial"
+                    },
+                    {
+                      "id": "A3",
+                      "name": "Triennial"
+                    },
+                    {
+                      "id": "A4",
+                      "name": "Quadrennial"
+                    },
+                    {
+                      "id": "A5",
+                      "name": "Quinquennial"
+                    },
+                    {
+                      "id": "A10",
+                      "name": "Decennial"
+                    },
+                    {
+                      "id": "A20",
+                      "name": "Bidecennial"
+                    },
+                    {
+                      "id": "A30",
+                      "name": "Tridecennial"
+                    },
+                    {
+                      "id": "A_3",
+                      "name": "Three times a year"
+                    },
+                    {
+                      "id": "M2",
+                      "name": "Bimonthly"
+                    },
+                    {
+                      "id": "M_2",
+                      "name": "Semimonthly"
+                    },
+                    {
+                      "id": "M_3",
+                      "name": "Three times a month"
+                    },
+                    {
+                      "id": "W2",
+                      "name": "Biweekly"
+                    },
+                    {
+                      "id": "W3",
+                      "name": "Triweekly"
+                    },
+                    {
+                      "id": "W4",
+                      "name": "Four-weekly"
+                    },
+                    {
+                      "id": "W_2",
+                      "name": "Semiweekly"
+                    },
+                    {
+                      "id": "W_3",
+                      "name": "Three times a week"
+                    },
+                    {
+                      "id": "D_2",
+                      "name": "Twice a day"
+                    },
+                    {
+                      "id": "H",
+                      "name": "Hourly"
+                    },
+                    {
+                      "id": "H2",
+                      "name": "Bihourly"
+                    },
+                    {
+                      "id": "H3",
+                      "name": "Trihourly"
+                    },
+                    {
+                      "id": "B",
+                      "name": "Daily – business week"
+                    },
+                    {
+                      "id": "N",
+                      "name": "Minutely"
+                    },
+                    {
+                      "id": "I",
+                      "name": "Irregular"
+                    },
+                    {
+                      "id": "OA",
+                      "name": "Occasional annual"
+                    },
+                    {
+                      "id": "OM",
+                      "name": "Occasional monthly"
+                    },
+                    {
+                      "id": "_O",
+                      "name": "Other"
+                    },
+                    {
+                      "id": "_U",
+                      "name": "Unspecified"
+                    },
+                    {
+                      "id": "_Z",
+                      "name": "Not applicable"
+                    }
+                  ],
+                  "codelist_truncated": false,
+                  "unfiltered_count": 34,
+                  "matched_count": 34,
+                  "returned_count": 34,
+                  "offset": 0
+                }
+              ],
+              "source": "Source: International Monetary Fund, World Economic Outlook (WEO), https://data.imf.org/"
+            },
+            "error": null
+          },
+          {
+            "nombre": "imf_query_dataset",
+            "argumentos": {
+              "dataflow_id": "WEO",
+              "agency_id": null,
+              "version": null,
+              "key": "CHL.NGDP_RPCH.A",
+              "start_period": "2027",
+              "end_period": "2028",
+              "last_n_observations": null,
+              "canvas_id": null,
+              "output_mode": "auto"
+            },
+            "resultado": {
+              "dataflow_id": "WEO",
+              "key": "CHL.NGDP_RPCH.A",
+              "start_period": "2027",
+              "end_period": "2028",
+              "observations": [
+                {
+                  "series_key": "CHL.NGDP_RPCH.A",
+                  "time_period": "2027",
+                  "value": 2.610688,
+                  "status": null
+                },
+                {
+                  "series_key": "CHL.NGDP_RPCH.A",
+                  "time_period": "2028",
+                  "value": 2.416871,
+                  "status": null
+                }
+              ],
+              "series_attributes": {
+                "unit": "PT",
+                "scale": "0",
+                "decimals": 3
+              },
+              "observation_count": 2,
+              "staged": false,
+              "truncated": false,
+              "source": "Source: International Monetary Fund, World Economic Outlook (WEO), https://data.imf.org/"
+            },
+            "error": null
+          }
+        ]
+      }
+    }
+  ]
+}
