@@ -30,6 +30,8 @@ la especificidad del estilo general de `h3`, para conservar la separación entre
 - La portada, los capítulos y el cierre comparten el fondo azul oscuro.
 - Los capítulos se declaran explícitamente con `.section-slide`.
 - Las introducciones de paquetes agregan `.package-slide` para conservar el fondo claro.
+- El azul de los capítulos se pinta en `.reveal`, fuera del lienzo escalado de 1600 × 900,
+  para cubrir también las franjas de ventanas con otra proporción. La separadora es transparente.
 - Cualquier otra slide usa automáticamente el estilo claro de contenido.
 
 Las columnas, los bloques de código, los diffs y los espacios de demo son componentes internos. No

@@ -426,14 +426,23 @@ html.reveal-print .reveal .slides {
   padding: 0 120px;
   flex-direction: column;
   justify-content: center;
-  background:
-    radial-gradient(circle at 78% 44%, rgb(98 168 255 / 22%), transparent 31%),
-    linear-gradient(135deg, var(--night) 0%, var(--night-soft) 58%, var(--blue) 100%);
+  background: transparent;
   color: #edf3fb;
 }
 
-body:has(.section-slide.present:not(.package-slide)),
+body:has(.section-slide.present:not(.package-slide)) {
+  background: var(--night);
+}
+
+/* Pinta fuera del lienzo 16:9: evita franjas y juntas al escalar la slide en una ventana. */
 body:has(.section-slide.present:not(.package-slide)) .reveal {
+  --r-background-color: transparent;
+  background:
+    radial-gradient(circle at 78% 44%, rgb(98 168 255 / 22%), transparent 31%),
+    linear-gradient(135deg, var(--night) 0%, var(--night-soft) 58%, var(--blue) 100%);
+}
+
+html.reveal-print .reveal .slides > section.section-slide:not(.package-slide) {
   background: var(--night);
 }
 
