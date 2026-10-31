@@ -54,8 +54,12 @@ Los ejemplos `R/01_ellmer.R` a `R/04_ellmer_imagen.R` tienen sus parejas en `pyt
 El cuarto muestra un gráfico aleatorio y permite inspeccionar el objeto de imagen que recibe el modelo.
 Las dos versiones usan doce puntos, uno alejado, y letras aleatorias; no generan las mismas coordenadas.
 Todos los imports y librerías se cargan al inicio. Los ejemplos 02–04 comparan antes y después del registro.
-La slide de dos tools conserva una sola frase introductoria y limita el código a 590 px de alto.
+Las slides de una y dos tools conservan una sola frase introductoria y limitan el código a 590 px de alto.
 El código admite ajuste de línea para evitar scroll horizontal; el script completo sigue disponible.
+El botón de copiar permanece visible en ambas slides, incluso sin pasar el cursor sobre el código.
+Las slides principales se concentran en consultar, actualizar y mostrar resultados. App 04 permite
+listar todos los países y los modales no imponen un máximo de 100 filas. Las tools de gráficos describen
+las columnas permitidas en sus esquemas. El ejemplo de dos tools del clima conserva sus validaciones.
 Desde la raíz del repositorio, ejecútalo con `uv run python python/02_chatlas_tool.py`.
 Configura `OPENAI_API_KEY` en el entorno de Python; Python no carga `.Renviron` automáticamente.
 

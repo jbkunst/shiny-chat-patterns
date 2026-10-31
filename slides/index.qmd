@@ -210,7 +210,7 @@ OPENAI_API_KEY=clave_de_openai
 
 Después de crear o modificar el archivo, reinicia la sesión de R.
 
-No incluyas una clave real en la presentación ni subas `.Renviron` al repositorio.
+Reemplaza `clave_de_openai` por tu clave personal en el archivo `.Renviron` de tu proyecto.
 
 ## Una conversación con `{ellmer}` {.conversation-slide}
 
@@ -277,19 +277,15 @@ code_block(
 )
 ```
 
-## Una tool con `{ellmer}` · Consultar el pronóstico {.conversation-slide}
+## Una tool con `{ellmer}` {.conversation-slide .tool-console-slide}
 
-Copia el ejemplo completo en R: requiere `{ellmer}`, `{httr2}` y la clave de OpenAI.
-`consultar_pronostico(ciudad, fecha)` consulta una ciudad y una fecha explícita.
+Consulta un pronóstico por ciudad y fecha. Copia y ejecuta el bloque completo en R.
 
 ```{r}
 #| echo: false
 #| results: asis
 code_block("../R/02_ellmer_tool.R")
 ```
-
-Primero pregunta sin tools; después registra la función y vuelve a preguntar para obtener datos de la API.
-Fuente: [Open-Meteo](https://open-meteo.com/en/docs), sin clave para este uso no comercial.
 
 ## App 03 · Leer un resumen de los datos visibles {.pattern-overview}
 
@@ -334,10 +330,6 @@ code_block(
 
 La tool consulta toda la tabla `paises`; el filtro manual del dashboard no limita esa consulta.
 
-El código exige `SELECT`, la palabra `paises` y ningún punto y coma: es una validación básica.
-
-El prompt pide hasta 20 filas al listar registros; ese límite no está impuesto por el código.
-
 ```r
 consultar_paises <- function(consulta) {
   DBI::dbGetQuery(con, validar_select(consulta))
@@ -360,14 +352,14 @@ chat$register_tool(tool(
 code_block(
   "../app-04/app.R",
   c(
-    "18-24" = "Comprueba el inicio SELECT, la referencia a paises y la ausencia de punto y coma.",
+    "11-15" = "Prepara la tabla paises en DuckDB para consultarla desde el chat.",
     "68-70" = "La tool ejecuta la consulta sobre DuckDB.",
     "75-81" = "Registra la tool y describe sus argumentos."
   )
 )
 ```
 
-## Dos tools con `{ellmer}` {.conversation-slide .two-tools-slide}
+## Dos tools con `{ellmer}` {.conversation-slide .tool-console-slide}
 
 «¿Lloverá en Madrid dentro de tres días?» → consultar la fecha actual y luego el pronóstico.
 
@@ -381,14 +373,10 @@ code_block("../R/03_ellmer_dos_tools.R")
 
 Consultar devuelve datos al chat. Actualizar cambia la consulta reactiva que alimenta el dashboard.
 
-Antes de cambiar el estado, la tool comprueba que el resultado conserve todas las columnas.
-
 ```r
 actualizar_dashboard <- function(consulta) {
   consulta <- validar_select(consulta)
   resultado <- DBI::dbGetQuery(con, consulta)
-  if (!all(names(paises) %in% names(resultado))) stop("La consulta debe devolver todas las columnas.")
-
   consulta_actual(consulta)
 
   list(mensaje = "Dashboard actualizado.", registros = nrow(resultado))
@@ -449,24 +437,21 @@ code_block(
   "../app-05/app.R",
   c(
     "49-51" = "El dashboard lee la consulta reactiva actual.",
-    "69-76" = "La tool valida la consulta y sus columnas antes de escribir el estado reactivo.",
-    "89-95" = "Registra la tool que puede modificar el dashboard."
+    "69-75" = "La tool escribe la consulta en el estado reactivo del dashboard.",
+    "88-94" = "Registra la tool que puede modificar el dashboard."
   )
 )
 ```
 
-## Una tool que devuelve una imagen · Probar en R {.conversation-slide}
+## Una tool que devuelve una imagen {.conversation-slide .tool-console-slide}
 
-Generamos puntos aleatorios y devolvemos su gráfico al modelo. En una sesión interactiva vemos la misma imagen.
-La llamada directa permite inspeccionar el objeto devuelto; después comparamos el chat sin y con la tool.
+Generamos puntos aleatorios: nosotros vemos el gráfico y el modelo recibe la misma imagen.
 
 ```{r}
 #| echo: false
 #| results: asis
 code_block("../R/04_ellmer_imagen.R")
 ```
-
-El equivalente Python está en `python/04_chatlas_imagen.py`. App 06 agrega la visualización en un modal.
 
 ## App 06 · Abrir vistas y devolver contexto {.pattern-overview}
 
@@ -476,7 +461,6 @@ La tool devuelve al modelo los datos de la tabla o la imagen del gráfico que mu
 
 ```r
 mostrar_tabla <- function(n, titulo) {
-  n <- max(1L, min(as.integer(n), 100L))
   resultado <- head(isolate(data()), n)
   output$tabla_modal <- renderTable(resultado)
 
@@ -497,9 +481,9 @@ mostrar_tabla <- function(n, titulo) {
 code_block(
   "../app-06/app.R",
   c(
-    "82-94" = "Define la tool que muestra una tabla en un modal.",
-    "96-121" = "Define la tool que crea un gráfico y devuelve su imagen al modelo.",
-    "142-160" = "Registra las tools de interfaz con sus argumentos."
+    "81-92" = "Define la tool que muestra una tabla en un modal.",
+    "94-116" = "Define la tool que crea un gráfico y devuelve su imagen al modelo.",
+    "137-155" = "Registra las tools de interfaz con sus argumentos."
   )
 )
 ```
@@ -513,8 +497,6 @@ Comparamos dos formas de expresar la misma intención sobre el dashboard.
 | América; esperanza de vida: 70–80 años. | «Muestra América con esperanza de vida de 70 a 80 años». |
 
 Ambos caminos alimentan `data()`. La interacción más reciente determina el modo activo.
-
-Esta es una comparación de interfaces. App 08 retoma la consulta y la actualización para agregar el mapa.
 
 ## App 08 · Mover la cámara mediante un proxy {.pattern-overview}
 
@@ -553,9 +535,9 @@ ir_a_pais <- function(pais, zoom = 4) {
 code_block(
   "../app-08/app.R",
   c(
-    "148-160" = "La tool actualiza la cámara del mapa existente mediante un proxy.",
-    "192-199" = "Registra ir_a_pais y describe sus argumentos.",
-    "201-204" = "Mantiene el flujo del chat con las tools."
+    "147-159" = "La tool actualiza la cámara del mapa existente mediante un proxy.",
+    "191-198" = "Registra ir_a_pais y describe sus argumentos.",
+    "200-203" = "Mantiene el flujo del chat con las tools."
   )
 )
 ```

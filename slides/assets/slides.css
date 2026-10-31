@@ -222,14 +222,18 @@ html.reveal-print .reveal .slides {
   margin: 0 0 28px;
 }
 
-.reveal .slides > section.two-tools-slide > p:first-of-type {
+.reveal .slides > section.tool-console-slide > p:first-of-type {
   margin: 0 0 24px;
 }
 
-.reveal .slides > section.two-tools-slide pre.workshop-code > code.sourceCode {
+.reveal .slides > section.tool-console-slide pre.workshop-code > code.sourceCode {
   max-height: 590px;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
+}
+
+.reveal .tool-console-slide .code-copy-button {
+  opacity: 1;
 }
 
 .reveal .slides > section.reactivity-flow-slide > .code-copy-outer-scaffold {

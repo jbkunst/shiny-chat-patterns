@@ -445,7 +445,7 @@ LatinR 2026
 <p>Para usar OpenAI desde <code>{ellmer}</code>, configura la clave en un archivo <code>.Renviron</code>.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource dotenv number-lines code-with-copy"><code class="sourceCode"><span id="cb2-1"><a href="" aria-label="1"></a>OPENAI_API_KEY=clave_de_openai</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Después de crear o modificar el archivo, reinicia la sesión de R.</p>
-<p>No incluyas una clave real en la presentación ni subas <code>.Renviron</code> al repositorio.</p>
+<p>Reemplaza <code>clave_de_openai</code> por tu clave personal en el archivo <code>.Renviron</code> de tu proyecto.</p>
 </section>
 <section id="una-conversación-con-ellmer" class="slide level2 conversation-slide">
 <h2>Una conversación con <code>{ellmer}</code></h2>
@@ -574,9 +574,9 @@ LatinR 2026
 </dd>
 </dl>
 </section>
-<section id="una-tool-con-ellmer-consultar-el-pronóstico" class="slide level2 conversation-slide">
-<h2>Una tool con <code>{ellmer}</code> · Consultar el pronóstico</h2>
-<p>Copia el ejemplo completo en R: requiere <code>{ellmer}</code>, <code>{httr2}</code> y la clave de OpenAI. <code>consultar_pronostico(ciudad, fecha)</code> consulta una ciudad y una fecha explícita.</p>
+<section id="una-tool-con-ellmer" class="slide level2 conversation-slide tool-console-slide">
+<h2>Una tool con <code>{ellmer}</code></h2>
+<p>Consulta un pronóstico por ciudad y fecha. Copia y ejecuta el bloque completo en R.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource r workshop-code number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="" aria-label="1"></a><span class="fu">library</span>(ellmer)</span>
 <span id="cb6-2"><a href="" aria-label="2"></a><span class="fu">library</span>(httr2)</span>
 <span id="cb6-3"><a href="" aria-label="3"></a></span>
@@ -634,7 +634,6 @@ LatinR 2026
 <span id="cb6-55"><a href="" aria-label="55"></a></span>
 <span id="cb6-56"><a href="" aria-label="56"></a><span class="co"># Con la tool disponible: vuelve a pedir el pronóstico.</span></span>
 <span id="cb6-57"><a href="" aria-label="57"></a>chat<span class="sc">$</span><span class="fu">chat</span>(<span class="fu">paste</span>(<span class="st">"Ahora consulta el pronóstico con la herramienta disponible."</span>, pregunta))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Primero pregunta sin tools; después registra la función y vuelve a preguntar para obtener datos de la API. Fuente: <a href="https://open-meteo.com/en/docs">Open-Meteo</a>, sin clave para este uso no comercial.</p>
 </section>
 <section id="app-03-leer-un-resumen-de-los-datos-visibles" class="slide level2 pattern-overview">
 <h2>App 03 · Leer un resumen de los datos visibles</h2>
@@ -764,8 +763,6 @@ LatinR 2026
 <section id="app-04-pasar-del-resumen-a-consultas-sql" class="slide level2 pattern-overview">
 <h2>App 04 · Pasar del resumen a consultas SQL</h2>
 <p>La tool consulta toda la tabla <code>paises</code>; el filtro manual del dashboard no limita esa consulta.</p>
-<p>El código exige <code>SELECT</code>, la palabra <code>paises</code> y ningún punto y coma: es una validación básica.</p>
-<p>El prompt pide hasta 20 filas al listar registros; ese límite no está impuesto por el código.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="" aria-label="1"></a>consultar_paises <span class="ot">&lt;-</span> <span class="cf">function</span>(consulta) {</span>
 <span id="cb8-2"><a href="" aria-label="2"></a>  DBI<span class="sc">::</span><span class="fu">dbGetQuery</span>(con, <span class="fu">validar_select</span>(consulta))</span>
 <span id="cb8-3"><a href="" aria-label="3"></a>}</span>
@@ -780,7 +777,7 @@ LatinR 2026
 </section>
 <section id="app-04-el-código" class="slide level2">
 <h2>App 04 · El código</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-11" data-workshop-highlights="18-24|68-70|75-81"><pre class="sourceCode numberSource r workshop-code code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-11-1"><a href="#annotated-cell-11-1" aria-label="1"></a><span class="fu">library</span>(shiny)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-11" data-workshop-highlights="11-15|68-70|75-81"><pre class="sourceCode numberSource r workshop-code code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-11-1"><a href="#annotated-cell-11-1" aria-label="1"></a><span class="fu">library</span>(shiny)</span>
 <span id="annotated-cell-11-2"><a href="#annotated-cell-11-2" aria-label="2"></a><span class="fu">library</span>(bslib)</span>
 <span id="annotated-cell-11-3"><a href="#annotated-cell-11-3" aria-label="3"></a><span class="fu">library</span>(DBI)</span>
 <span id="annotated-cell-11-4"><a href="#annotated-cell-11-4" aria-label="4"></a><span class="fu">library</span>(duckdb)</span>
@@ -790,14 +787,14 @@ LatinR 2026
 <span id="annotated-cell-11-8"><a href="#annotated-cell-11-8" aria-label="8"></a></span>
 <span id="annotated-cell-11-9"><a href="#annotated-cell-11-9" aria-label="9"></a><span class="co"># database ----------------------------------------------------------------</span></span>
 <span id="annotated-cell-11-10"><a href="#annotated-cell-11-10" aria-label="10"></a>paises <span class="ot">&lt;-</span> utils<span class="sc">::</span><span class="fu">read.csv</span>(<span class="fu">file.path</span>(<span class="st">".."</span>, <span class="st">"data"</span>, <span class="st">"paises.csv"</span>), <span class="at">fileEncoding =</span> <span class="st">"UTF-8"</span>)</span>
-<span id="annotated-cell-11-11"><a href="#annotated-cell-11-11" aria-label="11"></a>continentes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Todos"</span>, <span class="fu">sort</span>(<span class="fu">unique</span>(paises<span class="sc">$</span>continente)))</span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-11" data-target-annotation="1">1</button><span id="annotated-cell-11-11" class="code-annotation-target"><a href="#annotated-cell-11-11" aria-label="11"></a>continentes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Todos"</span>, <span class="fu">sort</span>(<span class="fu">unique</span>(paises<span class="sc">$</span>continente)))</span>
 <span id="annotated-cell-11-12"><a href="#annotated-cell-11-12" aria-label="12"></a></span>
 <span id="annotated-cell-11-13"><a href="#annotated-cell-11-13" aria-label="13"></a>con <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbConnect</span>(duckdb<span class="sc">::</span><span class="fu">duckdb</span>(), <span class="at">dbdir =</span> <span class="st">":memory:"</span>)</span>
 <span id="annotated-cell-11-14"><a href="#annotated-cell-11-14" aria-label="14"></a>DBI<span class="sc">::</span><span class="fu">dbWriteTable</span>(con, <span class="st">"paises"</span>, paises)</span>
 <span id="annotated-cell-11-15"><a href="#annotated-cell-11-15" aria-label="15"></a>DBI<span class="sc">::</span><span class="fu">dbExecute</span>(con, <span class="st">"SET enable_external_access = false"</span>)</span>
 <span id="annotated-cell-11-16"><a href="#annotated-cell-11-16" aria-label="16"></a><span class="fu">onStop</span>(<span class="cf">function</span>() DBI<span class="sc">::</span><span class="fu">dbDisconnect</span>(con, <span class="at">shutdown =</span> <span class="cn">TRUE</span>))</span>
 <span id="annotated-cell-11-17"><a href="#annotated-cell-11-17" aria-label="17"></a></span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-11" data-target-annotation="1">1</button><span id="annotated-cell-11-18" class="code-annotation-target"><a href="#annotated-cell-11-18" aria-label="18"></a>validar_select <span class="ot">&lt;-</span> <span class="cf">function</span>(consulta) {</span>
+<span id="annotated-cell-11-18"><a href="#annotated-cell-11-18" aria-label="18"></a>validar_select <span class="ot">&lt;-</span> <span class="cf">function</span>(consulta) {</span>
 <span id="annotated-cell-11-19"><a href="#annotated-cell-11-19" aria-label="19"></a>  consulta <span class="ot">&lt;-</span> <span class="fu">trimws</span>(consulta)</span>
 <span id="annotated-cell-11-20"><a href="#annotated-cell-11-20" aria-label="20"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">grepl</span>(<span class="st">"^SELECT</span><span class="sc">\\</span><span class="st">b"</span>, consulta, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>)) <span class="fu">stop</span>(<span class="st">"Solo se permiten consultas SELECT."</span>)</span>
 <span id="annotated-cell-11-21"><a href="#annotated-cell-11-21" aria-label="21"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">grepl</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">bpaises</span><span class="sc">\\</span><span class="st">b"</span>, consulta, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>)) <span class="fu">stop</span>(<span class="st">"La consulta debe usar paises."</span>)</span>
@@ -872,7 +869,7 @@ LatinR 2026
 <dl class="code-annotation-container-hidden code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-11" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-11" data-code-lines="18" data-code-annotation="1"><strong>1.</strong> Comprueba el inicio SELECT, la referencia a paises y la ausencia de punto y coma.</span>
+<span data-code-cell="annotated-cell-11" data-code-lines="11" data-code-annotation="1"><strong>1.</strong> Prepara la tabla paises en DuckDB para consultarla desde el chat.</span>
 </dd>
 <dt data-target-cell="annotated-cell-11" data-target-annotation="2">2</dt>
 <dd>
@@ -884,7 +881,7 @@ LatinR 2026
 </dd>
 </dl>
 </section>
-<section id="dos-tools-con-ellmer" class="slide level2 conversation-slide two-tools-slide">
+<section id="dos-tools-con-ellmer" class="slide level2 conversation-slide tool-console-slide">
 <h2>Dos tools con <code>{ellmer}</code></h2>
 <p>«¿Lloverá en Madrid dentro de tres días?» → consultar la fecha actual y luego el pronóstico.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource r workshop-code number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="" aria-label="1"></a><span class="fu">library</span>(ellmer)</span>
@@ -977,16 +974,13 @@ LatinR 2026
 <section id="app-05-pasar-de-consultar-a-actualizar-la-vista" class="slide level2 pattern-overview">
 <h2>App 05 · Pasar de consultar a actualizar la vista</h2>
 <p>Consultar devuelve datos al chat. Actualizar cambia la consulta reactiva que alimenta el dashboard.</p>
-<p>Antes de cambiar el estado, la tool comprueba que el resultado conserve todas las columnas.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="" aria-label="1"></a>actualizar_dashboard <span class="ot">&lt;-</span> <span class="cf">function</span>(consulta) {</span>
 <span id="cb10-2"><a href="" aria-label="2"></a>  consulta <span class="ot">&lt;-</span> <span class="fu">validar_select</span>(consulta)</span>
 <span id="cb10-3"><a href="" aria-label="3"></a>  resultado <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbGetQuery</span>(con, consulta)</span>
-<span id="cb10-4"><a href="" aria-label="4"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">all</span>(<span class="fu">names</span>(paises) <span class="sc">%in%</span> <span class="fu">names</span>(resultado))) <span class="fu">stop</span>(<span class="st">"La consulta debe devolver todas las columnas."</span>)</span>
+<span id="cb10-4"><a href="" aria-label="4"></a>  <span class="fu">consulta_actual</span>(consulta)</span>
 <span id="cb10-5"><a href="" aria-label="5"></a></span>
-<span id="cb10-6"><a href="" aria-label="6"></a>  <span class="fu">consulta_actual</span>(consulta)</span>
-<span id="cb10-7"><a href="" aria-label="7"></a></span>
-<span id="cb10-8"><a href="" aria-label="8"></a>  <span class="fu">list</span>(<span class="at">mensaje =</span> <span class="st">"Dashboard actualizado."</span>, <span class="at">registros =</span> <span class="fu">nrow</span>(resultado))</span>
-<span id="cb10-9"><a href="" aria-label="9"></a>}</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb10-6"><a href="" aria-label="6"></a>  <span class="fu">list</span>(<span class="at">mensaje =</span> <span class="st">"Dashboard actualizado."</span>, <span class="at">registros =</span> <span class="fu">nrow</span>(resultado))</span>
+<span id="cb10-7"><a href="" aria-label="7"></a>}</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="app-05-cómo-se-propaga-el-cambio" class="slide level2 reactivity-flow-slide">
 <h2>App 05 · Cómo se propaga el cambio</h2>
@@ -1028,7 +1022,7 @@ LatinR 2026
 </section>
 <section id="app-05-el-código" class="slide level2">
 <h2>App 05 · El código</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-15" data-workshop-highlights="49-51|69-76|89-95"><pre class="sourceCode numberSource r workshop-code code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-15-1"><a href="#annotated-cell-15-1" aria-label="1"></a><span class="fu">library</span>(shiny)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-15" data-workshop-highlights="49-51|69-75|88-94"><pre class="sourceCode numberSource r workshop-code code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-15-1"><a href="#annotated-cell-15-1" aria-label="1"></a><span class="fu">library</span>(shiny)</span>
 <span id="annotated-cell-15-2"><a href="#annotated-cell-15-2" aria-label="2"></a><span class="fu">library</span>(bslib)</span>
 <span id="annotated-cell-15-3"><a href="#annotated-cell-15-3" aria-label="3"></a><span class="fu">library</span>(DBI)</span>
 <span id="annotated-cell-15-4"><a href="#annotated-cell-15-4" aria-label="4"></a><span class="fu">library</span>(duckdb)</span>
@@ -1099,38 +1093,37 @@ LatinR 2026
 <button class="code-annotation-anchor" data-target-cell="annotated-cell-15" data-target-annotation="2">2</button><span id="annotated-cell-15-69" class="code-annotation-target"><a href="#annotated-cell-15-69" aria-label="69"></a>  actualizar_dashboard <span class="ot">&lt;-</span> <span class="cf">function</span>(consulta) {</span>
 <span id="annotated-cell-15-70"><a href="#annotated-cell-15-70" aria-label="70"></a>    consulta <span class="ot">&lt;-</span> <span class="fu">validar_select</span>(consulta)</span>
 <span id="annotated-cell-15-71"><a href="#annotated-cell-15-71" aria-label="71"></a>    resultado <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbGetQuery</span>(con, consulta)</span>
-<span id="annotated-cell-15-72"><a href="#annotated-cell-15-72" aria-label="72"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">all</span>(<span class="fu">names</span>(paises) <span class="sc">%in%</span> <span class="fu">names</span>(resultado))) <span class="fu">stop</span>(<span class="st">"La consulta debe devolver todas las columnas."</span>)</span>
-<span id="annotated-cell-15-73"><a href="#annotated-cell-15-73" aria-label="73"></a></span>
-<span id="annotated-cell-15-74"><a href="#annotated-cell-15-74" aria-label="74"></a>    <span class="fu">consulta_actual</span>(consulta)</span>
-<span id="annotated-cell-15-75"><a href="#annotated-cell-15-75" aria-label="75"></a>    <span class="fu">list</span>(<span class="at">mensaje =</span> <span class="st">"Dashboard actualizado."</span>, <span class="at">registros =</span> <span class="fu">nrow</span>(resultado))</span>
-<span id="annotated-cell-15-76"><a href="#annotated-cell-15-76" aria-label="76"></a>  }</span>
-<span id="annotated-cell-15-77"><a href="#annotated-cell-15-77" aria-label="77"></a></span>
-<span id="annotated-cell-15-78"><a href="#annotated-cell-15-78" aria-label="78"></a>  <span class="co"># chat ------------------------------------------------------------------</span></span>
-<span id="annotated-cell-15-79"><a href="#annotated-cell-15-79" aria-label="79"></a>  chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat_openai</span>(<span class="at">model =</span> <span class="st">"gpt-5-nano"</span>, <span class="at">system_prompt =</span> prompt_sistema)</span>
-<span id="annotated-cell-15-80"><a href="#annotated-cell-15-80" aria-label="80"></a></span>
-<span id="annotated-cell-15-81"><a href="#annotated-cell-15-81" aria-label="81"></a>  chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
-<span id="annotated-cell-15-82"><a href="#annotated-cell-15-82" aria-label="82"></a>    consultar_paises,</span>
-<span id="annotated-cell-15-83"><a href="#annotated-cell-15-83" aria-label="83"></a>    <span class="st">"Ejecuta una consulta SELECT de solo lectura sobre la tabla DuckDB paises."</span>,</span>
-<span id="annotated-cell-15-84"><a href="#annotated-cell-15-84" aria-label="84"></a>    <span class="at">arguments =</span> <span class="fu">list</span>(</span>
-<span id="annotated-cell-15-85"><a href="#annotated-cell-15-85" aria-label="85"></a>      <span class="at">consulta =</span> <span class="fu">type_string</span>(<span class="st">"Consulta DuckDB SELECT sobre la tabla paises, sin punto y coma."</span>)</span>
-<span id="annotated-cell-15-86"><a href="#annotated-cell-15-86" aria-label="86"></a>    )</span>
-<span id="annotated-cell-15-87"><a href="#annotated-cell-15-87" aria-label="87"></a>  ))</span>
-<span id="annotated-cell-15-88"><a href="#annotated-cell-15-88" aria-label="88"></a></span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-15" data-target-annotation="3">3</button><span id="annotated-cell-15-89" class="code-annotation-target"><a href="#annotated-cell-15-89" aria-label="89"></a>  chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
-<span id="annotated-cell-15-90"><a href="#annotated-cell-15-90" aria-label="90"></a>    actualizar_dashboard,</span>
-<span id="annotated-cell-15-91"><a href="#annotated-cell-15-91" aria-label="91"></a>    <span class="st">"Filtra, ordena o reinicia los datos reactivos mostrados en el dashboard."</span>,</span>
-<span id="annotated-cell-15-92"><a href="#annotated-cell-15-92" aria-label="92"></a>    <span class="at">arguments =</span> <span class="fu">list</span>(</span>
-<span id="annotated-cell-15-93"><a href="#annotated-cell-15-93" aria-label="93"></a>      <span class="at">consulta =</span> <span class="fu">type_string</span>(<span class="st">"SELECT * FROM paises con WHERE u ORDER BY, sin punto y coma."</span>)</span>
-<span id="annotated-cell-15-94"><a href="#annotated-cell-15-94" aria-label="94"></a>    )</span>
-<span id="annotated-cell-15-95"><a href="#annotated-cell-15-95" aria-label="95"></a>  ))</span>
-<span id="annotated-cell-15-96"><a href="#annotated-cell-15-96" aria-label="96"></a></span>
-<span id="annotated-cell-15-97"><a href="#annotated-cell-15-97" aria-label="97"></a>  <span class="fu">observeEvent</span>(input<span class="sc">$</span>chat_user_input, {</span>
-<span id="annotated-cell-15-98"><a href="#annotated-cell-15-98" aria-label="98"></a>    stream <span class="ot">&lt;-</span> chat<span class="sc">$</span><span class="fu">stream_async</span>(input<span class="sc">$</span>chat_user_input, <span class="at">stream =</span> <span class="st">"content"</span>)</span>
-<span id="annotated-cell-15-99"><a href="#annotated-cell-15-99" aria-label="99"></a>    shinychat<span class="sc">::</span><span class="fu">chat_append</span>(<span class="st">"chat"</span>, stream)</span>
-<span id="annotated-cell-15-100"><a href="#annotated-cell-15-100" aria-label="100"></a>  })</span>
-<span id="annotated-cell-15-101"><a href="#annotated-cell-15-101" aria-label="101"></a>}</span>
-<span id="annotated-cell-15-102"><a href="#annotated-cell-15-102" aria-label="102"></a></span>
-<span id="annotated-cell-15-103"><a href="#annotated-cell-15-103" aria-label="103"></a><span class="fu">shinyApp</span>(ui, server)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="annotated-cell-15-72"><a href="#annotated-cell-15-72" aria-label="72"></a></span>
+<span id="annotated-cell-15-73"><a href="#annotated-cell-15-73" aria-label="73"></a>    <span class="fu">consulta_actual</span>(consulta)</span>
+<span id="annotated-cell-15-74"><a href="#annotated-cell-15-74" aria-label="74"></a>    <span class="fu">list</span>(<span class="at">mensaje =</span> <span class="st">"Dashboard actualizado."</span>, <span class="at">registros =</span> <span class="fu">nrow</span>(resultado))</span>
+<span id="annotated-cell-15-75"><a href="#annotated-cell-15-75" aria-label="75"></a>  }</span>
+<span id="annotated-cell-15-76"><a href="#annotated-cell-15-76" aria-label="76"></a></span>
+<span id="annotated-cell-15-77"><a href="#annotated-cell-15-77" aria-label="77"></a>  <span class="co"># chat ------------------------------------------------------------------</span></span>
+<span id="annotated-cell-15-78"><a href="#annotated-cell-15-78" aria-label="78"></a>  chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat_openai</span>(<span class="at">model =</span> <span class="st">"gpt-5-nano"</span>, <span class="at">system_prompt =</span> prompt_sistema)</span>
+<span id="annotated-cell-15-79"><a href="#annotated-cell-15-79" aria-label="79"></a></span>
+<span id="annotated-cell-15-80"><a href="#annotated-cell-15-80" aria-label="80"></a>  chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
+<span id="annotated-cell-15-81"><a href="#annotated-cell-15-81" aria-label="81"></a>    consultar_paises,</span>
+<span id="annotated-cell-15-82"><a href="#annotated-cell-15-82" aria-label="82"></a>    <span class="st">"Ejecuta una consulta SELECT de solo lectura sobre la tabla DuckDB paises."</span>,</span>
+<span id="annotated-cell-15-83"><a href="#annotated-cell-15-83" aria-label="83"></a>    <span class="at">arguments =</span> <span class="fu">list</span>(</span>
+<span id="annotated-cell-15-84"><a href="#annotated-cell-15-84" aria-label="84"></a>      <span class="at">consulta =</span> <span class="fu">type_string</span>(<span class="st">"Consulta DuckDB SELECT sobre la tabla paises, sin punto y coma."</span>)</span>
+<span id="annotated-cell-15-85"><a href="#annotated-cell-15-85" aria-label="85"></a>    )</span>
+<span id="annotated-cell-15-86"><a href="#annotated-cell-15-86" aria-label="86"></a>  ))</span>
+<span id="annotated-cell-15-87"><a href="#annotated-cell-15-87" aria-label="87"></a></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-15" data-target-annotation="3">3</button><span id="annotated-cell-15-88" class="code-annotation-target"><a href="#annotated-cell-15-88" aria-label="88"></a>  chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
+<span id="annotated-cell-15-89"><a href="#annotated-cell-15-89" aria-label="89"></a>    actualizar_dashboard,</span>
+<span id="annotated-cell-15-90"><a href="#annotated-cell-15-90" aria-label="90"></a>    <span class="st">"Filtra, ordena o reinicia los datos reactivos mostrados en el dashboard."</span>,</span>
+<span id="annotated-cell-15-91"><a href="#annotated-cell-15-91" aria-label="91"></a>    <span class="at">arguments =</span> <span class="fu">list</span>(</span>
+<span id="annotated-cell-15-92"><a href="#annotated-cell-15-92" aria-label="92"></a>      <span class="at">consulta =</span> <span class="fu">type_string</span>(<span class="st">"SELECT * FROM paises con WHERE u ORDER BY, sin punto y coma."</span>)</span>
+<span id="annotated-cell-15-93"><a href="#annotated-cell-15-93" aria-label="93"></a>    )</span>
+<span id="annotated-cell-15-94"><a href="#annotated-cell-15-94" aria-label="94"></a>  ))</span>
+<span id="annotated-cell-15-95"><a href="#annotated-cell-15-95" aria-label="95"></a></span>
+<span id="annotated-cell-15-96"><a href="#annotated-cell-15-96" aria-label="96"></a>  <span class="fu">observeEvent</span>(input<span class="sc">$</span>chat_user_input, {</span>
+<span id="annotated-cell-15-97"><a href="#annotated-cell-15-97" aria-label="97"></a>    stream <span class="ot">&lt;-</span> chat<span class="sc">$</span><span class="fu">stream_async</span>(input<span class="sc">$</span>chat_user_input, <span class="at">stream =</span> <span class="st">"content"</span>)</span>
+<span id="annotated-cell-15-98"><a href="#annotated-cell-15-98" aria-label="98"></a>    shinychat<span class="sc">::</span><span class="fu">chat_append</span>(<span class="st">"chat"</span>, stream)</span>
+<span id="annotated-cell-15-99"><a href="#annotated-cell-15-99" aria-label="99"></a>  })</span>
+<span id="annotated-cell-15-100"><a href="#annotated-cell-15-100" aria-label="100"></a>}</span>
+<span id="annotated-cell-15-101"><a href="#annotated-cell-15-101" aria-label="101"></a></span>
+<span id="annotated-cell-15-102"><a href="#annotated-cell-15-102" aria-label="102"></a><span class="fu">shinyApp</span>(ui, server)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <dl class="code-annotation-container-hidden code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-15" data-target-annotation="1">1</dt>
 <dd>
@@ -1138,17 +1131,17 @@ LatinR 2026
 </dd>
 <dt data-target-cell="annotated-cell-15" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-cell="annotated-cell-15" data-code-lines="69" data-code-annotation="2"><strong>2.</strong> La tool valida la consulta y sus columnas antes de escribir el estado reactivo.</span>
+<span data-code-cell="annotated-cell-15" data-code-lines="69" data-code-annotation="2"><strong>2.</strong> La tool escribe la consulta en el estado reactivo del dashboard.</span>
 </dd>
 <dt data-target-cell="annotated-cell-15" data-target-annotation="3">3</dt>
 <dd>
-<span data-code-cell="annotated-cell-15" data-code-lines="89" data-code-annotation="3"><strong>3.</strong> Registra la tool que puede modificar el dashboard.</span>
+<span data-code-cell="annotated-cell-15" data-code-lines="88" data-code-annotation="3"><strong>3.</strong> Registra la tool que puede modificar el dashboard.</span>
 </dd>
 </dl>
 </section>
-<section id="una-tool-que-devuelve-una-imagen-probar-en-r" class="slide level2 conversation-slide">
-<h2>Una tool que devuelve una imagen · Probar en R</h2>
-<p>Generamos puntos aleatorios y devolvemos su gráfico al modelo. En una sesión interactiva vemos la misma imagen. La llamada directa permite inspeccionar el objeto devuelto; después comparamos el chat sin y con la tool.</p>
+<section id="una-tool-que-devuelve-una-imagen" class="slide level2 conversation-slide tool-console-slide">
+<h2>Una tool que devuelve una imagen</h2>
+<p>Generamos puntos aleatorios: nosotros vemos el gráfico y el modelo recibe la misma imagen.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource r workshop-code number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="" aria-label="1"></a><span class="fu">library</span>(ellmer)</span>
 <span id="cb12-2"><a href="" aria-label="2"></a></span>
 <span id="cb12-3"><a href="" aria-label="3"></a><span class="co"># tools -------------------------------------------------------------------</span></span>
@@ -1201,28 +1194,26 @@ LatinR 2026
 <span id="cb12-50"><a href="" aria-label="50"></a>))</span>
 <span id="cb12-51"><a href="" aria-label="51"></a></span>
 <span id="cb12-52"><a href="" aria-label="52"></a>chat<span class="sc">$</span><span class="fu">chat</span>(<span class="fu">paste</span>(<span class="st">"Ahora usa la herramienta disponible."</span>, pregunta))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<p>El equivalente Python está en <code>python/04_chatlas_imagen.py</code>. App 06 agrega la visualización en un modal.</p>
 </section>
 <section id="app-06-abrir-vistas-y-devolver-contexto" class="slide level2 pattern-overview">
 <h2>App 06 · Abrir vistas y devolver contexto</h2>
 <p>Una tool abre una tabla o un gráfico sin recargar la aplicación.</p>
 <p>La tool devuelve al modelo los datos de la tabla o la imagen del gráfico que muestra en el modal.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="" aria-label="1"></a>mostrar_tabla <span class="ot">&lt;-</span> <span class="cf">function</span>(n, titulo) {</span>
-<span id="cb13-2"><a href="" aria-label="2"></a>  n <span class="ot">&lt;-</span> <span class="fu">max</span>(<span class="dv">1</span>L, <span class="fu">min</span>(<span class="fu">as.integer</span>(n), <span class="dv">100</span>L))</span>
-<span id="cb13-3"><a href="" aria-label="3"></a>  resultado <span class="ot">&lt;-</span> <span class="fu">head</span>(<span class="fu">isolate</span>(<span class="fu">data</span>()), n)</span>
-<span id="cb13-4"><a href="" aria-label="4"></a>  output<span class="sc">$</span>tabla_modal <span class="ot">&lt;-</span> <span class="fu">renderTable</span>(resultado)</span>
-<span id="cb13-5"><a href="" aria-label="5"></a></span>
-<span id="cb13-6"><a href="" aria-label="6"></a>  <span class="fu">showModal</span>(<span class="fu">modalDialog</span>(</span>
-<span id="cb13-7"><a href="" aria-label="7"></a>    <span class="at">title =</span> titulo,</span>
-<span id="cb13-8"><a href="" aria-label="8"></a>    <span class="fu">tableOutput</span>(<span class="st">"tabla_modal"</span>)</span>
-<span id="cb13-9"><a href="" aria-label="9"></a>  ))</span>
-<span id="cb13-10"><a href="" aria-label="10"></a></span>
-<span id="cb13-11"><a href="" aria-label="11"></a>  resultado</span>
-<span id="cb13-12"><a href="" aria-label="12"></a>}</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb13-2"><a href="" aria-label="2"></a>  resultado <span class="ot">&lt;-</span> <span class="fu">head</span>(<span class="fu">isolate</span>(<span class="fu">data</span>()), n)</span>
+<span id="cb13-3"><a href="" aria-label="3"></a>  output<span class="sc">$</span>tabla_modal <span class="ot">&lt;-</span> <span class="fu">renderTable</span>(resultado)</span>
+<span id="cb13-4"><a href="" aria-label="4"></a></span>
+<span id="cb13-5"><a href="" aria-label="5"></a>  <span class="fu">showModal</span>(<span class="fu">modalDialog</span>(</span>
+<span id="cb13-6"><a href="" aria-label="6"></a>    <span class="at">title =</span> titulo,</span>
+<span id="cb13-7"><a href="" aria-label="7"></a>    <span class="fu">tableOutput</span>(<span class="st">"tabla_modal"</span>)</span>
+<span id="cb13-8"><a href="" aria-label="8"></a>  ))</span>
+<span id="cb13-9"><a href="" aria-label="9"></a></span>
+<span id="cb13-10"><a href="" aria-label="10"></a>  resultado</span>
+<span id="cb13-11"><a href="" aria-label="11"></a>}</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="app-06-el-código" class="slide level2">
 <h2>App 06 · El código</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-18" data-workshop-highlights="82-94|96-121|142-160"><pre class="sourceCode numberSource r workshop-code code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-18-1"><a href="#annotated-cell-18-1" aria-label="1"></a><span class="fu">library</span>(shiny)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-18" data-workshop-highlights="81-92|94-116|137-155"><pre class="sourceCode numberSource r workshop-code code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-18-1"><a href="#annotated-cell-18-1" aria-label="1"></a><span class="fu">library</span>(shiny)</span>
 <span id="annotated-cell-18-2"><a href="#annotated-cell-18-2" aria-label="2"></a><span class="fu">library</span>(bslib)</span>
 <span id="annotated-cell-18-3"><a href="#annotated-cell-18-3" aria-label="3"></a><span class="fu">library</span>(DBI)</span>
 <span id="annotated-cell-18-4"><a href="#annotated-cell-18-4" aria-label="4"></a><span class="fu">library</span>(duckdb)</span>
@@ -1297,111 +1288,106 @@ LatinR 2026
 <span id="annotated-cell-18-73"><a href="#annotated-cell-18-73" aria-label="73"></a>  actualizar_dashboard <span class="ot">&lt;-</span> <span class="cf">function</span>(consulta) {</span>
 <span id="annotated-cell-18-74"><a href="#annotated-cell-18-74" aria-label="74"></a>    consulta <span class="ot">&lt;-</span> <span class="fu">validar_select</span>(consulta)</span>
 <span id="annotated-cell-18-75"><a href="#annotated-cell-18-75" aria-label="75"></a>    resultado <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbGetQuery</span>(con, consulta)</span>
-<span id="annotated-cell-18-76"><a href="#annotated-cell-18-76" aria-label="76"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">all</span>(<span class="fu">names</span>(paises) <span class="sc">%in%</span> <span class="fu">names</span>(resultado))) <span class="fu">stop</span>(<span class="st">"La consulta debe devolver todas las columnas."</span>)</span>
-<span id="annotated-cell-18-77"><a href="#annotated-cell-18-77" aria-label="77"></a></span>
-<span id="annotated-cell-18-78"><a href="#annotated-cell-18-78" aria-label="78"></a>    <span class="fu">consulta_actual</span>(consulta)</span>
-<span id="annotated-cell-18-79"><a href="#annotated-cell-18-79" aria-label="79"></a>    <span class="fu">list</span>(<span class="at">mensaje =</span> <span class="st">"Dashboard actualizado."</span>, <span class="at">registros =</span> <span class="fu">nrow</span>(resultado))</span>
-<span id="annotated-cell-18-80"><a href="#annotated-cell-18-80" aria-label="80"></a>  }</span>
-<span id="annotated-cell-18-81"><a href="#annotated-cell-18-81" aria-label="81"></a></span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-18" data-target-annotation="1">1</button><span id="annotated-cell-18-82" class="code-annotation-target"><a href="#annotated-cell-18-82" aria-label="82"></a>  mostrar_tabla <span class="ot">&lt;-</span> <span class="cf">function</span>(n, titulo) {</span>
-<span id="annotated-cell-18-83"><a href="#annotated-cell-18-83" aria-label="83"></a>    n <span class="ot">&lt;-</span> <span class="fu">max</span>(<span class="dv">1</span>L, <span class="fu">min</span>(<span class="fu">as.integer</span>(n), <span class="dv">100</span>L))</span>
-<span id="annotated-cell-18-84"><a href="#annotated-cell-18-84" aria-label="84"></a>    df <span class="ot">&lt;-</span> <span class="fu">isolate</span>(<span class="fu">data</span>())</span>
-<span id="annotated-cell-18-85"><a href="#annotated-cell-18-85" aria-label="85"></a>    resultado <span class="ot">&lt;-</span> <span class="fu">head</span>(df, n)</span>
-<span id="annotated-cell-18-86"><a href="#annotated-cell-18-86" aria-label="86"></a>    output<span class="sc">$</span>tabla_modal <span class="ot">&lt;-</span> <span class="fu">renderTable</span>(resultado, <span class="at">striped =</span> <span class="cn">TRUE</span>, <span class="at">hover =</span> <span class="cn">TRUE</span>)</span>
-<span id="annotated-cell-18-87"><a href="#annotated-cell-18-87" aria-label="87"></a></span>
-<span id="annotated-cell-18-88"><a href="#annotated-cell-18-88" aria-label="88"></a>    <span class="fu">showModal</span>(<span class="fu">modalDialog</span>(</span>
-<span id="annotated-cell-18-89"><a href="#annotated-cell-18-89" aria-label="89"></a>      <span class="at">title =</span> titulo, <span class="fu">tableOutput</span>(<span class="st">"tabla_modal"</span>), <span class="at">size =</span> <span class="st">"l"</span>, <span class="at">easyClose =</span> <span class="cn">TRUE</span>,</span>
-<span id="annotated-cell-18-90"><a href="#annotated-cell-18-90" aria-label="90"></a>      <span class="at">footer =</span> <span class="fu">modalButton</span>(<span class="st">"Cerrar"</span>)</span>
-<span id="annotated-cell-18-91"><a href="#annotated-cell-18-91" aria-label="91"></a>    ))</span>
-<span id="annotated-cell-18-92"><a href="#annotated-cell-18-92" aria-label="92"></a></span>
-<span id="annotated-cell-18-93"><a href="#annotated-cell-18-93" aria-label="93"></a>    resultado</span>
-<span id="annotated-cell-18-94"><a href="#annotated-cell-18-94" aria-label="94"></a>  }</span>
-<span id="annotated-cell-18-95"><a href="#annotated-cell-18-95" aria-label="95"></a></span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-18" data-target-annotation="2">2</button><span id="annotated-cell-18-96" class="code-annotation-target"><a href="#annotated-cell-18-96" aria-label="96"></a>  mostrar_grafico <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y, color, titulo) {</span>
-<span id="annotated-cell-18-97"><a href="#annotated-cell-18-97" aria-label="97"></a>    df <span class="ot">&lt;-</span> <span class="fu">isolate</span>(<span class="fu">data</span>())</span>
-<span id="annotated-cell-18-98"><a href="#annotated-cell-18-98" aria-label="98"></a>    columnas <span class="ot">&lt;-</span> <span class="fu">c</span>(x, y, color)</span>
-<span id="annotated-cell-18-99"><a href="#annotated-cell-18-99" aria-label="99"></a>    columnas <span class="ot">&lt;-</span> columnas[<span class="fu">nzchar</span>(columnas)]</span>
-<span id="annotated-cell-18-100"><a href="#annotated-cell-18-100" aria-label="100"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">all</span>(columnas <span class="sc">%in%</span> <span class="fu">names</span>(df))) <span class="fu">stop</span>(<span class="st">"Una o más columnas no existen."</span>)</span>
-<span id="annotated-cell-18-101"><a href="#annotated-cell-18-101" aria-label="101"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">nrow</span>(df)) <span class="fu">stop</span>(<span class="st">"No hay datos para graficar."</span>)</span>
-<span id="annotated-cell-18-102"><a href="#annotated-cell-18-102" aria-label="102"></a>    formula <span class="ot">&lt;-</span> <span class="fu">as.formula</span>(<span class="fu">paste</span>(y, <span class="st">"~"</span>, x, <span class="cf">if</span> (<span class="fu">nzchar</span>(color)) <span class="fu">paste</span>(<span class="st">"|"</span>, color) <span class="cf">else</span> <span class="st">""</span>))</span>
+<span id="annotated-cell-18-76"><a href="#annotated-cell-18-76" aria-label="76"></a></span>
+<span id="annotated-cell-18-77"><a href="#annotated-cell-18-77" aria-label="77"></a>    <span class="fu">consulta_actual</span>(consulta)</span>
+<span id="annotated-cell-18-78"><a href="#annotated-cell-18-78" aria-label="78"></a>    <span class="fu">list</span>(<span class="at">mensaje =</span> <span class="st">"Dashboard actualizado."</span>, <span class="at">registros =</span> <span class="fu">nrow</span>(resultado))</span>
+<span id="annotated-cell-18-79"><a href="#annotated-cell-18-79" aria-label="79"></a>  }</span>
+<span id="annotated-cell-18-80"><a href="#annotated-cell-18-80" aria-label="80"></a></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-18" data-target-annotation="1">1</button><span id="annotated-cell-18-81" class="code-annotation-target"><a href="#annotated-cell-18-81" aria-label="81"></a>  mostrar_tabla <span class="ot">&lt;-</span> <span class="cf">function</span>(n, titulo) {</span>
+<span id="annotated-cell-18-82"><a href="#annotated-cell-18-82" aria-label="82"></a>    df <span class="ot">&lt;-</span> <span class="fu">isolate</span>(<span class="fu">data</span>())</span>
+<span id="annotated-cell-18-83"><a href="#annotated-cell-18-83" aria-label="83"></a>    resultado <span class="ot">&lt;-</span> <span class="fu">head</span>(df, n)</span>
+<span id="annotated-cell-18-84"><a href="#annotated-cell-18-84" aria-label="84"></a>    output<span class="sc">$</span>tabla_modal <span class="ot">&lt;-</span> <span class="fu">renderTable</span>(resultado, <span class="at">striped =</span> <span class="cn">TRUE</span>, <span class="at">hover =</span> <span class="cn">TRUE</span>)</span>
+<span id="annotated-cell-18-85"><a href="#annotated-cell-18-85" aria-label="85"></a></span>
+<span id="annotated-cell-18-86"><a href="#annotated-cell-18-86" aria-label="86"></a>    <span class="fu">showModal</span>(<span class="fu">modalDialog</span>(</span>
+<span id="annotated-cell-18-87"><a href="#annotated-cell-18-87" aria-label="87"></a>      <span class="at">title =</span> titulo, <span class="fu">tableOutput</span>(<span class="st">"tabla_modal"</span>), <span class="at">size =</span> <span class="st">"l"</span>, <span class="at">easyClose =</span> <span class="cn">TRUE</span>,</span>
+<span id="annotated-cell-18-88"><a href="#annotated-cell-18-88" aria-label="88"></a>      <span class="at">footer =</span> <span class="fu">modalButton</span>(<span class="st">"Cerrar"</span>)</span>
+<span id="annotated-cell-18-89"><a href="#annotated-cell-18-89" aria-label="89"></a>    ))</span>
+<span id="annotated-cell-18-90"><a href="#annotated-cell-18-90" aria-label="90"></a></span>
+<span id="annotated-cell-18-91"><a href="#annotated-cell-18-91" aria-label="91"></a>    resultado</span>
+<span id="annotated-cell-18-92"><a href="#annotated-cell-18-92" aria-label="92"></a>  }</span>
+<span id="annotated-cell-18-93"><a href="#annotated-cell-18-93" aria-label="93"></a></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-18" data-target-annotation="2">2</button><span id="annotated-cell-18-94" class="code-annotation-target"><a href="#annotated-cell-18-94" aria-label="94"></a>  mostrar_grafico <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y, color, titulo) {</span>
+<span id="annotated-cell-18-95"><a href="#annotated-cell-18-95" aria-label="95"></a>    df <span class="ot">&lt;-</span> <span class="fu">isolate</span>(<span class="fu">data</span>())</span>
+<span id="annotated-cell-18-96"><a href="#annotated-cell-18-96" aria-label="96"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">nrow</span>(df)) <span class="fu">stop</span>(<span class="st">"No hay datos para graficar."</span>)</span>
+<span id="annotated-cell-18-97"><a href="#annotated-cell-18-97" aria-label="97"></a>    formula <span class="ot">&lt;-</span> <span class="fu">as.formula</span>(<span class="fu">paste</span>(y, <span class="st">"~"</span>, x, <span class="cf">if</span> (<span class="fu">nzchar</span>(color)) <span class="fu">paste</span>(<span class="st">"|"</span>, color) <span class="cf">else</span> <span class="st">""</span>))</span>
+<span id="annotated-cell-18-98"><a href="#annotated-cell-18-98" aria-label="98"></a></span>
+<span id="annotated-cell-18-99"><a href="#annotated-cell-18-99" aria-label="99"></a>    dibujar <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="annotated-cell-18-100"><a href="#annotated-cell-18-100" aria-label="100"></a>      <span class="cf">if</span> (<span class="fu">nzchar</span>(color)) <span class="fu">tinyplot</span>(formula, <span class="at">data =</span> df, <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">palette =</span> <span class="st">"Blues 3"</span>)</span>
+<span id="annotated-cell-18-101"><a href="#annotated-cell-18-101" aria-label="101"></a>      <span class="cf">else</span> <span class="fu">tinyplot</span>(formula, <span class="at">data =</span> df, <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">col =</span> <span class="st">"#0E4F5A"</span>)</span>
+<span id="annotated-cell-18-102"><a href="#annotated-cell-18-102" aria-label="102"></a>    }</span>
 <span id="annotated-cell-18-103"><a href="#annotated-cell-18-103" aria-label="103"></a></span>
-<span id="annotated-cell-18-104"><a href="#annotated-cell-18-104" aria-label="104"></a>    dibujar <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
-<span id="annotated-cell-18-105"><a href="#annotated-cell-18-105" aria-label="105"></a>      <span class="cf">if</span> (<span class="fu">nzchar</span>(color)) <span class="fu">tinyplot</span>(formula, <span class="at">data =</span> df, <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">palette =</span> <span class="st">"Blues 3"</span>)</span>
-<span id="annotated-cell-18-106"><a href="#annotated-cell-18-106" aria-label="106"></a>      <span class="cf">else</span> <span class="fu">tinyplot</span>(formula, <span class="at">data =</span> df, <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">col =</span> <span class="st">"#0E4F5A"</span>)</span>
-<span id="annotated-cell-18-107"><a href="#annotated-cell-18-107" aria-label="107"></a>    }</span>
-<span id="annotated-cell-18-108"><a href="#annotated-cell-18-108" aria-label="108"></a></span>
-<span id="annotated-cell-18-109"><a href="#annotated-cell-18-109" aria-label="109"></a>    output<span class="sc">$</span>grafico_modal <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>(<span class="fu">dibujar</span>())</span>
+<span id="annotated-cell-18-104"><a href="#annotated-cell-18-104" aria-label="104"></a>    output<span class="sc">$</span>grafico_modal <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>(<span class="fu">dibujar</span>())</span>
+<span id="annotated-cell-18-105"><a href="#annotated-cell-18-105" aria-label="105"></a></span>
+<span id="annotated-cell-18-106"><a href="#annotated-cell-18-106" aria-label="106"></a>    <span class="fu">showModal</span>(<span class="fu">modalDialog</span>(</span>
+<span id="annotated-cell-18-107"><a href="#annotated-cell-18-107" aria-label="107"></a>      <span class="at">title =</span> titulo, <span class="fu">plotOutput</span>(<span class="st">"grafico_modal"</span>, <span class="at">height =</span> <span class="st">"500px"</span>), <span class="at">size =</span> <span class="st">"l"</span>, <span class="at">easyClose =</span> <span class="cn">TRUE</span>,</span>
+<span id="annotated-cell-18-108"><a href="#annotated-cell-18-108" aria-label="108"></a>      <span class="at">footer =</span> <span class="fu">modalButton</span>(<span class="st">"Cerrar"</span>)</span>
+<span id="annotated-cell-18-109"><a href="#annotated-cell-18-109" aria-label="109"></a>    ))</span>
 <span id="annotated-cell-18-110"><a href="#annotated-cell-18-110" aria-label="110"></a></span>
-<span id="annotated-cell-18-111"><a href="#annotated-cell-18-111" aria-label="111"></a>    <span class="fu">showModal</span>(<span class="fu">modalDialog</span>(</span>
-<span id="annotated-cell-18-112"><a href="#annotated-cell-18-112" aria-label="112"></a>      <span class="at">title =</span> titulo, <span class="fu">plotOutput</span>(<span class="st">"grafico_modal"</span>, <span class="at">height =</span> <span class="st">"500px"</span>), <span class="at">size =</span> <span class="st">"l"</span>, <span class="at">easyClose =</span> <span class="cn">TRUE</span>,</span>
-<span id="annotated-cell-18-113"><a href="#annotated-cell-18-113" aria-label="113"></a>      <span class="at">footer =</span> <span class="fu">modalButton</span>(<span class="st">"Cerrar"</span>)</span>
-<span id="annotated-cell-18-114"><a href="#annotated-cell-18-114" aria-label="114"></a>    ))</span>
-<span id="annotated-cell-18-115"><a href="#annotated-cell-18-115" aria-label="115"></a></span>
-<span id="annotated-cell-18-116"><a href="#annotated-cell-18-116" aria-label="116"></a>    archivo <span class="ot">&lt;-</span> <span class="fu">tempfile</span>(<span class="at">fileext =</span> <span class="st">".png"</span>)</span>
-<span id="annotated-cell-18-117"><a href="#annotated-cell-18-117" aria-label="117"></a>    grDevices<span class="sc">::</span><span class="fu">png</span>(archivo, <span class="at">width =</span> <span class="dv">768</span>, <span class="at">height =</span> <span class="dv">500</span>)</span>
-<span id="annotated-cell-18-118"><a href="#annotated-cell-18-118" aria-label="118"></a>    <span class="fu">tryCatch</span>(<span class="fu">dibujar</span>(), <span class="at">finally =</span> grDevices<span class="sc">::</span><span class="fu">dev.off</span>())</span>
-<span id="annotated-cell-18-119"><a href="#annotated-cell-18-119" aria-label="119"></a>    <span class="fu">on.exit</span>(<span class="fu">unlink</span>(archivo))</span>
-<span id="annotated-cell-18-120"><a href="#annotated-cell-18-120" aria-label="120"></a>    <span class="fu">content_image_file</span>(archivo, <span class="at">resize =</span> <span class="st">"none"</span>)</span>
-<span id="annotated-cell-18-121"><a href="#annotated-cell-18-121" aria-label="121"></a>  }</span>
-<span id="annotated-cell-18-122"><a href="#annotated-cell-18-122" aria-label="122"></a></span>
-<span id="annotated-cell-18-123"><a href="#annotated-cell-18-123" aria-label="123"></a>  <span class="co"># chat ------------------------------------------------------------------</span></span>
-<span id="annotated-cell-18-124"><a href="#annotated-cell-18-124" aria-label="124"></a>  chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat_openai</span>(<span class="at">model =</span> <span class="st">"gpt-5-nano"</span>, <span class="at">system_prompt =</span> prompt_sistema)</span>
-<span id="annotated-cell-18-125"><a href="#annotated-cell-18-125" aria-label="125"></a></span>
-<span id="annotated-cell-18-126"><a href="#annotated-cell-18-126" aria-label="126"></a>  chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
-<span id="annotated-cell-18-127"><a href="#annotated-cell-18-127" aria-label="127"></a>    consultar_paises,</span>
-<span id="annotated-cell-18-128"><a href="#annotated-cell-18-128" aria-label="128"></a>    <span class="st">"Ejecuta una consulta SELECT de solo lectura sobre la tabla DuckDB paises."</span>,</span>
-<span id="annotated-cell-18-129"><a href="#annotated-cell-18-129" aria-label="129"></a>    <span class="at">arguments =</span> <span class="fu">list</span>(</span>
-<span id="annotated-cell-18-130"><a href="#annotated-cell-18-130" aria-label="130"></a>      <span class="at">consulta =</span> <span class="fu">type_string</span>(<span class="st">"Consulta DuckDB SELECT sobre la tabla paises, sin punto y coma."</span>)</span>
-<span id="annotated-cell-18-131"><a href="#annotated-cell-18-131" aria-label="131"></a>    )</span>
-<span id="annotated-cell-18-132"><a href="#annotated-cell-18-132" aria-label="132"></a>  ))</span>
-<span id="annotated-cell-18-133"><a href="#annotated-cell-18-133" aria-label="133"></a></span>
-<span id="annotated-cell-18-134"><a href="#annotated-cell-18-134" aria-label="134"></a>  chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
-<span id="annotated-cell-18-135"><a href="#annotated-cell-18-135" aria-label="135"></a>    actualizar_dashboard,</span>
-<span id="annotated-cell-18-136"><a href="#annotated-cell-18-136" aria-label="136"></a>    <span class="st">"Filtra, ordena o reinicia los datos reactivos mostrados en el dashboard."</span>,</span>
-<span id="annotated-cell-18-137"><a href="#annotated-cell-18-137" aria-label="137"></a>    <span class="at">arguments =</span> <span class="fu">list</span>(</span>
-<span id="annotated-cell-18-138"><a href="#annotated-cell-18-138" aria-label="138"></a>      <span class="at">consulta =</span> <span class="fu">type_string</span>(<span class="st">"SELECT * FROM paises con WHERE u ORDER BY, sin punto y coma."</span>)</span>
-<span id="annotated-cell-18-139"><a href="#annotated-cell-18-139" aria-label="139"></a>    )</span>
-<span id="annotated-cell-18-140"><a href="#annotated-cell-18-140" aria-label="140"></a>  ))</span>
-<span id="annotated-cell-18-141"><a href="#annotated-cell-18-141" aria-label="141"></a></span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-18" data-target-annotation="3">3</button><span id="annotated-cell-18-142" class="code-annotation-target"><a href="#annotated-cell-18-142" aria-label="142"></a>  chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
-<span id="annotated-cell-18-143"><a href="#annotated-cell-18-143" aria-label="143"></a>    mostrar_tabla,</span>
-<span id="annotated-cell-18-144"><a href="#annotated-cell-18-144" aria-label="144"></a>    <span class="st">"Abre en un modal una tabla con los datos visibles en el dashboard."</span>,</span>
-<span id="annotated-cell-18-145"><a href="#annotated-cell-18-145" aria-label="145"></a>    <span class="at">arguments =</span> <span class="fu">list</span>(</span>
-<span id="annotated-cell-18-146"><a href="#annotated-cell-18-146" aria-label="146"></a>      <span class="at">n =</span> <span class="fu">type_integer</span>(<span class="st">"Cantidad de filas, entre 1 y 100."</span>),</span>
-<span id="annotated-cell-18-147"><a href="#annotated-cell-18-147" aria-label="147"></a>      <span class="at">titulo =</span> <span class="fu">type_string</span>(<span class="st">"Título breve del modal."</span>)</span>
-<span id="annotated-cell-18-148"><a href="#annotated-cell-18-148" aria-label="148"></a>    )</span>
-<span id="annotated-cell-18-149"><a href="#annotated-cell-18-149" aria-label="149"></a>  ))</span>
-<span id="annotated-cell-18-150"><a href="#annotated-cell-18-150" aria-label="150"></a></span>
-<span id="annotated-cell-18-151"><a href="#annotated-cell-18-151" aria-label="151"></a>  chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
-<span id="annotated-cell-18-152"><a href="#annotated-cell-18-152" aria-label="152"></a>    mostrar_grafico,</span>
-<span id="annotated-cell-18-153"><a href="#annotated-cell-18-153" aria-label="153"></a>    <span class="st">"Grafica los datos visibles en un modal y devuelve la imagen al modelo."</span>,</span>
-<span id="annotated-cell-18-154"><a href="#annotated-cell-18-154" aria-label="154"></a>    <span class="at">arguments =</span> <span class="fu">list</span>(</span>
-<span id="annotated-cell-18-155"><a href="#annotated-cell-18-155" aria-label="155"></a>      <span class="at">x =</span> <span class="fu">type_enum</span>(<span class="fu">c</span>(<span class="st">"poblacion"</span>, <span class="st">"esperanza_de_vida"</span>, <span class="st">"pib_per_capita"</span>), <span class="st">"Columna para el eje x."</span>),</span>
-<span id="annotated-cell-18-156"><a href="#annotated-cell-18-156" aria-label="156"></a>      <span class="at">y =</span> <span class="fu">type_enum</span>(<span class="fu">c</span>(<span class="st">"poblacion"</span>, <span class="st">"esperanza_de_vida"</span>, <span class="st">"pib_per_capita"</span>), <span class="st">"Columna para el eje y."</span>),</span>
-<span id="annotated-cell-18-157"><a href="#annotated-cell-18-157" aria-label="157"></a>      <span class="at">color =</span> <span class="fu">type_enum</span>(<span class="fu">c</span>(<span class="st">""</span>, <span class="st">"continente"</span>), <span class="st">"Columna para el color, o ninguna."</span>),</span>
-<span id="annotated-cell-18-158"><a href="#annotated-cell-18-158" aria-label="158"></a>      <span class="at">titulo =</span> <span class="fu">type_string</span>(<span class="st">"Título breve del modal."</span>)</span>
-<span id="annotated-cell-18-159"><a href="#annotated-cell-18-159" aria-label="159"></a>    )</span>
-<span id="annotated-cell-18-160"><a href="#annotated-cell-18-160" aria-label="160"></a>  ))</span>
-<span id="annotated-cell-18-161"><a href="#annotated-cell-18-161" aria-label="161"></a></span>
-<span id="annotated-cell-18-162"><a href="#annotated-cell-18-162" aria-label="162"></a>  <span class="fu">observeEvent</span>(input<span class="sc">$</span>chat_user_input, {</span>
-<span id="annotated-cell-18-163"><a href="#annotated-cell-18-163" aria-label="163"></a>    stream <span class="ot">&lt;-</span> chat<span class="sc">$</span><span class="fu">stream_async</span>(input<span class="sc">$</span>chat_user_input, <span class="at">tool_mode =</span> <span class="st">"sequential"</span>, <span class="at">stream =</span> <span class="st">"content"</span>)</span>
-<span id="annotated-cell-18-164"><a href="#annotated-cell-18-164" aria-label="164"></a>    shinychat<span class="sc">::</span><span class="fu">chat_append</span>(<span class="st">"chat"</span>, stream)</span>
-<span id="annotated-cell-18-165"><a href="#annotated-cell-18-165" aria-label="165"></a>  })</span>
-<span id="annotated-cell-18-166"><a href="#annotated-cell-18-166" aria-label="166"></a>}</span>
-<span id="annotated-cell-18-167"><a href="#annotated-cell-18-167" aria-label="167"></a></span>
-<span id="annotated-cell-18-168"><a href="#annotated-cell-18-168" aria-label="168"></a><span class="fu">shinyApp</span>(ui, server)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="annotated-cell-18-111"><a href="#annotated-cell-18-111" aria-label="111"></a>    archivo <span class="ot">&lt;-</span> <span class="fu">tempfile</span>(<span class="at">fileext =</span> <span class="st">".png"</span>)</span>
+<span id="annotated-cell-18-112"><a href="#annotated-cell-18-112" aria-label="112"></a>    grDevices<span class="sc">::</span><span class="fu">png</span>(archivo, <span class="at">width =</span> <span class="dv">768</span>, <span class="at">height =</span> <span class="dv">500</span>)</span>
+<span id="annotated-cell-18-113"><a href="#annotated-cell-18-113" aria-label="113"></a>    <span class="fu">tryCatch</span>(<span class="fu">dibujar</span>(), <span class="at">finally =</span> grDevices<span class="sc">::</span><span class="fu">dev.off</span>())</span>
+<span id="annotated-cell-18-114"><a href="#annotated-cell-18-114" aria-label="114"></a>    <span class="fu">on.exit</span>(<span class="fu">unlink</span>(archivo))</span>
+<span id="annotated-cell-18-115"><a href="#annotated-cell-18-115" aria-label="115"></a>    <span class="fu">content_image_file</span>(archivo, <span class="at">resize =</span> <span class="st">"none"</span>)</span>
+<span id="annotated-cell-18-116"><a href="#annotated-cell-18-116" aria-label="116"></a>  }</span>
+<span id="annotated-cell-18-117"><a href="#annotated-cell-18-117" aria-label="117"></a></span>
+<span id="annotated-cell-18-118"><a href="#annotated-cell-18-118" aria-label="118"></a>  <span class="co"># chat ------------------------------------------------------------------</span></span>
+<span id="annotated-cell-18-119"><a href="#annotated-cell-18-119" aria-label="119"></a>  chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat_openai</span>(<span class="at">model =</span> <span class="st">"gpt-5-nano"</span>, <span class="at">system_prompt =</span> prompt_sistema)</span>
+<span id="annotated-cell-18-120"><a href="#annotated-cell-18-120" aria-label="120"></a></span>
+<span id="annotated-cell-18-121"><a href="#annotated-cell-18-121" aria-label="121"></a>  chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
+<span id="annotated-cell-18-122"><a href="#annotated-cell-18-122" aria-label="122"></a>    consultar_paises,</span>
+<span id="annotated-cell-18-123"><a href="#annotated-cell-18-123" aria-label="123"></a>    <span class="st">"Ejecuta una consulta SELECT de solo lectura sobre la tabla DuckDB paises."</span>,</span>
+<span id="annotated-cell-18-124"><a href="#annotated-cell-18-124" aria-label="124"></a>    <span class="at">arguments =</span> <span class="fu">list</span>(</span>
+<span id="annotated-cell-18-125"><a href="#annotated-cell-18-125" aria-label="125"></a>      <span class="at">consulta =</span> <span class="fu">type_string</span>(<span class="st">"Consulta DuckDB SELECT sobre la tabla paises, sin punto y coma."</span>)</span>
+<span id="annotated-cell-18-126"><a href="#annotated-cell-18-126" aria-label="126"></a>    )</span>
+<span id="annotated-cell-18-127"><a href="#annotated-cell-18-127" aria-label="127"></a>  ))</span>
+<span id="annotated-cell-18-128"><a href="#annotated-cell-18-128" aria-label="128"></a></span>
+<span id="annotated-cell-18-129"><a href="#annotated-cell-18-129" aria-label="129"></a>  chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
+<span id="annotated-cell-18-130"><a href="#annotated-cell-18-130" aria-label="130"></a>    actualizar_dashboard,</span>
+<span id="annotated-cell-18-131"><a href="#annotated-cell-18-131" aria-label="131"></a>    <span class="st">"Filtra, ordena o reinicia los datos reactivos mostrados en el dashboard."</span>,</span>
+<span id="annotated-cell-18-132"><a href="#annotated-cell-18-132" aria-label="132"></a>    <span class="at">arguments =</span> <span class="fu">list</span>(</span>
+<span id="annotated-cell-18-133"><a href="#annotated-cell-18-133" aria-label="133"></a>      <span class="at">consulta =</span> <span class="fu">type_string</span>(<span class="st">"SELECT * FROM paises con WHERE u ORDER BY, sin punto y coma."</span>)</span>
+<span id="annotated-cell-18-134"><a href="#annotated-cell-18-134" aria-label="134"></a>    )</span>
+<span id="annotated-cell-18-135"><a href="#annotated-cell-18-135" aria-label="135"></a>  ))</span>
+<span id="annotated-cell-18-136"><a href="#annotated-cell-18-136" aria-label="136"></a></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-18" data-target-annotation="3">3</button><span id="annotated-cell-18-137" class="code-annotation-target"><a href="#annotated-cell-18-137" aria-label="137"></a>  chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
+<span id="annotated-cell-18-138"><a href="#annotated-cell-18-138" aria-label="138"></a>    mostrar_tabla,</span>
+<span id="annotated-cell-18-139"><a href="#annotated-cell-18-139" aria-label="139"></a>    <span class="st">"Abre en un modal una tabla con los datos visibles en el dashboard."</span>,</span>
+<span id="annotated-cell-18-140"><a href="#annotated-cell-18-140" aria-label="140"></a>    <span class="at">arguments =</span> <span class="fu">list</span>(</span>
+<span id="annotated-cell-18-141"><a href="#annotated-cell-18-141" aria-label="141"></a>      <span class="at">n =</span> <span class="fu">type_integer</span>(<span class="st">"Cantidad de filas que quieres mostrar."</span>),</span>
+<span id="annotated-cell-18-142"><a href="#annotated-cell-18-142" aria-label="142"></a>      <span class="at">titulo =</span> <span class="fu">type_string</span>(<span class="st">"Título breve del modal."</span>)</span>
+<span id="annotated-cell-18-143"><a href="#annotated-cell-18-143" aria-label="143"></a>    )</span>
+<span id="annotated-cell-18-144"><a href="#annotated-cell-18-144" aria-label="144"></a>  ))</span>
+<span id="annotated-cell-18-145"><a href="#annotated-cell-18-145" aria-label="145"></a></span>
+<span id="annotated-cell-18-146"><a href="#annotated-cell-18-146" aria-label="146"></a>  chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
+<span id="annotated-cell-18-147"><a href="#annotated-cell-18-147" aria-label="147"></a>    mostrar_grafico,</span>
+<span id="annotated-cell-18-148"><a href="#annotated-cell-18-148" aria-label="148"></a>    <span class="st">"Grafica los datos visibles en un modal y devuelve la imagen al modelo."</span>,</span>
+<span id="annotated-cell-18-149"><a href="#annotated-cell-18-149" aria-label="149"></a>    <span class="at">arguments =</span> <span class="fu">list</span>(</span>
+<span id="annotated-cell-18-150"><a href="#annotated-cell-18-150" aria-label="150"></a>      <span class="at">x =</span> <span class="fu">type_enum</span>(<span class="fu">c</span>(<span class="st">"poblacion"</span>, <span class="st">"esperanza_de_vida"</span>, <span class="st">"pib_per_capita"</span>), <span class="st">"Columna para el eje x."</span>),</span>
+<span id="annotated-cell-18-151"><a href="#annotated-cell-18-151" aria-label="151"></a>      <span class="at">y =</span> <span class="fu">type_enum</span>(<span class="fu">c</span>(<span class="st">"poblacion"</span>, <span class="st">"esperanza_de_vida"</span>, <span class="st">"pib_per_capita"</span>), <span class="st">"Columna para el eje y."</span>),</span>
+<span id="annotated-cell-18-152"><a href="#annotated-cell-18-152" aria-label="152"></a>      <span class="at">color =</span> <span class="fu">type_enum</span>(<span class="fu">c</span>(<span class="st">""</span>, <span class="st">"continente"</span>), <span class="st">"Columna para el color, o ninguna."</span>),</span>
+<span id="annotated-cell-18-153"><a href="#annotated-cell-18-153" aria-label="153"></a>      <span class="at">titulo =</span> <span class="fu">type_string</span>(<span class="st">"Título breve del modal."</span>)</span>
+<span id="annotated-cell-18-154"><a href="#annotated-cell-18-154" aria-label="154"></a>    )</span>
+<span id="annotated-cell-18-155"><a href="#annotated-cell-18-155" aria-label="155"></a>  ))</span>
+<span id="annotated-cell-18-156"><a href="#annotated-cell-18-156" aria-label="156"></a></span>
+<span id="annotated-cell-18-157"><a href="#annotated-cell-18-157" aria-label="157"></a>  <span class="fu">observeEvent</span>(input<span class="sc">$</span>chat_user_input, {</span>
+<span id="annotated-cell-18-158"><a href="#annotated-cell-18-158" aria-label="158"></a>    stream <span class="ot">&lt;-</span> chat<span class="sc">$</span><span class="fu">stream_async</span>(input<span class="sc">$</span>chat_user_input, <span class="at">tool_mode =</span> <span class="st">"sequential"</span>, <span class="at">stream =</span> <span class="st">"content"</span>)</span>
+<span id="annotated-cell-18-159"><a href="#annotated-cell-18-159" aria-label="159"></a>    shinychat<span class="sc">::</span><span class="fu">chat_append</span>(<span class="st">"chat"</span>, stream)</span>
+<span id="annotated-cell-18-160"><a href="#annotated-cell-18-160" aria-label="160"></a>  })</span>
+<span id="annotated-cell-18-161"><a href="#annotated-cell-18-161" aria-label="161"></a>}</span>
+<span id="annotated-cell-18-162"><a href="#annotated-cell-18-162" aria-label="162"></a></span>
+<span id="annotated-cell-18-163"><a href="#annotated-cell-18-163" aria-label="163"></a><span class="fu">shinyApp</span>(ui, server)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <dl class="code-annotation-container-hidden code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-18" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-18" data-code-lines="82" data-code-annotation="1"><strong>1.</strong> Define la tool que muestra una tabla en un modal.</span>
+<span data-code-cell="annotated-cell-18" data-code-lines="81" data-code-annotation="1"><strong>1.</strong> Define la tool que muestra una tabla en un modal.</span>
 </dd>
 <dt data-target-cell="annotated-cell-18" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-cell="annotated-cell-18" data-code-lines="96" data-code-annotation="2"><strong>2.</strong> Define la tool que crea un gráfico y devuelve su imagen al modelo.</span>
+<span data-code-cell="annotated-cell-18" data-code-lines="94" data-code-annotation="2"><strong>2.</strong> Define la tool que crea un gráfico y devuelve su imagen al modelo.</span>
 </dd>
 <dt data-target-cell="annotated-cell-18" data-target-annotation="3">3</dt>
 <dd>
-<span data-code-cell="annotated-cell-18" data-code-lines="142" data-code-annotation="3"><strong>3.</strong> Registra las tools de interfaz con sus argumentos.</span>
+<span data-code-cell="annotated-cell-18" data-code-lines="137" data-code-annotation="3"><strong>3.</strong> Registra las tools de interfaz con sus argumentos.</span>
 </dd>
 </dl>
 </section>
@@ -1427,7 +1413,6 @@ LatinR 2026
 </tbody>
 </table>
 <p>Ambos caminos alimentan <code>data()</code>. La interacción más reciente determina el modo activo.</p>
-<p>Esta es una comparación de interfaces. App 08 retoma la consulta y la actualización para agregar el mapa.</p>
 </section>
 <section id="app-08-mover-la-cámara-mediante-un-proxy" class="slide level2 pattern-overview">
 <h2>App 08 · Mover la cámara mediante un proxy</h2>
@@ -1456,7 +1441,7 @@ LatinR 2026
 </section>
 <section id="app-08-el-código" class="slide level2">
 <h2>App 08 · El código</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-20" data-workshop-highlights="148-160|192-199|201-204"><pre class="sourceCode numberSource r workshop-code code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-20-1"><a href="#annotated-cell-20-1" aria-label="1"></a><span class="fu">library</span>(shiny)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-20" data-workshop-highlights="147-159|191-198|200-203"><pre class="sourceCode numberSource r workshop-code code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-20-1"><a href="#annotated-cell-20-1" aria-label="1"></a><span class="fu">library</span>(shiny)</span>
 <span id="annotated-cell-20-2"><a href="#annotated-cell-20-2" aria-label="2"></a><span class="fu">library</span>(bslib)</span>
 <span id="annotated-cell-20-3"><a href="#annotated-cell-20-3" aria-label="3"></a><span class="fu">library</span>(DBI)</span>
 <span id="annotated-cell-20-4"><a href="#annotated-cell-20-4" aria-label="4"></a><span class="fu">library</span>(duckdb)</span>
@@ -1586,95 +1571,94 @@ LatinR 2026
 <span id="annotated-cell-20-128"><a href="#annotated-cell-20-128" aria-label="128"></a>  actualizar_dashboard <span class="ot">&lt;-</span> <span class="cf">function</span>(consulta) {</span>
 <span id="annotated-cell-20-129"><a href="#annotated-cell-20-129" aria-label="129"></a>    consulta <span class="ot">&lt;-</span> <span class="fu">validar_select</span>(consulta)</span>
 <span id="annotated-cell-20-130"><a href="#annotated-cell-20-130" aria-label="130"></a>    resultado <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbGetQuery</span>(con, consulta)</span>
-<span id="annotated-cell-20-131"><a href="#annotated-cell-20-131" aria-label="131"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">all</span>(<span class="fu">names</span>(paises) <span class="sc">%in%</span> <span class="fu">names</span>(resultado))) <span class="fu">stop</span>(<span class="st">"La consulta debe devolver todas las columnas."</span>)</span>
-<span id="annotated-cell-20-132"><a href="#annotated-cell-20-132" aria-label="132"></a></span>
-<span id="annotated-cell-20-133"><a href="#annotated-cell-20-133" aria-label="133"></a>    <span class="fu">consulta_actual</span>(consulta)</span>
-<span id="annotated-cell-20-134"><a href="#annotated-cell-20-134" aria-label="134"></a>    <span class="fu">list</span>(</span>
-<span id="annotated-cell-20-135"><a href="#annotated-cell-20-135" aria-label="135"></a>      <span class="at">mensaje =</span> <span class="st">"Dashboard y mapa actualizados."</span>,</span>
-<span id="annotated-cell-20-136"><a href="#annotated-cell-20-136" aria-label="136"></a>      <span class="at">registros =</span> <span class="fu">nrow</span>(resultado),</span>
-<span id="annotated-cell-20-137"><a href="#annotated-cell-20-137" aria-label="137"></a>      <span class="at">esperanza_promedio =</span> <span class="fu">round</span>(<span class="fu">mean</span>(resultado<span class="sc">$</span>esperanza_de_vida), <span class="dv">1</span>),</span>
-<span id="annotated-cell-20-138"><a href="#annotated-cell-20-138" aria-label="138"></a>      <span class="at">poblacion_total =</span> <span class="fu">sum</span>(resultado<span class="sc">$</span>poblacion),</span>
-<span id="annotated-cell-20-139"><a href="#annotated-cell-20-139" aria-label="139"></a>      <span class="at">pib_promedio =</span> <span class="fu">round</span>(<span class="fu">mean</span>(resultado<span class="sc">$</span>pib_per_capita))</span>
-<span id="annotated-cell-20-140"><a href="#annotated-cell-20-140" aria-label="140"></a>    )</span>
-<span id="annotated-cell-20-141"><a href="#annotated-cell-20-141" aria-label="141"></a>  }</span>
-<span id="annotated-cell-20-142"><a href="#annotated-cell-20-142" aria-label="142"></a></span>
-<span id="annotated-cell-20-143"><a href="#annotated-cell-20-143" aria-label="143"></a>  cambiar_variable <span class="ot">&lt;-</span> <span class="cf">function</span>(variable) {</span>
-<span id="annotated-cell-20-144"><a href="#annotated-cell-20-144" aria-label="144"></a>    <span class="fu">variable_mapa</span>(variable)</span>
-<span id="annotated-cell-20-145"><a href="#annotated-cell-20-145" aria-label="145"></a>    <span class="fu">paste</span>(<span class="st">"Mapa coloreado por"</span>, variable)</span>
-<span id="annotated-cell-20-146"><a href="#annotated-cell-20-146" aria-label="146"></a>  }</span>
-<span id="annotated-cell-20-147"><a href="#annotated-cell-20-147" aria-label="147"></a></span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-20" data-target-annotation="1">1</button><span id="annotated-cell-20-148" class="code-annotation-target"><a href="#annotated-cell-20-148" aria-label="148"></a>  ir_a_pais <span class="ot">&lt;-</span> <span class="cf">function</span>(pais, <span class="at">zoom =</span> <span class="dv">4</span>) {</span>
-<span id="annotated-cell-20-149"><a href="#annotated-cell-20-149" aria-label="149"></a>    ubicacion <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbGetQuery</span>(con, <span class="fu">paste</span>(</span>
-<span id="annotated-cell-20-150"><a href="#annotated-cell-20-150" aria-label="150"></a>      <span class="st">"SELECT DISTINCT p.pais, g.longitud, g.latitud"</span>,</span>
-<span id="annotated-cell-20-151"><a href="#annotated-cell-20-151" aria-label="151"></a>      <span class="st">"FROM paises p JOIN paises_geo g USING (codigo)"</span>,</span>
-<span id="annotated-cell-20-152"><a href="#annotated-cell-20-152" aria-label="152"></a>      <span class="st">"WHERE lower(p.pais) = lower(?)"</span></span>
-<span id="annotated-cell-20-153"><a href="#annotated-cell-20-153" aria-label="153"></a>    ), <span class="at">params =</span> <span class="fu">list</span>(pais))</span>
-<span id="annotated-cell-20-154"><a href="#annotated-cell-20-154" aria-label="154"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">nrow</span>(ubicacion)) <span class="fu">stop</span>(<span class="st">"No encontré ese país."</span>)</span>
-<span id="annotated-cell-20-155"><a href="#annotated-cell-20-155" aria-label="155"></a></span>
-<span id="annotated-cell-20-156"><a href="#annotated-cell-20-156" aria-label="156"></a>    mapgl<span class="sc">::</span><span class="fu">maplibre_proxy</span>(<span class="st">"map"</span>, session) <span class="sc">|&gt;</span></span>
-<span id="annotated-cell-20-157"><a href="#annotated-cell-20-157" aria-label="157"></a>      mapgl<span class="sc">::</span><span class="fu">fly_to</span>(<span class="at">center =</span> <span class="fu">c</span>(ubicacion<span class="sc">$</span>longitud[<span class="dv">1</span>], ubicacion<span class="sc">$</span>latitud[<span class="dv">1</span>]), <span class="at">zoom =</span> zoom)</span>
-<span id="annotated-cell-20-158"><a href="#annotated-cell-20-158" aria-label="158"></a></span>
-<span id="annotated-cell-20-159"><a href="#annotated-cell-20-159" aria-label="159"></a>    <span class="fu">paste</span>(<span class="st">"Mapa centrado en"</span>, ubicacion<span class="sc">$</span>pais[<span class="dv">1</span>])</span>
-<span id="annotated-cell-20-160"><a href="#annotated-cell-20-160" aria-label="160"></a>  }</span>
-<span id="annotated-cell-20-161"><a href="#annotated-cell-20-161" aria-label="161"></a></span>
-<span id="annotated-cell-20-162"><a href="#annotated-cell-20-162" aria-label="162"></a>  <span class="co"># chat ------------------------------------------------------------------</span></span>
-<span id="annotated-cell-20-163"><a href="#annotated-cell-20-163" aria-label="163"></a>  chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat_openai</span>(<span class="at">model =</span> <span class="st">"gpt-5-nano"</span>, <span class="at">system_prompt =</span> prompt_sistema)</span>
-<span id="annotated-cell-20-164"><a href="#annotated-cell-20-164" aria-label="164"></a></span>
-<span id="annotated-cell-20-165"><a href="#annotated-cell-20-165" aria-label="165"></a>  chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
-<span id="annotated-cell-20-166"><a href="#annotated-cell-20-166" aria-label="166"></a>    consultar_paises,</span>
-<span id="annotated-cell-20-167"><a href="#annotated-cell-20-167" aria-label="167"></a>    <span class="st">"Ejecuta una consulta SELECT de solo lectura sobre la tabla DuckDB paises."</span>,</span>
-<span id="annotated-cell-20-168"><a href="#annotated-cell-20-168" aria-label="168"></a>    <span class="at">arguments =</span> <span class="fu">list</span>(</span>
-<span id="annotated-cell-20-169"><a href="#annotated-cell-20-169" aria-label="169"></a>      <span class="at">consulta =</span> <span class="fu">type_string</span>(<span class="st">"Consulta DuckDB SELECT sobre la tabla paises, sin punto y coma."</span>)</span>
-<span id="annotated-cell-20-170"><a href="#annotated-cell-20-170" aria-label="170"></a>    )</span>
-<span id="annotated-cell-20-171"><a href="#annotated-cell-20-171" aria-label="171"></a>  ))</span>
-<span id="annotated-cell-20-172"><a href="#annotated-cell-20-172" aria-label="172"></a></span>
-<span id="annotated-cell-20-173"><a href="#annotated-cell-20-173" aria-label="173"></a>  chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
-<span id="annotated-cell-20-174"><a href="#annotated-cell-20-174" aria-label="174"></a>    actualizar_dashboard,</span>
-<span id="annotated-cell-20-175"><a href="#annotated-cell-20-175" aria-label="175"></a>    <span class="st">"Filtra, ordena o reinicia los datos reactivos mostrados en el dashboard y el mapa."</span>,</span>
-<span id="annotated-cell-20-176"><a href="#annotated-cell-20-176" aria-label="176"></a>    <span class="at">arguments =</span> <span class="fu">list</span>(</span>
-<span id="annotated-cell-20-177"><a href="#annotated-cell-20-177" aria-label="177"></a>      <span class="at">consulta =</span> <span class="fu">type_string</span>(<span class="st">"SELECT * FROM paises con WHERE u ORDER BY, sin punto y coma."</span>)</span>
-<span id="annotated-cell-20-178"><a href="#annotated-cell-20-178" aria-label="178"></a>    )</span>
-<span id="annotated-cell-20-179"><a href="#annotated-cell-20-179" aria-label="179"></a>  ))</span>
-<span id="annotated-cell-20-180"><a href="#annotated-cell-20-180" aria-label="180"></a></span>
-<span id="annotated-cell-20-181"><a href="#annotated-cell-20-181" aria-label="181"></a>  chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
-<span id="annotated-cell-20-182"><a href="#annotated-cell-20-182" aria-label="182"></a>    cambiar_variable,</span>
-<span id="annotated-cell-20-183"><a href="#annotated-cell-20-183" aria-label="183"></a>    <span class="st">"Cambia la variable utilizada para colorear los países del mapa."</span>,</span>
-<span id="annotated-cell-20-184"><a href="#annotated-cell-20-184" aria-label="184"></a>    <span class="at">arguments =</span> <span class="fu">list</span>(</span>
-<span id="annotated-cell-20-185"><a href="#annotated-cell-20-185" aria-label="185"></a>      <span class="at">variable =</span> <span class="fu">type_enum</span>(</span>
-<span id="annotated-cell-20-186"><a href="#annotated-cell-20-186" aria-label="186"></a>        <span class="fu">c</span>(<span class="st">"esperanza_de_vida"</span>, <span class="st">"poblacion"</span>, <span class="st">"pib_per_capita"</span>),</span>
-<span id="annotated-cell-20-187"><a href="#annotated-cell-20-187" aria-label="187"></a>        <span class="st">"Variable con la que se colorea el mapa."</span></span>
-<span id="annotated-cell-20-188"><a href="#annotated-cell-20-188" aria-label="188"></a>      )</span>
-<span id="annotated-cell-20-189"><a href="#annotated-cell-20-189" aria-label="189"></a>    )</span>
-<span id="annotated-cell-20-190"><a href="#annotated-cell-20-190" aria-label="190"></a>  ))</span>
-<span id="annotated-cell-20-191"><a href="#annotated-cell-20-191" aria-label="191"></a></span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-20" data-target-annotation="2">2</button><span id="annotated-cell-20-192" class="code-annotation-target"><a href="#annotated-cell-20-192" aria-label="192"></a>  chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
-<span id="annotated-cell-20-193"><a href="#annotated-cell-20-193" aria-label="193"></a>    ir_a_pais,</span>
-<span id="annotated-cell-20-194"><a href="#annotated-cell-20-194" aria-label="194"></a>    <span class="st">"Vuela hacia un país en el mapa."</span>,</span>
-<span id="annotated-cell-20-195"><a href="#annotated-cell-20-195" aria-label="195"></a>    <span class="at">arguments =</span> <span class="fu">list</span>(</span>
-<span id="annotated-cell-20-196"><a href="#annotated-cell-20-196" aria-label="196"></a>      <span class="at">pais =</span> <span class="fu">type_string</span>(<span class="st">"Nombre del país en español."</span>),</span>
-<span id="annotated-cell-20-197"><a href="#annotated-cell-20-197" aria-label="197"></a>      <span class="at">zoom =</span> <span class="fu">type_number</span>(<span class="st">"Nivel de zoom, normalmente entre 2 y 6."</span>, <span class="at">required =</span> <span class="cn">FALSE</span>)</span>
-<span id="annotated-cell-20-198"><a href="#annotated-cell-20-198" aria-label="198"></a>    )</span>
-<span id="annotated-cell-20-199"><a href="#annotated-cell-20-199" aria-label="199"></a>  ))</span>
-<span id="annotated-cell-20-200"><a href="#annotated-cell-20-200" aria-label="200"></a></span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-20" data-target-annotation="3">3</button><span id="annotated-cell-20-201" class="code-annotation-target"><a href="#annotated-cell-20-201" aria-label="201"></a>  <span class="fu">observeEvent</span>(input<span class="sc">$</span>chat_user_input, {</span>
-<span id="annotated-cell-20-202"><a href="#annotated-cell-20-202" aria-label="202"></a>    stream <span class="ot">&lt;-</span> chat<span class="sc">$</span><span class="fu">stream_async</span>(input<span class="sc">$</span>chat_user_input, <span class="at">tool_mode =</span> <span class="st">"sequential"</span>, <span class="at">stream =</span> <span class="st">"content"</span>)</span>
-<span id="annotated-cell-20-203"><a href="#annotated-cell-20-203" aria-label="203"></a>    shinychat<span class="sc">::</span><span class="fu">chat_append</span>(<span class="st">"chat"</span>, stream)</span>
-<span id="annotated-cell-20-204"><a href="#annotated-cell-20-204" aria-label="204"></a>  })</span>
-<span id="annotated-cell-20-205"><a href="#annotated-cell-20-205" aria-label="205"></a>}</span>
-<span id="annotated-cell-20-206"><a href="#annotated-cell-20-206" aria-label="206"></a></span>
-<span id="annotated-cell-20-207"><a href="#annotated-cell-20-207" aria-label="207"></a><span class="fu">shinyApp</span>(ui, server)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="annotated-cell-20-131"><a href="#annotated-cell-20-131" aria-label="131"></a></span>
+<span id="annotated-cell-20-132"><a href="#annotated-cell-20-132" aria-label="132"></a>    <span class="fu">consulta_actual</span>(consulta)</span>
+<span id="annotated-cell-20-133"><a href="#annotated-cell-20-133" aria-label="133"></a>    <span class="fu">list</span>(</span>
+<span id="annotated-cell-20-134"><a href="#annotated-cell-20-134" aria-label="134"></a>      <span class="at">mensaje =</span> <span class="st">"Dashboard y mapa actualizados."</span>,</span>
+<span id="annotated-cell-20-135"><a href="#annotated-cell-20-135" aria-label="135"></a>      <span class="at">registros =</span> <span class="fu">nrow</span>(resultado),</span>
+<span id="annotated-cell-20-136"><a href="#annotated-cell-20-136" aria-label="136"></a>      <span class="at">esperanza_promedio =</span> <span class="fu">round</span>(<span class="fu">mean</span>(resultado<span class="sc">$</span>esperanza_de_vida), <span class="dv">1</span>),</span>
+<span id="annotated-cell-20-137"><a href="#annotated-cell-20-137" aria-label="137"></a>      <span class="at">poblacion_total =</span> <span class="fu">sum</span>(resultado<span class="sc">$</span>poblacion),</span>
+<span id="annotated-cell-20-138"><a href="#annotated-cell-20-138" aria-label="138"></a>      <span class="at">pib_promedio =</span> <span class="fu">round</span>(<span class="fu">mean</span>(resultado<span class="sc">$</span>pib_per_capita))</span>
+<span id="annotated-cell-20-139"><a href="#annotated-cell-20-139" aria-label="139"></a>    )</span>
+<span id="annotated-cell-20-140"><a href="#annotated-cell-20-140" aria-label="140"></a>  }</span>
+<span id="annotated-cell-20-141"><a href="#annotated-cell-20-141" aria-label="141"></a></span>
+<span id="annotated-cell-20-142"><a href="#annotated-cell-20-142" aria-label="142"></a>  cambiar_variable <span class="ot">&lt;-</span> <span class="cf">function</span>(variable) {</span>
+<span id="annotated-cell-20-143"><a href="#annotated-cell-20-143" aria-label="143"></a>    <span class="fu">variable_mapa</span>(variable)</span>
+<span id="annotated-cell-20-144"><a href="#annotated-cell-20-144" aria-label="144"></a>    <span class="fu">paste</span>(<span class="st">"Mapa coloreado por"</span>, variable)</span>
+<span id="annotated-cell-20-145"><a href="#annotated-cell-20-145" aria-label="145"></a>  }</span>
+<span id="annotated-cell-20-146"><a href="#annotated-cell-20-146" aria-label="146"></a></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-20" data-target-annotation="1">1</button><span id="annotated-cell-20-147" class="code-annotation-target"><a href="#annotated-cell-20-147" aria-label="147"></a>  ir_a_pais <span class="ot">&lt;-</span> <span class="cf">function</span>(pais, <span class="at">zoom =</span> <span class="dv">4</span>) {</span>
+<span id="annotated-cell-20-148"><a href="#annotated-cell-20-148" aria-label="148"></a>    ubicacion <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbGetQuery</span>(con, <span class="fu">paste</span>(</span>
+<span id="annotated-cell-20-149"><a href="#annotated-cell-20-149" aria-label="149"></a>      <span class="st">"SELECT DISTINCT p.pais, g.longitud, g.latitud"</span>,</span>
+<span id="annotated-cell-20-150"><a href="#annotated-cell-20-150" aria-label="150"></a>      <span class="st">"FROM paises p JOIN paises_geo g USING (codigo)"</span>,</span>
+<span id="annotated-cell-20-151"><a href="#annotated-cell-20-151" aria-label="151"></a>      <span class="st">"WHERE lower(p.pais) = lower(?)"</span></span>
+<span id="annotated-cell-20-152"><a href="#annotated-cell-20-152" aria-label="152"></a>    ), <span class="at">params =</span> <span class="fu">list</span>(pais))</span>
+<span id="annotated-cell-20-153"><a href="#annotated-cell-20-153" aria-label="153"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">nrow</span>(ubicacion)) <span class="fu">stop</span>(<span class="st">"No encontré ese país."</span>)</span>
+<span id="annotated-cell-20-154"><a href="#annotated-cell-20-154" aria-label="154"></a></span>
+<span id="annotated-cell-20-155"><a href="#annotated-cell-20-155" aria-label="155"></a>    mapgl<span class="sc">::</span><span class="fu">maplibre_proxy</span>(<span class="st">"map"</span>, session) <span class="sc">|&gt;</span></span>
+<span id="annotated-cell-20-156"><a href="#annotated-cell-20-156" aria-label="156"></a>      mapgl<span class="sc">::</span><span class="fu">fly_to</span>(<span class="at">center =</span> <span class="fu">c</span>(ubicacion<span class="sc">$</span>longitud[<span class="dv">1</span>], ubicacion<span class="sc">$</span>latitud[<span class="dv">1</span>]), <span class="at">zoom =</span> zoom)</span>
+<span id="annotated-cell-20-157"><a href="#annotated-cell-20-157" aria-label="157"></a></span>
+<span id="annotated-cell-20-158"><a href="#annotated-cell-20-158" aria-label="158"></a>    <span class="fu">paste</span>(<span class="st">"Mapa centrado en"</span>, ubicacion<span class="sc">$</span>pais[<span class="dv">1</span>])</span>
+<span id="annotated-cell-20-159"><a href="#annotated-cell-20-159" aria-label="159"></a>  }</span>
+<span id="annotated-cell-20-160"><a href="#annotated-cell-20-160" aria-label="160"></a></span>
+<span id="annotated-cell-20-161"><a href="#annotated-cell-20-161" aria-label="161"></a>  <span class="co"># chat ------------------------------------------------------------------</span></span>
+<span id="annotated-cell-20-162"><a href="#annotated-cell-20-162" aria-label="162"></a>  chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat_openai</span>(<span class="at">model =</span> <span class="st">"gpt-5-nano"</span>, <span class="at">system_prompt =</span> prompt_sistema)</span>
+<span id="annotated-cell-20-163"><a href="#annotated-cell-20-163" aria-label="163"></a></span>
+<span id="annotated-cell-20-164"><a href="#annotated-cell-20-164" aria-label="164"></a>  chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
+<span id="annotated-cell-20-165"><a href="#annotated-cell-20-165" aria-label="165"></a>    consultar_paises,</span>
+<span id="annotated-cell-20-166"><a href="#annotated-cell-20-166" aria-label="166"></a>    <span class="st">"Ejecuta una consulta SELECT de solo lectura sobre la tabla DuckDB paises."</span>,</span>
+<span id="annotated-cell-20-167"><a href="#annotated-cell-20-167" aria-label="167"></a>    <span class="at">arguments =</span> <span class="fu">list</span>(</span>
+<span id="annotated-cell-20-168"><a href="#annotated-cell-20-168" aria-label="168"></a>      <span class="at">consulta =</span> <span class="fu">type_string</span>(<span class="st">"Consulta DuckDB SELECT sobre la tabla paises, sin punto y coma."</span>)</span>
+<span id="annotated-cell-20-169"><a href="#annotated-cell-20-169" aria-label="169"></a>    )</span>
+<span id="annotated-cell-20-170"><a href="#annotated-cell-20-170" aria-label="170"></a>  ))</span>
+<span id="annotated-cell-20-171"><a href="#annotated-cell-20-171" aria-label="171"></a></span>
+<span id="annotated-cell-20-172"><a href="#annotated-cell-20-172" aria-label="172"></a>  chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
+<span id="annotated-cell-20-173"><a href="#annotated-cell-20-173" aria-label="173"></a>    actualizar_dashboard,</span>
+<span id="annotated-cell-20-174"><a href="#annotated-cell-20-174" aria-label="174"></a>    <span class="st">"Filtra, ordena o reinicia los datos reactivos mostrados en el dashboard y el mapa."</span>,</span>
+<span id="annotated-cell-20-175"><a href="#annotated-cell-20-175" aria-label="175"></a>    <span class="at">arguments =</span> <span class="fu">list</span>(</span>
+<span id="annotated-cell-20-176"><a href="#annotated-cell-20-176" aria-label="176"></a>      <span class="at">consulta =</span> <span class="fu">type_string</span>(<span class="st">"SELECT * FROM paises con WHERE u ORDER BY, sin punto y coma."</span>)</span>
+<span id="annotated-cell-20-177"><a href="#annotated-cell-20-177" aria-label="177"></a>    )</span>
+<span id="annotated-cell-20-178"><a href="#annotated-cell-20-178" aria-label="178"></a>  ))</span>
+<span id="annotated-cell-20-179"><a href="#annotated-cell-20-179" aria-label="179"></a></span>
+<span id="annotated-cell-20-180"><a href="#annotated-cell-20-180" aria-label="180"></a>  chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
+<span id="annotated-cell-20-181"><a href="#annotated-cell-20-181" aria-label="181"></a>    cambiar_variable,</span>
+<span id="annotated-cell-20-182"><a href="#annotated-cell-20-182" aria-label="182"></a>    <span class="st">"Cambia la variable utilizada para colorear los países del mapa."</span>,</span>
+<span id="annotated-cell-20-183"><a href="#annotated-cell-20-183" aria-label="183"></a>    <span class="at">arguments =</span> <span class="fu">list</span>(</span>
+<span id="annotated-cell-20-184"><a href="#annotated-cell-20-184" aria-label="184"></a>      <span class="at">variable =</span> <span class="fu">type_enum</span>(</span>
+<span id="annotated-cell-20-185"><a href="#annotated-cell-20-185" aria-label="185"></a>        <span class="fu">c</span>(<span class="st">"esperanza_de_vida"</span>, <span class="st">"poblacion"</span>, <span class="st">"pib_per_capita"</span>),</span>
+<span id="annotated-cell-20-186"><a href="#annotated-cell-20-186" aria-label="186"></a>        <span class="st">"Variable con la que se colorea el mapa."</span></span>
+<span id="annotated-cell-20-187"><a href="#annotated-cell-20-187" aria-label="187"></a>      )</span>
+<span id="annotated-cell-20-188"><a href="#annotated-cell-20-188" aria-label="188"></a>    )</span>
+<span id="annotated-cell-20-189"><a href="#annotated-cell-20-189" aria-label="189"></a>  ))</span>
+<span id="annotated-cell-20-190"><a href="#annotated-cell-20-190" aria-label="190"></a></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-20" data-target-annotation="2">2</button><span id="annotated-cell-20-191" class="code-annotation-target"><a href="#annotated-cell-20-191" aria-label="191"></a>  chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
+<span id="annotated-cell-20-192"><a href="#annotated-cell-20-192" aria-label="192"></a>    ir_a_pais,</span>
+<span id="annotated-cell-20-193"><a href="#annotated-cell-20-193" aria-label="193"></a>    <span class="st">"Vuela hacia un país en el mapa."</span>,</span>
+<span id="annotated-cell-20-194"><a href="#annotated-cell-20-194" aria-label="194"></a>    <span class="at">arguments =</span> <span class="fu">list</span>(</span>
+<span id="annotated-cell-20-195"><a href="#annotated-cell-20-195" aria-label="195"></a>      <span class="at">pais =</span> <span class="fu">type_string</span>(<span class="st">"Nombre del país en español."</span>),</span>
+<span id="annotated-cell-20-196"><a href="#annotated-cell-20-196" aria-label="196"></a>      <span class="at">zoom =</span> <span class="fu">type_number</span>(<span class="st">"Nivel de zoom, normalmente entre 2 y 6."</span>, <span class="at">required =</span> <span class="cn">FALSE</span>)</span>
+<span id="annotated-cell-20-197"><a href="#annotated-cell-20-197" aria-label="197"></a>    )</span>
+<span id="annotated-cell-20-198"><a href="#annotated-cell-20-198" aria-label="198"></a>  ))</span>
+<span id="annotated-cell-20-199"><a href="#annotated-cell-20-199" aria-label="199"></a></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-20" data-target-annotation="3">3</button><span id="annotated-cell-20-200" class="code-annotation-target"><a href="#annotated-cell-20-200" aria-label="200"></a>  <span class="fu">observeEvent</span>(input<span class="sc">$</span>chat_user_input, {</span>
+<span id="annotated-cell-20-201"><a href="#annotated-cell-20-201" aria-label="201"></a>    stream <span class="ot">&lt;-</span> chat<span class="sc">$</span><span class="fu">stream_async</span>(input<span class="sc">$</span>chat_user_input, <span class="at">tool_mode =</span> <span class="st">"sequential"</span>, <span class="at">stream =</span> <span class="st">"content"</span>)</span>
+<span id="annotated-cell-20-202"><a href="#annotated-cell-20-202" aria-label="202"></a>    shinychat<span class="sc">::</span><span class="fu">chat_append</span>(<span class="st">"chat"</span>, stream)</span>
+<span id="annotated-cell-20-203"><a href="#annotated-cell-20-203" aria-label="203"></a>  })</span>
+<span id="annotated-cell-20-204"><a href="#annotated-cell-20-204" aria-label="204"></a>}</span>
+<span id="annotated-cell-20-205"><a href="#annotated-cell-20-205" aria-label="205"></a></span>
+<span id="annotated-cell-20-206"><a href="#annotated-cell-20-206" aria-label="206"></a><span class="fu">shinyApp</span>(ui, server)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <dl class="code-annotation-container-hidden code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-20" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-20" data-code-lines="148" data-code-annotation="1"><strong>1.</strong> La tool actualiza la cámara del mapa existente mediante un proxy.</span>
+<span data-code-cell="annotated-cell-20" data-code-lines="147" data-code-annotation="1"><strong>1.</strong> La tool actualiza la cámara del mapa existente mediante un proxy.</span>
 </dd>
 <dt data-target-cell="annotated-cell-20" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-cell="annotated-cell-20" data-code-lines="192" data-code-annotation="2"><strong>2.</strong> Registra ir_a_pais y describe sus argumentos.</span>
+<span data-code-cell="annotated-cell-20" data-code-lines="191" data-code-annotation="2"><strong>2.</strong> Registra ir_a_pais y describe sus argumentos.</span>
 </dd>
 <dt data-target-cell="annotated-cell-20" data-target-annotation="3">3</dt>
 <dd>
-<span data-code-cell="annotated-cell-20" data-code-lines="201" data-code-annotation="3"><strong>3.</strong> Mantiene el flujo del chat con las tools.</span>
+<span data-code-cell="annotated-cell-20" data-code-lines="200" data-code-annotation="3"><strong>3.</strong> Mantiene el flujo del chat con las tools.</span>
 </dd>
 </dl>
 </section>
