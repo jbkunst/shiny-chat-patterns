@@ -41,7 +41,7 @@ jobs:
 
       - name: Install render dependencies
         run: |
-          Rscript -e 'install.packages(c("rmarkdown", "shinylive"))'
+          Rscript -e 'install.packages(c("rmarkdown", "shinylive"), repos = Sys.getenv("RSPM", "https://cloud.r-project.org"))'
           Rscript -e 'stopifnot(requireNamespace("rmarkdown"), requireNamespace("shinylive"))'
 
       - name: Render presentation
