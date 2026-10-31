@@ -212,3 +212,6 @@ app que corre en el navegador queda expuesto.
 El workflow `.github/workflows/slides-pages.yml` renderiza `slides/index.qmd` y publica esta carpeta con
 GitHub Pages. Se activa al cambiar las slides, las apps o los scripts de `R/` en `main`, y también
 permite ejecución manual. En la configuración del repositorio, usa **GitHub Actions** como fuente de Pages.
+
+El job de publicación usa `R_PROFILE_USER=/dev/null` e instala `rmarkdown` y `shinylive` en la librería
+del runner. Así el perfil `renv` de las apps no cambia la librería que usan Quarto y el filtro Shinylive.
