@@ -774,6 +774,25 @@ shiny::runApp("app-09")
 El chat muestra las tools remotas del MCP y la llamada local a `graficar_serie()`.
 Comprueba el indicador, las unidades y qué años son proyecciones.
 
+## Extensión opcional · `{commons}` {.pattern-overview}
+
+Una **app independiente**, sin agregar pasos al recorrido: `commons` distingue entre
+**usar un cálculo que ya validamos** y **generar una consulta nueva**.
+
+| Pregunta | Camino del agente | Procedencia |
+|---|---|---|
+| «¿Cuántas unidades se vendieron en Norte?» | Ejecuta la medida `total_unidades_region`. | **Trusted** |
+| «¿Qué región creció más de enero a abril?» | Escribe SQL/R sobre los datos. | **Cited** o **Untrusted** |
+
+**Cambios mínimos:** `data_source()` expone los datos, `measure()` define el cálculo aprobado,
+`semantic_layer()` lo registra, y `commons_app()` muestra el agente en Shiny.
+
+```r
+shiny::runApp("app-commons")
+```
+
+El sello de confianza describe **cómo se calculó** la respuesta, no prueba que el cálculo original sea correcto.
+
 ## Cierre {.section-slide}
 
 La interfaz conserva su función y suma una nueva forma de expresar intención.
