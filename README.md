@@ -8,7 +8,7 @@ Ejemplos progresivos de patrones para construir aplicaciones Shiny con chat y to
 práctico que recorre, paso a paso, distintas formas de incorporar modelos de lenguaje en una
 aplicación Shiny usando `ellmer`. Partiremos desde una aplicación simple y agregaremos
 conversación, acceso controlado a datos, consultas SQL, actualización del estado y acciones sobre la
-interfaz, para finalizar con un dashboard conversacional que controla gráficos, tablas y mapas.
+interfaz, hasta conectar herramientas remotas mediante MCP y graficar sus datos en Shiny.
 
 Cada patrón se presenta como una aplicación independiente que cambia una sola idea respecto de la
 anterior. Esto permite identificar con claridad qué código habilita cada patrón y cuándo resulta útil.
@@ -51,14 +51,19 @@ Al finalizar el taller, quienes participen podrán:
 **Capítulo 3 · Actuar sobre la interfaz · App 06–08**
 
 - Acciones de interfaz: tablas, gráficos y modales.
-- Comparación entre filtros tradicionales y consultas por chat.
+- Comparación y uso complementario de filtros tradicionales y consultas por chat.
 - Control de una visualización geográfica y su cámara.
 
-**Extensión · Conectar herramientas externas con MCP · App 09**
+**Capítulo 4 · Conectar herramientas externas con MCP · App 09**
 
 - Comparación real y cacheada con el mismo modelo, sin y con MCP.
 - Consulta de datos del FMI mediante un servidor MCP comunitario.
 - Una tool local de R grafica las observaciones recuperadas.
+
+**Casos de aplicación · Colombia territorial y series de Banrep**
+
+- Aplicaciones más completas que combinan los patrones del recorrido principal.
+- Separación de responsabilidades entre las tools de cada caso.
 
 La presentación vive en `slides/` y se publica en
 <https://jkunst.com/shiny-chat-patterns/>. El QMD, el tema y los scripts se mantienen juntos para que
@@ -66,10 +71,13 @@ la carpeta pueda publicarse como una unidad. El render también lee los scripts 
 
 ## Sobre el repositorio
 
-`app-00` establece el punto de partida y `app-01` presenta el dashboard común de países. Desde
-`app-02` hasta `app-06`, cada aplicación incorpora **una sola idea nueva** y conserva tanto como sea
-posible del paso anterior. `app-07` es una pausa comparativa; `app-08` retoma la línea principal desde
-`app-06` y agrega el mapa. Así, cada cambio se reconoce en el código y puede mostrarse en un taller.
+El recorrido principal comprende `app-00`–`app-09`: una aplicación que crece paso a paso,
+incorporando conversación, datos, acciones de interfaz y herramientas remotas. Cada carpeta conserva
+una versión independiente para reconocer el cambio y ejecutarlo durante el taller.
+`app-00` es una introducción básica a Shiny, con widgets y outputs. Desde `app-01` crece el
+dashboard común de países.
+`app-07` muestra cómo los controles manuales y el chat pueden compararse y complementarse;
+`app-08` incorpora el mapa y `app-09` conecta datos remotos mediante MCP con un gráfico local.
 
 Las apps del recorrido principal usan `page_sidebar()` para mantener una estructura consistente
 y concentrar cada ejemplo en el patrón que introduce. Desde `app-00` hasta
@@ -98,7 +106,7 @@ source("R/02_ellmer_tool.R", encoding = "UTF-8")
 ```
 
 ```console
-uv run python python/02_chatlas_tool.py
+uv run --env-file .Renviron python python/02_chatlas_tool.py
 ```
 
 Las consolas auxiliares de `app-02`, `app-03` y `app-04` tienen `interactive-console.R` y
@@ -111,48 +119,38 @@ o exploraciones en R; todavía no tienen una pareja Python. No forman parte de e
 
 ## Recorrido principal
 
-| App | Rol | Qué incorpora |
-|---|---|---|
-| `app-00` | Punto de partida | Presenta widgets y outputs, todavía sin chat |
-| `app-01` | Nueva base | Establece el dashboard reactivo de países y el filtro manual |
-| `app-02` | Incremental | Agrega un chat que todavía no conoce los datos |
-| `app-03` | Incremental | Entrega al modelo un resumen de los países visibles |
-| `app-04` | Incremental | Incorpora DuckDB mediante una tool SQL de solo lectura |
-| `app-05` | Incremental | Permite que la consulta del chat actualice el dashboard |
-| `app-06` | Incremental | Agrega tools que abren modales y retornan datos o imágenes |
-| `app-07` | Comparativa | Contrasta filtros manuales con consultas solicitadas por chat |
-| `app-08` | Retoma `app-06` | Agrega un globo que el chat puede filtrar y controlar |
+| App | Qué presenta |
+|---|---|
+| `app-00` | Introducción básica a Shiny: widgets y outputs, sin chat |
+| `app-01` | Dashboard reactivo de países y filtro manual |
+| `app-02` | Chat que todavía no conoce los datos |
+| `app-03` | Tool que entrega al modelo un resumen de los países visibles |
+| `app-04` | DuckDB mediante una tool SQL de solo lectura |
+| `app-05` | Consultas del chat que actualizan el dashboard |
+| `app-06` | Tools que abren modales y retornan datos o imágenes |
+| `app-07` | Uso complementario de filtros manuales y consultas por chat |
+| `app-08` | Globo que el chat puede filtrar y controlar |
+| `app-09` | Tools remotas del FMI mediante MCP y gráfico local |
 
-`app-07` sí agrega la comparación sobre `app-06`, pero funciona como un desvío pedagógico: muestra
-dos formas de controlar el mismo dashboard y no establece la base técnica de `app-08`.
-
-## Extensión MCP en R
-
-`app-09` incorpora las tools remotas de un servidor comunitario de datos del FMI mediante `mcptools`.
-Reutiliza el patrón de actualización reactiva para graficar las observaciones con una tool local.
-Por ahora solo tiene `app.R`; la versión Python queda pendiente de revisar este ejemplo.
-Su configuración remota está en `app-09/mcp.json`. Requiere internet y `OPENAI_API_KEY` para el modelo;
-el endpoint MCP usado en este ejemplo no requiere una clave propia.
-
-```r
-shiny::runApp("app-09")
-```
-
-La tabla comparativa de las slides usa `app-09/data/comparacion.json`, con respuestas reales, fecha,
-modelo, prompt y resultados de las tools. No hace llamadas al modelo durante el render.
-Consulta [las instrucciones de App 09](app-09/README.md) para verificar o regenerar la caché.
+`app-07` forma parte de la secuencia: permite comparar ambas formas de interacción y usarlas como
+complemento sobre el mismo dashboard. En el código, `app-08` retoma la base de `app-06` para concentrar
+el cambio en el globo y su cámara.
 
 ## Casos de aplicación
 
 Estas apps trasladan los patrones del recorrido principal a fuentes colombianas. No continúan la
-secuencia incremental `app-00`–`app-08`; muestran cómo organizar tools por responsabilidad.
+secuencia incremental `app-00`–`app-09`; muestran cómo organizar tools por responsabilidad.
 Son casos particulares para motivar con aplicaciones concretas. Sus estilos y layouts son excepciones
 deliberadas a la UI mínima de las apps de enseñanza; no tienen que conservar el mismo dashboard.
 
 | App | Fuente | Patrón |
 |---|---|---|
-| `app-91-colombia-territorial` | ECV 2025 · MGN 2018 | Territorios, indicadores, mapa e inspección |
-| `app-92-banrep-sdmx` | Banco de la República | Series SDMX, gráfico e inspección |
+| `app-91-colombia-territorial` | ECV 2025 · MGN 2018 | Mapa de indicadores con chat flotante |
+| `app-92-banrep-sdmx` | Banco de la República | Chat, gráfico de una serie y últimas observaciones |
+
+Después de MCP, una tabla compara cómo estos casos separan responsabilidades entre sus tools:
+resolver el catálogo, consultar datos, mostrar el resultado e inspeccionar la vista para responder.
+La 91 consulta datos locales; la 92 descarga observaciones desde el servicio de Banrep.
 
 `app-91-colombia-territorial` incluye datos departamentales locales para funcionar durante el
 taller. Su chat flotante es una excepción al sidebar del recorrido principal. Para reconstruir los
@@ -200,7 +198,7 @@ la actualización también devuelve un resumen y una imagen al modelo.
 
 ## Alcance
 
-El recorrido principal comprende `app-00`–`app-08`, seguido de la extensión MCP en R de `app-09`.
+El recorrido principal comprende `app-00`–`app-09`. App 09 está disponible por ahora solo en R.
 Las aplicaciones experimentales quedan fuera de este alcance
 mientras no sean formalizadas e incorporadas al material del curso.
 
@@ -245,7 +243,14 @@ solicita de manera protegida y queda disponible inmediatamente en la sesión act
 usethis::use_env_var("OPENAI_API_KEY", scope = "project")
 ```
 
-Para ejecutar las apps Python desde PowerShell:
+Python no carga `.Renviron` automáticamente. Con `uv`, puedes reutilizar el archivo de R
+desde la raíz del repositorio:
+
+```console
+uv run --env-file .Renviron python python/02_chatlas_tool.py
+```
+
+También puedes definir la variable en la terminal antes de ejecutar Python. En PowerShell:
 
 ```powershell
 $env:OPENAI_API_KEY = "tu_clave_de_openai"

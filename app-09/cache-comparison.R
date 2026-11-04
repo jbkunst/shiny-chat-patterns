@@ -4,10 +4,7 @@ library(jsonlite)
 
 # prompt ------------------------------------------------------------------
 prompt <- paste(readLines("comparison-prompt.md", warn = FALSE), collapse = "\n")
-preguntas <- c(
-  "Según el FMI, ¿cuánta población tenía Chile en 2025?",
-  "Según el FMI, ¿cuál fue la tasa de desempleo de España en 2025?"
-)
+preguntas <- "¿Cuál fue la tasa de desempleo de España en 2025?"
 
 # tools -------------------------------------------------------------------
 tools <- mcptools::mcp_tools("mcp.json")

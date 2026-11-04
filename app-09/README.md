@@ -1,6 +1,6 @@
 # App 09 · MCP + datos del FMI
 
-Extensión del recorrido principal, por ahora solo en R. La idea nueva es registrar tools remotas con
+Parte del recorrido principal, por ahora solo en R. La idea nueva es registrar tools remotas con
 MCP. La tool local `graficar_serie()` reutiliza el patrón de actualización reactiva para mostrar los datos.
 
 El [servidor MCP comunitario de cyanheads](https://github.com/cyanheads/imf-mcp-server) consulta datos
@@ -48,17 +48,20 @@ la demostración inicial. El gráfico se genera en R, no en el servidor MCP.
 
 ## Comparación cacheada para las slides
 
-`data/comparacion.json` guarda dos preguntas con el mismo modelo (`gpt-5-nano`) y el mismo prompt,
+`data/comparacion.json` guarda una pregunta con el mismo modelo (`gpt-5-nano`) y el mismo prompt,
 en conversaciones independientes, sin y con MCP. Conserva respuestas y llamadas completas a tools:
 argumentos, resultados y errores. `data/comparacion.rds` guarda los mismos datos en formato R.
 No contiene claves ni razonamiento interno del modelo. Las slides leen el JSON sin consultar la API.
 
-Las preguntas son población de Chile y desempleo de España en 2025. El prompt solo pide una respuesta
-breve en español con año, unidad y fuente; no menciona MCP, herramientas ni el taller. La respuesta
-sin MCP puede acertar de memoria: la comparación permite revisar precisión y procedencia de los datos.
+La pregunta es «¿Cuál fue la tasa de desempleo de España en 2025?», sin exigir una fuente en la pregunta.
+El prompt solo pide una respuesta breve en español con año, unidad y fuente;
+no menciona MCP, herramientas ni el taller. La respuesta
+sin MCP puede acertar de memoria o dar una aproximación: la comparación permite revisar precisión
+y procedencia de los datos. Las preguntas y el prompt no piden al modelo que se equivoque.
 
-Las cifras de las respuestas con MCP se contrastan con los resultados guardados de las herramientas,
-respetando la precisión mostrada y la escala (personas o millones de personas).
+La respuesta con MCP se contrasta con las observaciones guardadas de España, desempleo anual y año 2025,
+respetando la precisión mostrada. El servidor ofrece esta serie en Labor Statistics y World Economic Outlook.
+La ejecución guardada usa Labor Statistics (`ESP.U.PT.A`).
 Las respuestas sin MCP se conservan tal como las dio el modelo; no se presentan como datos verificados.
 Para repetir esa comprobación sin internet ni llamadas al modelo, ejecuta dentro de `app-09`:
 

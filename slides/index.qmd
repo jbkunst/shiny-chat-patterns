@@ -84,16 +84,14 @@ code_block <- function(path, descriptions = NULL, single_copy = TRUE) {
 1. **Preparar la app y conversar**
 
    ::: {.nonincremental}
-   - Inputs y outputs.
-   - Dashboard reactivo.
+   - Inputs, outputs y dashboard reactivo.
    - Chat sin acceso a los datos.
    :::
 
 2. **Consultar y actualizar datos**
 
    ::: {.nonincremental}
-   - Primera tool de consulta.
-   - Consultas SQL.
+   - Tools de consulta y SQL.
    - Actualización del dashboard.
    :::
 
@@ -101,14 +99,19 @@ code_block <- function(path, descriptions = NULL, single_copy = TRUE) {
 
    ::: {.nonincremental}
    - Tablas y gráficos en modales.
-   - Controles tradicionales y chat.
-   - Cámara del mapa.
+   - Controles manuales, chat y cámara del mapa.
    :::
 
 4. **Conectar herramientas externas**
 
    ::: {.nonincremental}
    - MCP con datos del FMI y un gráfico local.
+   :::
+
+5. **Organizar las tools en aplicaciones más completas**
+
+   ::: {.nonincremental}
+   - Casos territorial y económico de Colombia.
    :::
 :::
 
@@ -711,7 +714,7 @@ cat("\n", knitr::kable(do.call(rbind, filas), format = "pipe", row.names = FALSE
 cat("\n\n", "Modelo: ", comparacion$modelo, " · Caché: ", comparacion$generado_utc, ".", sep = "")
 ```
 
-Compara cifra, año y fuente. Las llamadas se conservan en `app-09/data/comparacion.json`.
+Compara cifra, precisión, año y fuente. Las llamadas se conservan en `app-09/data/comparacion.json`.
 
 ## App 09 · Datos remotos, gráfico local {.pattern-overview}
 
@@ -774,24 +777,53 @@ shiny::runApp("app-09")
 El chat muestra las tools remotas del MCP y la llamada local a `graficar_serie()`.
 Comprueba el indicador, las unidades y qué años son proyecciones.
 
-## Extensión opcional · `{commons}` {.pattern-overview}
+## 05 · Aplicaciones más completas {.section-slide}
 
-Una **app independiente**, sin agregar pasos al recorrido: `commons` distingue entre
-**usar un cálculo que ya validamos** y **generar una consulta nueva**.
+Casos 91 y 92 · Combinar los patrones del taller y organizar las responsabilidades de las tools.
 
-| Pregunta | Camino del agente | Procedencia |
+## Separar responsabilidades {.case-structure}
+
+Estos dos ejemplos comparten una organización de tools.
+
+| Responsabilidad | 91 · Colombia territorial | 92 · Series de Banrep |
 |---|---|---|
-| «¿Cuántas unidades se vendieron en Norte?» | Ejecuta la medida `total_unidades_region`. | **Trusted** |
-| «¿Qué región creció más de enero a abril?» | Escribe SQL/R sobre los datos. | **Cited** o **Untrusted** |
+| **Resolver** | `resolver_catalogo()` | `resolver_serie()` |
+| **Obtener datos** | `consultar_indicador()` | `consultar_sdmx()` |
+| **Mostrar** | `visualizar_indicador()` | `visualizar_serie()` |
+| **Inspeccionar** | `inspeccionar_vista()` | `inspeccionar_vista()` |
 
-**Cambios mínimos:** `data_source()` expone los datos, `measure()` define el cálculo aprobado,
-`semantic_layer()` lo registra, y `commons_app()` muestra el agente en Shiny.
+La 91 consulta datos locales; la 92 usa un servicio remoto.
+
+## App 91 · Colombia territorial {.app-demo}
 
 ```r
-shiny::runApp("app-commons")
+shiny::runApp("app-91-colombia-territorial")
 ```
 
-El sello de confianza describe **cómo se calculó** la respuesta, no prueba que el cálculo original sea correcto.
+### Pide
+
+«Colorea los departamentos según el porcentaje de hogares con internet».
+
+### Observa
+
+El mapa y la leyenda cambian; la respuesta usa los datos de la vista.
+
+21 indicadores en 32 departamentos y Bogotá · ECV 2025 y geometría del MGN 2018.
+
+## App 92 · Series del Banco de la República {.app-demo}
+
+```r
+shiny::runApp("app-92-banrep-sdmx")
+```
+
+### Pide
+
+«Grafica la TRM de 2025 y dime cómo terminó el año».
+
+### Observa
+
+El gráfico y la tabla muestran la serie descargada, con su unidad y período.
+El modelo inspecciona la vista para explicar el resultado.
 
 ## Cierre {.section-slide}
 

@@ -345,6 +345,33 @@ html.reveal-print .reveal .slides {
   width: 27%;
 }
 
+.reveal .case-structure table {
+  width: 100%;
+  table-layout: fixed;
+  margin: 32px 0;
+  font-size: 25px;
+  line-height: 1.35;
+}
+
+.reveal .case-structure th,
+.reveal .case-structure td {
+  padding: 18px 16px;
+  vertical-align: top;
+}
+
+.reveal .case-structure th:first-child {
+  width: 22%;
+}
+
+.reveal .case-structure code {
+  font-size: 23px;
+}
+
+.reveal .slides > section.case-structure:not(.section-slide) > p {
+  margin: 0 0 24px;
+  font-size: 27px;
+}
+
 .reveal .slides > section.comparison-slide > p {
   margin: 0 0 28px;
 }

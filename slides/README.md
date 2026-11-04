@@ -29,13 +29,19 @@ al HTML de esa app embebida, sin cambiar la escala de las slides ni la app local
 En las demos, los subtítulos tienen 48 px de margen superior y 16 px inferior. Su selector debe superar
 la especificidad del estilo general de `h3`, para conservar la separación entre acción y observación.
 
-Después de App 08 hay un cuarto capítulo de extensión: MCP y App 09, por ahora solo en R.
+Después de App 08, el cuarto capítulo continúa el recorrido principal con MCP y App 09, por ahora solo en R.
 Incluye una definición breve, una comparación real cacheada sin y con MCP, el código de la app y
 «Ejecutar y explorar». El servidor remoto es comunitario; los datos estadísticos provienen del FMI.
-La tabla se construye desde `app-09/data/comparacion.json`, con preguntas de población y desempleo.
+La tabla se construye desde `app-09/data/comparacion.json`, con una pregunta neutral sobre desempleo de España.
 El prompt común no menciona MCP, herramientas ni el taller. Las cifras de las respuestas con MCP se
 contrastan con las llamadas guardadas; `app-09/verify-comparison.R` permite repetir esa comprobación
 sin usar el modelo ni conectarse al servidor. La caché no representa una consulta en tiempo real.
+
+Después de MCP se presentan los casos 91 y 92 como aplicaciones más completas. Una separadora azul
+introduce una tabla con responsabilidades por filas y nombres de tools por aplicación, seguida de las demos.
+Es una decisión de organización de estos ejemplos: resolver, consultar, mostrar e inspeccionar.
+La 91 usa datos locales y la 92 un servicio remoto. Cada demo incluye cómo ejecutarla, qué pedir y qué observar.
+Los casos conservan su interfaz y no agregan pasos intermedios al recorrido incremental App 00–09.
 
 - La portada, los capítulos y el cierre comparten el fondo azul oscuro.
 - Los capítulos se declaran explícitamente con `.section-slide`.
@@ -85,8 +91,8 @@ El botón de copiar permanece visible en estas slides, incluso sin pasar el curs
 Las slides principales se concentran en consultar, actualizar y mostrar resultados. App 04 permite
 listar todos los países y los modales no imponen un máximo de 100 filas. Las tools de gráficos describen
 las columnas permitidas en sus esquemas. El ejemplo de dos tools del clima conserva sus validaciones.
-Desde la raíz del repositorio, ejecútalo con `uv run python python/02_chatlas_tool.py`.
-Configura `OPENAI_API_KEY` en el entorno de Python; Python no carga `.Renviron` automáticamente.
+Desde la raíz, ejecútalo con `uv run --env-file .Renviron python python/02_chatlas_tool.py`.
+`--env-file` carga la clave desde el mismo archivo usado por R.
 
 ## Render local
 

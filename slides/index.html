@@ -37,7 +37,7 @@
     ul.task-list{list-style: none;}
     ul.task-list li input[type="checkbox"] {
       width: 0.8em;
-      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
     /* CSS for syntax highlighting */
@@ -139,12 +139,12 @@
     }
     .reveal .footnotes ol {
       counter-reset: ol;
-      list-style-type: none;
+      list-style-type: none; 
       margin-left: 0;
     }
     .reveal .footnotes ol li:before {
       counter-increment: ol;
-      content: counter(ol) ". ";
+      content: counter(ol) ". "; 
     }
     .reveal .footnotes ol li > p:first-child {
       display: inline-block;
@@ -186,19 +186,19 @@
     .reveal .slide > img.r-stretch.quarto-figure-center {
       display: block;
       margin-left: auto;
-      margin-right: auto;
+      margin-right: auto; 
     }
     .reveal .slide > img.stretch.quarto-figure-left,
     .reveal .slide > img.r-stretch.quarto-figure-left  {
       display: block;
       margin-left: 0;
-      margin-right: auto;
+      margin-right: auto; 
     }
     .reveal .slide > img.stretch.quarto-figure-right,
     .reveal .slide > img.r-stretch.quarto-figure-right  {
       display: block;
       margin-left: auto;
-      margin-right: 0;
+      margin-right: 0; 
     }
   </style>
 </head>
@@ -234,25 +234,26 @@ LatinR 2026
 <ol type="1">
 <li class="fragment"><p><strong>Preparar la app y conversar</strong></p>
 <ul>
-<li>Inputs y outputs.</li>
-<li>Dashboard reactivo.</li>
+<li>Inputs, outputs y dashboard reactivo.</li>
 <li>Chat sin acceso a los datos.</li>
 </ul></li>
 <li class="fragment"><p><strong>Consultar y actualizar datos</strong></p>
 <ul>
-<li>Primera tool de consulta.</li>
-<li>Consultas SQL.</li>
+<li>Tools de consulta y SQL.</li>
 <li>Actualización del dashboard.</li>
 </ul></li>
 <li class="fragment"><p><strong>Actuar sobre la interfaz</strong></p>
 <ul>
 <li>Tablas y gráficos en modales.</li>
-<li>Controles tradicionales y chat.</li>
-<li>Cámara del mapa.</li>
+<li>Controles manuales, chat y cámara del mapa.</li>
 </ul></li>
 <li class="fragment"><p><strong>Conectar herramientas externas</strong></p>
 <ul>
 <li>MCP con datos del FMI y un gráfico local.</li>
+</ul></li>
+<li class="fragment"><p><strong>Organizar las tools en aplicaciones más completas</strong></p>
+<ul>
+<li>Casos territorial y económico de Colombia.</li>
 </ul></li>
 </ol>
 </section>
@@ -1763,8 +1764,8 @@ LatinR 2026
 <table class="caption-top">
 <colgroup>
 <col style="width: 19%">
-<col style="width: 50%">
-<col style="width: 29%">
+<col style="width: 37%">
+<col style="width: 42%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -1775,19 +1776,14 @@ LatinR 2026
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Según el FMI, ¿cuánta población tenía Chile en 2025?</td>
-<td style="text-align: left;">2025; unidad: personas; fuente: FMI (WEO). No dispongo de la cifra exacta aquí. ¿Quieres que la busque y te la comparta?</td>
-<td style="text-align: left;">2025: 20,037 millones de personas. Unidad: personas. Fuente: FMI, World Economic Outlook (WEO).</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Según el FMI, ¿cuál fue la tasa de desempleo de España en 2025?</td>
-<td style="text-align: left;">2025, tasa de desempleo de España, unidad: %, fuente: FMI — World Economic Outlook. Nota: no puedo confirmar el valor exacto sin consultar datos en tiempo real.</td>
-<td style="text-align: left;">España (2025): 10.51% (unidad: porcentaje). Fuente: FMI, World Economic Outlook (WEO).</td>
+<td style="text-align: left;">¿Cuál fue la tasa de desempleo de España en 2025?</td>
+<td style="text-align: left;">Año: 2025. Unidad: porcentaje. Fuente: INE (EPA). Nota: aún no hay datos oficiales para 2025.</td>
+<td style="text-align: left;">2025: 10.525% (unidad: porcentaje de la fuerza laboral). Fuente: IMF, Labor Statistics (LS), España (ESP).</td>
 </tr>
 </tbody>
 </table>
-<p>Modelo: gpt-5-nano · Caché: 2026-10-31 05:18:16 UTC.</p>
-<p>Compara cifra, año y fuente. Las llamadas se conservan en <code>app-09/data/comparacion.json</code>.</p>
+<p>Modelo: gpt-5-nano · Caché: 2026-11-01 00:53:50 UTC.</p>
+<p>Compara cifra, precisión, año y fuente. Las llamadas se conservan en <code>app-09/data/comparacion.json</code>.</p>
 </section>
 <section id="app-09-datos-remotos-gráfico-local" class="slide level2 pattern-overview">
 <h2>App 09 · Datos remotos, gráfico local</h2>
@@ -1907,6 +1903,63 @@ LatinR 2026
 <h3 id="observa-8">Observa</h3>
 <p>El chat muestra las tools remotas del MCP y la llamada local a <code>graficar_serie()</code>. Comprueba el indicador, las unidades y qué años son proyecciones.</p>
 </section>
+<section id="aplicaciones-más-completas" class="slide level2 section-slide">
+<h2>05 · Aplicaciones más completas</h2>
+<p>Casos 91 y 92 · Combinar los patrones del taller y organizar las responsabilidades de las tools.</p>
+</section>
+<section id="separar-responsabilidades" class="slide level2 case-structure">
+<h2>Separar responsabilidades</h2>
+<p>Estos dos ejemplos comparten una organización de tools.</p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Responsabilidad</th>
+<th>91 · Colombia territorial</th>
+<th>92 · Series de Banrep</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Resolver</strong></td>
+<td><code>resolver_catalogo()</code></td>
+<td><code>resolver_serie()</code></td>
+</tr>
+<tr class="even">
+<td><strong>Obtener datos</strong></td>
+<td><code>consultar_indicador()</code></td>
+<td><code>consultar_sdmx()</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Mostrar</strong></td>
+<td><code>visualizar_indicador()</code></td>
+<td><code>visualizar_serie()</code></td>
+</tr>
+<tr class="even">
+<td><strong>Inspeccionar</strong></td>
+<td><code>inspeccionar_vista()</code></td>
+<td><code>inspeccionar_vista()</code></td>
+</tr>
+</tbody>
+</table>
+<p>La 91 consulta datos locales; la 92 usa un servicio remoto.</p>
+</section>
+<section id="app-91-colombia-territorial" class="slide level2 app-demo">
+<h2>App 91 · Colombia territorial</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="" aria-label="1"></a>shiny<span class="sc">::</span><span class="fu">runApp</span>(<span class="st">"app-91-colombia-territorial"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<h3 id="pide-4">Pide</h3>
+<p>«Colorea los departamentos según el porcentaje de hogares con internet».</p>
+<h3 id="observa-9">Observa</h3>
+<p>El mapa y la leyenda cambian; la respuesta usa los datos de la vista.</p>
+<p>21 indicadores en 32 departamentos y Bogotá · ECV 2025 y geometría del MGN 2018.</p>
+</section>
+<section id="app-92-series-del-banco-de-la-república" class="slide level2 app-demo">
+<h2>App 92 · Series del Banco de la República</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="" aria-label="1"></a>shiny<span class="sc">::</span><span class="fu">runApp</span>(<span class="st">"app-92-banrep-sdmx"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<h3 id="pide-5">Pide</h3>
+<p>«Grafica la TRM de 2025 y dime cómo terminó el año».</p>
+<h3 id="observa-10">Observa</h3>
+<p>El gráfico y la tabla muestran la serie descargada, con su unidad y período. El modelo inspecciona la vista para explicar el resultado.</p>
+</section>
 <section id="cierre" class="slide level2 section-slide">
 <h2>Cierre</h2>
 <p>La interfaz conserva su función y suma una nueva forma de expresar intención.</p>
@@ -1928,7 +1981,7 @@ LatinR 2026
   <script src="index_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
   <script src="index_files/libs/revealjs/plugin/reveal-js-codefrag/codefrag.js"></script>
   <script src="index_files/libs/revealjs/plugin/quarto-support/support.js"></script>
-
+  
 
   <script src="index_files/libs/revealjs/plugin/notes/notes.js"></script>
   <script src="index_files/libs/revealjs/plugin/search/search.js"></script>
@@ -1950,7 +2003,7 @@ LatinR 2026
 'jumpToSlide': true,
 'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
 'smaller': false,
-
+ 
         // Display controls in the bottom right corner
         controls: false,
 
@@ -2176,7 +2229,7 @@ LatinR 2026
 
     </div>
 
-
+    
 
     <script src="assets/cover.js"></script>
 
@@ -2184,7 +2237,7 @@ LatinR 2026
 
     <script src="assets/code-tooltips.js"></script>
 
-
+    
 
     <script>
 
@@ -2208,13 +2261,13 @@ LatinR 2026
 
         }
 
-
+    
 
         function fireSlideChanged(previousSlide, currentSlide) {
 
           fireSlideEnter();
 
-
+    
 
           // dispatch for shiny
 
@@ -2236,7 +2289,7 @@ LatinR 2026
 
         }
 
-
+    
 
         // hookup for slidy
 
@@ -2252,13 +2305,13 @@ LatinR 2026
 
         }
 
-
+    
 
       })();
 
     </script>
 
-
+    
 
     <script id="quarto-html-after-body" type="application/javascript">
       window.document.addEventListener("DOMContentLoaded", function (event) {
@@ -2268,7 +2321,7 @@ LatinR 2026
         });
         const isCodeAnnotation = (el) => {
           for (const clz of el.classList) {
-            if (clz.startsWith('code-annotation-')) {
+            if (clz.startsWith('code-annotation-')) {                     
               return true;
             }
           }
@@ -2288,11 +2341,11 @@ LatinR 2026
             button.setAttribute("data-bs-toggle", "tooltip");
             button.setAttribute("data-bs-placement", "left");
             button.setAttribute("data-bs-title", "Copiado");
-            tooltip = new bootstrap.Tooltip(button,
-              { trigger: "manual",
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
                 customClass: "code-copy-button-tooltip",
                 offset: [0, -8]});
-            tooltip.show();
+            tooltip.show();    
           }
           setTimeout(function() {
             if (tooltip) {
@@ -2371,7 +2424,7 @@ LatinR 2026
           }
             config['offset'] = [0,0];
             config['maxWidth'] = 700;
-          window.tippy(el, config);
+          window.tippy(el, config); 
         }
         const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
         for (var i=0; i<noterefs.length; i++) {
@@ -2420,7 +2473,7 @@ LatinR 2026
                   height = bottom - top;
                 }
                 if (top !== null && height !== null && parent !== null) {
-                  // cook up a div (if necessary) and position it
+                  // cook up a div (if necessary) and position it 
                   let div = window.document.getElementById("code-annotation-line-highlight");
                   if (div === null) {
                     div = window.document.createElement("div");
@@ -2538,10 +2591,10 @@ LatinR 2026
                       altAxis: false
                     }
                   }
-                  ]
-                }
+                  ]        
+                }      
               };
-              window.tippy(annoteTarget, config);
+              window.tippy(annoteTarget, config); 
             }
         const findCites = (el) => {
           const parentEl = el.parentElement;
@@ -2582,6 +2635,6 @@ LatinR 2026
         }
       });
       </script>
-
+    
 
 </body></html>

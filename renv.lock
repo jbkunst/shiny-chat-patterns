@@ -2616,8 +2616,8 @@
     },
     "mcptools": {
       "Package": "mcptools",
-      "Version": "1.0.3.9000",
-      "Source": "GitHub",
+      "Version": "1.0.3",
+      "Source": "Repository",
       "Title": "Model Context Protocol Servers and Clients",
       "Authors@R": "c( person(\"Simon\", \"Couch\", , \"simon.couch@posit.co\", role = c(\"aut\", \"cre\"), comment = c(ORCID = \"0000-0001-5676-5107\")), person(\"Winston\", \"Chang\", , \"winston@posit.co\", role = \"aut\", comment = c(ORCID = \"0000-0002-1576-2126\")), person(\"Charlie\", \"Gao\", , \"charlie.gao@posit.co\", role = \"aut\", comment = c(ORCID = \"0000-0002-0750-061X\")), person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\"), comment = c(ROR = \"03wc8by49\")) )",
       "Description": "Implements the Model Context Protocol (MCP). Users can start 'R'-based servers, serving functions as tools for large language models to call before responding to the user in MCP-compatible apps like 'Claude Desktop' and 'Claude Code', with options to run those tools inside of interactive 'R' sessions. On the other end, when 'R' is the client via the 'ellmer' package, users can register tools from third-party MCP servers to integrate additional context into chats.",
@@ -2651,17 +2651,11 @@
       "Config/Needs/website": "tidyverse/tidytemplate",
       "Config/testthat/edition": "3",
       "Encoding": "UTF-8",
-      "Roxygen": "list(markdown = TRUE)",
       "Config/roxygen2/version": "8.0.0",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "mcptools",
-      "RemoteUsername": "posit-dev",
-      "RemoteRef": "714803bdfce903707a27d9c4740591d87f601aae",
-      "RemoteSha": "714803bdfce903707a27d9c4740591d87f601aae",
       "NeedsCompilation": "no",
       "Author": "Simon Couch [aut, cre] (ORCID: <https://orcid.org/0000-0001-5676-5107>), Winston Chang [aut] (ORCID: <https://orcid.org/0000-0002-1576-2126>), Charlie Gao [aut] (ORCID: <https://orcid.org/0000-0002-0750-061X>), Posit Software, PBC [cph, fnd] (ROR: <https://ror.org/03wc8by49>)",
-      "Maintainer": "Simon Couch <simon.couch@posit.co>"
+      "Maintainer": "Simon Couch <simon.couch@posit.co>",
+      "Repository": "https://packagemanager.posit.co/cran/latest"
     },
     "memoise": {
       "Package": "memoise",
@@ -2754,7 +2748,7 @@
     },
     "nanonext": {
       "Package": "nanonext",
-      "Version": "1.10.3",
+      "Version": "1.10.4",
       "Source": "Repository",
       "Type": "Package",
       "Title": "Lightweight Toolkit for Messaging, Concurrency and the Web",
@@ -2786,7 +2780,7 @@
       "NeedsCompilation": "yes",
       "Author": "Charlie Gao [aut, cre] (ORCID: <https://orcid.org/0000-0002-0750-061X>), Posit Software, PBC [cph, fnd] (ROR: <https://ror.org/03wc8by49>), Hibiki AI Limited [cph], Staysail Systems, Inc. [cph] (NNG library), Capitar IT Group BV [cph] (NNG library), The Mbed TLS Contributors [cph] (Mbed TLS library), Pierre L'Ecuyer [cph] (RngStreams library), sakura authors [cph] (Serialization hooks), R Consortium [fnd] (ROR: <https://ror.org/01z833950>)",
       "Maintainer": "Charlie Gao <charlie.gao@posit.co>",
-      "Repository": "CRAN"
+      "Repository": "https://packagemanager.posit.co/cran/latest"
     },
     "nasaweather": {
       "Package": "nasaweather",
@@ -3297,39 +3291,6 @@
       "Author": "Hadley Wickham [aut, cre] (ORCID: <https://orcid.org/0000-0003-4757-117X>), Lionel Henry [aut], Posit Software, PBC [cph, fnd] (ROR: <https://ror.org/03wc8by49>)",
       "Maintainer": "Hadley Wickham <hadley@posit.co>",
       "Repository": "CRAN"
-    },
-    "ragg": {
-      "Package": "ragg",
-      "Version": "1.5.2",
-      "Source": "Repository",
-      "Priority": null,
-      "Depends": [
-        null
-      ],
-      "Imports": [
-        "systemfonts (>= 1.0.3)",
-        "textshaping (>= 0.3.0)"
-      ],
-      "LinkingTo": [
-        "systemfonts",
-        "textshaping"
-      ],
-      "Suggests": [
-        "covr",
-        "graphics",
-        "grid",
-        "testthat (>= 3.0.0)"
-      ],
-      "Enhances": [
-        null
-      ],
-      "License": "MIT + file LICENSE",
-      "License_is_FOSS": null,
-      "License_restricts_use": null,
-      "OS_type": null,
-      "NeedsCompilation": "yes",
-      "Repository": "CRAN",
-      "Type": "source"
     },
     "rapidjsonr": {
       "Package": "rapidjsonr",
@@ -4621,6 +4582,46 @@
       "NeedsCompilation": "yes",
       "Author": "Yihui Xie [aut, cre, cph] (ORCID: <https://orcid.org/0000-0003-0645-5666>, URL: https://yihui.org), Wush Wu [ctb], Daijiang Li [ctb], Xianying Tan [ctb], Salim Brüggemann [ctb] (ORCID: <https://orcid.org/0000-0002-5329-5987>), Christophe Dervieux [ctb]",
       "Maintainer": "Yihui Xie <xie@yihui.name>",
+      "Repository": "CRAN"
+    },
+    "xml2": {
+      "Package": "xml2",
+      "Version": "1.6.0",
+      "Source": "Repository",
+      "Title": "Parse XML",
+      "Authors@R": "c( person(\"Hadley\", \"Wickham\", role = \"aut\"), person(\"Jim\", \"Hester\", role = \"aut\"), person(\"Jeroen\", \"Ooms\", email = \"jeroenooms@gmail.com\", role = c(\"aut\", \"cre\")), person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\")), person(\"R Foundation\", role = \"ctb\", comment = \"Copy of R-project homepage cached as example\") )",
+      "Description": "Bindings to 'libxml2' for working with XML data using a simple,  consistent interface based on 'XPath' expressions. Also supports XML schema validation; for 'XSLT' transformations see the 'xslt' package.",
+      "License": "MIT + file LICENSE",
+      "URL": "https://xml2.r-lib.org, https://r-lib.r-universe.dev/xml2",
+      "BugReports": "https://github.com/r-lib/xml2/issues",
+      "Depends": [
+        "R (>= 3.6.0)"
+      ],
+      "Imports": [
+        "cli",
+        "methods",
+        "rlang (>= 1.1.0)"
+      ],
+      "Suggests": [
+        "covr",
+        "curl",
+        "httr",
+        "knitr",
+        "mockery",
+        "rmarkdown",
+        "testthat (>= 3.2.0)",
+        "xslt"
+      ],
+      "VignetteBuilder": "knitr",
+      "Config/Needs/website": "tidyverse/tidytemplate",
+      "Encoding": "UTF-8",
+      "RoxygenNote": "7.3.3",
+      "SystemRequirements": "libxml2: libxml2-dev (deb), libxml2-devel (rpm)",
+      "Collate": "'S4.R' 'as_list.R' 'xml_parse.R' 'as_xml_document.R' 'classes.R' 'format.R' 'import-standalone-obj-type.R' 'import-standalone-purrr.R' 'import-standalone-types-check.R' 'init.R' 'nodeset_apply.R' 'paths.R' 'utils.R' 'xml2-package.R' 'xml_attr.R' 'xml_children.R' 'xml_document.R' 'xml_find.R' 'xml_missing.R' 'xml_modify.R' 'xml_name.R' 'xml_namespaces.R' 'xml_node.R' 'xml_nodeset.R' 'xml_path.R' 'xml_schema.R' 'xml_serialize.R' 'xml_structure.R' 'xml_text.R' 'xml_type.R' 'xml_url.R' 'xml_write.R'",
+      "Config/testthat/edition": "3",
+      "NeedsCompilation": "yes",
+      "Author": "Hadley Wickham [aut], Jim Hester [aut], Jeroen Ooms [aut, cre], Posit Software, PBC [cph, fnd], R Foundation [ctb] (Copy of R-project homepage cached as example)",
+      "Maintainer": "Jeroen Ooms <jeroenooms@gmail.com>",
       "Repository": "CRAN"
     },
     "xtable": {

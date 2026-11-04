@@ -1,8 +1,0 @@
-Title: Demo autonoma · Commons
-Description: Compara una medida R confiable con una consulta exploratoria
-    usando datos ficticios en una app Shiny minima.
-Imports:
-    commons,
-    DBI,
-    ellmer
-Encoding: UTF-8
