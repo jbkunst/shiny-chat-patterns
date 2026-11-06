@@ -13,7 +13,7 @@ prompt_sistema <- paste(readLines("prompt.md", warn = FALSE), collapse = "\n")
 ui <- page_sidebar(
   title = "App 09 · MCP + datos del FMI",
   sidebar = sidebar(
-    shinychat::chat_ui("chat", messages = saludo, placeholder = "Consulta una serie del FMI..."),
+    shinychat::chat_ui("chat", greeting = saludo, placeholder = "Consulta una serie del FMI..."),
     width = 400
   ),
   plotOutput("plot", height = "400px"),
@@ -57,7 +57,7 @@ server <- function(input, output, session) {
   ))
 
   observeEvent(input$chat_user_input, {
-    stream <- chat$stream_async(input$chat_user_input, tool_mode = "sequential", stream = "content")
+    stream <- chat$stream_async(!!!input$chat_user_input, tool_mode = "sequential", stream = "content")
     shinychat::chat_append("chat", stream)
   })
 }

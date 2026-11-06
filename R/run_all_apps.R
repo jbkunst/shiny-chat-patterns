@@ -8,12 +8,17 @@ port_is_open <- function(port) {
   TRUE
 }
 
-url_is_ready <- function(url) {
+url_is_ready <- function(url, apps = NULL) {
   response <- suppressWarnings(try(
     httr::GET(url, httr::timeout(1)),
     silent = TRUE
   ))
-  !inherits(response, "try-error") && httr::status_code(response) < 400
+  if (inherits(response, "try-error") || httr::status_code(response) >= 400) return(FALSE)
+  if (is.null(apps)) return(TRUE)
+  html <- httr::content(response, as = "text", encoding = "UTF-8")
+  ids <- regmatches(html, gregexpr('id="app-[^"]+"', html))[[1]]
+  expected <- paste0('id="', apps$app, '"')
+  setequal(ids, expected) && all(vapply(apps$url, grepl, logical(1), x = html, fixed = TRUE))
 }
 
 read_process_log <- function(process) {
@@ -22,17 +27,18 @@ read_process_log <- function(process) {
   paste(output, collapse = "\n")
 }
 
-wait_for_process <- function(process, url, label, timeout = 180) {
+wait_for_process <- function(process, url, label, timeout = 180, apps = NULL) {
   deadline <- Sys.time() + timeout
   while (Sys.time() < deadline) {
     if (!process$is_alive()) {
       stop(label, " terminó antes de responder.\n", read_process_log(process), call. = FALSE)
     }
-    if (url_is_ready(url)) return(invisible(TRUE))
+    if (url_is_ready(url, apps)) return(invisible(TRUE))
     Sys.sleep(0.25)
   }
+  problem <- if (is.null(apps)) " no respondió en " else " no mostró todas las apps en "
   stop(
-    label, " no respondió en ", url, " después de ", timeout, " segundos.\n",
+    label, problem, url, " después de ", timeout, " segundos.\n",
     read_process_log(process),
     call. = FALSE
   )
@@ -41,19 +47,23 @@ wait_for_process <- function(process, url, label, timeout = 180) {
 stop_all_apps <- function(course, timeout = 10) {
   cli::cli_alert_info("Deteniendo apps y catálogo.")
   processes <- c(list(course$catalog_process), course$app_processes)
-  invisible(lapply(processes, function(process) {
-    if (!is.null(process) && process$is_alive()) process$kill_tree()
-  }))
+  for (process in processes) {
+    if (is.null(process) || !process$is_alive()) next
+    tryCatch(process$kill_tree(), error = function(error) {
+      cli::cli_alert_warning("No se pudo detener un proceso: {conditionMessage(error)}")
+    })
+  }
+
+  ports <- course$apps$port[course$apps$app %in% names(course$app_processes)]
+  if (!is.null(course$catalog_process)) {
+    ports <- c(ports, as.integer(sub(".*:", "", course$catalog_url)))
+  }
 
   deadline <- Sys.time() + timeout
   repeat {
     alive <- vapply(processes, function(process) {
       !is.null(process) && process$is_alive()
     }, logical(1))
-    ports <- course$apps$port
-    if (!is.null(course$catalog_url)) {
-      ports <- c(ports, as.integer(sub(".*:", "", course$catalog_url)))
-    }
     occupied <- ports[vapply(ports, port_is_open, logical(1))]
     if (!any(alive) && !length(occupied)) break
     if (Sys.time() >= deadline) {
@@ -73,8 +83,8 @@ stop_all_apps <- function(course, timeout = 10) {
 
 open_catalog <- function(course) {
   url <- course$catalog_url
-  if (!url_is_ready(url)) {
-    stop("El catálogo no está respondiendo en ", url, ".", call. = FALSE)
+  if (!url_is_ready(url, course$apps)) {
+    stop("El catálogo no contiene la lista completa de apps en ", url, ".", call. = FALSE)
   }
   link <- cli::style_hyperlink(url, url)
   cli::cli_alert_info("Abriendo el catálogo: {link}")
@@ -82,29 +92,7 @@ open_catalog <- function(course) {
   invisible(url)
 }
 
-run_all_apps <- function(
-  include_experimental = FALSE,
-  root = ".",
-  first_app_port = 8000L,
-  catalog_port = 7999L,
-  startup_timeout = 180
-) {
-  if (!requireNamespace("callr", quietly = TRUE)) {
-    stop("Instala callr con install.packages(\"callr\").", call. = FALSE)
-  }
-  if (!requireNamespace("processx", quietly = TRUE)) {
-    stop("Instala processx con install.packages(\"processx\").", call. = FALSE)
-  }
-  if (!requireNamespace("cli", quietly = TRUE)) {
-    stop("Instala cli con install.packages(\"cli\").", call. = FALSE)
-  }
-  if (!requireNamespace("httr", quietly = TRUE)) {
-    stop("Instala httr con install.packages(\"httr\").", call. = FALSE)
-  }
-  quarto <- Sys.which("quarto")
-  if (!nzchar(quarto)) stop("Instala Quarto y asegúrate de que esté en PATH.", call. = FALSE)
-
-  root <- normalizePath(root, winslash = "/", mustWork = TRUE)
+plan_apps <- function(root, include_experimental = FALSE, first_app_port = 8000L) {
   directories <- list.dirs(root, full.names = FALSE, recursive = FALSE)
   stable <- directories[
     grepl("^app-[0-9]+(-[a-z0-9-]+)?$", directories) &
@@ -119,6 +107,43 @@ run_all_apps <- function(
   if (!length(apps)) stop("No se encontraron apps R desde ", root, ".", call. = FALSE)
 
   ports <- first_app_port + seq_along(apps) - 1L
+  descriptions <- lapply(apps, function(app) {
+    path <- file.path(root, app)
+    parse(file.path(path, "app.R"), encoding = "UTF-8")
+    metadata <- read.dcf(file.path(path, "DESCRIPTION"))[1, ]
+    fields <- c("Title", "Description")
+    if (!all(fields %in% names(metadata)) || any(!nzchar(trimws(metadata[fields])))) {
+      stop(app, " necesita Title y Description en DESCRIPTION.", call. = FALSE)
+    }
+    unname(metadata[fields])
+  })
+  data.frame(
+    app = apps,
+    port = ports,
+    url = sprintf("http://127.0.0.1:%d", ports),
+    title = vapply(descriptions, `[`, character(1), 1L),
+    description = vapply(descriptions, `[`, character(1), 2L)
+  )
+}
+
+run_all_apps <- function(
+  include_experimental = FALSE,
+  root = ".",
+  first_app_port = 8000L,
+  catalog_port = 7999L,
+  startup_timeout = 180
+) {
+  for (package in c("callr", "processx", "cli", "httr", "yaml")) {
+    if (!requireNamespace(package, quietly = TRUE)) {
+      stop("Instala ", package, " con install.packages(\"", package, "\").", call. = FALSE)
+    }
+  }
+  quarto <- Sys.which("quarto")
+  if (!nzchar(quarto)) stop("Instala Quarto y asegúrate de que esté en PATH.", call. = FALSE)
+
+  root <- normalizePath(root, winslash = "/", mustWork = TRUE)
+  apps <- plan_apps(root, include_experimental, first_app_port)
+  ports <- apps$port
   occupied <- ports[vapply(ports, port_is_open, logical(1))]
   if (length(occupied)) {
     stop("Estos puertos ya están ocupados: ", paste(occupied, collapse = ", "), ".", call. = FALSE)
@@ -134,21 +159,28 @@ run_all_apps <- function(
   }
 
   cli::cli_h1("Apps del taller")
-  cli::cli_alert_info("Iniciando {length(apps)} apps en procesos de fondo.")
-  app_processes <- list()
-  catalog_process <- NULL
+  manifest <- file.path(root, "catalog", "apps.yml")
+  items <- lapply(seq_len(nrow(apps)), function(index) as.list(apps[index, ]))
+  yaml::write_yaml(list(items = items), manifest)
+  cli::cli_alert_success("Plan guardado en catalog/apps.yml: {nrow(apps)} apps.")
+  print(apps[c("app", "port", "title")], row.names = FALSE)
+  apps <- do.call(rbind, lapply(yaml::read_yaml(manifest)$items, as.data.frame))
+  cli::cli_alert_info("Iniciando {nrow(apps)} apps en procesos de fondo.")
+  course <- list(
+    apps = apps,
+    app_processes = list(),
+    catalog_process = NULL,
+    catalog_url = sprintf("http://127.0.0.1:%d", catalog_port)
+  )
   ready <- FALSE
   on.exit({
-    if (!ready) stop_all_apps(list(
-      app_processes = app_processes,
-      catalog_process = catalog_process
-    ))
+    if (!ready) stop_all_apps(course)
   }, add = TRUE)
 
-  for (index in seq_along(apps)) {
-    app <- apps[index]
-    port <- ports[index]
-    url <- sprintf("http://127.0.0.1:%d", port)
+  for (index in seq_len(nrow(apps))) {
+    app <- apps$app[index]
+    port <- apps$port[index]
+    url <- apps$url[index]
     cli::cli_alert_info("Iniciando {.code {app}}.")
     process <- callr::r_bg(
       function(path, port) {
@@ -159,46 +191,39 @@ run_all_apps <- function(
       stderr = "|",
       supervise = TRUE
     )
-    app_processes[[app]] <- process
+    course$app_processes[[app]] <- process
     wait_for_process(process, url, app, startup_timeout)
     cli::cli_alert_success("{.code {app}} lista en {.url {url}}")
   }
 
   cli::cli_alert_info("Preparando el catálogo Quarto.")
-  catalog_env <- Sys.getenv()
-  catalog_env[c("SHINY_APP_ROOT", "SHINY_APP_NAMES", "SHINY_APP_PORTS")] <- c(
-    root,
-    paste(apps, collapse = ";"),
-    paste(ports, collapse = ";")
-  )
-  catalog_process <- processx::process$new(
+  course$catalog_process <- processx::process$new(
     quarto,
-    c("preview", "catalog", "--host", "127.0.0.1", "--port", catalog_port, "--no-browser"),
+    c("preview", "catalog", "--render", "html", "--host", "127.0.0.1",
+      "--port", catalog_port, "--no-browser"),
     wd = root,
-    env = catalog_env,
     stdout = "|",
     stderr = "|",
     cleanup = TRUE,
     cleanup_tree = TRUE
   )
-  catalog_url <- sprintf("http://127.0.0.1:%d", catalog_port)
-  wait_for_process(catalog_process, catalog_url, "El catálogo Quarto", startup_timeout)
-  ready <- TRUE
-
-  result <- list(
-    apps = data.frame(app = apps, port = ports, url = sprintf("http://127.0.0.1:%d", ports)),
-    app_processes = app_processes,
-    catalog_process = catalog_process,
-    catalog_url = catalog_url
-  )
-  link <- cli::style_hyperlink(catalog_url, catalog_url)
+  wait_for_process(course$catalog_process, course$catalog_url, "El catálogo Quarto", startup_timeout, apps)
+  link <- cli::style_hyperlink(course$catalog_url, course$catalog_url)
   cli::cli_alert_success("Catálogo listo: {link}")
   cli::cli_inform("Para detener todo: {.code stop_all_apps(course)}")
-  open_catalog(result)
-  result
+  open_catalog(course)
+  ready <- TRUE
+  course
 }
 
 # launch ------------------------------------------------------------------
+if (!nzchar(Sys.getenv("RENV_PROJECT"))) {
+  source("renv/activate.R")
+  cli::cli_alert_success("Entorno renv activado para el proyecto.")
+} else {
+  cli::cli_alert_info("El entorno renv ya está activo.")
+}
+
 if (
   exists("course", inherits = FALSE) &&
     is.list(course) &&

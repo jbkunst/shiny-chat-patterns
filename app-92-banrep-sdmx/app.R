@@ -36,7 +36,7 @@ ui <- page_sidebar(
   ")),
   sidebar = sidebar(
     width = 400, bg = "#ffffff",
-    shinychat::chat_ui("chat", messages = saludo, placeholder = "Pregunta por una serie...")
+    shinychat::chat_ui("chat", greeting = saludo, placeholder = "Pregunta por una serie...")
   ),
   uiOutput("vista"),
   tags$small(
@@ -188,7 +188,7 @@ server <- function(input, output, session) {
   ))
 
   observeEvent(input$chat_user_input, {
-    stream <- chat$stream_async(input$chat_user_input, tool_mode = "sequential", stream = "content")
+    stream <- chat$stream_async(!!!input$chat_user_input, tool_mode = "sequential", stream = "content")
     shinychat::chat_append("chat", stream)
   })
 }

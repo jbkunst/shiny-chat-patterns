@@ -261,13 +261,13 @@ El cliente conserva el historial entre llamadas a `chat$chat()`. La clave se lee
 ::: {.fragment}
 ### El chat en la UI
 
-En la UI, `chat_ui()` crea la conversación. El id `chat` la conecta con el server; `messages` muestra
+En la UI, `chat_ui()` crea la conversación. El id `chat` la conecta con el server; `greeting` muestra
 un saludo inicial y `placeholder` orienta la pregunta. El modelo todavía no recibe los datos del dashboard.
 
 ```r
 shinychat::chat_ui(
   "chat",
-  messages = saludo,
+  greeting = saludo,
   placeholder = "Pregunta algo sobre los países..."
 )
 ```
@@ -283,7 +283,7 @@ En el server, `chat_openai()` crea el cliente. `observeEvent()` escucha `input$c
 chat <- ellmer::chat_openai(...)
 
 observeEvent(input$chat_user_input, {
-  stream <- chat$stream_async(input$chat_user_input)
+  stream <- chat$stream_async(!!!input$chat_user_input)
   shinychat::chat_append("chat", stream)
 })
 ```

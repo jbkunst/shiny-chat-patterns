@@ -16,7 +16,7 @@ ui <- page_sidebar(
   title = "App 02 · Chat sin tools",
   sidebar = sidebar(
     selectInput("continente", "Continente", choices = continentes),
-    shinychat::chat_ui("chat", messages = saludo, placeholder = "Pregunta algo sobre los países..."),
+    shinychat::chat_ui("chat", greeting = saludo, placeholder = "Pregunta algo sobre los países..."),
     width = 400
   ),
   layout_columns(
@@ -58,7 +58,7 @@ server <- function(input, output, session) {
   )
 
   observeEvent(input$chat_user_input, {
-    stream <- chat$stream_async(input$chat_user_input)
+    stream <- chat$stream_async(!!!input$chat_user_input)
     shinychat::chat_append("chat", stream)
   })
 }

@@ -69,7 +69,7 @@ ui <- page_sidebar(
     width = 420,
     shinychat::chat_ui(
       "chat",
-      messages = greeting,
+      greeting = greeting,
       placeholder = "Ej: ¿Qué aerolínea tuvo más vuelos?"
     )
   ),

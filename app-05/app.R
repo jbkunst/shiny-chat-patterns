@@ -30,7 +30,7 @@ prompt_sistema <- paste(readLines("prompt.md", warn = FALSE), collapse = "\n")
 ui <- page_sidebar(
   title = "App 05 · Tool + reactividad",
   sidebar = sidebar(
-    shinychat::chat_ui("chat", messages = saludo, placeholder = "Filtra u ordena el dashboard..."),
+    shinychat::chat_ui("chat", greeting = saludo, placeholder = "Filtra u ordena el dashboard..."),
     width = 400
   ),
   layout_columns(
@@ -94,7 +94,7 @@ server <- function(input, output, session) {
   ))
 
   observeEvent(input$chat_user_input, {
-    stream <- chat$stream_async(input$chat_user_input, stream = "content")
+    stream <- chat$stream_async(!!!input$chat_user_input, stream = "content")
     shinychat::chat_append("chat", stream)
   })
 }

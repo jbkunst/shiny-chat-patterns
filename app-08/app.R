@@ -64,7 +64,7 @@ prompt_sistema <- paste(readLines("prompt.md", warn = FALSE), collapse = "\n")
 ui <- page_sidebar(
   title = "App 08 · Tool + mapa",
   sidebar = sidebar(
-    shinychat::chat_ui("chat", messages = saludo, placeholder = "Filtra o controla el mapa..."),
+    shinychat::chat_ui("chat", greeting = saludo, placeholder = "Filtra o controla el mapa..."),
     width = 400
   ),
   layout_columns(
@@ -198,7 +198,7 @@ server <- function(input, output, session) {
   ))
 
   observeEvent(input$chat_user_input, {
-    stream <- chat$stream_async(input$chat_user_input, tool_mode = "sequential", stream = "content")
+    stream <- chat$stream_async(!!!input$chat_user_input, tool_mode = "sequential", stream = "content")
     shinychat::chat_append("chat", stream)
   })
 }

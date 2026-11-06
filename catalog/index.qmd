@@ -10,13 +10,10 @@ Cada ejemplo se ejecuta en un proceso independiente. Puedes probarlo aquí o abr
 
 ```{r}
 #| results: asis
-root <- Sys.getenv("SHINY_APP_ROOT")
-apps <- strsplit(Sys.getenv("SHINY_APP_NAMES"), ";", fixed = TRUE)[[1]]
-ports <- as.integer(strsplit(Sys.getenv("SHINY_APP_PORTS"), ";", fixed = TRUE)[[1]])
-
-if (!nzchar(root) || !length(apps) || length(apps) != length(ports)) {
+if (!file.exists("apps.yml")) {
   stop("Inicia este catálogo con R/run_all_apps.R.")
 }
+items <- yaml::read_yaml("apps.yml")$items
 
 escape_html <- function(text) {
   text <- gsub("&", "&amp;", text, fixed = TRUE)
@@ -25,13 +22,12 @@ escape_html <- function(text) {
   gsub('"', "&quot;", text, fixed = TRUE)
 }
 
-for (index in seq_along(apps)) {
-  app <- apps[index]
-  metadata <- read.dcf(file.path(root, app, "DESCRIPTION"))[1, ]
-  title <- unname(metadata["Title"])
+for (item in items) {
+  app <- item$app
+  title <- item$title
   html_title <- escape_html(title)
-  description <- escape_html(unname(metadata["Description"]))
-  url <- sprintf("http://127.0.0.1:%d", ports[index])
+  description <- escape_html(item$description)
+  url <- item$url
 
   cat(
     '\n\n::: {.app-entry .column-page}\n\n',

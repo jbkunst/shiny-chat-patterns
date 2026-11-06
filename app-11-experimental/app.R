@@ -10,7 +10,7 @@ ui <- page_sidebar(
   sidebar = sidebar(
     shinychat::chat_ui(
       "chat",
-      messages = "Hola. Puedes preguntarme sobre series del Banco Central de Chile.",
+      greeting = "Hola. Puedes preguntarme sobre series del Banco Central de Chile.",
       placeholder = "Pregunta por una serie..."
     ),
     width = 400
@@ -36,7 +36,7 @@ server <- function(input, output) {
   )
 
   observeEvent(input$chat_user_input, {
-    stream <- chat$stream_async(input$chat_user_input, stream = "content")
+    stream <- chat$stream_async(!!!input$chat_user_input, stream = "content")
     shinychat::chat_append("chat", stream)
   })
 }

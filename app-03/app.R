@@ -21,7 +21,7 @@ ui <- page_sidebar(
   title = "App 03 · Tool con contexto",
   sidebar = sidebar(
     selectInput("continente", "Continente", choices = continentes),
-    shinychat::chat_ui("chat", messages = saludo, placeholder = "Pregunta sobre los datos visibles..."),
+    shinychat::chat_ui("chat", greeting = saludo, placeholder = "Pregunta sobre los datos visibles..."),
     width = 400
   ),
   layout_columns(
@@ -80,7 +80,7 @@ server <- function(input, output, session) {
   ))
 
   observeEvent(input$chat_user_input, {
-    stream <- chat$stream_async(input$chat_user_input, stream = "content")
+    stream <- chat$stream_async(!!!input$chat_user_input, stream = "content")
     shinychat::chat_append("chat", stream)
   })
 }

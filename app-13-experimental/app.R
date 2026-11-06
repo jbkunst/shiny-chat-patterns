@@ -16,7 +16,7 @@ ui <- page_sidebar(
   title = "App 13 · Tools que devuelven contexto",
   fillable = TRUE,
   sidebar = sidebar(
-    shinychat::chat_ui("chat", messages = saludo, placeholder = "Pregunta por la serie visible..."),
+    shinychat::chat_ui("chat", greeting = saludo, placeholder = "Pregunta por la serie visible..."),
     width = 400
   ),
   layout_columns(
@@ -104,7 +104,7 @@ server <- function(input, output) {
   ))
 
   observeEvent(input$chat_user_input, {
-    stream <- chat$stream_async(input$chat_user_input, tool_mode = "sequential", stream = "content")
+    stream <- chat$stream_async(!!!input$chat_user_input, tool_mode = "sequential", stream = "content")
     shinychat::chat_append("chat", stream)
   })
 }

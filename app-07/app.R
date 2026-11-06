@@ -48,7 +48,7 @@ ui <- page_sidebar(
       ),
       accordion_panel(
         "Consulta con chat",
-        shinychat::chat_ui("chat", messages = saludo, placeholder = "Describe el filtro...")
+        shinychat::chat_ui("chat", greeting = saludo, placeholder = "Describe el filtro...")
       ),
       open = "Consulta con chat",
       multiple = FALSE
@@ -221,7 +221,7 @@ server <- function(input, output, session) {
   ))
 
   observeEvent(input$chat_user_input, {
-    stream <- chat$stream_async(input$chat_user_input, tool_mode = "sequential", stream = "content")
+    stream <- chat$stream_async(!!!input$chat_user_input, tool_mode = "sequential", stream = "content")
     shinychat::chat_append("chat", stream)
   })
 }

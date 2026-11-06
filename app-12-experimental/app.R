@@ -16,7 +16,7 @@ ui <- page_sidebar(
   title = "App 12 · Tools para actualizar la aplicación",
   fillable = TRUE,
   sidebar = sidebar(
-    shinychat::chat_ui("chat", messages = saludo, placeholder = "Busca una serie..."),
+    shinychat::chat_ui("chat", greeting = saludo, placeholder = "Busca una serie..."),
     width = 400
   ),
   layout_columns(
@@ -88,7 +88,7 @@ server <- function(input, output) {
   ))
 
   observeEvent(input$chat_user_input, {
-    stream <- chat$stream_async(input$chat_user_input, tool_mode = "sequential", stream = "content")
+    stream <- chat$stream_async(!!!input$chat_user_input, tool_mode = "sequential", stream = "content")
     shinychat::chat_append("chat", stream)
   })
 }

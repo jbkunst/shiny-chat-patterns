@@ -65,7 +65,7 @@ ui <- page_sidebar(
     width = 420,
     shinychat::chat_ui(
       "chat",
-      messages = paste(
+      greeting = paste(
         "Este ejemplo usa dos agentes sin memoria compartida.",
         "Pregunta por ventas, regiones, productos, unidades o revenue."
       ),

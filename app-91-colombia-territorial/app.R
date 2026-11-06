@@ -71,7 +71,7 @@ ui <- page_fillable(
     h2("Colombia territorial"),
     uiOutput("contexto"),
     div(class = "chat-wrapper",
-      shinychat::chat_ui("chat", messages = saludo, placeholder = "Explora Colombia...", height = "100%")
+      shinychat::chat_ui("chat", greeting = saludo, placeholder = "Explora Colombia...", height = "100%")
     ),
     tags$footer(
       actionButton("ver_colombia", "Ver toda Colombia", class = "btn-outline-secondary btn-sm"),
@@ -223,7 +223,7 @@ server <- function(input, output, session) {
   ))
 
   observeEvent(input$chat_user_input, {
-    stream <- chat$stream_async(input$chat_user_input, tool_mode = "sequential", stream = "content")
+    stream <- chat$stream_async(!!!input$chat_user_input, tool_mode = "sequential", stream = "content")
     shinychat::chat_append("chat", stream)
   })
 }

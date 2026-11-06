@@ -290,7 +290,10 @@ source("R/run_all_apps.R")
 Por defecto incluye App 00–09 y los casos 91–92. Las experimentales se agregan con
 `run_all_apps(include_experimental = TRUE)` después de cargar el script.
 
-Esta única instrucción inicia las apps, prepara el catálogo y lo abre en el navegador. El objeto
+Esta instrucción primero valida el código R y los títulos y descripciones de las apps, asigna sus
+puertos y guarda el plan en `catalog/apps.yml`. Después inicia exactamente las apps de ese YAML y
+vuelve a renderizar el catálogo con la misma lista. Antes de abrirlo, verifica que incluya todas las
+apps y sus URLs. El objeto
 `course` se crea automáticamente. Si vuelves a ejecutarla, primero detiene la ejecución anterior.
 Al terminar el taller, detén todos los procesos con:
 
