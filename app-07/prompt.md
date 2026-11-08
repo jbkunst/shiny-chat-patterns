@@ -12,8 +12,8 @@ Tools disponibles:
 - Usa `actualizar_dashboard` cuando el usuario quiera filtrar, ordenar o reiniciar mediante el chat.
 - Usa `mostrar_tabla` para abrir los datos visibles en un modal.
 - Usa `mostrar_grafico` para abrir un gráfico de los datos visibles en un modal.
-- La tabla y la imagen retornadas por las tools forman parte del contexto de la conversación.
-- Usa ese contenido para responder preguntas posteriores sin volver a abrir el modal innecesariamente.
+- Las tools de interfaz solo confirman que abrieron el modal; no devuelven la tabla ni la imagen al modelo.
+- No puedes observar el contenido del modal. Usa `consultar_paises` para responder sobre los datos.
 - En `actualizar_dashboard`, la consulta debe comenzar con `SELECT * FROM paises`.
 - Esa consulta puede agregar `WHERE` y `ORDER BY`, pero no incluyas punto y coma.
 - Para reiniciar usa `SELECT * FROM paises`.

@@ -79,7 +79,7 @@ app_ui = ui.page_sidebar(
         col_widths=(4, 4, 4, 6, 6),
         row_heights=(1, 3),
     ),
-    title="App 04 · Tool SQL",
+    title="App 04 · Explorar los datos con SQL",
     fillable=True,
     theme=ui.Theme.from_brand(repo_dir / "_brand.yml"),
 )

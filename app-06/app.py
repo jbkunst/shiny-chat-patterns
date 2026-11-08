@@ -1,14 +1,13 @@
 import atexit
 import json
 import re
-import tempfile
 from pathlib import Path
 from typing import Annotated, Literal
 
 import duckdb
 import matplotlib.pyplot as plt
 import pandas as pd
-from chatlas import ChatOpenAI, content_image_file
+from chatlas import ChatOpenAI
 from faicons import icon_svg
 from pydantic import Field
 
@@ -91,7 +90,7 @@ app_ui = ui.page_sidebar(
         col_widths=(4, 4, 4, 6, 6),
         row_heights=(1, 3),
     ),
-    title="App 06 · Tools de interfaz",
+    title="App 06 · Mostrar tablas y gráficos",
     fillable=True,
     theme=ui.Theme.from_brand(repo_dir / "_brand.yml"),
 )
@@ -184,7 +183,7 @@ def server(input: Inputs, output: Outputs, session: Session):
     async def mostrar_tabla(
         n: Annotated[int, Field(description="Cantidad de filas que quieres mostrar.")],
         titulo: Annotated[str, Field(description="Título breve del modal.")],
-    ) -> list[dict]:
+    ) -> str:
         """Abre en un modal una tabla con los datos visibles en el dashboard."""
         with reactive.isolate():
             resultado = data().head(n)
@@ -203,7 +202,7 @@ def server(input: Inputs, output: Outputs, session: Session):
             ),
             session=session,
         )
-        return json.loads(resultado.to_json(orient="records", force_ascii=False))
+        return "Tabla mostrada en un modal."
 
     async def mostrar_grafico(
         x: Annotated[
@@ -219,8 +218,8 @@ def server(input: Inputs, output: Outputs, session: Session):
             Field(description="Columna para el color, o ninguna."),
         ],
         titulo: Annotated[str, Field(description="Título breve del modal.")],
-    ):
-        """Grafica los datos visibles en un modal y devuelve la imagen al modelo."""
+    ) -> str:
+        """Abre en un modal un gráfico de los datos visibles en el dashboard."""
         with reactive.isolate():
             frame = data().copy()
 
@@ -242,15 +241,7 @@ def server(input: Inputs, output: Outputs, session: Session):
             session=session,
         )
 
-        figure = dibujar_grafico(frame, x, y, color)
-        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as archivo:
-            ruta = Path(archivo.name)
-        figure.savefig(ruta, dpi=100, bbox_inches="tight")
-        plt.close(figure)
-        try:
-            return content_image_file(str(ruta), resize="none")
-        finally:
-            ruta.unlink(missing_ok=True)
+        return "Gráfico mostrado en un modal."
 
     # chat ----------------------------------------------------------------
     chat = ui.Chat("chat")

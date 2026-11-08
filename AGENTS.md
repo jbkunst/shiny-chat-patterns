@@ -26,9 +26,10 @@ literal línea por línea.
 - `app-05`: permite que una tool actualice los datos reactivos mostrados por
   Shiny.
 - `app-06`: agrega tools de interfaz como `mostrar_tabla()` y `mostrar_grafico()` que
-  abren modales.
+  abren modales y devuelven una confirmación, sin enviar su contenido al modelo.
 - `app-07`: compara filtros tradicionales con una consulta solicitada por chat.
-- `app-08`: integra una tool con un globo y actualizaciones de cámara tipo proxy.
+- `app-08`: conserva el globo y las actualizaciones de cámara tipo proxy; completa
+  `mostrar_grafico()` para abrir el modal y devolver la imagen al modelo.
 - `app-09`: extensión en R con un MCP comunitario de datos del FMI y una tool local de gráficos.
   La comparación sin y con MCP usa respuestas reales cacheadas; no se consulta al modelo al renderizar slides.
   La versión Python queda pendiente hasta revisar el ejemplo R.

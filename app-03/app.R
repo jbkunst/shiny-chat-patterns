@@ -18,7 +18,7 @@ saludo <- paste(
 
 # user interface ----------------------------------------------------------
 ui <- page_sidebar(
-  title = "App 03 · Tool con contexto",
+  title = "App 03 · Consultar los datos visibles",
   sidebar = sidebar(
     selectInput("continente", "Continente", choices = continentes),
     shinychat::chat_ui("chat", greeting = saludo, placeholder = "Pregunta sobre los datos visibles..."),

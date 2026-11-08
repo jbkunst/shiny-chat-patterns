@@ -8,7 +8,7 @@ continentes <- c("Todos", sort(unique(paises$continente)))
 
 # user interface ----------------------------------------------------------
 ui <- page_sidebar(
-  title = "App 01 · Dashboard reactivo",
+  title = "App 01 · Explorar y filtrar datos",
   sidebar = sidebar(selectInput("continente", "Continente", choices = continentes), width = 400),
   layout_columns(
     value_box("Países", textOutput("n_filas"), showcase = icon("earth-americas"), theme = "text-primary"),

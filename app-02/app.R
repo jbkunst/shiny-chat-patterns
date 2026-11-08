@@ -13,7 +13,7 @@ saludo <- "Prueba con:\n\n- **¿Cuántos países se muestran en el dashboard?**"
 
 # user interface ----------------------------------------------------------
 ui <- page_sidebar(
-  title = "App 02 · Chat sin tools",
+  title = "App 02 · Conversar sin acceso a los datos",
   sidebar = sidebar(
     selectInput("continente", "Continente", choices = continentes),
     shinychat::chat_ui("chat", greeting = saludo, placeholder = "Pregunta algo sobre los países..."),

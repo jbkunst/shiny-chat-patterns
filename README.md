@@ -52,13 +52,13 @@ Al finalizar el taller, quienes participen podrán:
 
 - Acciones de interfaz: tablas, gráficos y modales.
 - Comparación y uso complementario de filtros tradicionales y consultas por chat.
-- Control de una visualización geográfica y su cámara.
+- Control del globo y su cámara, y entrega del gráfico de un modal al modelo para interpretarlo.
 
 **Capítulo 4 · Conectar herramientas externas con MCP · App 09**
 
 - Comparación real y cacheada con el mismo modelo, sin y con MCP.
 - Consulta de datos del FMI mediante un servidor MCP comunitario.
-- Una tool local de R grafica las observaciones recuperadas.
+- El dashboard y globo de App 08 usan datos del FMI; una tool abre series temporales en un modal.
 
 **Casos de aplicación · Colombia territorial y series de Banrep**
 
@@ -77,7 +77,8 @@ una versión independiente para reconocer el cambio y ejecutarlo durante el tall
 `app-00` es una introducción básica a Shiny, con widgets y outputs. Desde `app-01` crece el
 dashboard común de países.
 `app-07` muestra cómo los controles manuales y el chat pueden compararse y complementarse;
-`app-08` incorpora el mapa y `app-09` conecta datos remotos mediante MCP con un gráfico local.
+`app-08` agrega un globo y completa la tool de gráficos para enviar la imagen al modelo;
+`app-09` retoma el globo con datos del FMI y series mediante MCP en un modal.
 
 Las apps del recorrido principal usan `page_sidebar()` para mantener una estructura consistente
 y concentrar cada ejemplo en el patrón que introduce. Desde `app-00` hasta
@@ -127,14 +128,22 @@ o exploraciones en R; todavía no tienen una pareja Python. No forman parte de e
 | `app-03` | Tool que entrega al modelo un resumen de los países visibles |
 | `app-04` | DuckDB mediante una tool SQL de solo lectura |
 | `app-05` | Consultas del chat que actualizan el dashboard |
-| `app-06` | Tools que abren modales y retornan datos o imágenes |
+| `app-06` | Tools que abren tablas y gráficos en modales y confirman la acción |
 | `app-07` | Uso complementario de filtros manuales y consultas por chat |
-| `app-08` | Globo que el chat puede filtrar y controlar |
-| `app-09` | Tools remotas del FMI mediante MCP y gráfico local |
+| `app-08` | Globo, cámara y gráficos en modales cuya imagen recibe el modelo |
+| `app-09` | Dashboard y globo del FMI, tools MCP y series en un modal |
 
 `app-07` forma parte de la secuencia: permite comparar ambas formas de interacción y usarlas como
-complemento sobre el mismo dashboard. En el código, `app-08` retoma la base de `app-06` para concentrar
-el cambio en el globo y su cámara.
+complemento sobre el mismo dashboard. Sus tools de interfaz conservan la confirmación simple de App 06.
+`app-08` agrega el globo e `ir_a_pais()`, y completa `mostrar_grafico()` de App 06: además del modal,
+devuelve una confirmación y la imagen al modelo. La misma función de dibujo se usa en ambos destinos.
+El ejemplo de consola `R/04_ellmer_imagen.R` y su pareja Python introducen ese paso antes de App 08.
+
+La progresión es de capacidades, sin conservar necesariamente todas las tools y controles anteriores:
+App 04 reemplaza el resumen fijo por SQL; App 05 pasa del filtro manual a la actualización por chat;
+App 07 reúne ambos caminos; App 08 centra la vista en el mapa y el gráfico, sin los filtros manuales
+ni la tool de tabla de App 07.
+La interpretación de imágenes usa `gpt-5.6-luna`, igual que el ejemplo de consola.
 
 ## Casos de aplicación
 
@@ -176,9 +185,8 @@ Las apps de países en R y Python leen `data/paises.csv`. El archivo se genera
 con `R/generar-data-paises.R`, de modo que ambas implementaciones trabajan con
 la misma base de 142 países.
 
-En App 08 queda una diferencia pendiente de equivalencia: la unión con las geometrías en R conserva
-140 países y excluye Reunión y Territorios Palestinos; Python conserva los 142. Esto afecta los totales
-del dashboard de esa app. El recorrido App 01–07 usa los 142 países en ambos lenguajes.
+Las apps 01–08 conservan los 142 países en R y Python. En App 08, los países sin geometría en Natural Earth
+siguen presentes en los indicadores, las consultas y los gráficos, aunque no tengan un polígono en el globo.
 
 La versión Python de `app-08` usa un globo ortográfico de Plotly. La tool de
 cámara actualiza el widget existente mediante `map.widget.update_geos()`, el
@@ -235,6 +243,18 @@ Luego reinicia R. Si el archivo se creó con la sesión abierta, también puedes
 ```r
 readRenviron(".Renviron")
 ```
+
+Para cargar la clave y comprobar que ellmer puede consultar el modelo, ejecuta desde la raíz:
+
+```r
+library(ellmer)
+readRenviron(".Renviron")
+nzchar(Sys.getenv("OPENAI_API_KEY"))
+chat <- chat_openai(model = "gpt-5-nano")
+chat$chat("Responde solamente: conexión correcta.")
+```
+
+La tercera línea debe devolver `TRUE` sin mostrar la clave. La última comprueba el acceso a la API.
 
 Si ya tienes `usethis`, puedes crear o actualizar la variable de forma interactiva. La clave se
 solicita de manera protegida y queda disponible inmediatamente en la sesión actual:

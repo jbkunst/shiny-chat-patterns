@@ -1,6 +1,6 @@
-Title: App 06 · Tools de interfaz
-Description: Agrega tools que abren una tabla o un gráfico en modales y retornan
-    su contenido para que el modelo pueda utilizarlo en la conversación.
+Title: App 06 · Mostrar tablas y gráficos
+Description: Agrega tools que abren una tabla o un gráfico en modales y devuelven
+    una confirmación al chat, sin entregar su contenido al modelo.
 Imports:
     brand.yml,
     bslib,

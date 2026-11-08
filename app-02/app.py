@@ -53,7 +53,7 @@ app_ui = ui.page_sidebar(
         col_widths=(4, 4, 4, 6, 6),
         row_heights=(1, 3),
     ),
-    title="App 02 · Chat sin tools",
+    title="App 02 · Conversar sin acceso a los datos",
     fillable=True,
     theme=ui.Theme.from_brand(repo_dir / "_brand.yml"),
 )

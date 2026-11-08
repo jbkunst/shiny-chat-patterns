@@ -32,7 +32,7 @@ geometrias <- data.frame(
   latitud = mapa_mundo$label_y,
   wkt = sf::st_as_text(sf::st_geometry(mapa_mundo))
 )
-paises_geo <- merge(paises, geometrias, by = "codigo")
+paises_geo <- merge(paises, geometrias, by = "codigo", all.x = TRUE)
 
 con <- DBI::dbConnect(duckdb::duckdb(), dbdir = ":memory:")
 DBI::dbWriteTable(con, "paises_carga", paises_geo)
@@ -62,9 +62,9 @@ prompt_sistema <- paste(readLines("prompt.md", warn = FALSE), collapse = "\n")
 
 # user interface ----------------------------------------------------------
 ui <- page_sidebar(
-  title = "App 08 · Tool + mapa",
+  title = "App 08 · Mover el mapa e interpretar gráficos",
   sidebar = sidebar(
-    shinychat::chat_ui("chat", greeting = saludo, placeholder = "Filtra o controla el mapa..."),
+    shinychat::chat_ui("chat", greeting = saludo, placeholder = "Filtra, vuela o pide un gráfico..."),
     width = 400
   ),
   layout_columns(
@@ -85,7 +85,7 @@ server <- function(input, output, session) {
 
   data <- reactive({
     consulta <- paste(
-      "SELECT q.*, ST_AsText(g.geometry) AS wkt",
+      "SELECT q.*, COALESCE(ST_AsText(g.geometry), 'GEOMETRYCOLLECTION EMPTY') AS wkt",
       paste0("FROM (", consulta_actual(), ") q"),
       "JOIN paises_geo g USING (codigo)"
     )
@@ -158,8 +158,35 @@ server <- function(input, output, session) {
     paste("Mapa centrado en", ubicacion$pais[1])
   }
 
+  mostrar_grafico <- function(x, y, color, titulo) {
+    df <- sf::st_drop_geometry(isolate(data()))
+    if (!nrow(df)) stop("No hay datos para graficar.")
+    formula <- as.formula(paste(y, "~", x, if (nzchar(color)) paste("|", color) else ""))
+
+    dibujar <- function() {
+      if (nzchar(color)) tinyplot(formula, data = df, pch = 19, palette = "Blues 3")
+      else tinyplot(formula, data = df, pch = 19, col = "#0E4F5A")
+    }
+
+    output$grafico_modal <- renderPlot(dibujar())
+
+    showModal(modalDialog(
+      title = titulo, plotOutput("grafico_modal", height = "500px"), size = "l", easyClose = TRUE,
+      footer = modalButton("Cerrar")
+    ))
+
+    archivo <- tempfile(fileext = ".png")
+    grDevices::png(archivo, width = 768, height = 500)
+    tryCatch(dibujar(), finally = grDevices::dev.off())
+    on.exit(unlink(archivo))
+    list(
+      ContentText("Gráfico mostrado en el modal. Analiza la imagen adjunta y responde."),
+      content_image_file(archivo, resize = "none")
+    )
+  }
+
   # chat ------------------------------------------------------------------
-  chat <- ellmer::chat_openai(model = "gpt-5-nano", system_prompt = prompt_sistema)
+  chat <- ellmer::chat_openai(model = "gpt-5.6-luna", system_prompt = prompt_sistema)
 
   chat$register_tool(tool(
     consultar_paises,
@@ -194,6 +221,17 @@ server <- function(input, output, session) {
     arguments = list(
       pais = type_string("Nombre del país en español."),
       zoom = type_number("Nivel de zoom, normalmente entre 2 y 6.", required = FALSE)
+    )
+  ))
+
+  chat$register_tool(tool(
+    mostrar_grafico,
+    "Abre un gráfico de los datos visibles en un modal y devuelve su imagen al modelo.",
+    arguments = list(
+      x = type_enum(c("poblacion", "esperanza_de_vida", "pib_per_capita"), "Columna para el eje x."),
+      y = type_enum(c("poblacion", "esperanza_de_vida", "pib_per_capita"), "Columna para el eje y."),
+      color = type_enum(c("", "continente"), "Columna para el color, o ninguna."),
+      titulo = type_string("Título breve del modal.")
     )
   ))
 

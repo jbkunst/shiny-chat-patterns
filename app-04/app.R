@@ -29,7 +29,7 @@ prompt_sistema <- paste(readLines("prompt.md", warn = FALSE), collapse = "\n")
 
 # user interface ----------------------------------------------------------
 ui <- page_sidebar(
-  title = "App 04 · Tool SQL",
+  title = "App 04 · Explorar los datos con SQL",
   sidebar = sidebar(
     selectInput("continente", "Continente", choices = continentes),
     shinychat::chat_ui("chat", greeting = saludo, placeholder = "Pregunta por los datos..."),

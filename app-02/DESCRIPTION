@@ -1,4 +1,4 @@
-Title: App 02 · Chat sin tools
+Title: App 02 · Conversar sin acceso a los datos
 Description: Agrega un chat al dashboard, pero el modelo todavía no puede
     consultar los datos visibles ni controlar la interfaz.
 Imports:

@@ -1,4 +1,4 @@
-Title: App 04 · Tool SQL
+Title: App 04 · Explorar los datos con SQL
 Description: Permite que el modelo consulte una tabla DuckDB mediante consultas
     SELECT de solo lectura, sin modificar el dashboard.
 Imports:

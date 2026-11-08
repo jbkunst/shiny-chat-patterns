@@ -1,6 +1,7 @@
 import atexit
 import json
 import re
+import tempfile
 from pathlib import Path
 from typing import Annotated, Literal
 
@@ -9,7 +10,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import plotly.express as px
-from chatlas import ChatOpenAI
+from chatlas import ChatOpenAI, content_image_file
+from chatlas.types import ContentText
 from faicons import icon_svg
 from pydantic import Field
 from shinywidgets import output_widget, render_plotly
@@ -59,6 +61,19 @@ def validar_select(consulta: str) -> str:
     return consulta
 
 
+def dibujar_grafico(frame: pd.DataFrame, x: str, y: str, color: str = ""):
+    figure, axis = plt.subplots()
+    if color:
+        for valor, grupo in frame.groupby(color, sort=False):
+            axis.scatter(grupo[x], grupo[y], label=str(valor))
+        axis.legend(title=color)
+    else:
+        axis.scatter(frame[x], frame[y], color="#0E4F5A")
+    axis.set_xlabel(x)
+    axis.set_ylabel(y)
+    return figure
+
+
 # prompt ------------------------------------------------------------------
 saludo = (app_dir / "greeting.md").read_text(encoding="utf-8")
 prompt_sistema = (app_dir / "prompt.md").read_text(encoding="utf-8")
@@ -70,7 +85,7 @@ app_ui = ui.page_sidebar(
         ui.chat_ui(
             "chat",
             messages=[saludo],
-            placeholder="Filtra o controla el mapa...",
+            placeholder="Filtra, vuela o pide un gráfico...",
         ),
         width=400,
     ),
@@ -98,7 +113,7 @@ app_ui = ui.page_sidebar(
         col_widths=(4, 4, 4, 6, 6),
         row_heights=(1, 3),
     ),
-    title="App 08 · Tool + mapa",
+    title="App 08 · Mover el mapa e interpretar gráficos",
     fillable=True,
     theme=ui.Theme.from_brand(repo_dir / "_brand.yml"),
 )
@@ -109,6 +124,9 @@ def server(input: Inputs, output: Outputs, session: Session):
     consulta_actual = reactive.value("SELECT * FROM paises")
     variable_mapa = reactive.value("esperanza_de_vida")
     camara_mapa = reactive.value({"latitud": 15.0, "longitud": 0.0, "zoom": 1.0})
+    grafico_modal = reactive.value(
+        {"data": pd.DataFrame(), "x": "poblacion", "y": "esperanza_de_vida", "color": ""}
+    )
 
     @reactive.calc
     def data():
@@ -172,6 +190,16 @@ def server(input: Inputs, output: Outputs, session: Session):
             coloraxis_colorbar={"title": variable},
         )
         return figura
+
+    @render.plot
+    def grafico_en_modal():
+        especificacion = grafico_modal()
+        return dibujar_grafico(
+            especificacion["data"],
+            especificacion["x"],
+            especificacion["y"],
+            especificacion["color"],
+        )
 
     # tools ---------------------------------------------------------------
     def consultar_paises(
@@ -250,13 +278,62 @@ def server(input: Inputs, output: Outputs, session: Session):
         )
         return f"Mapa centrado en {nombre}"
 
+    async def mostrar_grafico(
+        x: Annotated[
+            Literal["poblacion", "esperanza_de_vida", "pib_per_capita"],
+            Field(description="Columna para el eje x."),
+        ],
+        y: Annotated[
+            Literal["poblacion", "esperanza_de_vida", "pib_per_capita"],
+            Field(description="Columna para el eje y."),
+        ],
+        color: Annotated[
+            Literal["", "continente"],
+            Field(description="Columna para el color, o ninguna."),
+        ],
+        titulo: Annotated[str, Field(description="Título breve del modal.")],
+    ) -> list[object]:
+        """Abre un gráfico de los datos visibles en un modal y devuelve su imagen al modelo."""
+        with reactive.isolate():
+            frame = data().copy()
+
+        if frame.empty:
+            raise ValueError("No hay datos para graficar.")
+
+        async with reactive.lock():
+            grafico_modal.set({"data": frame, "x": x, "y": y, "color": color})
+            await reactive.flush()
+
+        ui.modal_show(
+            ui.modal(
+                ui.output_plot("grafico_en_modal", height="500px"),
+                title=titulo,
+                size="l",
+                easy_close=True,
+                footer=ui.modal_button("Cerrar"),
+            ),
+            session=session,
+        )
+
+        figure = dibujar_grafico(frame, x, y, color)
+        with tempfile.TemporaryDirectory() as carpeta:
+            archivo = Path(carpeta) / "grafico.png"
+            figure.savefig(archivo, dpi=100, bbox_inches="tight")
+            plt.close(figure)
+            imagen = content_image_file(str(archivo), resize="none")
+        return [
+            ContentText(text="Gráfico mostrado en el modal. Analiza la imagen adjunta y responde."),
+            imagen,
+        ]
+
     # chat ----------------------------------------------------------------
     chat = ui.Chat("chat")
-    chat_client = ChatOpenAI(model="gpt-5-nano", system_prompt=prompt_sistema)
+    chat_client = ChatOpenAI(model="gpt-5.6-luna", system_prompt=prompt_sistema)
     chat_client.register_tool(consultar_paises)
     chat_client.register_tool(actualizar_dashboard)
     chat_client.register_tool(cambiar_variable)
     chat_client.register_tool(ir_a_pais)
+    chat_client.register_tool(mostrar_grafico)
 
     @chat.on_user_submit
     async def _(user_input: str):

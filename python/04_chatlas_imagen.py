@@ -6,13 +6,23 @@ from tempfile import TemporaryDirectory
 import matplotlib.pyplot as plt
 import numpy as np
 from chatlas import ChatOpenAI, content_image_file
+from chatlas.types import ContentText
 
 # tools -------------------------------------------------------------------
-def mostrar_puntos() -> object:
-    """Genera y devuelve un gráfico aleatorio con puntos identificados por letras."""
+def mostrar_puntos() -> list[object]:
+    """Genera y devuelve un gráfico de puntos con un patrón aleatorio y letras."""
     rng = np.random.default_rng()
-    puntos = rng.normal(size=(12, 2))
-    puntos[-1] = rng.uniform(4, 6, size=2)
+    x = rng.uniform(-3, 3, size=24)
+    match rng.choice(["grupos", "tendencia", "curva", "aislado"]):
+        case "grupos":
+            y = np.repeat([-2, 2], 12) + rng.normal(scale=0.3, size=24)
+        case "tendencia":
+            y = rng.choice([-1, 1]) * x + rng.normal(scale=0.3, size=24)
+        case "curva":
+            y = x**2 + rng.normal(scale=0.3, size=24)
+        case "aislado":
+            y = np.r_[rng.normal(size=23), 6]
+    puntos = np.column_stack([x, y])
     rng.shuffle(puntos)
 
     figura, eje = plt.subplots(figsize=(7, 5))
@@ -22,7 +32,7 @@ def mostrar_puntos() -> object:
     eje.set(
         xlim=(puntos[:, 0].min() - 0.5, puntos[:, 0].max() + 0.5),
         ylim=(puntos[:, 1].min() - 0.5, puntos[:, 1].max() + 0.5),
-        xlabel="X", ylabel="Y", title="¿Qué punto se separa del grupo?",
+        xlabel="X", ylabel="Y", title="¿Qué patrón ves?",
     )
 
     with TemporaryDirectory() as carpeta:
@@ -34,23 +44,25 @@ def mostrar_puntos() -> object:
         plt.show(block=False)
     else:
         plt.close(figura)
-    return resultado
+    return [ContentText(text="Gráfico generado. Analiza la imagen adjunta y responde."), resultado]
 
 
 # prompt ------------------------------------------------------------------
-pregunta = "Genera un gráfico e identifica el punto más separado del grupo. Explica por qué."
+pregunta = "Genera un gráfico y describe lo que ves. Identifica patrones y puntos que llamen la atención."
 
 # chat --------------------------------------------------------------------
 # Prueba la función y revisa el objeto de imagen sin llamar al modelo.
 resultado = mostrar_puntos()
-print(type(resultado))
-print({"tipo": resultado.image_content_type, "imagen_base64": len(resultado.data)})
+print([type(contenido).__name__ for contenido in resultado])
+print({"tipo": resultado[1].image_content_type, "imagen_base64": len(resultado[1].data)})
 
 chat = ChatOpenAI(
-    model="gpt-5-nano",
+    model="gpt-5.6-luna",
     system_prompt=(
-        "Responde brevemente en español. Usa mostrar_puntos para observar el gráfico. "
-        "Si no tienes la tool disponible, explica que no puedes observar los puntos."
+        "No describas ningún gráfico sin recibir su imagen mediante mostrar_puntos. "
+        "Cada petición de un gráfico nuevo requiere una nueva llamada a mostrar_puntos. "
+        "Tras recibir la imagen, descríbela y responde sin llamar otra vez a la tool para esa petición. "
+        "Responde brevemente en español; si no tienes la tool, di que no puedes observar el gráfico."
     ),
 )
 
@@ -59,3 +71,5 @@ chat.chat(pregunta)
 chat.register_tool(mostrar_puntos)
 
 chat.chat("Ahora usa la herramienta disponible. " + pregunta)
+
+chat.chat("Genera otro gráfico y describe lo que ves.")

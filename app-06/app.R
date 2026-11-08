@@ -28,7 +28,7 @@ prompt_sistema <- paste(readLines("prompt.md", warn = FALSE), collapse = "\n")
 
 # user interface ----------------------------------------------------------
 ui <- page_sidebar(
-  title = "App 06 · Tools de interfaz",
+  title = "App 06 · Mostrar tablas y gráficos",
   sidebar = sidebar(
     shinychat::chat_ui(
       "chat",
@@ -88,7 +88,7 @@ server <- function(input, output, session) {
       footer = modalButton("Cerrar")
     ))
 
-    resultado
+    "Tabla mostrada en un modal."
   }
 
   mostrar_grafico <- function(x, y, color, titulo) {
@@ -108,11 +108,7 @@ server <- function(input, output, session) {
       footer = modalButton("Cerrar")
     ))
 
-    archivo <- tempfile(fileext = ".png")
-    grDevices::png(archivo, width = 768, height = 500)
-    tryCatch(dibujar(), finally = grDevices::dev.off())
-    on.exit(unlink(archivo))
-    content_image_file(archivo, resize = "none")
+    "Gráfico mostrado en un modal."
   }
 
   # chat ------------------------------------------------------------------
@@ -145,7 +141,7 @@ server <- function(input, output, session) {
 
   chat$register_tool(tool(
     mostrar_grafico,
-    "Grafica los datos visibles en un modal y devuelve la imagen al modelo.",
+    "Abre en un modal un gráfico de los datos visibles en el dashboard.",
     arguments = list(
       x = type_enum(c("poblacion", "esperanza_de_vida", "pib_per_capita"), "Columna para el eje x."),
       y = type_enum(c("poblacion", "esperanza_de_vida", "pib_per_capita"), "Columna para el eje y."),

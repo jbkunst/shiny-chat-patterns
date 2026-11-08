@@ -1,4 +1,4 @@
-Title: App 03 · Tool con contexto
+Title: App 03 · Consultar los datos visibles
 Description: Registra una primera tool que resume los países visibles y entrega
     al modelo contexto real del estado reactivo del dashboard.
 Imports:

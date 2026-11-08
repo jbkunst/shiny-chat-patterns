@@ -28,7 +28,7 @@ prompt_sistema <- paste(readLines("prompt.md", warn = FALSE), collapse = "\n")
 
 # user interface ----------------------------------------------------------
 ui <- page_sidebar(
-  title = "App 05 · Tool + reactividad",
+  title = "App 05 · Actualizar el dashboard desde el chat",
   sidebar = sidebar(
     shinychat::chat_ui("chat", greeting = saludo, placeholder = "Filtra u ordena el dashboard..."),
     width = 400
