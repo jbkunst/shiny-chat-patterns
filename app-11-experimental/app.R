@@ -36,7 +36,7 @@ server <- function(input, output) {
   )
 
   observeEvent(input$chat_user_input, {
-    stream <- chat$stream_async(!!!input$chat_user_input, stream = "content")
+    stream <- chat$stream_async(!!!input$chat_user_input)
     shinychat::chat_append("chat", stream)
   })
 }
