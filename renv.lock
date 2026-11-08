@@ -2616,8 +2616,8 @@
     },
     "mcptools": {
       "Package": "mcptools",
-      "Version": "1.0.3",
-      "Source": "Repository",
+      "Version": "1.0.3.9000",
+      "Source": "GitHub",
       "Title": "Model Context Protocol Servers and Clients",
       "Authors@R": "c( person(\"Simon\", \"Couch\", , \"simon.couch@posit.co\", role = c(\"aut\", \"cre\"), comment = c(ORCID = \"0000-0001-5676-5107\")), person(\"Winston\", \"Chang\", , \"winston@posit.co\", role = \"aut\", comment = c(ORCID = \"0000-0002-1576-2126\")), person(\"Charlie\", \"Gao\", , \"charlie.gao@posit.co\", role = \"aut\", comment = c(ORCID = \"0000-0002-0750-061X\")), person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\"), comment = c(ROR = \"03wc8by49\")) )",
       "Description": "Implements the Model Context Protocol (MCP). Users can start 'R'-based servers, serving functions as tools for large language models to call before responding to the user in MCP-compatible apps like 'Claude Desktop' and 'Claude Code', with options to run those tools inside of interactive 'R' sessions. On the other end, when 'R' is the client via the 'ellmer' package, users can register tools from third-party MCP servers to integrate additional context into chats.",
@@ -2651,11 +2651,14 @@
       "Config/Needs/website": "tidyverse/tidytemplate",
       "Config/testthat/edition": "3",
       "Encoding": "UTF-8",
+      "Roxygen": "list(markdown = TRUE)",
       "Config/roxygen2/version": "8.0.0",
-      "NeedsCompilation": "no",
-      "Author": "Simon Couch [aut, cre] (ORCID: <https://orcid.org/0000-0001-5676-5107>), Winston Chang [aut] (ORCID: <https://orcid.org/0000-0002-1576-2126>), Charlie Gao [aut] (ORCID: <https://orcid.org/0000-0002-0750-061X>), Posit Software, PBC [cph, fnd] (ROR: <https://ror.org/03wc8by49>)",
-      "Maintainer": "Simon Couch <simon.couch@posit.co>",
-      "Repository": "https://packagemanager.posit.co/cran/latest"
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteUsername": "posit-dev",
+      "RemoteRepo": "mcptools",
+      "RemoteRef": "714803bdfce903707a27d9c4740591d87f601aae",
+      "RemoteSha": "714803bdfce903707a27d9c4740591d87f601aae"
     },
     "memoise": {
       "Package": "memoise",

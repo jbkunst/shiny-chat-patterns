@@ -1,7 +1,12 @@
 # App 09 · MCP + datos del FMI
 
-Parte del recorrido principal, por ahora solo en R. La idea nueva es registrar tools remotas con
-MCP. La tool local `graficar_serie()` reutiliza el patrón de actualización reactiva para mostrar los datos.
+Parte del recorrido principal, por ahora solo en R. Parte de App 08 y conserva sus tres indicadores,
+el gráfico de dispersión, el globo, los filtros por chat y los cambios de cámara. La fuente numérica
+pasa de Gapminder a World Economic Outlook (WEO) del FMI, con un corte de 2007.
+
+La esperanza de vida se reemplaza por desempleo (%); población y PIB por habitante conservan su papel.
+El PIB del FMI está en USD corrientes, no en la unidad PPA de Gapminder. El indicador de desempleo
+muestra el promedio simple de los países seleccionados, no una tasa agregada ponderada.
 
 El [servidor MCP comunitario de cyanheads](https://github.com/cyanheads/imf-mcp-server) consulta datos
 del FMI; no es un servidor oficial del Fondo. Su endpoint público no requiere una clave propia.
@@ -31,17 +36,37 @@ remotes::install_github(
 )
 ```
 
-Prueba: «Consulta la población de Chile entre 2020 y 2025 y grafícala».
-El chat muestra las llamadas MCP y la llamada local de gráficos. La tabla permite comparar los valores
-graficados con los devueltos por la consulta. Comprueba indicador, unidad y años de proyección.
-La prueba completa verificó que el gráfico coincide con la consulta a la precisión publicada por WEO.
+Prueba primero «Muestra solo países de América y colorea el mapa por desempleo» y «Vuela a Chile».
+Después pide «Consulta el desempleo de Chile y España entre 2000 y 2025 y grafícalo en un modal».
+El chat muestra las consultas MCP y `graficar_serie()` abre el gráfico y su tabla en un modal.
+Cerrar el modal conserva el dashboard, su corte de 2007 y los filtros. Comprueba indicador, unidad
+y años de estimación o proyección en las consultas de series.
+
+## Datos iniciales y continuidad con App 08
+
+`data/paises.csv` contiene los valores reales recuperados mediante MCP para los indicadores WEO
+`LUR`, `LP` y `NGDPDPC` en 2007. Conserva los países con los tres indicadores y etiquetas disponibles.
+`data/dashboard.json` guarda las respuestas originales, unidades, fecha de recuperación y versión de WEO.
+Las geometrías siguen viniendo de Natural Earth, igual que en App 08.
+
+La copia guardada permite abrir el dashboard sin descargar los datos en cada arranque. Las consultas
+SQL locales de solo lectura siguen filtrando esa tabla, igual que en App 08; las tools MCP consultan
+otras series del FMI en vivo. Para regenerar únicamente el corte inicial, desde la raíz:
+
+```r
+source("app-09/prepare-data.R", chdir = TRUE, encoding = "UTF-8")
+```
+
+Este script no usa el modelo ni modifica `data/comparacion.json` o `data/comparacion.rds`.
 
 ## Qué hace cada parte
 
 - `imf_list_databases`: descubre bases disponibles.
 - `imf_get_database`: obtiene dimensiones y códigos para construir la consulta.
 - `imf_query_dataset`: recupera observaciones, unidades y fuente.
-- `graficar_serie`: recibe los valores recuperados y actualiza el gráfico y la tabla en Shiny.
+- `consultar_paises` y `actualizar_dashboard`: consultan y filtran el corte local, como en App 08.
+- `cambiar_variable` e `ir_a_pais`: conservan el control del globo de App 08.
+- `graficar_serie`: recibe observaciones del MCP y abre un modal con su gráfico y tabla.
 
 El endpoint también ofrece tools de consulta SQL sobre resultados almacenados. No son necesarias para
 la demostración inicial. El gráfico se genera en R, no en el servidor MCP.

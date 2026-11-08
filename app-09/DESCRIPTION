@@ -1,11 +1,17 @@
-Title: App 09 · MCP + datos del FMI
-Description: Descubre y consulta herramientas de un servidor MCP comunitario de datos del FMI.
-    Una tool local de R grafica las observaciones recuperadas y actualiza la vista.
+Title: App 09 · MCP + mapa del FMI
+Description: Conserva el dashboard y el globo de App 08 con datos por países del FMI de 2007.
+    Consulta series mediante un MCP comunitario y las muestra en un modal con una tool local.
 Imports:
     bslib,
+    countrycode,
+    DBI,
+    duckdb,
     ellmer,
     jsonlite,
     mcptools,
+    mapgl,
+    rnaturalearthdata,
+    sf,
     shiny,
     shinychat,
     tinyplot
