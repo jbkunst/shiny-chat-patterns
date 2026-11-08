@@ -8,6 +8,34 @@
   const blocks = new WeakMap();
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
 
+  function orderAnnotations(deck) {
+    document.querySelectorAll(".reveal .slides section").forEach((slide) => {
+      const groups = new Map();
+      slide.querySelectorAll(".code-annotation-fragment").forEach((fragment) => {
+        const cell = fragment.dataset.targetCell;
+        const source = document.getElementById(cell);
+        if (!source?.dataset.workshopHighlights || source.dataset.codeAnnotationFragmentIndices) return;
+        if (!groups.has(cell)) groups.set(cell, []);
+        groups.get(cell).push(fragment);
+      });
+
+      let changed = false;
+      groups.forEach((fragments) => {
+        // Keep this block's slots relative to other slide fragments, but follow the marker numbers.
+        const indices = fragments.map((fragment) => Number(fragment.dataset.fragmentIndex));
+        if (!indices.every(Number.isFinite)) return;
+        indices.sort((a, b) => a - b);
+        fragments.sort((a, b) => Number(a.dataset.targetAnnotation) - Number(b.dataset.targetAnnotation));
+        fragments.forEach((fragment, index) => {
+          if (Number(fragment.dataset.fragmentIndex) === indices[index]) return;
+          fragment.dataset.fragmentIndex = String(indices[index]);
+          changed = true;
+        });
+      });
+      if (changed) deck.syncFragments(slide);
+    });
+  }
+
   function getBlock(pre) {
     if (blocks.has(pre)) return blocks.get(pre);
     const source = pre.closest("div.sourceCode");
@@ -65,7 +93,11 @@
     }
     const deck = window.Reveal;
     const update = () => updateSlide(deck.getCurrentSlide(), true);
-    deck.on("ready", () => updateSlide(deck.getCurrentSlide()));
+    const ready = () => {
+      orderAnnotations(deck);
+      updateSlide(deck.getCurrentSlide());
+    };
+    deck.on("ready", ready);
     deck.on("fragmentshown", update);
     deck.on("fragmenthidden", update);
     deck.on("slidechanged", () => updateSlide(deck.getCurrentSlide(), false, true));
@@ -94,7 +126,7 @@
       }
       highlight(block, Number(anchor.dataset.targetAnnotation) - 1, false);
     });
-    if (deck.isReady()) updateSlide(deck.getCurrentSlide());
+    if (deck.isReady()) ready();
   }
 
   connectReveal();

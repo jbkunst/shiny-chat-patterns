@@ -27,7 +27,7 @@ format:
     auto-stretch: false
     hash: true
     code-overflow: scroll
-    code-block-height: 650px
+    code-block-height: 500px
     code-annotations: select
     highlight-style: github
 revealjs-plugins:
@@ -37,13 +37,16 @@ revealjs-plugins:
 ```{r}
 #| label: setup-code-block
 #| include: false
+# Evita que R imprima tildes como <U+...> al renderizar en Windows con locale C.
+if (.Platform$OS.type == "windows") Sys.setlocale("LC_CTYPE", ".UTF-8")
+
 # Inserta un archivo R como Markdown. Las descripciones nombradas agregan
 # anotaciones y pasos de resaltado para los rangos de líneas indicados.
 code_block <- function(path, descriptions = NULL, single_copy = TRUE) {
   # Cuidados de mantenimiento (detalle en README.md):
   # - path es relativo a este QMD; los rangos corresponden al archivo original completo.
-  # - Conservar .workshop-code en ambos modos: assets/slides.css le aplica fuente de 19 px,
-  #   altura máxima de 683 px y scroll. Los demás ejemplos conservan 20 px y 650 px.
+  # - Conservar .workshop-code en ambos modos: aplica fuente de 19 px a los archivos completos.
+  #   Todo el código comparte el límite general de altura y los márgenes de assets/slides.css.
   # - El CSS también define el ancho, fondo y z-index del tooltip para mantenerlo legible.
   # - assets/code-highlights.js resalta un único bloque; single_copy = FALSE recupera las copias de Reveal.
   # - assets/code-tooltips.js mantiene el tooltip encima del marcador y fuera del contenedor con scroll.
@@ -68,6 +71,38 @@ code_block <- function(path, descriptions = NULL, single_copy = TRUE) {
   cat(fence, paste(code, collapse = "\n"), "```", "", notes, sep = "\n")
 }
 ```
+
+## Motivación {.content-centered}
+
+Una pregunta en lenguaje natural puede activar consultas, cálculos y cambios en la vista.
+
+El agente interpreta el pedido y usa herramientas para trabajar con los datos de la aplicación.
+
+::: {.columns}
+::: {.column width="50%"}
+### [CensoLab](https://censolab.cl/)
+
+[![](assets/apps/censolab.png){fig-alt="CensoLab: mapa de escolaridad del Gran Santiago."}][censolab]
+:::
+::: {.column width="50%"}
+### [BCCh Studio](https://jbkunst-bcch-studio.share.connect.posit.cloud/)
+
+[![](assets/apps/bcch-studio.png){fig-alt="BCCh Studio: PIB y estacionalidad."}][bcch-studio]
+:::
+:::
+
+::: {.notes}
+Presentación y capturas: https://kpstudio.io/#proyectos.
+CensoLab conecta preguntas sobre el Censo 2024 con cálculos, mapas, tipologías e informes territoriales.
+Está desarrollado principalmente en R con Shiny: https://censolab.cl/acerca-de/.
+BCCh Studio permite buscar y comparar series del Banco Central de Chile, aplicar métodos estadísticos,
+visualizar y elaborar proyecciones con trazabilidad de los datos y resultados.
+Las capturas muestran un pedido de mapa de escolaridad y otro de reorganización de gráficos del PIB.
+Puente al taller: construiremos paso a paso las capacidades que conectan conversación, datos e interfaz.
+:::
+
+[censolab]: https://censolab.cl/
+[bcch-studio]: https://jbkunst-bcch-studio.share.connect.posit.cloud/
 
 ## Cómo avanzaremos por el taller {.center}
 
@@ -99,7 +134,7 @@ code_block <- function(path, descriptions = NULL, single_copy = TRUE) {
 
    ::: {.nonincremental}
    - Tablas y gráficos en modales.
-   - Controles manuales, chat y cámara del mapa.
+   - Filtros, globo e interpretación de gráficos con el modelo.
    :::
 
 4. **Conectar herramientas externas**
@@ -113,6 +148,64 @@ code_block <- function(path, descriptions = NULL, single_copy = TRUE) {
    ::: {.nonincremental}
    - Casos territorial y económico de Colombia.
    :::
+:::
+
+## Antes de partir · Repo y entornos
+
+Slides: [jkunst.com/shiny-chat-patterns](https://jkunst.com/shiny-chat-patterns/).
+
+Repo: [github.com/jbkunst/shiny-chat-patterns](https://github.com/jbkunst/shiny-chat-patterns).
+
+Usaremos R. Ejecuta los comandos desde la raíz del repo.
+
+```console
+git clone https://github.com/jbkunst/shiny-chat-patterns.git
+cd shiny-chat-patterns
+```
+
+### Consola de R
+
+Inicia R en esta carpeta y restaura `renv.lock`. El entorno se activa automáticamente.
+
+```r
+renv::restore()
+```
+
+Alternativa en Python 3.12+: `uv sync --locked` en la terminal. Guía completa en el README.
+
+::: {.notes}
+Instalación de uv: https://docs.astral.sh/uv/getting-started/installation/.
+renv::activate() habilita el entorno; este repo ya incluye su activación en .Rprofile.
+renv::restore() instala las versiones fijadas: https://pkgs.rstudio.com/renv/reference/restore.html.
+Si renv no está instalado, el autoloader del proyecto ofrece instalarlo al iniciar R desde la raíz.
+:::
+
+## Antes de partir · API y primera prueba
+
+Desde App 02, el chat necesita internet y una `OPENAI_API_KEY` con acceso y saldo para la API.
+Crea `.Renviron` en la raíz del repo con tu clave:
+
+```dotenv
+OPENAI_API_KEY=tu_clave_de_openai
+```
+
+Carga la clave y prueba ellmer. La tercera línea debe devolver `TRUE`, sin mostrar la clave:
+
+```r
+library(ellmer)
+readRenviron(".Renviron")
+nzchar(Sys.getenv("OPENAI_API_KEY"))
+chat <- chat_openai(model = "gpt-5-nano")
+chat$chat("Responde solamente: conexión correcta.")
+```
+
+::: {.notes}
+App 00–08 tienen versiones equivalentes en R y Python. La configuración completa está en el README.
+La clave es personal y .Renviron queda fuera de Git.
+App 00–01 funcionan sin clave. App 09 está, por ahora, solo en R.
+readRenviron() carga .Renviron sin tener que reiniciar la sesión para esta prueba.
+En Python, uv run --env-file .Renviron carga la clave antes de ejecutar el comando correspondiente.
+La confirmación de la clave no demuestra que sea válida: la consulta a la API comprueba el acceso al modelo.
 :::
 
 ## 01 · Preparar y conversar {.section-slide}
@@ -193,7 +286,7 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-## App 01 · Filtrar datos con controles {#app-01-dashboard-reactivo}
+## App 01 · Explorar y filtrar datos {#app-01-dashboard-reactivo}
 
 Esta será la aplicación base que iremos modificando paso a paso.
 
@@ -228,21 +321,9 @@ Los indicadores, el gráfico y la tabla cambian juntos: todos dependen de los mi
 
 `{ellmer}` conecta R con modelos de lenguaje para construir conversaciones con contexto.
 
-## Configuración de `{ellmer}` {.setup-slide}
-
-Para usar OpenAI desde `{ellmer}`, configura la clave en un archivo `.Renviron`.
-
-```dotenv
-OPENAI_API_KEY=clave_de_openai
-```
-
-Después de crear o modificar el archivo, reinicia la sesión de R.
-
-Reemplaza `clave_de_openai` por tu clave personal en el archivo `.Renviron` de tu proyecto.
-
 ## Una conversación con `{ellmer}` {.conversation-slide}
 
-Antes de conectarlo a una aplicación, probamos el cliente y la conversación de forma aislada.
+Script `R/01_ellmer.R`: un ejemplo mínimo de conversación antes de conectarlo a una aplicación.
 
 ```{r}
 #| echo: false
@@ -256,7 +337,7 @@ El cliente conserva el historial entre llamadas a `chat$chat()`. La clave se lee
 
 `{shinychat}` conecta la conversación de `{ellmer}` con la interfaz reactiva de `{shiny}`.
 
-## App 02 · Conversar sin acceso a los datos {.app02-overview}
+## App 02 · Conversar sin acceso a los datos {.fragment-swap}
 
 ::: {.fragment}
 ### El chat en la UI
@@ -284,6 +365,7 @@ chat <- ellmer::chat_openai(...)
 
 observeEvent(input$chat_user_input, {
   stream <- chat$stream_async(!!!input$chat_user_input)
+
   shinychat::chat_append("chat", stream)
 })
 ```
@@ -325,15 +407,24 @@ App 03–05 · Dar acceso a los datos y modificar el estado reactivo.
 
 ## Una tool con `{ellmer}` {.conversation-slide .tool-console-slide}
 
-Consulta un pronóstico por ciudad y fecha. Copia y ejecuta el bloque completo en R.
+Script `R/02_ellmer_tool.R`: definimos una función, la usamos directamente y la registramos como tool.
 
 ```{r}
 #| echo: false
 #| results: asis
-code_block("../R/02_ellmer_tool.R")
+code_block(
+  "../R/02_ellmer_tool.R",
+  c(
+    "5-25" = "Define una función R que consulta el pronóstico por ciudad y fecha.",
+    "28-33" = "Podemos llamar la función directamente, sin usar un modelo.",
+    "35-44" = "Pregunta al modelo sin registrar la tool: todavía no puede consultar el pronóstico.",
+    "47-54" = "Registra la función como tool y describe sus argumentos para el modelo.",
+    "57" = "Vuelve a preguntar en la misma conversación, ahora con la tool disponible."
+  )
+)
 ```
 
-## App 03 · Leer un resumen de los datos visibles {.pattern-overview}
+## App 03 · Consultar los datos visibles {.pattern-overview}
 
 La tool calcula un resumen con campos predefinidos a partir de los países visibles.
 
@@ -342,6 +433,7 @@ La tool calcula un resumen con campos predefinidos a partir de los países visib
 ```r
 resumir_datos_visibles <- function() {
   df <- isolate(data())
+
   list(
     continente = isolate(input$continente),
     registros = nrow(df),
@@ -359,6 +451,9 @@ chat$register_tool(tool(
 
 ## App 03 · El código
 
+Con tools, agregamos `stream = "content"`: es necesario para mostrar sus llamadas y resultados en el chat.
+Las tools también se ejecutan sin ese argumento.
+
 ```{r}
 #| echo: false
 #| results: asis
@@ -367,7 +462,8 @@ code_block(
   c(
     "57-66" = "Define la tool que lee y resume los datos visibles al ejecutarse.",
     "77-80" = "Registra la tool para que el modelo pueda usarla.",
-    "82-85" = "Mantiene el flujo de conversación en el chat."
+    "83" = "Agrega `stream = 'content'` para mostrar llamadas y resultados de tools.",
+    "84-85" = "Agrega el contenido recibido al chat."
   )
 )
 ```
@@ -386,22 +482,27 @@ Selecciona Europa y pregunta: «¿Cuántos países se muestran y cuál es su esp
 
 El resumen del chat coincide con los indicadores. Cambia a Asia y vuelve a preguntar.
 
-## App 04 · Pasar del resumen a consultas SQL {.pattern-overview}
+## App 04 · Explorar los datos con SQL {.pattern-overview}
 
-La tool consulta toda la tabla `paises`; el filtro manual del dashboard no limita esa consulta.
+Definimos `consultar_paises(consulta)`: usa la conexión `con` a DuckDB, ejecuta un SELECT validado
+y devuelve el resultado como un data frame. Luego registramos esa función como tool del chat.
+
+Consulta la tabla `paises` completa, aunque el dashboard tenga un filtro manual.
 
 ```r
 consultar_paises <- function(consulta) {
   DBI::dbGetQuery(con, validar_select(consulta))
 }
 
-chat$register_tool(tool(
-  consultar_paises,
-  "Ejecuta una consulta SELECT sobre la tabla paises.",
-  arguments = list(
-    consulta = type_string("Consulta SELECT sin punto y coma.")
-  )
+chat$register_tool(tool(consultar_paises, "Ejecuta un SELECT sobre paises.",
+  arguments = list(consulta = type_string("Consulta SELECT sin punto y coma."))
 ))
+
+
+# Ejemplo de uso directo y resultado con los datos del repo:
+consultar_paises("SELECT COUNT(*) AS paises FROM paises WHERE continente = 'Europa'")
+#   paises
+# 1     30
 ```
 
 ## App 04 · El código
@@ -413,11 +514,29 @@ code_block(
   "../app-04/app.R",
   c(
     "11-15" = "Prepara la tabla paises en DuckDB para consultarla desde el chat.",
-    "68-70" = "La tool ejecuta la consulta sobre DuckDB.",
+    "18-24" = paste(
+      "Filtro básico para rechazar SQL no deseado; no garantiza seguridad completa.",
+      "En producción, usar permisos de solo lectura y acceso limitado a los datos."
+    ),
+    "68-70" = "Define una función que usa con, ejecuta el SELECT validado y devuelve un data frame.",
     "75-81" = "Registra la tool y describe sus argumentos."
   )
 )
 ```
+
+::: {.notes}
+validar_select() revisa que la consulta empiece con SELECT, mencione paises y no tenga punto y coma.
+Es una validación básica para rechazar algunas instrucciones no deseadas generadas por el modelo.
+Las expresiones regulares no analizan toda la consulta ni garantizan que solo acceda a paises.
+En producción, los permisos deben imponer los límites: conexión de solo lectura y acceso solo a los
+datos necesarios. La validación complementa esos permisos; el prompt tampoco los sustituye.
+En DuckDB, un archivo de base de datos ya preparado puede abrirse con read_only = TRUE.
+Esta demo crea la tabla en memoria al arrancar; no basta con agregar ese argumento a su conexión.
+Además, enable_external_access = false deshabilita el acceso externo, pero no convierte la conexión
+en solo lectura ni limita por sí solo el coste de una consulta.
+Referencias: https://www.duckdb.org/docs/1.4/clients/r y
+https://duckdb.org/docs/stable/operations_manual/securing_duckdb/overview.html.
+:::
 
 ## App 04 · Ejecutar y explorar {.app-demo}
 
@@ -435,46 +554,63 @@ La tool consulta la tabla completa y devuelve el resultado al chat. La vista del
 
 ## Dos tools con `{ellmer}` {.conversation-slide .tool-console-slide}
 
-«¿Lloverá en Madrid dentro de tres días?» → consultar la fecha actual y luego el pronóstico.
+Script `R/03_ellmer_dos_tools.R`: contiene un ejemplo mínimo con dos tools.
+
+El modelo consulta primero la fecha actual y luego el pronóstico.
 
 ```{r}
 #| echo: false
 #| results: asis
-code_block("../R/03_ellmer_dos_tools.R")
+code_block(
+  "../R/03_ellmer_dos_tools.R",
+  c(
+    "5-40" = "Conserva la función de pronóstico y valida la ciudad y la fecha.",
+    "42-47" = "Agrega una función que devuelve la fecha actual en UTC.",
+    "50-55" = "Plantea una fecha relativa y prueba el pronóstico directamente, sin el modelo.",
+    "57-68" = "Indica el orden de consulta y pregunta antes de registrar las tools.",
+    "71-83" = "Registra las dos funciones para que el modelo pueda utilizarlas.",
+    "86" = "Vuelve a preguntar: el modelo consulta la fecha, calcula el día y pide el pronóstico."
+  )
+)
 ```
 
-## App 05 · Pasar de consultar a actualizar la vista {.pattern-overview}
+## App 05 · Actualizar el dashboard desde el chat {.pattern-overview}
 
 Consultar devuelve datos al chat. Actualizar cambia la consulta reactiva que alimenta el dashboard.
 
 ```r
 actualizar_dashboard <- function(consulta) {
   consulta <- validar_select(consulta)
+
+  # Ejecuta antes de cambiar el estado; si falla, no actualiza la vista.
   resultado <- DBI::dbGetQuery(con, consulta)
+
   consulta_actual(consulta)
 
   list(mensaje = "Dashboard actualizado.", registros = nrow(resultado))
 }
 ```
 
-## App 05 · Cómo se propaga el cambio {.reactivity-flow-slide}
+`resultado` también permite devolver al modelo la cantidad de filas con `nrow(resultado)`.
 
-La tool cambia el estado. Shiny propaga el cambio hasta los outputs.
+## App 05 · Cómo se propaga el cambio {.content-centered}
+
+El usuario pide: «Muestra solo los países de Europa en el dashboard».
 
 ```{=html}
-<div class="reactivity-flow" role="group" aria-label="Tool, estado, datos y outputs">
+<div class="reactivity-flow" role="group" aria-label="Agente, tool y estado, datos y vista">
   <div class="reactivity-step">
-    <span class="reactivity-number">01 / ACCIÓN</span>
-    <strong>La tool escribe</strong>
+    <span class="reactivity-number">01 / AGENTE</span>
+    <strong>Interpreta el pedido</strong>
     <code>actualizar_dashboard()</code>
-    <span>Recibe una consulta SQL.</span>
+    <span>Genera el SQL y llama a la tool con esa consulta.</span>
   </div>
   <span class="reactivity-arrow" aria-hidden="true">→</span>
   <div class="reactivity-step reactivity-state">
-    <span class="reactivity-number">02 / ESTADO</span>
+    <span class="reactivity-number">02 / TOOL Y ESTADO</span>
     <strong>Guarda la consulta</strong>
-    <code>consulta_actual()</code>
-    <span>Invalida sus dependientes.</span>
+    <code>consulta_actual(consulta)</code>
+    <span>La tool cambia el valor reactivo e invalida sus dependientes.</span>
   </div>
   <span class="reactivity-arrow" aria-hidden="true">→</span>
   <div class="reactivity-step">
@@ -493,13 +629,40 @@ La tool cambia el estado. Shiny propaga el cambio hasta los outputs.
 </div>
 ```
 
-```r
+```{.r .workshop-code data-workshop-highlights="17|6-9|11|3|19"}
 consulta_actual <- reactiveVal("SELECT * FROM paises")
-data <- reactive(DBI::dbGetQuery(con, consulta_actual()))
+
+data <- reactive(DBI::dbGetQuery(con, consulta_actual())) # <4>
+
+actualizar_dashboard <- function(consulta) {
+  consulta <- validar_select(consulta) # <2>
+
+  # Ejecuta antes de cambiar el estado; si falla, no actualiza la vista.
+  resultado <- DBI::dbGetQuery(con, consulta)
+
+  consulta_actual(consulta) # <3>
+
+  list(mensaje = "Dashboard actualizado.", registros = nrow(resultado))
+}
+
+# El agente genera el SQL y llama a la tool:
+actualizar_dashboard("SELECT * FROM paises WHERE continente = 'Europa'") # <1>
+
+output$table <- renderTable(data(), striped = TRUE, hover = TRUE) # <5>
 ```
 
-::: {.reactivity-takeaway}
-Una escritura en `consulta_actual()` activa toda la cadena reactiva.
+1. **1.** El agente interpreta el pedido, genera SQL y llama a la misma tool de la slide anterior.
+2. **2.** La tool valida y ejecuta la consulta antes de modificar el estado.
+3. **3.** Guarda el SQL en `consulta_actual()`, lo que invalida los datos dependientes.
+4. **4.** Los outputs vuelven a leer `data()`, que ejecuta el SELECT con la consulta nueva.
+5. **5.** La tabla se actualiza; los indicadores y el gráfico también dependen de `data()`.
+
+::: {.notes}
+El agente llama a la tool. Shiny propaga el cambio a los datos y a toda la vista.
+El bloque conserva exactamente la función de la slide anterior y agrega su contexto reactivo.
+El ejemplo muestra código del server con con y validar_select() ya definidos por la app.
+La llamada con SQL representa lo que solicita el agente; las definiciones reactivas pertenecen a la app.
+La tabla representa uno de los outputs: indicadores y gráfico leen el mismo data().
 :::
 
 ## App 05 · El código
@@ -511,7 +674,9 @@ code_block(
   "../app-05/app.R",
   c(
     "49-51" = "El dashboard lee la consulta reactiva actual.",
-    "69-75" = "La tool escribe la consulta en el estado reactivo del dashboard.",
+    "69-70" = "Define la tool y valida la consulta recibida.",
+    "71" = "Ejecuta primero: si hay un error, no cambia el estado. Guarda las filas para contarlas.",
+    "73-75" = "Actualiza el estado y devuelve al modelo la cantidad de registros.",
     "88-94" = "Registra la tool que puede modificar el dashboard."
   )
 )
@@ -533,27 +698,18 @@ La tool cambia el estado reactivo: se actualizan los indicadores, el gráfico y 
 
 ## 03 · Actuar sobre la interfaz {.section-slide}
 
-App 06–08 · Abrir vistas, comparar controles y mover la cámara del mapa.
+App 06–08 · Abrir vistas, comparar filtros y entregar gráficos al modelo.
 
-## Una tool que devuelve una imagen {.conversation-slide .tool-console-slide}
-
-Generamos puntos aleatorios: nosotros vemos el gráfico y el modelo recibe la misma imagen.
-
-```{r}
-#| echo: false
-#| results: asis
-code_block("../R/04_ellmer_imagen.R")
-```
-
-## App 06 · Abrir vistas y devolver contexto {.pattern-overview}
+## App 06 · Mostrar tablas y gráficos {.pattern-overview}
 
 Una tool abre una tabla o un gráfico sin recargar la aplicación.
 
-La tool devuelve al modelo los datos de la tabla o la imagen del gráfico que muestra en el modal.
+Las tools devuelven una confirmación al chat. El modelo todavía no recibe la tabla ni la imagen del modal.
 
 ```r
 mostrar_tabla <- function(n, titulo) {
   resultado <- head(isolate(data()), n)
+
   output$tabla_modal <- renderTable(resultado)
 
   showModal(modalDialog(
@@ -561,7 +717,7 @@ mostrar_tabla <- function(n, titulo) {
     tableOutput("tabla_modal")
   ))
 
-  resultado
+  "Tabla mostrada en un modal."
 }
 ```
 
@@ -574,8 +730,8 @@ code_block(
   "../app-06/app.R",
   c(
     "81-92" = "Define la tool que muestra una tabla en un modal.",
-    "94-116" = "Define la tool que crea un gráfico y devuelve su imagen al modelo.",
-    "137-155" = "Registra las tools de interfaz con sus argumentos."
+    "94-112" = "Abre el gráfico en un modal y devuelve solo una confirmación.",
+    "133-151" = "Registra las tools de interfaz con sus argumentos."
   )
 )
 ```
@@ -592,42 +748,52 @@ shiny::runApp("app-06")
 
 ### Observa
 
-Las tools abren modales. Pregunta «¿Qué patrón ves?» para usar la imagen devuelta al modelo.
+Las tools abren los modales y el chat confirma la acción. Mostrar el gráfico no se lo entrega al modelo.
 
-## App 07 · El mismo filtro con controles o con chat {.comparison-slide}
+## App 07 · Combinar controles y conversación {.comparison-slide}
 
-Comparamos dos formas de expresar la misma intención sobre el dashboard.
-
-| Controles tradicionales | Chat |
-|---|---|
-| América; esperanza de vida: 70–80 años. | «Muestra América con esperanza de vida de 70 a 80 años». |
-
-Ambos caminos alimentan `data()`. La interacción más reciente determina el modo activo.
-
-## App 07 · Ejecutar y explorar {.app-demo}
+Ejecuta la app y compara el mismo filtro por dos caminos:
 
 ```r
 shiny::runApp("app-07")
 ```
 
-### Compara
+| Controles tradicionales | Chat |
+|---|---|
+| Américas; esperanza de vida: 70–80 años. | «Muestra Américas con esperanza de vida entre 70 y 80 años». |
 
-Con los controles, selecciona Américas y esperanza de vida entre 70 y 80 años.
-Luego pide al chat: «Muestra Américas con esperanza de vida entre 70 y 80 años».
+Ambos muestran los mismos países. La última interacción determina el modo activo.
 
-### Observa
+## Enviar un gráfico al modelo {.conversation-slide .tool-console-slide}
 
-Ambos caminos muestran los mismos países. Cambia un filtro manual para volver al modo de controles.
+Script `R/04_ellmer_imagen.R`: cada gráfico puede mostrar un patrón distinto; el modelo recibe la misma imagen.
 
-## App 08 · Mover la cámara mediante un proxy {.pattern-overview}
+```{r}
+#| echo: false
+#| results: asis
+code_block(
+  "../R/04_ellmer_imagen.R",
+  c(
+    "4-13" = "Elige al azar grupos, tendencia, curva o punto aislado y asigna letras a los puntos.",
+    "15-24" = "Dibuja el gráfico sin revelar el patrón elegido en el título.",
+    "26-33" = "Guarda un PNG y devuelve una confirmación junto con la imagen para el modelo.",
+    "41-43" = "Prueba la función directamente e inspecciona el texto y la imagen, sin usar el modelo.",
+    "45-55" = "Crea la conversación y pregunta sin registrar la tool: el modelo aún no ve el gráfico.",
+    "57-60" = "Registra la función que genera y devuelve la imagen.",
+    "62-64" = "Pide dos gráficos: el modelo debe observar cada imagen para describir su patrón."
+  )
+)
+```
+
+## App 08 · Mover el mapa e interpretar gráficos {.pattern-overview}
 
 `ir_a_pais()` mueve la cámara sin cambiar el filtro de países ni el indicador del mapa.
 
 El proxy conserva el mapa al viajar. Los cambios de filtro o color usan el render reactivo.
 
-```r
+```{.r .workshop-code data-workshop-highlights="2-11|13|15-19|21"}
 ir_a_pais <- function(pais, zoom = 4) {
-  ubicacion <- DBI::dbGetQuery(
+  ubicacion <- DBI::dbGetQuery( # <1>
     con,
     paste(
       "SELECT DISTINCT p.pais, g.longitud, g.latitud",
@@ -636,17 +802,62 @@ ir_a_pais <- function(pais, zoom = 4) {
     ),
     params = list(pais)
   )
-  if (!nrow(ubicacion)) stop("No encontré ese país.")
 
-  mapgl::maplibre_proxy("map", session) |>
+  if (!nrow(ubicacion)) stop("No encontré ese país.") # <2>
+
+  mapgl::maplibre_proxy("map", session) |> # <3>
     mapgl::fly_to(
       center = c(ubicacion$longitud[1], ubicacion$latitud[1]),
       zoom = zoom
     )
 
-  paste("Mapa centrado en", ubicacion$pais[1])
+  paste("Mapa centrado en", ubicacion$pais[1]) # <4>
 }
 ```
+
+1. **1.** Consulta las coordenadas del país; `params` pasa el nombre como parámetro SQL.
+2. **2.** Detiene la tool si no encuentra el país.
+3. **3.** El proxy selecciona el mapa existente y `fly_to()` actualiza su centro y zoom.
+4. **4.** Devuelve al modelo una confirmación del movimiento.
+
+## App 08 · Interpretar el gráfico {.pattern-overview}
+
+Conservamos el globo y `ir_a_pais()`. Completamos `mostrar_grafico()`, que ya abría un modal en App 06.
+
+La misma función `dibujar()` produce el gráfico del modal y el PNG que recibe el modelo.
+
+```{.r .workshop-code data-workshop-highlights="1-16|18-21|22-25"}
+mostrar_grafico <- function(x, y, color, titulo) {
+  df <- sf::st_drop_geometry(isolate(data())) # <1>
+  if (!nrow(df)) stop("No hay datos para graficar.")
+  formula <- as.formula(paste(y, "~", x, if (nzchar(color)) paste("|", color) else ""))
+
+  dibujar <- function() {
+    if (nzchar(color)) tinyplot(formula, data = df, pch = 19, palette = "Blues 3")
+    else tinyplot(formula, data = df, pch = 19, col = "#0E4F5A")
+  }
+
+  output$grafico_modal <- renderPlot(dibujar())
+
+  showModal(modalDialog(
+    title = titulo, plotOutput("grafico_modal", height = "500px"), size = "l", easyClose = TRUE,
+    footer = modalButton("Cerrar")
+  ))
+
+  archivo <- tempfile(fileext = ".png") # <2>
+  grDevices::png(archivo, width = 768, height = 500)
+  tryCatch(dibujar(), finally = grDevices::dev.off())
+  on.exit(unlink(archivo))
+  list( # <3>
+    ContentText("Gráfico mostrado en el modal. Analiza la imagen adjunta y responde."),
+    content_image_file(archivo, resize = "none")
+  )
+}
+```
+
+1. **1.** Usa los datos visibles y abre el gráfico en un modal, como en App 06.
+2. **2.** Vuelve a usar `dibujar()` para capturar el mismo gráfico en un PNG.
+3. **3.** Devuelve la imagen y una confirmación al modelo para que pueda interpretar el gráfico.
 
 ## App 08 · El código
 
@@ -657,8 +868,10 @@ code_block(
   "../app-08/app.R",
   c(
     "147-159" = "La tool actualiza la cámara del mapa existente mediante un proxy.",
-    "191-198" = "Registra ir_a_pais y describe sus argumentos.",
-    "200-203" = "Mantiene el flujo del chat con las tools."
+    "161-176" = "Retoma mostrar_grafico de App 06 para abrir el modal.",
+    "178-185" = "Completa la función: devuelve la imagen al modelo, además de mostrarla al usuario.",
+    "227-236" = "Registra mostrar_grafico con los mismos argumentos que en App 06.",
+    "238-241" = "Mantiene el flujo del chat con las tools."
   )
 )
 ```
@@ -671,11 +884,13 @@ shiny::runApp("app-08")
 
 ### Pide
 
-«Colorea el mapa por población.» Después: «Vuela a Colombia».
+«Vuela a Colombia». Luego: «Grafica PIB per cápita versus esperanza de vida por continente.
+¿Qué patrón observas?».
 
 ### Observa
 
-El cambio de color vuelve a renderizar el mapa. El vuelo mueve la cámara mediante un proxy.
+El vuelo usa el proxy. La otra tool abre el gráfico en un modal y entrega su imagen al modelo.
+Pregunta «Describe el gráfico anterior» para reutilizar la imagen sin abrir otro modal.
 
 ## 04 · Conectar herramientas con MCP {.section-slide}
 
@@ -720,7 +935,7 @@ Compara cifra, precisión, año y fuente. Las llamadas se conservan en `app-09/d
 
 El MCP ofrece tools para descubrir bases, resolver códigos y consultar series; no dibuja el gráfico.
 
-Nuestra tool `graficar_serie()` recibe las observaciones recuperadas y actualiza el gráfico y la tabla.
+Nuestra tool `graficar_serie()` abre un modal con las series recuperadas y conserva el dashboard de App 08.
 
 `mcp.json` indica a qué servidor conectarse:
 
@@ -740,6 +955,7 @@ Nuestra tool `graficar_serie()` recibe las observaciones recuperadas y actualiza
 
 ```r
 chat <- chat_openai(model = "gpt-5-nano", system_prompt = prompt_sistema)
+
 chat$set_tools(mcptools::mcp_tools("mcp.json"))
 ```
 
@@ -753,11 +969,11 @@ El registro de `graficar_serie()` conserva el patrón de las apps anteriores.
 code_block(
   "../app-09/app.R",
   c(
-    "5" = "Carga el cliente MCP para descubrir herramientas externas.",
-    "38-42" = "La tool local conserva el patrón de actualización reactiva para graficar los datos.",
-    "45-46" = "Crea el chat y registra las herramientas descubiertas en mcp.json.",
-    "47-57" = "Agrega la tool local de gráficos junto a las herramientas remotas.",
-    "59-62" = "Envía al chat el stream de respuestas, llamadas y resultados de herramientas."
+    "8" = "Agrega el cliente MCP al dashboard y globo de App 08, ahora con datos del FMI.",
+    "167-175" = "La tool local abre un modal para las series, conservando el dashboard de 2007.",
+    "178-179" = "Crea el chat y registra las herramientas descubiertas en mcp.json.",
+    "217-227" = "Agrega la tool del modal junto a las tools del globo y las remotas.",
+    "229-232" = "Envía al chat el stream de respuestas, llamadas y resultados de herramientas."
   )
 )
 ```
@@ -828,3 +1044,30 @@ El modelo inspecciona la vista para explicar el resultado.
 ## Cierre {.section-slide}
 
 La interfaz conserva su función y suma una nueva forma de expresar intención.
+
+Slides del taller: [jkunst.com/shiny-chat-patterns](https://jkunst.com/shiny-chat-patterns/).
+
+## Q&A · ¿Qué modelos admiten tools?
+
+Estos modelos sí pueden solicitar llamadas a funciones mediante su API. Ejemplos a noviembre de 2026:
+
+- **[OpenAI][qa-openai]:** GPT-5 nano y GPT-5.6 Luna.
+- **[Anthropic][qa-anthropic]:** Claude Haiku 5.5, Sonnet 5.5 y Opus 5.5.
+- **[Google][qa-google]:** Gemini 3.8 Flash y Gemini 3.1 Pro (preview).
+
+La app debe registrar las tools. Que el modelo las soporte no garantiza que siempre las use correctamente.
+
+::: {.notes}
+Q&A para responder preguntas del público, con respuestas preparadas; no es una actividad interactiva.
+La lista da ejemplos confirmados en documentación oficial, no una lista exhaustiva ni un ranking de calidad.
+El soporte exige un modelo, una API y un cliente compatibles; el acceso también depende de la cuenta.
+Tanto GPT-5 nano como GPT-5.6 Luna admiten function calling. La diferencia observada en el taller
+es de comportamiento, no que nano carezca de soporte ni que Luna conozca nuestras funciones sin registrarlas.
+Ficha adicional de GPT-5 nano: https://developers.openai.com/api/docs/models/gpt-5-nano.
+La capacidad de llamar funciones no implica admitir imágenes como resultados de esas funciones;
+esa compatibilidad debe revisarse por separado para ejemplos como R/04_ellmer_imagen.R.
+:::
+
+[qa-openai]: https://developers.openai.com/api/docs/models/gpt-5.6-luna
+[qa-anthropic]: https://platform.claude.com/docs/en/models/overview
+[qa-google]: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/tools/function-calling

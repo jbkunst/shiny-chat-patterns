@@ -19,6 +19,18 @@ El render lee también los ejemplos de `R/` y los `app.R` del recorrido principa
 
 ## Arquitectura visual
 
+Una sola slide de motivación presenta CensoLab y BCCh Studio antes del recorrido del taller.
+Incluye una explicación breve de la conexión entre preguntas, datos y acciones, seguida de dos columnas.
+El contenido usa la utilidad general `.content-centered` para centrarse verticalmente bajo el título.
+Cada columna muestra el nombre y la captura enlazados a la aplicación. Las imágenes originales provienen
+de `kpstudio.io`, se guardan en `assets/apps/` y la fuente queda en notas.
+
+Después de «El recorrido del taller», dos slides «Antes de partir» presentan la preparación
+en una columna, con R primero y Python como alternativa secundaria. Incluyen el repo,
+`renv::restore()`, `uv sync --locked` y la configuración de `.Renviron`. La primera prueba muestra
+cinco líneas de R: carga ellmer y `.Renviron`, comprueba la clave sin mostrarla y consulta el modelo.
+Los comandos se ejecutan desde la raíz. `.Rprofile` ya activa `renv`; Python carga la clave con `--env-file`.
+
 El recorrido se divide en tres capítulos: preparar y conversar (App 00–02), consultar y actualizar
 (App 03–05) y actuar sobre la interfaz (App 06–08). App 01–08 terminan con «Ejecutar y explorar»:
 comando de R,
@@ -26,8 +38,7 @@ acción o pregunta sugerida y comportamiento a observar. Ejecuta los comandos de
 App 00 muestra solo la demo Shinylive, con un visor de 650 px y la app al 80 % de escala.
 No incluye comando de ejecución porque ya está funcionando en el navegador. El zoom se aplica
 al HTML de esa app embebida, sin cambiar la escala de las slides ni la app local.
-En las demos, los subtítulos tienen 48 px de margen superior y 16 px inferior. Su selector debe superar
-la especificidad del estilo general de `h3`, para conservar la separación entre acción y observación.
+Las demos usan los mismos márgenes generales para títulos, párrafos y código que el resto del contenido.
 
 Después de App 08, el cuarto capítulo continúa el recorrido principal con MCP y App 09, por ahora solo en R.
 Incluye una definición breve, una comparación real cacheada sin y con MCP, el código de la app y
@@ -53,19 +64,40 @@ Los casos conservan su interfaz y no agregan pasos intermedios al recorrido incr
 Las columnas, los bloques de código, los diffs y los espacios de demo son componentes internos. No
 definen variantes adicionales de slide.
 
-Las slides explicativas de las apps usan texto arriba y código debajo, a todo el ancho. La clase
-`.pattern-overview` deja 28 px antes del código y limita su altura a 540 px para que quepa con el texto.
-En App 02, los fragmentos de UI y server ocupan el mismo espacio y se muestran uno por vez.
+Las slides explicativas usan texto arriba y código debajo, a todo el ancho. El espaciado se define
+de forma general con `--content-gap: 40px` y `--code-gap: 48px`, también dentro de columnas y fragmentos.
+Los subtítulos después de un párrafo, lista o tabla usan `--section-gap: 56px`, por ejemplo «Observa».
+Las columnas dejan `--column-gap: 40px` a cada lado de su línea divisoria, con separación simétrica.
+No hay excepciones de márgenes por app. Todo el código comparte `--code-max-height: 500px` y scroll.
+App 04 incluye debajo una llamada directa y su resultado real:
+30 países de Europa en `data/paises.csv`.
+En App 02, la utilidad reutilizable `.fragment-swap` muestra UI y server uno por vez en el mismo espacio.
 Los archivos completos presentados con `code_block()` conservan sus estilos propios.
 
-Los títulos de las apps nombran la capacidad que se incorpora. App 05 incluye un diagrama HTML/CSS de
-la cadena tool → estado reactivo → datos → outputs, con el estado destacado. App 07 compara el mismo filtro
-mediante controles y chat. El recorrido inicial enumera las capacidades sin repetir los números de app.
+Los títulos de las apps nombran la capacidad que se incorpora. App 05 muestra el esquema de propagación
+del cambio y, debajo, el código anotado en la misma slide. Repite la función completa de la slide anterior
+y recorre la llamada del agente, la validación, el estado reactivo, los datos y un output.
+En las slides centradas, el código se ajusta al alto disponible y conserva el scroll y las anotaciones.
+App 07 reúne en una sola slide el comando de ejecución, la comparación del mismo filtro mediante
+controles y chat, y el resultado a observar. El recorrido inicial enumera las capacidades sin repetir las apps.
+App 08 explica por separado el proxy del globo y la devolución de la imagen del modal al modelo.
 App 09 muestra la configuración `mcp.json` y anota las líneas nuevas del cliente y registro de tools.
 
 ## Ejemplos de consola en R y Python
 
 Antes de App 03, `R/02_ellmer_tool.R` consulta el pronóstico de una ciudad para una fecha explícita.
+App 06 se concentra en abrir tablas y gráficos en modales: sus tools devuelven una confirmación.
+App 07 conserva ese comportamiento y compara filtros manuales con consultas por chat.
+Después de App 07, «Enviar un gráfico al modelo» presenta `R/04_ellmer_imagen.R` antes de App 08.
+App 08 conserva el globo y su proxy, y completa `mostrar_grafico()` de App 06 para devolver el PNG
+al modelo. La misma función dibuja el modal y la imagen; el cliente usa `gpt-5.6-luna`, igual que la consola.
+Las cuatro slides de consola muestran la ruta del script antes del código para abrirlo en el editor.
+La primera tool usa `code_block()` con pasos para definir la función, ejecutarla directamente,
+preguntar sin tools, registrarla y volver a preguntar en la misma conversación.
+La slide de dos tools también anota la función de fecha, el orden de consulta y el registro de ambas.
+La slide de imagen anota la generación del gráfico, su devolución como imagen, la prueba directa
+y la comparación de la conversación antes y después de registrar la tool.
+Separa la ruta y la explicación en dos párrafos, con el espaciado general del contenido.
 La primera versión prioriza mostrar la función, sus argumentos y el registro de la tool.
 Los ejemplos de tools preguntan primero sin ellas, las registran y vuelven a preguntar
 en la misma conversación.
@@ -82,10 +114,18 @@ El horizonte válido incluye hoy y los próximos 15 días. Los datos conservan l
 Los ejemplos `R/01_ellmer.R` a `R/04_ellmer_imagen.R` tienen sus parejas en `python/`:
 `01_chatlas.py`, `02_chatlas_tool.py`, `03_chatlas_dos_tools.py` y `04_chatlas_imagen.py`.
 El cuarto muestra un gráfico aleatorio y permite inspeccionar el objeto de imagen que recibe el modelo.
-Las dos versiones usan doce puntos, uno alejado, y letras aleatorias; no generan las mismas coordenadas.
+El script 04 usa `gpt-5.6-luna` en R y Python para probar su comportamiento con imágenes devueltas por tools.
+La tool devuelve texto de confirmación y la imagen juntos, para indicar que la generación ya terminó.
+El prompt distingue cada petición de una imagen nueva y pide responder al recibirla, sin volver a llamar
+la tool para esa petición. Es una instrucción al modelo, no un límite de ejecución impuesto por código.
+`<tool result preview not available>` indica que la consola no puede previsualizar ese resultado;
+no basta para concluir que la imagen no se devolvió. Si el modelo repite llamadas, interrumpe la ejecución
+y vuelve a crear la conversación al probar un prompt corregido.
+Las dos versiones eligen al azar entre grupos, una tendencia ascendente o descendente, una curva
+y un punto aislado. Cada gráfico tiene 24 puntos con letras; no generan las mismas coordenadas.
+El título y la respuesta textual de la tool no revelan el patrón elegido: el modelo debe observar la imagen.
 Todos los imports y librerías se cargan al inicio. Los ejemplos 02–04 comparan antes y después del registro.
-Las slides de una tool, dos tools e imagen usan `.tool-console-slide`: una frase introductoria y código
-de hasta 590 px de alto.
+Las slides de consola usan la misma separación entre párrafos y código y el mismo límite de altura general.
 El código admite ajuste de línea para evitar scroll horizontal; el script completo sigue disponible.
 El botón de copiar permanece visible en estas slides, incluso sin pasar el cursor sobre el código.
 Las slides principales se concentran en consultar, actualizar y mostrar resultados. App 04 permite
@@ -95,6 +135,11 @@ Desde la raíz, ejecútalo con `uv run --env-file .Renviron python python/02_cha
 `--env-file` carga la clave desde el mismo archivo usado por R.
 
 ## Render local
+
+La última slide de Q&A responde preguntas del público; no propone una actividad interactiva.
+Incluye una lista breve de modelos con soporte oficial de function calling de OpenAI, Anthropic y Google.
+Cada proveedor enlaza la documentación consultada en noviembre de 2026.
+La respuesta distingue soporte, registro de tools, acceso de la cuenta y fiabilidad observada.
 
 ```console
 quarto render slides/index.qmd
@@ -144,10 +189,8 @@ Con `descriptions = NULL`, muestra el archivo sin anotaciones ni pasos de resalt
 los números de línea del archivo original; al editar una app, revisa las llamadas correspondientes.
 
 Ambos modos emiten la clase `.workshop-code`. En `assets/slides.css`, esta clase establece fuente de
-19 px y altura máxima de 683 px, aproximadamente un 5 % más que los 650 px originales. Es una altura
-máxima: un archivo corto ocupa menos espacio. `.tool-console-slide` reduce ese máximo a 590 px.
-Los ejemplos escritos directamente en las slides usan fuente de 20 px; `.pattern-overview` limita
-su altura a 540 px y el resto conserva un máximo de 650 px.
+19 px. Los ejemplos escritos directamente en las slides usan fuente de 20 px. Todos comparten
+el mismo límite `--code-max-height: 500px`: un archivo corto ocupa menos espacio y uno largo tiene scroll.
 
 Estos valores se mantienen en CSS para conservar una presentación consistente. Si aparece una
 necesidad concreta, tendría sentido agregar:
@@ -163,6 +206,8 @@ numeración original y ajustar la relación entre rangos, anotaciones y pasos de
 Por defecto, el helper emite `data-workshop-highlights` en lugar de `code-line-numbers`. Así Quarto
 conserva una sola copia del archivo. `codefrag` sigue creando los avances de las anotaciones y
 `assets/code-highlights.js` aplica las clases de resaltado al bloque existente al avanzar o retroceder.
+Los avances siguen el número de anotación (1, 2, 3...), aunque los marcadores aparezcan en otro orden
+en el archivo. El ajuste conserva los índices reservados al bloque y respeta los índices explícitos.
 Los rangos y las líneas originales se conservan; el archivo completo sigue disponible para el scroll.
 
 El desplazamiento usa el scroll suave del navegador y respeta la preferencia de movimiento reducido.
@@ -209,6 +254,9 @@ Al modificar el helper, los estilos o las versiones de Quarto/codefrag, comproba
 - Los clics en los marcadores numerados y la exportación mediante `?print-pdf`.
 - `single_copy = FALSE`, para conservar una alternativa al actualizar Quarto o `codefrag`.
 - Las tildes y eñes: si aparecen secuencias como `<U+00F3>`, revisar la configuración UTF-8 de R.
+
+El chunk inicial usa `LC_CTYPE = ".UTF-8"` en Windows para conservar las tildes al emitir el código.
+Esto evita que una sesión iniciada con locale `C` convierta esos caracteres en secuencias `<U+...>`.
 
 El ajuste depende de los selectores de los fragmentos y de la instancia `_tippy` que crea Quarto.
 Al actualizar esas dependencias, revisa estas suposiciones además de comprobar el render.
