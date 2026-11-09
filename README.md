@@ -127,7 +127,7 @@ o exploraciones en R; todavía no tienen una pareja Python. No forman parte de e
 
 | App | Qué presenta |
 |---|---|
-| `app-00` | Introducción básica a Shiny: widgets y outputs, sin chat |
+| `app-00` | Conectar inputs y outputs con widgets de Shiny, sin chat |
 | `app-01` | Dashboard reactivo de países y filtro manual |
 | `app-02` | Chat que todavía no conoce los datos |
 | `app-03` | Tool que entrega al modelo un resumen de los países visibles |
@@ -135,7 +135,7 @@ o exploraciones en R; todavía no tienen una pareja Python. No forman parte de e
 | `app-05` | Consultas del chat que actualizan el dashboard |
 | `app-06` | Tools que abren tablas y gráficos en modales y confirman la acción |
 | `app-07` | Uso complementario de filtros manuales y consultas por chat |
-| `app-08` | Globo, cámara y gráficos en modales cuya imagen recibe el modelo |
+| `app-08` | Mover el mapa e interpretar gráficos cuya imagen recibe el modelo |
 | `app-09` | Conecta herramientas MCP con tools locales; crecimiento e inflación del FMI |
 | `app-09-v2` | Agente mínimo con page_chat(), chat_server() y herramientas MCP |
 

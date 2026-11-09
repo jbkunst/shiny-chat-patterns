@@ -268,7 +268,7 @@ pasajeros <- data.frame(pasajeros = as.numeric(AirPassengers))
 
 # user interface ----------------------------------------------------------
 ui <- page_sidebar(
-  title = "App 00 · Widgets y outputs",
+  title = "App 00 · Conectar inputs y outputs",
   tags$style("html { zoom: 0.8; }"),
   sidebar = sidebar(
     textInput("title", "Título", value = "Pasajeros aéreos"),
@@ -805,7 +805,7 @@ code_block(
 )
 ```
 
-## App 08 · Mover el mapa e interpretar gráficos {.pattern-overview}
+## App 08 · Mover el mapa {.pattern-overview}
 
 `ir_a_pais()` mueve la cámara sin cambiar el filtro de países ni el indicador del mapa.
 
@@ -840,7 +840,7 @@ ir_a_pais <- function(pais, zoom = 4) {
 3. **3.** El proxy selecciona el mapa existente y `fly_to()` actualiza su centro y zoom.
 4. **4.** Devuelve al modelo una confirmación del movimiento.
 
-## App 08 · Interpretar el gráfico {.pattern-overview}
+## App 08 · Interpretar gráficos {.pattern-overview}
 
 Conservamos el globo y `ir_a_pais()`. Completamos `mostrar_grafico()`, que ya abría un modal en App 06.
 
@@ -1016,7 +1016,7 @@ La tool local actualiza data(); Shiny recalcula los outputs por reactividad.
 En este ejemplo, el servidor comunitario lo mantiene cyanheads y la fuente es el FMI.
 :::
 
-## App 09 · De los datos a la vista {.pattern-overview}
+## App 09 · Actualizar los datos reactivos {.pattern-overview}
 
 En `app-09/app.R`, el agente asigna los valores a los ejes, tamaño y color del mapa.
 `guardar_datos()` reemplaza la carga; todos los outputs se recalculan desde `data()`.

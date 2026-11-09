@@ -23,7 +23,7 @@ app_ui = ui.page_sidebar(
         ui.card_header(ui.output_text("plot_title")),
         ui.output_plot("plot"),
     ),
-    title="App 00 · La estructura mínima de una app",
+    title="App 00 · Conectar inputs y outputs",
     fillable=True,
     theme=ui.Theme.from_brand(repo_dir / "_brand.yml"),
 )
