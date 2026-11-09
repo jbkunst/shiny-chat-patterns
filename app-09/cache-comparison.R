@@ -3,15 +3,19 @@ library(mcptools)
 library(jsonlite)
 
 # prompt ------------------------------------------------------------------
-prompt <- paste(readLines("comparison-prompt.md", warn = FALSE), collapse = "\n")
-preguntas <- "¿Cuál fue la tasa de desempleo de España en 2025?"
+prompt <- paste(readLines("comparison-prompt.md", warn = FALSE, encoding = "UTF-8"), collapse = "\n")
+pregunta <- "¿Cuál fue la esperanza de vida al nacer en Colombia en 2023?"
+modelo <- "gpt-5-nano"
+if (!nzchar(Sys.getenv("OPENAI_API_KEY"))) stop("Falta OPENAI_API_KEY; la caché anterior se conserva.")
 
 # tools -------------------------------------------------------------------
-tools <- mcptools::mcp_tools("mcp.json")
+source("mcp-tools.R", local = TRUE, encoding = "UTF-8")
 
 # comparison --------------------------------------------------------------
-ejecutar <- function(pregunta, usar_mcp) {
-  chat <- chat_openai(model = "gpt-5-nano", system_prompt = prompt)
+ejecutar <- function(usar_mcp) {
+  chat <- chat_openai(
+    model = modelo, system_prompt = prompt, params = params(max_tokens = 16384, reasoning_effort = "low")
+  )
   if (usar_mcp) chat$set_tools(tools)
   respuesta <- as.character(chat$chat(pregunta, echo = "none"))
 
@@ -30,23 +34,28 @@ ejecutar <- function(pregunta, usar_mcp) {
   list(respuesta = respuesta, llamadas = llamadas)
 }
 
-casos <- lapply(preguntas, function(pregunta) {
-  cat("Comparando:", pregunta, "\n")
-  sin_mcp <- ejecutar(pregunta, FALSE)
-  con_mcp <- ejecutar(pregunta, TRUE)
-  stopifnot(length(sin_mcp$llamadas) == 0L, length(con_mcp$llamadas) > 0L)
-  list(pregunta = pregunta, sin_mcp = sin_mcp, con_mcp = con_mcp)
-})
-
+sin_mcp <- ejecutar(FALSE)
+con_mcp <- ejecutar(TRUE)
 cache <- list(
   generado_utc = format(Sys.time(), tz = "UTC", format = "%Y-%m-%d %H:%M:%S UTC"),
-  modelo = "gpt-5-nano",
-  endpoint = "https://imf.caseyjhand.com/mcp",
+  modelo = modelo,
+  parametros = params(max_tokens = 16384, reasoning_effort = "low"),
+  endpoint = "https://worldbank.caseyjhand.com/mcp",
+  fuente = "Banco Mundial · World Development Indicators",
   prompt = prompt,
-  casos = casos
+  casos = list(list(pregunta = pregunta, sin_mcp = sin_mcp, con_mcp = con_mcp))
 )
+
+# validate before replacing the previous cache -----------------------------
+temporal_json <- tempfile(fileext = ".json")
+temporal_rds <- tempfile(fileext = ".rds")
+write_json(cache, temporal_json, auto_unbox = TRUE, pretty = TRUE, null = "null", digits = NA)
+saveRDS(cache, temporal_rds)
+source("verify-comparison.R", local = list2env(list(archivo_cache = temporal_json)), encoding = "UTF-8")
+stopifnot(isTRUE(all.equal(read_json(temporal_json), readRDS(temporal_rds), check.attributes = FALSE)))
+
 dir.create("data", showWarnings = FALSE)
-saveRDS(cache, "data/comparacion.rds")
-write_json(cache, "data/comparacion.json", auto_unbox = TRUE, pretty = TRUE, null = "null", digits = NA)
-cat("Comparación guardada en data/comparacion.json. Revisa las respuestas y sus llamadas.\n")
-source("verify-comparison.R", encoding = "UTF-8")
+stopifnot(file.copy(temporal_json, "data/comparacion.json", overwrite = TRUE))
+stopifnot(file.copy(temporal_rds, "data/comparacion.rds", overwrite = TRUE))
+unlink(c(temporal_json, temporal_rds))
+cat("Comparación Banco Mundial guardada tras verificar las observaciones y la respuesta.\n")

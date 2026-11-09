@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 580" role="img"
+  aria-labelledby="mcp-flow-title mcp-flow-desc">
+  <title id="mcp-flow-title">Del agente y el MCP a los outputs de Shiny</title>
+  <desc id="mcp-flow-desc">El agente consulta el servidor MCP y recibe sus datos.
+    Luego llama a guardar_datos, que actualiza data. Los datos reactivos alimentan
+    el mapa, el gráfico, la tabla y los indicadores.</desc>
+  <defs>
+    <marker id="mcp-arrow" viewBox="0 0 10 10" refX="9" refY="5"
+      markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#174a70" stroke-width="1.6"/>
+    </marker>
+  </defs>
+
+  <g fill="none" stroke="#174a70" stroke-width="2.5" stroke-linecap="round">
+    <path d="M 72 293 V 184" marker-end="url(#mcp-arrow)"/>
+    <path d="M 214 184 V 293" marker-end="url(#mcp-arrow)"/>
+    <path d="M 282 360 H 358" marker-end="url(#mcp-arrow)"/>
+    <path d="M 682 360 H 778" marker-end="url(#mcp-arrow)"/>
+    <path d="M 1002 360 H 1080"/>
+    <path d="M 1080 160 V 490"/>
+    <path d="M 1080 160 H 1138" marker-end="url(#mcp-arrow)"/>
+    <path d="M 1080 270 H 1138" marker-end="url(#mcp-arrow)"/>
+    <path d="M 1080 380 H 1138" marker-end="url(#mcp-arrow)"/>
+    <path d="M 1080 490 H 1138" marker-end="url(#mcp-arrow)"/>
+  </g>
+
+  <g fill="#fffefa" stroke="#ced9dc" stroke-width="2">
+    <rect x="20" y="60" width="250" height="110" rx="16"/>
+    <rect x="20" y="305" width="250" height="110" rx="16"/>
+    <rect x="370" y="305" width="300" height="110" rx="16"/>
+    <rect x="1150" y="120" width="230" height="80" rx="12"/>
+    <rect x="1150" y="230" width="230" height="80" rx="12"/>
+    <rect x="1150" y="340" width="230" height="80" rx="12"/>
+    <rect x="1150" y="450" width="230" height="80" rx="12"/>
+  </g>
+  <rect x="790" y="305" width="200" height="110" rx="16"
+    fill="#e5edf1" stroke="#174a70" stroke-width="2.5"/>
+
+  <g font-family="inherit" fill="#263338" text-anchor="middle">
+    <g font-size="30" font-weight="500">
+      <text x="145" y="108">Servidor MCP</text>
+      <text x="145" y="352">Agente</text>
+    </g>
+    <g font-size="22" fill="#5f6d72">
+      <text x="145" y="140">Datos externos</text>
+      <text x="145" y="384">ellmer</text>
+      <text x="520" y="343">Tool local de R</text>
+      <text x="890" y="384">Estado reactivo</text>
+    </g>
+    <g font-family="IBM Plex Mono, monospace" fill="#174a70">
+      <text x="520" y="382" font-size="26">guardar_datos()</text>
+      <text x="890" y="352" font-size="36">data()</text>
+    </g>
+    <g font-size="27">
+      <text x="1265" y="170">Mapa</text>
+      <text x="1265" y="280">Gráfico</text>
+      <text x="1265" y="390">Tabla</text>
+      <text x="1265" y="500">Indicadores</text>
+    </g>
+    <text x="1265" y="85" font-size="21" font-weight="500" fill="#174a70">OUTPUTS DE SHINY</text>
+    <g font-size="20" fill="#5f6d72">
+      <text x="92" y="242" text-anchor="start">consulta</text>
+      <text x="230" y="242" text-anchor="start">datos</text>
+      <text x="320" y="337">llama</text>
+      <text x="730" y="337">actualiza</text>
+    </g>
+  </g>
+</svg>

@@ -1,11 +1,14 @@
-Title: App 09 · MCP + mapa del FMI
-Description: Conserva el dashboard y el globo de App 08 con datos por países del FMI de 2007.
-    Consulta series mediante un MCP comunitario y las muestra en un modal con una tool local.
+Title: App 09 · Conectar herramientas externas con MCP
+Description: Integra las herramientas de un servidor MCP externo con el chat y las tools locales de Shiny.
+    El ejemplo consulta datos del Banco Mundial y guarda una carga reactiva para mapa, dispersión y tabla.
 Imports:
+    ragg,
+    thematic,
     bslib,
-    countrycode,
-    DBI,
-    duckdb,
+    dplyr,
+    ggplot2,
+    readr,
+    stringr,
     ellmer,
     jsonlite,
     mcptools,
@@ -13,7 +16,6 @@ Imports:
     rnaturalearthdata,
     sf,
     shiny,
-    shinychat,
-    tinyplot
+    shinychat
 Remotes: posit-dev/mcptools@714803bdfce903707a27d9c4740591d87f601aae
 Encoding: UTF-8

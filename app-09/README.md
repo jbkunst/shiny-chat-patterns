@@ -1,104 +1,151 @@
-# App 09 · MCP + datos del FMI
+# App 09 · Conectar herramientas externas con MCP
 
-Parte del recorrido principal, por ahora solo en R. Parte de App 08 y conserva sus tres indicadores,
-el gráfico de dispersión, el globo, los filtros por chat y los cambios de cámara. La fuente numérica
-pasa de Gapminder a World Economic Outlook (WEO) del FMI, con un corte de 2007.
+Agrega herramientas remotas mediante MCP al chat que ya utiliza tools locales de Shiny.
+El ejemplo usa **Luna** y el servidor comunitario de datos del Banco Mundial mantenido por **cyanheads**.
+Empieza vacía: un solo `data()` alimenta el mapa, la dispersión, la tabla y los resúmenes.
+Debajo de los indicadores, un `navset_card_tab()` separa **Visualización** (mapa y gráfico)
+de **Datos** (tabla). Visualización contiene dos cards con título: **Mapa** y **Gráfico**.
 
-La esperanza de vida se reemplaza por desempleo (%); población y PIB por habitante conservan su papel.
-El PIB del FMI está en USD corrientes, no en la unidad PPA de Gapminder. El indicador de desempleo
-muestra el promedio simple de los países seleccionados, no una tasa agregada ponderada.
-
-El [servidor MCP comunitario de cyanheads](https://github.com/cyanheads/imf-mcp-server) consulta datos
-del FMI; no es un servidor oficial del Fondo. Su endpoint público no requiere una clave propia.
-El modelo usa `OPENAI_API_KEY`, igual que las otras apps. Las respuestas dependen de la disponibilidad
-del servidor y de la publicación de cada base.
+La fuente estadística es el **Banco Mundial**. El
+[servidor MCP comunitario](https://github.com/cyanheads/worldbank-mcp-server) no es un servidor oficial.
+El endpoint `https://worldbank.caseyjhand.com/mcp` funciona sin token del Banco Mundial.
+El modelo usa `OPENAI_API_KEY`. No hay SQL, DuckDB ni datos numéricos iniciales.
 
 ## Ejecutar
 
-Restaura las dependencias desde la raíz con `renv::restore()` y abre la app:
+Desde la raíz, con el entorno restaurado mediante `renv::restore()`:
 
 ```r
+readRenviron(".Renviron")
 shiny::runApp("app-09")
 ```
 
-`renv.lock` fija la revisión de `posit-dev/mcptools` comprobada con este endpoint HTTP:
-`714803bdfce903707a27d9c4740591d87f601aae`. Esta revisión conserva los campos JSON `null` al ocultar
-datos sensibles, y evita un fallo del cliente al procesar algunas respuestas del servidor.
+## Una carga para toda la vista
 
-Si `renv::restore()` falla en Windows al extraer el archivo `AGENTS.md` de esa dependencia, la instalación
-con `remotes` permite completar la compilación del paquete. Con el entorno del proyecto activo:
+`data()` guarda la carga completa:
 
-```r
-install.packages("remotes") # Solo si aún no está instalado.
-remotes::install_github(
-  "posit-dev/mcptools@714803bdfce903707a27d9c4740591d87f601aae",
-  dependencies = FALSE, upgrade = "never", build_vignettes = FALSE
-)
+- `datos`: filas con `pais` (ISO3), `anio`, `x_var`, `y_var`, `size_var`, `color_var` y `map_var`.
+- `variables`: indicador, nombre y unidad de cada columna utilizada.
+
+X e Y son los ejes, `size_var` es el tamaño y `color_var` colorea los puntos por un indicador numérico.
+`map_var` determina el color del país de forma independiente.
+Una variable puede ocupar varios papeles: por ejemplo, esperanza de vida en Y y en el mapa.
+Los papeles no utilizados quedan como `NA`; los faltantes no se convierten en cero.
+
+```mermaid
+flowchart TD
+  MCP["Observaciones del MCP"] --> A["El agente arma la carga"]
+  A --> G["guardar_datos()"]
+  G --> D["data(): filas, nombres y unidades"]
+  D --> M["Mapa: map_var"]
+  D --> P["Dispersión: x_var, y_var, size_var, color_var"]
+  D --> T["Tabla y resúmenes"]
 ```
 
-Prueba primero «Muestra solo países de América y colorea el mapa por desempleo» y «Vuela a Chile».
-Después pide «Consulta el desempleo de Chile y España entre 2000 y 2025 y grafícalo en un modal».
-El chat muestra las consultas MCP y `graficar_serie()` abre el gráfico y su tabla en un modal.
-Cerrar el modal conserva el dashboard, su corte de 2007 y los filtros. Comprueba indicador, unidad
-y años de estimación o proyección en las consultas de series.
+`guardar_datos()` recibe los objetos estructurados, arma los data frames con `bind_rows()` y reemplaza
+la carga completa. No une con datos anteriores. El agente decide qué valores asignar a cada papel
+usando exclusivamente las observaciones recibidas del MCP; cuatro decimales son suficientes.
+La app no analiza una cadena JSON: ellmer convierte los argumentos a listas de R.
+`ver_datos()` devuelve esa misma carga sin modificarla.
 
-## Datos iniciales y continuidad con App 08
+Cada nueva carga reemplaza la anterior. Para cambiar el color o mostrar solo algunos países,
+el agente puede leer la carga y reenviar los datos disponibles, sin descargar otra vez.
+No existen `region()`, `data_view()`, un catálogo de filtros ni un estado para series.
+La app trabaja con un año o el último dato por país. Si se pide una serie temporal, explica ese alcance.
 
-`data/paises.csv` contiene los valores reales recuperados mediante MCP para los indicadores WEO
-`LUR`, `LP` y `NGDPDPC` en 2007. Conserva los países con los tres indicadores y etiquetas disponibles.
-`data/dashboard.json` guarda las respuestas originales, unidades, fecha de recuperación y versión de WEO.
-Las geometrías siguen viniendo de Natural Earth, igual que en App 08.
+## Mapa y dispersión
 
-La copia guardada permite abrir el dashboard sin descargar los datos en cada arranque. Las consultas
-SQL locales de solo lectura siguen filtrando esa tabla, igual que en App 08; las tools MCP consultan
-otras series del FMI en vivo. Para regenerar únicamente el corte inicial, desde la raíz:
+Prueba primero:
+
+> Colorea el mapa con el último dato disponible de esperanza de vida de cada país.
+
+El MCP consulta `mrnev = 1`, el último valor no nulo de cada país, conservando su año real.
+El mapa une las filas recibidas con Natural Earth mediante `inner_join()`: su capa de datos solo
+contiene países con `map_var` disponible. No añade una capa de países sin datos.
+La cartografía base sigue proporcionando contexto geográfico.
+El tooltip muestra país, indicador, valor, unidad, año y fuente.
+
+Después pide:
+
+> Ahora genera un gráfico con PIB per cápita en X y la esperanza de vida ya descargada en Y.
+> Usa escala logarítmica en X y conserva el mapa.
+
+El agente lee la carga actual y consulta el PIB per cápita para el mismo año de cada fila.
+Reutiliza la esperanza de vida en Y y en el mapa, sin volver a descargarla.
+`configurar_grafico(log = "x")` cambia la escala visual de X sin transformar los datos guardados.
+La dispersión usa una única capa de puntos de esa carga y `theme_minimal()`.
+Sin datos, muestra un canvas con los ejes X e Y, sin puntos ni valores inventados.
+El tamaño y el color son opcionales: si no se usan, los puntos tienen tamaño fijo y color uniforme.
+El mapa y la tabla muestran los mismos países. Si faltan valores, se omiten de la visualización
+que los necesita; la tabla conserva `NA`.
+
+Las value boxes muestran países, período y cantidad de indicadores distintos de la carga.
+Un indicador repetido en Y y mapa se cuenta una sola vez.
+Finalmente pide:
+
+> Ahora filtra solamente los países y territorios de América, reutilizando los datos cargados.
+
+El agente lee `ver_datos()`, selecciona las filas de América y llama a `guardar_datos()`
+sin descargar otra vez.
+Mapa, gráfico, tabla y resúmenes se actualizan con esa selección; la escala de X se conserva.
+El año y la cobertura dependen de las observaciones recibidas: compruébalos en la tabla.
+
+Puedes pedir «Usa escala logarítmica en X» o «Colorea los puntos por esperanza de vida».
+Para cambiar los ejes llama a `configurar_grafico(log)`, con `""`, `"x"`, `"y"` o `"xy"`.
+El área de los puntos es proporcional al valor con `scale_size_area()` de ggplot2.
+Puedes pedir «Usa tamaño logarítmico»: `configurar_grafico(tamano = "log10")` comprime su rango.
+Usa `tamano = "area"` para volver al área proporcional. Los argumentos omitidos conservan su estado.
+La configuración visual queda fuera de `data()`; no vuelve a guardar ni descargar observaciones.
+Para cambiar la variable del color sí reutiliza la carga mediante `guardar_datos()`.
+Las escalas solo cambian los ejes; la tabla conserva los valores y unidades originales.
+En ejes logarítmicos se omiten los puntos con valores no positivos, conservando esas filas en la tabla.
+
+Se evaluó tinyplot 0.7.0: permite estas representaciones, pero sus dos leyendas necesitan más ajustes
+para mostrar nombres y unidades dinámicos. Se conserva ggplot2 para mantener ese código sencillo.
+`thematic::thematic_shiny(font = "auto")` y ragg vinculan la tipografía con la interfaz de `_brand.yml`.
+
+## Conexión MCP
+
+`mcp.json` configura el endpoint con un timeout de 60 segundos.
+`mcp-tools.R` prepara búsqueda, metadatos y observaciones:
+
+- `worldbank_search_indicators`: encuentra el indicador.
+- `worldbank_get_indicator`: confirma definición, fuente y unidad.
+- `worldbank_get_data`: consulta `indicator_id`, `countries`, `date_range` o `mrnev`, y paginación.
+
+Para un año, `date_range = "2023"`; para el último dato por país, `mrnev = 1`, sin `date_range`.
+`countries = "all"` permite consultar todos los países; el agente omite agregados y valores `null`.
+Se comprobó `per_page = 1000`; hay que revisar `totalPages`.
+Cada fila de `resultado@value$data` contiene `countryIso3`, `countryName`, `date` y `value`.
+Se conserva el ajuste de esquema necesario con ellmer 0.4.2; no añade validaciones a la carga local.
+
+## Comparación y demo guardadas
+
+`data/comparacion.json` y `.rds` conservan conversaciones independientes con el mismo `gpt-5-nano`
+y prompt neutral, sin y con MCP: esperanza de vida de Colombia en 2023. Las slides leen ese JSON local.
+La comparación es independiente de las tools locales del dashboard.
 
 ```r
-source("app-09/prepare-data.R", chdir = TRUE, encoding = "UTF-8")
+readRenviron(".Renviron")
+source("app-09/cache-comparison.R", chdir = TRUE, encoding = "UTF-8")
+source("app-09/verify-comparison.R", chdir = TRUE, encoding = "UTF-8")
 ```
 
-Este script no usa el modelo ni modifica `data/comparacion.json` o `data/comparacion.rds`.
-
-## Qué hace cada parte
-
-- `imf_list_databases`: descubre bases disponibles.
-- `imf_get_database`: obtiene dimensiones y códigos para construir la consulta.
-- `imf_query_dataset`: recupera observaciones, unidades y fuente.
-- `consultar_paises` y `actualizar_dashboard`: consultan y filtran el corte local, como en App 08.
-- `cambiar_variable` e `ir_a_pais`: conservan el control del globo de App 08.
-- `graficar_serie`: recibe observaciones del MCP y abre un modal con su gráfico y tabla.
-
-El endpoint también ofrece tools de consulta SQL sobre resultados almacenados. No son necesarias para
-la demostración inicial. El gráfico se genera en R, no en el servidor MCP.
-
-## Comparación cacheada para las slides
-
-`data/comparacion.json` guarda una pregunta con el mismo modelo (`gpt-5-nano`) y el mismo prompt,
-en conversaciones independientes, sin y con MCP. Conserva respuestas y llamadas completas a tools:
-argumentos, resultados y errores. `data/comparacion.rds` guarda los mismos datos en formato R.
-No contiene claves ni razonamiento interno del modelo. Las slides leen el JSON sin consultar la API.
-
-La pregunta es «¿Cuál fue la tasa de desempleo de España en 2025?», sin exigir una fuente en la pregunta.
-El prompt solo pide una respuesta breve en español con año, unidad y fuente;
-no menciona MCP, herramientas ni el taller. La respuesta
-sin MCP puede acertar de memoria o dar una aproximación: la comparación permite revisar precisión
-y procedencia de los datos. Las preguntas y el prompt no piden al modelo que se equivoque.
-
-La respuesta con MCP se contrasta con las observaciones guardadas de España, desempleo anual y año 2025,
-respetando la precisión mostrada. El servidor ofrece esta serie en Labor Statistics y World Economic Outlook.
-La ejecución guardada usa Labor Statistics (`ESP.U.PT.A`).
-Las respuestas sin MCP se conservan tal como las dio el modelo; no se presentan como datos verificados.
-Para repetir esa comprobación sin internet ni llamadas al modelo, ejecuta dentro de `app-09`:
+`data/demo.json` guarda la conversación real de la carga única: mapa, dispersión, otro año,
+reutilización, alcance de series y reducción a Chile. El verificador contrasta las cifras del MCP
+con la tabla, los puntos y los polígonos, sin conectarse a internet.
 
 ```r
-source("verify-comparison.R", encoding = "UTF-8")
+source("app-09/verify-demo.R", chdir = TRUE, encoding = "UTF-8")
 ```
 
-Para regenerar las respuestas con consultas reales, ejecuta en esa misma carpeta:
+Para regenerar la demo real, valida primero un archivo temporal y conserva la caché hasta que pase:
 
 ```r
-source("cache-comparison.R", encoding = "UTF-8")
+readRenviron(".Renviron")
+source("app-09/cache-demo.R", chdir = TRUE, encoding = "UTF-8")
 ```
 
-Esto usa la API del modelo y reemplaza ambos archivos de caché. Revisa el resultado antes de publicarlo:
-el script comprueba las respuestas, pero los datos del servidor pueden cambiar con nuevas publicaciones.
+`renv.lock` conserva la revisión comprobada de `mcptools`.
+Si Windows arranca con el locale inválido `C.UTF-8`, ejecuta
+`Sys.setlocale("LC_CTYPE", ".UTF-8")` antes de conectar.

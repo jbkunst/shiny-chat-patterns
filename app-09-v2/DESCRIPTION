@@ -1,0 +1,10 @@
+Title: App 09 v2 · Conversar con herramientas MCP
+Description: Agente mínimo con page_chat(), chat_server(), ellmer y herramientas MCP.
+    Usa el servidor comunitario de cyanheads para consultar datos del Banco Mundial.
+Imports:
+    ellmer,
+    mcptools,
+    shiny,
+    shinychat
+Remotes: posit-dev/mcptools@714803bdfce903707a27d9c4740591d87f601aae
+Encoding: UTF-8

@@ -1,6 +1,7 @@
 library(shiny)
 library(bslib)
 library(forecast)
+thematic::thematic_shiny(font = "auto")
 
 # data --------------------------------------------------------------------
 pasajeros <- utils::read.csv(file.path("..", "data", "air-passengers.csv"))

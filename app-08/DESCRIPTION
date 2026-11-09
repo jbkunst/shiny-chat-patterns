@@ -2,6 +2,7 @@ Title: App 08 · Mover el mapa e interpretar gráficos
 Description: Agrega un globo con tools de filtro, color y cámara. Completa
     mostrar_grafico para abrir un modal y devolver la misma imagen al modelo.
 Imports:
+    thematic,
     brand.yml,
     bslib,
     countrycode,

@@ -30,9 +30,26 @@ literal línea por línea.
 - `app-07`: compara filtros tradicionales con una consulta solicitada por chat.
 - `app-08`: conserva el globo y las actualizaciones de cámara tipo proxy; completa
   `mostrar_grafico()` para abrir el modal y devolver la imagen al modelo.
-- `app-09`: extensión en R con un MCP comunitario de datos del FMI y una tool local de gráficos.
+- `app-09`: extensión en R con el MCP comunitario de cyanheads para datos del Banco Mundial.
+  Sin SQL ni datos numéricos iniciales. Solo data() guarda filas y metadatos para todos los outputs.
+  Las filas tienen pais, anio, x_var, y_var, size_var, color_var y map_var.
+  Los metadatos conservan indicador, nombre y unidad.
+  configurar_grafico(log, tamano) cambia ejes y tamaño, fuera de data() y de guardar_datos().
+  El tamaño usa área proporcional por defecto; log10 permite comprimir su rango visual.
+  El agente consulta el MCP y pasa la carga completa a guardar_datos(), que reemplaza la anterior.
+  ver_datos() devuelve esa carga sin modificarla. No hay region(), data_view() ni estado de series.
+  Mapa y dispersión dibujan solo los países y puntos recibidos. No hay filtros regionales en R.
+  El mapa usa map_var; la dispersión usa x_var, y_var, size_var y color_var de un año común.
+  No muestra series.
+  Usa theme_minimal() y un canvas con ejes cuando no hay datos para la dispersión.
+  Debajo de los indicadores, navset_card_tab() separa Visualización de Datos.
+  Visualización contiene dos cards con título: Mapa y Gráfico; Datos contiene la tabla.
   La comparación sin y con MCP usa respuestas reales cacheadas; no se consulta al modelo al renderizar slides.
+  Compara esperanza de vida en Colombia en 2023; la demo consulta el mapa y tres variables por país.
   La versión Python queda pendiente hasta revisar el ejemplo R.
+- `app-09-v2`: variante mínima en R con page_chat(), chat_server() y un cliente ellmer por sesión.
+  Conversa con herramientas MCP sin dashboard ni tools locales de visualización.
+  Registra todas las tools directamente con set_tools(mcp_tools("mcp.json")), sin adaptar sus esquemas.
 - `app-91-colombia-territorial`: caso territorial con datos departamentales de
   Colombia y chat flotante.
 - `app-92-banrep-sdmx`: caso económico que consulta series de Banrep mediante
@@ -65,6 +82,7 @@ Conserva su identidad visual; no los simplifiques para hacerlos iguales a las ap
   de un agente.
 - Prefiere el mismo dataset y la misma estructura de dashboard durante el
   recorrido principal.
+- En R, App 00–09 usan thematic::thematic_shiny(font = "auto") y ragg para heredar la fuente de la UI.
 
 ## Chat, prompts y tools
 

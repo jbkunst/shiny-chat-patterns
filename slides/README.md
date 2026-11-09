@@ -25,11 +25,14 @@ El contenido usa la utilidad general `.content-centered` para centrarse vertical
 Cada columna muestra el nombre y la captura enlazados a la aplicación. Las imágenes originales provienen
 de `kpstudio.io`, se guardan en `assets/apps/` y la fuente queda en notas.
 
-Después de «El recorrido del taller», dos slides «Antes de partir» presentan la preparación
+Después de «El recorrido del taller», tres slides «Antes de partir» presentan la preparación
 en una columna, con R primero y Python como alternativa secundaria. Incluyen el repo,
 `renv::restore()`, `uv sync --locked` y la configuración de `.Renviron`. La primera prueba muestra
 cinco líneas de R: carga ellmer y `.Renviron`, comprueba la clave sin mostrarla y consulta el modelo.
 Los comandos se ejecutan desde la raíz. `.Rprofile` ya activa `renv`; Python carga la clave con `--env-file`.
+Entre los entornos y la prueba de API se presenta OpenAI como proveedor del taller, con GPT-5 nano
+y GPT-5.6 Luna por su relación entre costo y capacidad. Los mismos patrones pueden aplicarse
+con Anthropic u otros proveedores que admitan las capacidades de cada ejemplo.
 
 El recorrido se divide en tres capítulos: preparar y conversar (App 00–02), consultar y actualizar
 (App 03–05) y actuar sobre la interfaz (App 06–08). App 01–08 terminan con «Ejecutar y explorar»:
@@ -42,8 +45,21 @@ Las demos usan los mismos márgenes generales para títulos, párrafos y código
 
 Después de App 08, el cuarto capítulo continúa el recorrido principal con MCP y App 09, por ahora solo en R.
 Incluye una definición breve, una comparación real cacheada sin y con MCP, el código de la app y
-«Ejecutar y explorar». El servidor remoto es comunitario; los datos estadísticos provienen del FMI.
-La tabla se construye desde `app-09/data/comparacion.json`, con una pregunta neutral sobre desempleo de España.
+«Ejecutar y explorar». cyanheads mantiene el servidor comunitario; la fuente es el Banco Mundial.
+La tabla lee `app-09/data/comparacion.json`: pregunta neutral sobre esperanza de vida en Colombia en 2023.
+La demo colorea por el último dato de cada país y combina tres variables de un año común en una dispersión.
+App 09 usa un solo data() con pais, anio, x_var, y_var, size_var, color_var y map_var, más nombres y unidades.
+El agente arma esa carga desde el MCP y llama a guardar_datos(); ver_datos() lee lo mostrado.
+La slide «Del MCP a Shiny» muestra el intercambio agente/MCP, la tool local, data() y los cuatro outputs.
+Cada carga reemplaza la anterior. Mapa y dispersión solo dibujan los países y puntos de esa carga.
+Debajo de los indicadores, Visualización reúne dos cards, Mapa y Gráfico; Datos contiene la tabla.
+La preparación usa dplyr/stringr y la dispersión usa ggplot2 con theme_minimal y escalas logarítmicas opcionales.
+El canvas inicial muestra solo los ejes. Color y tamaño son opcionales; cuatro decimales bastan para el ejemplo.
+Las apps R 00–09 usan thematic y ragg para heredar la tipografía de la UI.
+Después se muestra App 09 v2: el archivo completo con page_chat(), MCP y chat_server(),
+seguido de cómo ejecutarla y una pregunta de ejemplo. Registra todas las tools directamente,
+sin adaptar sus esquemas. El lanzador también incluye esta variante.
+No usa SQL, filtros regionales ni series temporales.
 El prompt común no menciona MCP, herramientas ni el taller. Las cifras de las respuestas con MCP se
 contrastan con las llamadas guardadas; `app-09/verify-comparison.R` permite repetir esa comprobación
 sin usar el modelo ni conectarse al servidor. La caché no representa una consulta en tiempo real.

@@ -184,6 +184,7 @@ run_all_apps <- function(
     cli::cli_alert_info("Iniciando {.code {app}}.")
     process <- callr::r_bg(
       function(path, port) {
+        if (.Platform$OS.type == "windows") invisible(Sys.setlocale("LC_CTYPE", ".UTF-8"))
         shiny::runApp(path, host = "127.0.0.1", port = port, launch.browser = FALSE)
       },
       args = list(path = file.path(root, app), port = port),
@@ -217,6 +218,7 @@ run_all_apps <- function(
 }
 
 # launch ------------------------------------------------------------------
+if (.Platform$OS.type == "windows") invisible(Sys.setlocale("LC_CTYPE", ".UTF-8"))
 if (!nzchar(Sys.getenv("RENV_PROJECT"))) {
   source("renv/activate.R")
   cli::cli_alert_success("Entorno renv activado para el proyecto.")

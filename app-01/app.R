@@ -1,6 +1,7 @@
 library(shiny)
 library(bslib)
 library(tinyplot)
+thematic::thematic_shiny(font = "auto")
 
 # data --------------------------------------------------------------------
 paises <- utils::read.csv(file.path("..", "data", "paises.csv"), fileEncoding = "UTF-8")

@@ -1,7 +1,10 @@
-El mismo dashboard y globo de App 08, ahora con datos del FMI de 2007.
+Consulta datos del Banco Mundial. **Visualización** reúne el mapa y la dispersión;
+**Datos** muestra la tabla de esa misma carga.
 
-- **Muestra solo países de América y colorea el mapa por desempleo.**
-- **Vuela a Chile.**
-- **Consulta el desempleo de Chile y España entre 2000 y 2025 y grafícalo en un modal.**
+- **Colorea el mapa con el último dato disponible de esperanza de vida de cada país.**
+- **Ahora genera un gráfico con PIB per cápita en X y la esperanza de vida ya descargada en Y.
+  Usa escala logarítmica en X y conserva el mapa.**
+- **Ahora filtra solamente los países y territorios de América, reutilizando los datos cargados.**
 
-El modal consulta series mediante MCP; el dashboard conserva su corte de 2007.
+Esta app trabaja con un año o el último dato por país; no muestra series temporales.
+Cada carga reemplaza la anterior y solo se dibujan los países recibidos.

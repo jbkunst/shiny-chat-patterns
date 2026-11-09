@@ -140,7 +140,7 @@ Puente al taller: construiremos paso a paso las capacidades que conectan convers
 4. **Conectar herramientas externas**
 
    ::: {.nonincremental}
-   - MCP con datos del FMI y un gráfico local.
+   - MCP con datos del Banco Mundial y un gráfico local.
    :::
 
 5. **Organizar las tools en aplicaciones más completas**
@@ -179,6 +179,22 @@ renv::activate() habilita el entorno; este repo ya incluye su activación en .Rp
 renv::restore() instala las versiones fijadas: https://pkgs.rstudio.com/renv/reference/restore.html.
 Si renv no está instalado, el autoloader del proyecto ofrece instalarlo al iniciar R desde la raíz.
 :::
+
+## Antes de partir · Proveedor y modelos
+
+### OpenAI en este taller
+
+Usaremos **OpenAI** como proveedor para compartir una misma configuración en los ejemplos.
+
+### Modelos elegidos
+
+Usaremos **GPT-5 nano** y **GPT-5.6 Luna** por su relación entre costo y capacidad
+para las tareas de este curso: conversar, usar herramientas y trabajar con imágenes.
+
+### También con otros proveedores
+
+Es posible obtener resultados similares con modelos de **Anthropic** u otros proveedores
+que admitan las capacidades del ejemplo. Los patrones de Shiny se mantienen.
 
 ## Antes de partir · API y primera prueba
 
@@ -224,10 +240,10 @@ App 00–02 · De inputs y outputs a una conversación en Shiny.
 code_block(
   "../app-00/app.R",
   c(
-    "9-11" = "La UI define la estructura visible de la aplicación.",
-    "12-14" = "Los inputs permiten que la persona interactúe.",
-    "16-19" = "Los outputs muestran los resultados.",
-    "23-43" = "El server conecta los inputs con los outputs."
+    "10-12" = "La UI define la estructura visible de la aplicación.",
+    "13-15" = "Los inputs permiten que la persona interactúe.",
+    "17-20" = "Los outputs muestran los resultados.",
+    "24-44" = "El server conecta los inputs con los outputs."
   )
 )
 ```
@@ -242,6 +258,7 @@ code_block(
 library(shiny)
 library(bslib)
 library(forecast)
+thematic::thematic_shiny(font = "auto")
 
 # data --------------------------------------------------------------------
 pasajeros <- data.frame(pasajeros = as.numeric(AirPassengers))
@@ -296,9 +313,9 @@ Esta será la aplicación base que iremos modificando paso a paso.
 code_block(
   "../app-01/app.R",
   c(
-    "6-7" = "Carga los datos compartidos y prepara las opciones del filtro.",
-    "10-22" = "Construye el dashboard con filtro, indicadores, gráfico y tabla.",
-    "25-41" = "Conecta el filtro con los outputs mediante lógica reactiva."
+    "7-8" = "Carga los datos compartidos y prepara las opciones del filtro.",
+    "11-23" = "Construye el dashboard con filtro, indicadores, gráfico y tabla.",
+    "26-42" = "Conecta el filtro con los outputs mediante lógica reactiva."
   )
 )
 ```
@@ -379,10 +396,10 @@ observeEvent(input$chat_user_input, {
 code_block(
   "../app-02/app.R",
   c(
-    "3-4" = "Carga `{ellmer}` y `{shinychat}`.",
-    "19" = "Incorpora el chat en la UI con el id `chat`.",
-    "52-58" = "Crea la conversación; todavía no entrega los datos de la app al modelo.",
-    "60-63" = "Escucha el input y agrega la respuesta al chat."
+    "4-5" = "Carga `{ellmer}` y `{shinychat}`.",
+    "20" = "Incorpora el chat en la UI con el id `chat`.",
+    "53-59" = "Crea la conversación; todavía no entrega los datos de la app al modelo.",
+    "61-64" = "Escucha el input y agrega la respuesta al chat."
   )
 )
 ```
@@ -460,10 +477,10 @@ Las tools también se ejecutan sin ese argumento.
 code_block(
   "../app-03/app.R",
   c(
-    "57-66" = "Define la tool que lee y resume los datos visibles al ejecutarse.",
-    "77-80" = "Registra la tool para que el modelo pueda usarla.",
-    "83" = "Agrega `stream = 'content'` para mostrar llamadas y resultados de tools.",
-    "84-85" = "Agrega el contenido recibido al chat."
+    "58-67" = "Define la tool que lee y resume los datos visibles al ejecutarse.",
+    "78-81" = "Registra la tool para que el modelo pueda usarla.",
+    "84" = "Agrega `stream = 'content'` para mostrar llamadas y resultados de tools.",
+    "85-86" = "Agrega el contenido recibido al chat."
   )
 )
 ```
@@ -513,13 +530,13 @@ consultar_paises("SELECT COUNT(*) AS paises FROM paises WHERE continente = 'Euro
 code_block(
   "../app-04/app.R",
   c(
-    "11-15" = "Prepara la tabla paises en DuckDB para consultarla desde el chat.",
-    "18-24" = paste(
+    "12-16" = "Prepara la tabla paises en DuckDB para consultarla desde el chat.",
+    "19-25" = paste(
       "Filtro básico para rechazar SQL no deseado; no garantiza seguridad completa.",
       "En producción, usar permisos de solo lectura y acceso limitado a los datos."
     ),
-    "68-70" = "Define una función que usa con, ejecuta el SELECT validado y devuelve un data frame.",
-    "75-81" = "Registra la tool y describe sus argumentos."
+    "69-71" = "Define una función que usa con, ejecuta el SELECT validado y devuelve un data frame.",
+    "76-82" = "Registra la tool y describe sus argumentos."
   )
 )
 ```
@@ -673,11 +690,11 @@ La tabla representa uno de los outputs: indicadores y gráfico leen el mismo dat
 code_block(
   "../app-05/app.R",
   c(
-    "49-51" = "El dashboard lee la consulta reactiva actual.",
-    "69-70" = "Define la tool y valida la consulta recibida.",
-    "71" = "Ejecuta primero: si hay un error, no cambia el estado. Guarda las filas para contarlas.",
-    "73-75" = "Actualiza el estado y devuelve al modelo la cantidad de registros.",
-    "88-94" = "Registra la tool que puede modificar el dashboard."
+    "50-52" = "El dashboard lee la consulta reactiva actual.",
+    "70-71" = "Define la tool y valida la consulta recibida.",
+    "72" = "Ejecuta primero: si hay un error, no cambia el estado. Guarda las filas para contarlas.",
+    "74-76" = "Actualiza el estado y devuelve al modelo la cantidad de registros.",
+    "89-95" = "Registra la tool que puede modificar el dashboard."
   )
 )
 ```
@@ -729,9 +746,9 @@ mostrar_tabla <- function(n, titulo) {
 code_block(
   "../app-06/app.R",
   c(
-    "81-92" = "Define la tool que muestra una tabla en un modal.",
-    "94-112" = "Abre el gráfico en un modal y devuelve solo una confirmación.",
-    "133-151" = "Registra las tools de interfaz con sus argumentos."
+    "82-93" = "Define la tool que muestra una tabla en un modal.",
+    "95-113" = "Abre el gráfico en un modal y devuelve solo una confirmación.",
+    "134-152" = "Registra las tools de interfaz con sus argumentos."
   )
 )
 ```
@@ -867,11 +884,11 @@ mostrar_grafico <- function(x, y, color, titulo) {
 code_block(
   "../app-08/app.R",
   c(
-    "147-159" = "La tool actualiza la cámara del mapa existente mediante un proxy.",
-    "161-176" = "Retoma mostrar_grafico de App 06 para abrir el modal.",
-    "178-185" = "Completa la función: devuelve la imagen al modelo, además de mostrarla al usuario.",
-    "227-236" = "Registra mostrar_grafico con los mismos argumentos que en App 06.",
-    "238-241" = "Mantiene el flujo del chat con las tools."
+    "148-160" = "La tool actualiza la cámara del mapa existente mediante un proxy.",
+    "162-177" = "Retoma mostrar_grafico de App 06 para abrir el modal.",
+    "179-186" = "Completa la función: devuelve la imagen al modelo, además de mostrarla al usuario.",
+    "228-237" = "Registra mostrar_grafico con los mismos argumentos que en App 06.",
+    "239-242" = "Mantiene el flujo del chat con las tools."
   )
 )
 ```
@@ -894,7 +911,7 @@ Pregunta «Describe el gráfico anterior» para reutilizar la imagen sin abrir o
 
 ## 04 · Conectar herramientas con MCP {.section-slide}
 
-App 09 · Consultar un servicio externo y graficar sus datos con R.
+App 09 · Conectar herramientas externas con MCP.
 
 ## ¿Qué agrega MCP? {.pattern-overview}
 
@@ -906,8 +923,9 @@ herramientas de otros servicios desde nuestra aplicación.
 - `{mcptools}` las convierte en tools de `{ellmer}`. El modelo decide cuándo llamarlas.
 - El servidor consulta los datos; el modelo usa el resultado para responder.
 
-Usaremos un [servidor comunitario de datos del FMI](https://github.com/cyanheads/imf-mcp-server),
-sin clave propia. El modelo sigue necesitando `OPENAI_API_KEY`.
+Usaremos el [servidor comunitario de cyanheads](https://github.com/cyanheads/worldbank-mcp-server).
+La fuente es el Banco Mundial; el MCP no es un servicio oficial. No requiere un token del Banco Mundial.
+El modelo sigue necesitando `OPENAI_API_KEY`.
 
 ## El mismo modelo, sin y con MCP {.mcp-comparison}
 
@@ -917,6 +935,7 @@ Respuestas reales cacheadas: mismo modelo, mismo prompt neutral y conversaciones
 #| echo: false
 #| results: asis
 comparacion <- jsonlite::read_json("../app-09/data/comparacion.json")
+if (identical(comparacion$endpoint, "https://worldbank.caseyjhand.com/mcp")) {
 filas <- lapply(comparacion$casos, function(caso) {
   data.frame(
     Pregunta = caso$pregunta,
@@ -927,23 +946,29 @@ filas <- lapply(comparacion$casos, function(caso) {
 })
 cat("\n", knitr::kable(do.call(rbind, filas), format = "pipe", row.names = FALSE), "\n", sep = "\n")
 cat("\n\n", "Modelo: ", comparacion$modelo, " · Caché: ", comparacion$generado_utc, ".", sep = "")
+} else {
+  cat("La comparación del Banco Mundial está pendiente. La caché de otra fuente no se presenta aquí.")
+}
 ```
 
 Compara cifra, precisión, año y fuente. Las llamadas se conservan en `app-09/data/comparacion.json`.
 
-## App 09 · Datos remotos, gráfico local {.pattern-overview}
+## App 09 · Conectar herramientas externas con MCP {.pattern-overview}
 
-El MCP ofrece tools para descubrir bases, resolver códigos y consultar series; no dibuja el gráfico.
+MCP aporta herramientas remotas al mismo chat que ya usa nuestras tools locales de R.
+El ejemplo consulta datos del Banco Mundial y los pasa a `guardar_datos()` para actualizar Shiny.
 
-Nuestra tool `graficar_serie()` abre un modal con las series recuperadas y conserva el dashboard de App 08.
+`data()` contiene `pais`, `anio`, `x_var`, `y_var`, `size_var`, `color_var` y `map_var`, con nombres y unidades.
+Cada carga reemplaza la anterior: mapa, dispersión y tabla muestran los países recibidos.
+La app consulta un año o el último dato por país; no muestra series temporales ni usa SQL.
 
 `mcp.json` indica a qué servidor conectarse:
 
 ```json
 {
   "mcpServers": {
-    "imf": {
-      "url": "https://imf.caseyjhand.com/mcp"
+    "worldbank": {
+      "url": "https://worldbank.caseyjhand.com/mcp"
     }
   }
 }
@@ -951,15 +976,53 @@ Nuestra tool `graficar_serie()` abre un modal con las series recuperadas y conse
 
 ## App 09 · Registrar las herramientas {.pattern-overview}
 
-`mcp_tools()` descubre las tools remotas. Después registramos la función de gráficos definida en R.
+`mcp_tools()` descubre las tools remotas. `app-09/mcp-tools.R` selecciona las de indicadores y datos,
+permitiendo un año o el último dato por país. El agente recibe los datos y llama a la tool local de guardado.
 
 ```r
-chat <- chat_openai(model = "gpt-5-nano", system_prompt = prompt_sistema)
+chat <- chat_openai(model = "gpt-5.6-luna", system_prompt = prompt_sistema)
 
-chat$set_tools(mcptools::mcp_tools("mcp.json"))
+source("mcp-tools.R", local = TRUE, encoding = "UTF-8")
+
+chat$set_tools(tools)
 ```
 
-El registro de `graficar_serie()` conserva el patrón de las apps anteriores.
+Las tools locales guardan los datos, permiten leerlos y cambian la escala del gráfico por separado.
+
+## App 09 · Del MCP a Shiny {.content-centered}
+
+El agente consulta la fuente externa y usa una tool local para actualizar Shiny.
+
+::: {.architecture-diagram}
+```{=html}
+{{< include assets/mcp-reactivity.svg >}}
+```
+:::
+
+::: {.notes}
+El MCP ofrece herramientas remotas. El agente recibe sus observaciones y llama a guardar_datos().
+La tool local actualiza data(); Shiny recalcula los outputs por reactividad.
+En este ejemplo, el servidor comunitario lo mantiene cyanheads y la fuente es el Banco Mundial.
+:::
+
+## App 09 · De los datos a la vista {.pattern-overview}
+
+En `app-09/app.R`, el agente asigna los valores a los ejes, tamaño y color del mapa.
+`guardar_datos()` reemplaza la carga; todos los outputs se recalculan desde `data()`.
+
+```r
+guardar_datos <- function(datos, variables) {
+  data(list(datos = bind_rows(isolate(data())$datos[0, ], datos),
+    variables = bind_rows(variables)))
+  paste("Vista actualizada:", length(datos), "países.")
+}
+
+output$table <- renderTable(data()$datos, digits = 4, striped = TRUE, hover = TRUE)
+
+output$n_paises <- renderText(n_distinct(data()$datos$pais))
+
+output$n_variables <- renderText(n_distinct(data()$variables$indicador))
+```
 
 ## App 09 · El código
 
@@ -969,11 +1032,13 @@ El registro de `graficar_serie()` conserva el patrón de las apps anteriores.
 code_block(
   "../app-09/app.R",
   c(
-    "8" = "Agrega el cliente MCP al dashboard y globo de App 08, ahora con datos del FMI.",
-    "167-175" = "La tool local abre un modal para las series, conservando el dashboard de 2007.",
-    "178-179" = "Crea el chat y registra las herramientas descubiertas en mcp.json.",
-    "217-227" = "Agrega la tool del modal junto a las tools del globo y las remotas.",
-    "229-232" = "Envía al chat el stream de respuestas, llamadas y resultados de herramientas."
+    "24-45" = "Indicadores arriba; Visualización contiene Mapa y Gráfico; Datos contiene la tabla.",
+    "49-63" = "data guarda filas y metadatos; las escalas visuales quedan separadas.",
+    "65-83" = "Área proporcional o tamaño logarítmico; color y escalas de los ejes son independientes.",
+    "85-102" = "inner_join dibuja solo países con map_var y prepara su tooltip.",
+    "105-117" = "Guardar, leer y configurar las escalas son acciones separadas.",
+    "120-150" = "Registra el MCP y describe los argumentos de las tres tools locales.",
+    "151-154" = "El chat transmite respuestas y ejecuta las herramientas en secuencia."
   )
 )
 ```
@@ -986,12 +1051,51 @@ shiny::runApp("app-09")
 
 ### Pide
 
-«Consulta la población de Chile entre 2020 y 2025 y grafícala».
+«Colorea el mapa con el último dato disponible de esperanza de vida de cada país».
+
+«Ahora genera un gráfico con PIB per cápita en X y la esperanza de vida ya descargada en Y.
+Usa escala logarítmica en X y conserva el mapa».
+
+«Ahora filtra solamente los países y territorios de América, reutilizando los datos cargados».
 
 ### Observa
 
-El chat muestra las tools remotas del MCP y la llamada local a `graficar_serie()`.
-Comprueba el indicador, las unidades y qué años son proyecciones.
+El mapa conserva la esperanza de vida al agregar el gráfico. El filtro reutiliza los datos sin otra descarga.
+**Datos** permite comprobar países, años y valores; la escala logarítmica solo cambia la visualización.
+
+## App 09 v2 · Conversar con herramientas MCP {.pattern-overview}
+
+Script `app-09-v2/app.R`: el chat registra todas las herramientas del MCP y usa `page_chat()`.
+`mcp_tools()` descubre las herramientas y `set_tools()` las registra, sin archivos auxiliares.
+
+```{r}
+#| echo: false
+#| results: asis
+code_block(
+  "../app-09-v2/app.R",
+  c(
+    "7" = "page_chat crea la interfaz de conversación a pantalla completa.",
+    "11-18" = "Cada sesión tiene su cliente ellmer y un prompt breve, con los parámetros por defecto.",
+    "19" = "Descubre todas las herramientas remotas y las registra en el cliente.",
+    "20" = "chat_server gestiona los mensajes, las herramientas y el streaming."
+  )
+)
+```
+
+## App 09 v2 · Ejecutar y explorar {.app-demo}
+
+```r
+shiny::runApp("app-09-v2")
+```
+
+### Pide
+
+«¿Cuál fue la esperanza de vida al nacer en Colombia en 2023?».
+
+### Observa
+
+El agente busca el indicador y consulta el MCP. Las llamadas y los resultados aparecen en el chat.
+El mismo patrón funciona sin el dashboard: `chat_server()` se encarga de la conversación.
 
 ## 05 · Aplicaciones más completas {.section-slide}
 

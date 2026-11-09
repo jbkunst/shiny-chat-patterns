@@ -57,8 +57,8 @@ Al finalizar el taller, quienes participen podrán:
 **Capítulo 4 · Conectar herramientas externas con MCP · App 09**
 
 - Comparación real y cacheada con el mismo modelo, sin y con MCP.
-- Consulta de datos del FMI mediante un servidor MCP comunitario.
-- El dashboard y globo de App 08 usan datos del FMI; una tool abre series temporales en un modal.
+- Consulta de datos del Banco Mundial mediante el servidor MCP comunitario de cyanheads.
+- Las variables descargadas se comparten entre el mapa por valor y una dispersión con tamaño.
 
 **Casos de aplicación · Colombia territorial y series de Banrep**
 
@@ -78,7 +78,7 @@ una versión independiente para reconocer el cambio y ejecutarlo durante el tall
 dashboard común de países.
 `app-07` muestra cómo los controles manuales y el chat pueden compararse y complementarse;
 `app-08` agrega un globo y completa la tool de gráficos para enviar la imagen al modelo;
-`app-09` retoma el globo con datos del FMI y series mediante MCP en un modal.
+`app-09` cambia la fuente por el MCP del Banco Mundial: conserva mapa y gráficos, sin SQL ni datos iniciales.
 
 Las apps del recorrido principal usan `page_sidebar()` para mantener una estructura consistente
 y concentrar cada ejemplo en el patrón que introduce. Desde `app-00` hasta
@@ -131,7 +131,25 @@ o exploraciones en R; todavía no tienen una pareja Python. No forman parte de e
 | `app-06` | Tools que abren tablas y gráficos en modales y confirman la acción |
 | `app-07` | Uso complementario de filtros manuales y consultas por chat |
 | `app-08` | Globo, cámara y gráficos en modales cuya imagen recibe el modelo |
-| `app-09` | Dashboard y globo del FMI, tools MCP y series en un modal |
+| `app-09` | Conecta herramientas MCP con tools locales; ejemplo con datos del Banco Mundial |
+| `app-09-v2` | Agente mínimo con page_chat(), chat_server() y herramientas MCP |
+
+En App 09, la comparación pregunta por la esperanza de vida en Colombia en 2023. La demo colorea
+el mapa con el último dato por país y combina PIB, esperanza de vida y población en una dispersión.
+Los valores provienen del Banco Mundial; cyanheads mantiene el servidor comunitario.
+La comparación se valida offline y las slides leen su JSON local.
+La app comienza vacía. Un solo data() conserva filas con pais, anio, x_var, y_var,
+size_var, color_var y map_var, junto con nombres y unidades. El agente arma la carga recibida del MCP y la entrega a guardar_datos().
+Cada carga reemplaza la anterior; mapa, dispersión, tabla y resumen muestran esos mismos países.
+Las pestañas Visualización y Datos separan el mapa y el gráfico de la tabla, debajo de los indicadores.
+ver_datos() permite leer o reutilizar la carga. No hay filtros regionales ni series temporales.
+El gráfico muestra ejes vacíos al inicio y permite color, tamaño y escalas logarítmicas en X o Y.
+Las apps R 00–09 usan thematic y ragg para heredar la tipografía de la interfaz desde `_brand.yml`.
+
+`app-09-v2` conserva solo el agente conectado al MCP, en una interfaz `page_chat()`.
+Usa `chat_server()` para gestionar mensajes y streaming y registra todas las herramientas del MCP.
+Registra las tools directamente con `set_tools(mcp_tools("mcp.json"))`, sin archivos auxiliares.
+Ejecuta la variante con `shiny::runApp("app-09-v2")`.
 
 `app-07` forma parte de la secuencia: permite comparar ambas formas de interacción y usarlas como
 complemento sobre el mismo dashboard. Sus tools de interfaz conservan la confirmación simple de App 06.
@@ -307,7 +325,7 @@ descripción y una vista interactiva. Desde una sesión R en la raíz del reposi
 source("R/run_all_apps.R")
 ```
 
-Por defecto incluye App 00–09 y los casos 91–92. Las experimentales se agregan con
+Por defecto incluye App 00–09, la variante 09 v2 y los casos 91–92. Las experimentales se agregan con
 `run_all_apps(include_experimental = TRUE)` después de cargar el script.
 
 Esta instrucción primero valida el código R y los títulos y descripciones de las apps, asigna sus

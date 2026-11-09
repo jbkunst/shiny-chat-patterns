@@ -7,6 +7,7 @@ library(shinychat)
 library(tinyplot)
 library(mapgl)
 library(sf)
+thematic::thematic_shiny(font = "auto")
 
 # database ----------------------------------------------------------------
 paises <- utils::read.csv(file.path("..", "data", "paises.csv"), fileEncoding = "UTF-8")

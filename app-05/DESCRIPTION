@@ -2,6 +2,7 @@ Title: App 05 · Actualizar el dashboard desde el chat
 Description: Extiende la tool SQL para que una consulta solicitada por chat
     actualice los datos reactivos mostrados en el dashboard.
 Imports:
+    thematic,
     brand.yml,
     bslib,
     DBI,

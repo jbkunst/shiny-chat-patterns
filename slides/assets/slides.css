@@ -155,8 +155,8 @@ html.reveal-print .reveal .slides {
 }
 
 .reveal .slides > section:not(.quarto-title-block):not(.section-slide)
-  :where(p, h3, .code-copy-outer-scaffold, .columns, table, .reactivity-flow)
-  + :where(p, h3, .code-copy-outer-scaffold, .columns, table, .reactivity-flow) {
+  :where(p, h3, .code-copy-outer-scaffold, .columns, table, .reactivity-flow, .architecture-diagram)
+  + :where(p, h3, .code-copy-outer-scaffold, .columns, table, .reactivity-flow, .architecture-diagram) {
   margin-top: var(--content-gap);
 }
 
@@ -221,6 +221,13 @@ html.reveal-print .reveal .slides {
 .reveal .slides > section.content-centered > .code-copy-outer-scaffold code.sourceCode {
   height: 100%;
   max-height: 100%;
+}
+
+.architecture-diagram > svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 540px;
 }
 
 .reactivity-flow {
