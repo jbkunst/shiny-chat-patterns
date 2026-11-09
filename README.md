@@ -221,8 +221,14 @@ Gapminder incluido en Plotly.
 
 ## Aplicaciones experimentales
 
-Las apps numeradas desde `90` son experimentales y quedan fuera del recorrido del taller.
+Las apps `90+` son exploraciones fuera del recorrido del taller. Actualmente:
 
+| App | Qué explora |
+|---|---|
+| `app-90-orquestacion-simulada-experimental` | Dos agentes; el analista propone una consulta y la ejecución devuelve datos simulados. |
+| `app-91-orquestacion-duckdb-experimental` | Dos agentes persistentes y consultas reales a una base DuckDB de solo lectura. |
+
+Se pueden incluir al ejecutar `run_all_apps(include_experimental = TRUE)`.
 ## Alcance
 
 El recorrido principal comprende `app-00`–`app-09`. App 09 está disponible por ahora solo en R.

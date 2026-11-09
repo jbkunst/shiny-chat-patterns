@@ -61,11 +61,8 @@ Reserva `00–49` para el recorrido del taller, `50–89` para casos de aplicaci
   Colombia y chat flotante.
 - `app-51-banrep-sdmx`: caso económico que consulta series de Banrep mediante
   SDMX REST/XML.
-- `app-90-experimental`: explorador manual de series del Banco Central de Chile.
-- `app-91-experimental`: integra un chat sin tools ni acceso a los datos de la app.
-- `app-92-experimental`: agrega tools para encontrar y mostrar una serie.
-- `app-93-experimental`: conserva las tools de App 92 y devuelve resumen e imagen al modelo al actualizar.
-- `app-94-experimental` en adelante: orquestación, agentes y bots especializados.
+- `app-90-orquestacion-simulada-experimental`: flujo de dos agentes con ejecución simulada.
+- `app-91-orquestacion-duckdb-experimental`: dos agentes persistentes y consultas reales en DuckDB.
 
 Agrega una app intermedia en vez de introducir varios conceptos nuevos en el
 mismo paso.

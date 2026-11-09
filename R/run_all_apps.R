@@ -98,7 +98,7 @@ plan_apps <- function(root, include_experimental = FALSE, first_app_port = 8000L
     grepl("^app-[0-9]+(-[a-z0-9-]+)?$", directories) &
       !grepl("-experimental$", directories)
   ]
-  experimental <- directories[grepl("^app-[0-9]+-experimental$", directories)]
+  experimental <- directories[grepl("^app-[0-9]+(-[a-z0-9-]+)?-experimental$", directories)]
   apps <- if (include_experimental) c(stable, experimental) else stable
   apps <- apps[file.exists(file.path(root, apps, "app.R"))]
   numbers <- as.integer(sub("^app-([0-9]+).*$", "\\1", apps))
