@@ -2,12 +2,10 @@ library(shiny)
 library(jsonlite)
 
 # cached conversation -----------------------------------------------------
-if (!exists("archivo_demo", inherits = FALSE)) archivo_demo <- "data/demo.json"
+if (!exists("archivo_demo", inherits = FALSE)) archivo_demo <- "data/demo-fmi.json"
 cache <- read_json(archivo_demo)
-stopifnot(cache$endpoint == "https://worldbank.caseyjhand.com/mcp", cache$formato == "carga-unica")
-stopifnot(length(cache$pasos) == 7L)
-roles_anteriores <- c(varx = "x_var", vary = "y_var", varz = "size_var", varmapa = "map_var")
-columna_actual <- function(x) unname(ifelse(x %in% names(roles_anteriores), roles_anteriores[x], x))
+stopifnot(cache$endpoint == "https://imf.caseyjhand.com/mcp", cache$formato == "fmi-crecimiento-inflacion")
+stopifnot(length(cache$pasos) == 3L)
 
 # actual app without the chat or an MCP connection -------------------------
 app <- new.env()
@@ -40,24 +38,21 @@ shiny::testServer(app$server, {
     anterior <- data()
     for (llamada in paso$llamadas) {
       if (!is.null(llamada$error)) next
-      if (llamada$nombre == "worldbank_get_data") consultas[[length(consultas) + 1L]] <- llamada
+      if (llamada$nombre == "imf_query_dataset") consultas[[length(consultas) + 1L]] <- llamada
       if (llamada$nombre == "guardar_datos") {
         args <- llamada$argumentos
-        # Adapta en memoria la caché histórica; conserva el JSON de la ejecución real.
-        args$datos <- lapply(args$datos, function(x) setNames(x, columna_actual(names(x))))
-        args$variables <- lapply(args$variables, function(x) {
-          x$columna <- columna_actual(x$columna)
-          x
-        })
         filas <- dplyr::bind_rows(args$datos)
         info <- dplyr::bind_rows(args$variables)
         stopifnot(all(info$columna %in% c("x_var", "y_var", "size_var", "color_var", "map_var")))
         stopifnot(all(nzchar(info$unidad)), all(nzchar(info$indicador)))
         for (j in seq_len(nrow(info))) {
-          fuentes <- Filter(function(x) identical(x$resultado$indicator$id, info$indicador[j]), consultas)
-          recibidos <- unlist(lapply(fuentes, function(x) x$resultado$data), recursive = FALSE)
-          recibidos <- rev(Filter(function(x) !isTRUE(x$isAggregate) && !is.null(x$value), recibidos))
-          claves <- vapply(recibidos, function(x) paste(x$countryIso3, x$date), "")
+          recibidos <- unlist(lapply(consultas, function(x) x$resultado$observations), recursive = FALSE)
+          recibidos <- rev(Filter(function(x) {
+            strsplit(x$series_key, ".", fixed = TRUE)[[1]][2] == info$indicador[j] && !is.null(x$value)
+          }, recibidos))
+          claves <- vapply(recibidos, function(x) {
+            paste(strsplit(x$series_key, ".", fixed = TRUE)[[1]][1], x$time_period)
+          }, "")
           valores <- vapply(recibidos, function(x) x$value, numeric(1))
           usados <- !is.na(filas[[info$columna[j]]])
           idx <- match(paste(filas$pais[usados], filas$anio[usados]), claves)
@@ -73,8 +68,8 @@ shiny::testServer(app$server, {
     session$flushReact()
     df <- data()$datos
     info <- data()$variables
-    stopifnot(nrow(df) == if (i >= 6L) 1L else 3L)
-    stopifnot(setequal(df$pais, if (i >= 6L) "CHL" else c("CHL", "PER", "COL")))
+    stopifnot(nrow(df) > 0L, all(df$anio == if (i == 3L) 2020L else 2023L))
+    stopifnot(isTRUE(all.equal(df, dplyr::bind_rows(df[0, ], paso$carga$datos))))
     stopifnot(output$n_paises == as.character(nrow(df)))
     stopifnot(output$n_variables == as.character(dplyr::n_distinct(info$indicador)))
 
@@ -89,6 +84,7 @@ shiny::testServer(app$server, {
       stopifnot(isTRUE(all.equal(p$map_var, unname(df$map_var[idx]))))
       stopifnot(grepl(as.character(df$anio[idx]), p$detalle, fixed = TRUE))
       stopifnot(grepl(info$unidad[info$columna == "map_var"], p$detalle, fixed = TRUE))
+      stopifnot(grepl("FMI", p$detalle, fixed = TRUE))
     }
     stopifnot(length(mapa$x$legend_html) > 0L)
     tabla <- output$table
@@ -97,26 +93,29 @@ shiny::testServer(app$server, {
     if (i >= 2L) {
       imagen <- output$plot
       stopifnot(!is.null(imagen))
-      stopifnot(identical(puntos$datos, df))
-      stopifnot(identical(rlang::eval_tidy(puntos$mapping$x, puntos$datos), df$x_var))
-      stopifnot(identical(rlang::eval_tidy(puntos$mapping$y, puntos$datos), df$y_var))
-      stopifnot(identical(rlang::eval_tidy(puntos$mapping$size, puntos$datos), df$size_var))
-      stopifnot(all(df$anio == if (i <= 3L) 2023L else 2022L))
+      stopifnot(identical(puntos$datos, dplyr::filter(df, !is.na(x_var), !is.na(y_var))))
+      stopifnot(identical(rlang::eval_tidy(puntos$mapping$x, puntos$datos), puntos$datos$x_var))
+      stopifnot(identical(rlang::eval_tidy(puntos$mapping$y, puntos$datos), puntos$datos$y_var))
+      stopifnot(identical(rlang::eval_tidy(puntos$mapping$size, puntos$datos), puntos$datos$size_var))
+      construido <- ggplot2::ggplot_build(isolate(eval(expresion_plot)))
+      stopifnot(isTRUE(all.equal(construido$data[[1]]$x, puntos$datos$x_var)))
+      stopifnot(isTRUE(all.equal(construido$data[[1]]$y, puntos$datos$y_var)))
+      stopifnot(identical(isolate(escala()), ""))
+      stopifnot(info$indicador[info$columna == "x_var"] == "NGDP_RPCH")
+      stopifnot(info$indicador[info$columna == "y_var"] == "PCPIPCH")
+      stopifnot(info$indicador[info$columna == "size_var"] == "LP")
+      stopifnot(identical(df$y_var, df$map_var))
     }
-    nombres <- vapply(paso$llamadas, function(x) x$nombre, "")
-    if (i %in% c(3L, 6L, 7L)) stopifnot(!"worldbank_get_data" %in% nombres)
-    if (i == 5L || i == 7L) stopifnot(identical(data(), anterior), !"guardar_datos" %in% nombres)
-    if (i == 3L) {
-      stopifnot(identical(df$x_var, anterior$datos$x_var), identical(df$y_var, anterior$datos$y_var))
-      stopifnot(identical(df$size_var, anterior$datos$size_var), identical(df$map_var, df$x_var))
-    }
-    if (i == 6L) stopifnot(identical(df, dplyr::filter(anterior$datos, pais == "CHL")))
+    if (i == 2L) stopifnot(identical(df$map_var,
+      anterior$datos$map_var[match(df$pais, anterior$datos$pais)]))
     cat("Paso", i, "verificado:", paso$pregunta, "\n")
   }
 
-  # Color independiente y escalas: los números guardados conservan la unidad original.
+  # Prueba auxiliar de escalas con valores positivos conocidos; no modifica la caché de la demo.
   original <- data()
-  filas <- original$datos
+  filas <- head(original$datos, 1)
+  filas$x_var <- 10
+  filas$y_var <- 100
   filas$color_var <- filas$y_var
   info <- original$variables
   color <- dplyr::filter(info, columna == "y_var")
@@ -134,7 +133,7 @@ shiny::testServer(app$server, {
   construido <- ggplot2::ggplot_build(isolate(eval(expresion_plot)))
   stopifnot(isTRUE(all.equal(construido$data[[1]]$x, log10(filas$x_var))))
   stopifnot(isTRUE(all.equal(construido$data[[1]]$y, filas$y_var)))
-  stopifnot(identical(data()$datos$map_var, original$datos$map_var))
+  stopifnot(identical(data()$datos$map_var, filas$map_var))
   configurar_grafico(log = "xy")
   session$flushReact()
   construido <- ggplot2::ggplot_build(isolate(eval(expresion_plot)))

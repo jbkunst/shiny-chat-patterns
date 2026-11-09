@@ -32,8 +32,8 @@ pregunta <- sprintf("¿Lloverá en Madrid el %s? Indica también las temperatura
 # Prueba primero la función sin el modelo:
 consultar_pronostico("Madrid", fecha_ejemplo)
 
-chat <- ellmer::chat_openai(
-  model = "gpt-5-nano",
+chat <- ellmer::chat(
+  "openai/gpt-5-nano",
   system_prompt = paste(
     "Responde en español. Usa consultar_pronostico; no inventes datos meteorológicos.",
     "Si no tienes una tool disponible para consultar el pronóstico, explica que no puedes obtenerlo."

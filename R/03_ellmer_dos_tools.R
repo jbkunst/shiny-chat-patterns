@@ -54,8 +54,8 @@ pregunta <- "¿Lloverá en Madrid dentro de tres días? Indica también las temp
 # Prueba primero la función sin el modelo:
 consultar_pronostico("Madrid", fecha_ejemplo)
 
-chat <- ellmer::chat_openai(
-  model = "gpt-5-nano",
+chat <- ellmer::chat(
+  "openai/gpt-5-nano",
   system_prompt = paste(
     "Responde en español.",
     "Para fechas relativas, consulta primero consultar_fecha_actual y calcula la fecha.",

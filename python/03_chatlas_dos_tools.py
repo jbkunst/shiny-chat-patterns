@@ -6,7 +6,7 @@ from pprint import pprint
 from urllib.parse import urlencode
 from urllib.request import urlopen
 
-from chatlas import ChatOpenAI
+from chatlas import ChatAuto
 
 # tools -------------------------------------------------------------------
 def consultar_pronostico(ciudad: str, fecha: str) -> dict:
@@ -62,8 +62,8 @@ pregunta = "¿Lloverá en Madrid dentro de tres días? Indica también las tempe
 # Prueba primero la función sin el modelo:
 pprint(consultar_pronostico("Madrid", fecha_ejemplo))
 
-chat = ChatOpenAI(
-    model="gpt-5-nano",
+chat = ChatAuto(
+    "openai/gpt-5-nano",
     system_prompt=(
         "Responde en español. "
         "Para fechas relativas, consulta primero consultar_fecha_actual y calcula la fecha. "

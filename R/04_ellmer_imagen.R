@@ -42,8 +42,8 @@ resultado <- mostrar_puntos()
 lapply(resultado, class)
 str(resultado, max.level = 1)
 
-chat <- chat_openai(
-  model = "gpt-5.6-luna",
+chat <- ellmer::chat(
+  "openai/gpt-5.6-luna",
   system_prompt = paste(
     "No describas ningún gráfico sin recibir su imagen mediante mostrar_puntos.",
     "Cada petición de un gráfico nuevo requiere una nueva llamada a mostrar_puntos.",

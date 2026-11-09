@@ -162,7 +162,7 @@ server <- function(input, output, session) {
   }, width = "100%", align = "lr", striped = TRUE, hover = TRUE, digits = 4)
 
   # tools -----------------------------------------------------------------
-  chat <- ellmer::chat_openai(model = "gpt-5-nano", system_prompt = prompt_sistema)
+  chat <- ellmer::chat("openai/gpt-5-nano", system_prompt = prompt_sistema)
   chat$register_tool(tool(
     resolver_serie,
     "Resuelve palabras del usuario a un flow_id SDMX disponible.",

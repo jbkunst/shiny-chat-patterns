@@ -7,7 +7,7 @@ from typing import Annotated
 import duckdb
 import matplotlib.pyplot as plt
 import pandas as pd
-from chatlas import ChatOpenAI
+from chatlas import ChatAuto
 from faicons import icon_svg
 from pydantic import Field
 
@@ -137,7 +137,7 @@ def server(input: Inputs, output: Outputs, session: Session):
 
     # chat ----------------------------------------------------------------
     chat = ui.Chat("chat")
-    chat_client = ChatOpenAI(model="gpt-5-nano", system_prompt=prompt_sistema)
+    chat_client = ChatAuto("openai/gpt-5-nano", system_prompt=prompt_sistema)
     chat_client.register_tool(consultar_paises)
 
     @chat.on_user_submit

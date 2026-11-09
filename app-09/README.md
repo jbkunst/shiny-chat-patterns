@@ -1,14 +1,14 @@
 # App 09 · Conectar herramientas externas con MCP
 
 Agrega herramientas remotas mediante MCP al chat que ya utiliza tools locales de Shiny.
-El ejemplo usa **Luna** y el servidor comunitario de datos del Banco Mundial mantenido por **cyanheads**.
+El ejemplo usa **Luna** y el servidor comunitario de datos del FMI mantenido por **cyanheads**.
 Empieza vacía: un solo `data()` alimenta el mapa, la dispersión, la tabla y los resúmenes.
 Debajo de los indicadores, un `navset_card_tab()` separa **Visualización** (mapa y gráfico)
 de **Datos** (tabla). Visualización contiene dos cards con título: **Mapa** y **Gráfico**.
 
-La fuente estadística es el **Banco Mundial**. El
-[servidor MCP comunitario](https://github.com/cyanheads/worldbank-mcp-server) no es un servidor oficial.
-El endpoint `https://worldbank.caseyjhand.com/mcp` funciona sin token del Banco Mundial.
+La fuente estadística es **FMI · World Economic Outlook (WEO)**. El
+[servidor MCP comunitario](https://github.com/cyanheads/imf-mcp-server) no es un servidor oficial.
+El endpoint `https://imf.caseyjhand.com/mcp` no necesita un token propio.
 El modelo usa `OPENAI_API_KEY`. No hay SQL, DuckDB ni datos numéricos iniciales.
 
 ## Ejecutar
@@ -29,7 +29,7 @@ shiny::runApp("app-09")
 
 X e Y son los ejes, `size_var` es el tamaño y `color_var` colorea los puntos por un indicador numérico.
 `map_var` determina el color del país de forma independiente.
-Una variable puede ocupar varios papeles: por ejemplo, esperanza de vida en Y y en el mapa.
+Una variable puede ocupar varios papeles: por ejemplo, inflación en Y y en el mapa.
 Los papeles no utilizados quedan como `NA`; los faltantes no se convierten en cero.
 
 ```mermaid
@@ -51,15 +51,15 @@ La app no analiza una cadena JSON: ellmer convierte los argumentos a listas de R
 Cada nueva carga reemplaza la anterior. Para cambiar el color o mostrar solo algunos países,
 el agente puede leer la carga y reenviar los datos disponibles, sin descargar otra vez.
 No existen `region()`, `data_view()`, un catálogo de filtros ni un estado para series.
-La app trabaja con un año o el último dato por país. Si se pide una serie temporal, explica ese alcance.
+La app compara países en un año común. Si se pide una serie temporal, explica ese alcance.
 
 ## Mapa y dispersión
 
 Prueba primero:
 
-> Colorea el mapa con el último dato disponible de esperanza de vida de cada país.
+> Colorea los países de América Latina según su inflación promedio anual en 2023.
 
-El MCP consulta `mrnev = 1`, el último valor no nulo de cada país, conservando su año real.
+El MCP consulta WEO para un año explícito; `PCPIPCH` representa la inflación promedio anual.
 El mapa une las filas recibidas con Natural Earth mediante `inner_join()`: su capa de datos solo
 contiene países con `map_var` disponible. No añade una capa de países sin datos.
 La cartografía base sigue proporcionando contexto geográfico.
@@ -67,12 +67,12 @@ El tooltip muestra país, indicador, valor, unidad, año y fuente.
 
 Después pide:
 
-> Ahora genera un gráfico con PIB per cápita en X y la esperanza de vida ya descargada en Y.
-> Usa escala logarítmica en X y conserva el mapa.
+> Ahora agrega un gráfico con crecimiento real del PIB en X, inflación en Y y población como tamaño.
+> Conserva el mapa.
 
-El agente lee la carga actual y consulta el PIB per cápita para el mismo año de cada fila.
-Reutiliza la esperanza de vida en Y y en el mapa, sin volver a descargarla.
-`configurar_grafico(log = "x")` cambia la escala visual de X sin transformar los datos guardados.
+El agente lee la carga actual y consulta crecimiento (`NGDP_RPCH`, %) y población (`LP`).
+La población conserva el valor, la unidad y la escala de la edición consultada de WEO.
+Reutiliza la inflación en Y y en el mapa. Los ejes son lineales: el crecimiento puede ser negativo.
 La dispersión usa una única capa de puntos de esa carga y `theme_minimal()`.
 Sin datos, muestra un canvas con los ejes X e Y, sin puntos ni valores inventados.
 El tamaño y el color son opcionales: si no se usan, los puntos tienen tamaño fijo y color uniforme.
@@ -83,14 +83,14 @@ Las value boxes muestran países, período y cantidad de indicadores distintos d
 Un indicador repetido en Y y mapa se cuenta una sola vez.
 Finalmente pide:
 
-> Ahora filtra solamente los países y territorios de América, reutilizando los datos cargados.
+> Ahora consulta las mismas variables para 2020 y actualiza la vista.
 
-El agente lee `ver_datos()`, selecciona las filas de América y llama a `guardar_datos()`
-sin descargar otra vez.
-Mapa, gráfico, tabla y resúmenes se actualizan con esa selección; la escala de X se conserva.
-El año y la cobertura dependen de las observaciones recibidas: compruébalos en la tabla.
+El agente descarga las tres variables para 2020 y reemplaza la carga completa.
+Mapa, gráfico, tabla y resúmenes se actualizan para comparar el panorama económico entre años.
+La cobertura depende de las observaciones recibidas: comprueba países y unidades en la tabla.
+Si pides filtrar países, `ver_datos()` permite reutilizar la carga sin descargar otra vez.
 
-Puedes pedir «Usa escala logarítmica en X» o «Colorea los puntos por esperanza de vida».
+Puedes pedir «Colorea los puntos por crecimiento» o cambiar las escalas de variables positivas.
 Para cambiar los ejes llama a `configurar_grafico(log)`, con `""`, `"x"`, `"y"` o `"xy"`.
 El área de los puntos es proporcional al valor con `scale_size_area()` de ggplot2.
 Puedes pedir «Usa tamaño logarítmico»: `configurar_grafico(tamano = "log10")` comprime su rango.
@@ -106,28 +106,35 @@ para mostrar nombres y unidades dinámicos. Se conserva ggplot2 para mantener es
 
 ## Conexión MCP
 
-`R/06_ellmer_mcp.R` muestra el registro de herramientas en una conversación de consola.
+`R/06_ellmer_mcp.R` muestra el patrón básico con el MCP del FMI en una consola interactiva.
 Se ejecuta desde la raíz con `source("R/06_ellmer_mcp.R", encoding = "UTF-8")`.
-Incluye la selección de tres tools y el ajuste de esquema de App 09, sin cargar un script auxiliar.
+Registra todas sus herramientas sin filtros ni ajustes, igual que App 09 v2.
 
-`mcp.json` configura el endpoint con un timeout de 60 segundos.
-`mcp-tools.R` prepara búsqueda, metadatos y observaciones:
+`mcp.json` configura el FMI con un timeout de 60 segundos.
+La app registra todas sus herramientas directamente con `set_tools(mcp_tools("mcp.json"))`:
 
-- `worldbank_search_indicators`: encuentra el indicador.
-- `worldbank_get_indicator`: confirma definición, fuente y unidad.
-- `worldbank_get_data`: consulta `indicator_id`, `countries`, `date_range` o `mrnev`, y paginación.
+- `imf_list_databases`: encuentra la base, por ejemplo WEO.
+- `imf_get_database`: consulta dimensiones y códigos de indicadores y países.
+- `imf_query_dataset`: recupera observaciones para países, indicadores y períodos.
+- `imf_dataframe_describe` e `imf_dataframe_query`: consultan resultados grandes guardados en DataCanvas.
 
-Para un año, `date_range = "2023"`; para el último dato por país, `mrnev = 1`, sin `date_range`.
-`countries = "all"` permite consultar todos los países; el agente omite agregados y valores `null`.
-Se comprobó `per_page = 1000`; hay que revisar `totalPages`.
-Cada fila de `resultado@value$data` contiene `countryIso3`, `countryName`, `date` y `value`.
-Se conserva el ajuste de esquema necesario con ellmer 0.4.2; no añade validaciones a la carga local.
+En WEO, `key_format` indica `COUNTRY.INDICATOR.FREQUENCY`; una clave sería `CHL.PCPIPCH.A`.
+Para un año, `start_period` y `end_period` coinciden. Las observaciones incluyen `series_key`,
+`time_period` y `value`; los metadatos permiten interpretar unidades y estado de la serie.
+WEO incluye estimaciones y proyecciones: el agente debe distinguirlas cuando corresponda.
+
+## Banco Mundial conservado
+
+`mcp-worldbank.json` conserva su endpoint. `mcp-tools.R` es el ajuste específico del **MCP del Banco Mundial**:
+selecciona tres tools y acota los argumentos de consulta. La app del FMI no lo necesita ni lo carga.
+Se conserva para revisar ese ajuste y regenerar la comparación anterior.
 
 ## Comparación y demo guardadas
 
 `data/comparacion.json` y `.rds` conservan conversaciones independientes con el mismo `gpt-5-nano`
 y prompt neutral, sin y con MCP: esperanza de vida de Colombia en 2023. Las slides leen ese JSON local.
 La comparación es independiente de las tools locales del dashboard.
+Es una ejecución del Banco Mundial, no una ejecución del nuevo ejemplo del FMI.
 
 ```r
 readRenviron(".Renviron")
@@ -135,9 +142,9 @@ source("app-09/cache-comparison.R", chdir = TRUE, encoding = "UTF-8")
 source("app-09/verify-comparison.R", chdir = TRUE, encoding = "UTF-8")
 ```
 
-`data/demo.json` guarda la conversación real de la carga única: mapa, dispersión, otro año,
-reutilización, alcance de series y reducción a Chile. El verificador contrasta las cifras del MCP
-con la tabla, los puntos y los polígonos, sin conectarse a internet.
+`data/demo-fmi.json` guarda la demo del FMI: inflación en 2023, dispersión con crecimiento y población,
+y cambio a 2020. El verificador contrasta cifras del MCP con tabla, puntos y polígonos sin internet.
+`data/demo.json` conserva la demo histórica del Banco Mundial; no se presenta como una consulta del FMI.
 
 ```r
 source("app-09/verify-demo.R", chdir = TRUE, encoding = "UTF-8")

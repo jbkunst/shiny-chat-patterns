@@ -85,12 +85,12 @@ ui <- page_sidebar(
 # server ------------------------------------------------------------------
 server <- function(input, output, session) {
   # Agents are created once per Shiny session.
-  analyst_agent <- ellmer::chat_openai(
-    model = "gpt-5-nano",
+  analyst_agent <- ellmer::chat(
+    "openai/gpt-5-nano",
     system_prompt = analyst_prompt
   )
-  writer_agent <- ellmer::chat_openai(
-    model = "gpt-5-nano",
+  writer_agent <- ellmer::chat(
+    "openai/gpt-5-nano",
     system_prompt = writer_prompt
   )
 

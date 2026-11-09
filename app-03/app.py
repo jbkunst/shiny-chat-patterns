@@ -2,7 +2,7 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import pandas as pd
-from chatlas import ChatOpenAI
+from chatlas import ChatAuto
 from faicons import icon_svg
 
 from shiny import App, Inputs, Outputs, Session, reactive, render, ui
@@ -118,8 +118,8 @@ def server(input: Inputs, output: Outputs, session: Session):
 
     # chat ----------------------------------------------------------------
     chat = ui.Chat("chat")
-    chat_client = ChatOpenAI(
-        model="gpt-5-nano",
+    chat_client = ChatAuto(
+        "openai/gpt-5-nano",
         system_prompt=(
             "Responde brevemente en español. Usa resumir_datos_visibles para responder "
             "sobre el dashboard y no inventes resultados."

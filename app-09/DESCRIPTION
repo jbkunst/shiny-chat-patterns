@@ -1,6 +1,6 @@
 Title: App 09 · Conectar herramientas externas con MCP
 Description: Integra las herramientas de un servidor MCP externo con el chat y las tools locales de Shiny.
-    El ejemplo consulta datos del Banco Mundial y guarda una carga reactiva para mapa, dispersión y tabla.
+    Consulta crecimiento, inflación y población del FMI y guarda una carga para mapa, dispersión y tabla.
 Imports:
     ragg,
     thematic,

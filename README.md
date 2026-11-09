@@ -57,8 +57,8 @@ Al finalizar el taller, quienes participen podrán:
 **Capítulo 4 · Conectar herramientas externas con MCP · App 09**
 
 - Comparación real y cacheada con el mismo modelo, sin y con MCP.
-- Consulta de datos del Banco Mundial mediante el servidor MCP comunitario de cyanheads.
-- Las variables descargadas se comparten entre el mapa por valor y una dispersión con tamaño.
+- Consulta de datos del FMI mediante el servidor MCP comunitario de cyanheads.
+- Crecimiento, inflación y población compartidos entre mapa y dispersión.
 
 **Casos de aplicación · Colombia territorial y series de Banrep**
 
@@ -81,7 +81,7 @@ una versión independiente para reconocer el cambio y ejecutarlo durante el tall
 dashboard común de países.
 `app-07` muestra cómo los controles manuales y el chat pueden compararse y complementarse;
 `app-08` agrega un globo y completa la tool de gráficos para enviar la imagen al modelo;
-`app-09` cambia la fuente por el MCP del Banco Mundial: conserva mapa y gráficos, sin SQL ni datos iniciales.
+`app-09` cambia la fuente por el MCP del FMI: conserva mapa y gráficos, sin SQL ni datos iniciales.
 
 Las apps del recorrido principal usan `page_sidebar()` para mantener una estructura consistente
 y concentrar cada ejemplo en el patrón que introduce. Desde `app-00` hasta
@@ -100,7 +100,7 @@ Ejecuta los scripts desde la raíz del repositorio y carga primero todas sus lib
 | Pronóstico con una tool | `R/02_ellmer_tool.R` | `python/02_chatlas_tool.py` |
 | Fecha actual y pronóstico con dos tools | `R/03_ellmer_dos_tools.R` | `python/03_chatlas_dos_tools.py` |
 | Imagen de puntos aleatorios | `R/04_ellmer_imagen.R` | `python/04_chatlas_imagen.py` |
-| Herramientas remotas con MCP | `R/06_ellmer_mcp.R` | Pendiente |
+| Consola interactiva con MCP del FMI | `R/06_ellmer_mcp.R` | Pendiente |
 
 En los ejemplos 02–04 se pregunta primero sin tools, se registran y se vuelve a preguntar en la misma
 conversación. Las llamadas directas permiten inspeccionar los resultados sin llamar al modelo.
@@ -136,13 +136,14 @@ o exploraciones en R; todavía no tienen una pareja Python. No forman parte de e
 | `app-06` | Tools que abren tablas y gráficos en modales y confirman la acción |
 | `app-07` | Uso complementario de filtros manuales y consultas por chat |
 | `app-08` | Globo, cámara y gráficos en modales cuya imagen recibe el modelo |
-| `app-09` | Conecta herramientas MCP con tools locales; ejemplo con datos del Banco Mundial |
+| `app-09` | Conecta herramientas MCP con tools locales; crecimiento e inflación del FMI |
 | `app-09-v2` | Agente mínimo con page_chat(), chat_server() y herramientas MCP |
 
-En App 09, la comparación pregunta por la esperanza de vida en Colombia en 2023. La demo colorea
-el mapa con el último dato por país y combina PIB, esperanza de vida y población en una dispersión.
-Los valores provienen del Banco Mundial; cyanheads mantiene el servidor comunitario.
-La comparación se valida offline y las slides leen su JSON local.
+En App 09, la demo colorea América Latina por inflación y combina crecimiento real del PIB,
+inflación y población en una dispersión. Compara 2023 con 2020, con ejes lineales.
+Los valores provienen del FMI; cyanheads mantiene el servidor comunitario.
+La comparación histórica sin y con MCP sigue siendo del Banco Mundial y se identifica como tal.
+Se valida offline y las slides leen su JSON local. mcp-tools.R conserva el ajuste de ese MCP.
 La app comienza vacía. Un solo data() conserva filas con pais, anio, x_var, y_var,
 size_var, color_var y map_var, junto con nombres y unidades. El agente arma la carga recibida del MCP y la entrega a guardar_datos().
 Cada carga reemplaza la anterior; mapa, dispersión, tabla y resumen muestran esos mismos países.
@@ -153,7 +154,8 @@ Las apps R 00–09 usan thematic y ragg para heredar la tipografía de la interf
 
 `app-09-v2` conserva solo el agente conectado al MCP, en una interfaz `page_chat()`.
 Usa `chat_server()` para gestionar mensajes y streaming y registra todas las herramientas del MCP.
-Registra las tools directamente con `set_tools(mcp_tools("mcp.json"))`, sin archivos auxiliares.
+Registra las tools del FMI con `set_tools(mcp_tools("mcp-imf.json"))`, sin adaptar sus esquemas.
+Conserva `mcp.json` con el Banco Mundial para comparar cambiando solo el archivo de configuración.
 Ejecuta la variante con `shiny::runApp("app-09-v2")`.
 
 `app-07` forma parte de la secuencia: permite comparar ambas formas de interacción y usarlas como
@@ -246,6 +248,11 @@ Los entornos son independientes y reproducibles:
 
 ## Configurar la API
 
+Los clientes usan el formato `proveedor/modelo`: `ellmer::chat("openai/gpt-5.6-luna")` en R
+y `ChatAuto("openai/gpt-5.6-luna")` en Python, importado desde `chatlas`.
+Cambiar esa cadena permite elegir otro proveedor con sus credenciales correspondientes.
+Cada ejemplo conserva su modelo: GPT-5 nano o GPT-5.6 Luna.
+
 Las apps con chat, desde `app-02`, necesitan `OPENAI_API_KEY`. `app-00` y `app-01` funcionan sin una
 clave.
 
@@ -267,7 +274,7 @@ Para cargar la clave y comprobar que ellmer puede consultar el modelo, ejecuta d
 library(ellmer)
 readRenviron(".Renviron")
 nzchar(Sys.getenv("OPENAI_API_KEY"))
-chat <- chat_openai(model = "gpt-5-nano")
+chat <- ellmer::chat("openai/gpt-5-nano")
 chat$chat("Responde solamente: conexión correcta.")
 ```
 

@@ -5,7 +5,7 @@ from tempfile import TemporaryDirectory
 
 import matplotlib.pyplot as plt
 import numpy as np
-from chatlas import ChatOpenAI, content_image_file
+from chatlas import ChatAuto, content_image_file
 from chatlas.types import ContentText
 
 # tools -------------------------------------------------------------------
@@ -56,8 +56,8 @@ resultado = mostrar_puntos()
 print([type(contenido).__name__ for contenido in resultado])
 print({"tipo": resultado[1].image_content_type, "imagen_base64": len(resultado[1].data)})
 
-chat = ChatOpenAI(
-    model="gpt-5.6-luna",
+chat = ChatAuto(
+    "openai/gpt-5.6-luna",
     system_prompt=(
         "No describas ningún gráfico sin recibir su imagen mediante mostrar_puntos. "
         "Cada petición de un gráfico nuevo requiere una nueva llamada a mostrar_puntos. "

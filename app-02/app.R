@@ -50,8 +50,8 @@ server <- function(input, output, session) {
   output$table <- renderTable(data(), striped = TRUE, hover = TRUE)
 
   # chat ------------------------------------------------------------------
-  chat <- ellmer::chat_openai(
-    model = "gpt-5-nano",
+  chat <- ellmer::chat(
+    "openai/gpt-5-nano",
     system_prompt = paste(
       "Responde brevemente en español sobre los países de Gapminder en su último año.",
       "No inventes resultados numéricos."

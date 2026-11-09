@@ -6,7 +6,7 @@ from typing import Annotated
 
 import duckdb
 import pandas as pd
-from chatlas import ChatOpenAI
+from chatlas import ChatAuto
 from pydantic import Field
 
 # database ----------------------------------------------------------------
@@ -40,7 +40,7 @@ def consultar_paises(
 
 # chat --------------------------------------------------------------------
 prompt_sistema = Path("app-04/prompt.md").read_text(encoding="utf-8")
-chat = ChatOpenAI(model="gpt-5-nano", system_prompt=prompt_sistema)
+chat = ChatAuto("openai/gpt-5-nano", system_prompt=prompt_sistema)
 
 chat.register_tool(consultar_paises)
 

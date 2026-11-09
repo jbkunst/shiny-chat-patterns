@@ -179,7 +179,7 @@ server <- function(input, output, session) {
   }
 
   # chat ------------------------------------------------------------------
-  chat <- ellmer::chat_openai(model = "gpt-5-nano", system_prompt = prompt_sistema)
+  chat <- ellmer::chat("openai/gpt-5-nano", system_prompt = prompt_sistema)
 
   chat$register_tool(tool(
     consultar_paises,

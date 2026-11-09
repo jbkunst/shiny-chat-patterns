@@ -24,7 +24,7 @@ consultar_paises <- function(consulta) {
 
 # chat --------------------------------------------------------------------
 prompt_sistema <- paste(readLines("app-04/prompt.md", warn = FALSE), collapse = "\n")
-chat <- chat_openai(model = "gpt-5-nano", system_prompt = prompt_sistema)
+chat <- ellmer::chat("openai/gpt-5-nano", system_prompt = prompt_sistema)
 
 chat$register_tool(tool(
   consultar_paises,

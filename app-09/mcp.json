@@ -1,7 +1,7 @@
 {
   "mcpServers": {
-    "worldbank": {
-      "url": "https://worldbank.caseyjhand.com/mcp",
+    "imf": {
+      "url": "https://imf.caseyjhand.com/mcp",
       "timeout": 60
     }
   }

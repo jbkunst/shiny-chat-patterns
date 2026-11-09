@@ -1,6 +1,6 @@
 Title: App 09 v2 · Conversar con herramientas MCP
 Description: Agente mínimo con page_chat(), chat_server(), ellmer y herramientas MCP.
-    Usa el servidor comunitario de cyanheads para consultar datos del Banco Mundial.
+    Usa el servidor comunitario de cyanheads para consultar datos del FMI.
 Imports:
     ellmer,
     mcptools,

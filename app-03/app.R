@@ -67,8 +67,8 @@ server <- function(input, output, session) {
   }
 
   # chat ------------------------------------------------------------------
-  chat <- ellmer::chat_openai(
-    model = "gpt-5-nano",
+  chat <- ellmer::chat(
+    "openai/gpt-5-nano",
     system_prompt = paste(
       "Responde brevemente en español.",
       "Usa resumir_datos_visibles para responder sobre el dashboard y no inventes resultados."

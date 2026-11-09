@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import plotly.express as px
-from chatlas import ChatOpenAI, content_image_file
+from chatlas import ChatAuto, content_image_file
 from chatlas.types import ContentText
 from faicons import icon_svg
 from pydantic import Field
@@ -328,7 +328,7 @@ def server(input: Inputs, output: Outputs, session: Session):
 
     # chat ----------------------------------------------------------------
     chat = ui.Chat("chat")
-    chat_client = ChatOpenAI(model="gpt-5.6-luna", system_prompt=prompt_sistema)
+    chat_client = ChatAuto("openai/gpt-5.6-luna", system_prompt=prompt_sistema)
     chat_client.register_tool(consultar_paises)
     chat_client.register_tool(actualizar_dashboard)
     chat_client.register_tool(cambiar_variable)

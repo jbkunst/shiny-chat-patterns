@@ -104,15 +104,6 @@ Puente al taller: construiremos paso a paso las capacidades que conectan convers
 [censolab]: https://censolab.cl/
 [bcch-studio]: https://jbkunst-bcch-studio.share.connect.posit.cloud/
 
-## Cómo avanzaremos por el taller {.center}
-
-::: {.incremental}
-1. **Partimos** de una aplicación existente.
-2. **Agregamos** una sola funcionalidad nueva.
-3. **Explicamos** qué cambia y cómo funciona en el código.
-4. **Continuamos** con la siguiente app.
-:::
-
 ## El recorrido del taller {.workshop-agenda}
 
 ::: {.incremental}
@@ -140,7 +131,7 @@ Puente al taller: construiremos paso a paso las capacidades que conectan convers
 4. **Conectar herramientas externas**
 
    ::: {.nonincremental}
-   - MCP con datos del Banco Mundial y un gráfico local.
+   - MCP con datos del FMI y visualizaciones locales.
    :::
 
 5. **Organizar las tools en aplicaciones más completas**
@@ -148,6 +139,15 @@ Puente al taller: construiremos paso a paso las capacidades que conectan convers
    ::: {.nonincremental}
    - Casos territorial y económico de Colombia.
    :::
+:::
+
+## Cómo avanzaremos por este recorrido {.center}
+
+::: {.incremental}
+1. **Partimos** de una aplicación existente.
+2. **Agregamos** una sola funcionalidad nueva.
+3. **Explicamos** qué cambia y cómo funciona en el código.
+4. **Continuamos** con la siguiente app.
 :::
 
 ## Antes de partir · Repo y entornos
@@ -196,6 +196,9 @@ para las tareas de este curso: conversar, usar herramientas y trabajar con imág
 Es posible obtener resultados similares con modelos de **Anthropic** u otros proveedores
 que admitan las capacidades del ejemplo. Los patrones de Shiny se mantienen.
 
+Usamos `ellmer::chat("proveedor/modelo")` en R y `ChatAuto("proveedor/modelo")` en Python.
+El proveedor se elige en la cadena, con sus credenciales correspondientes.
+
 ## Antes de partir · API y primera prueba
 
 Desde App 02, el chat necesita internet y una `OPENAI_API_KEY` con acceso y saldo para la API.
@@ -211,7 +214,7 @@ Carga la clave y prueba ellmer. La tercera línea debe devolver `TRUE`, sin most
 library(ellmer)
 readRenviron(".Renviron")
 nzchar(Sys.getenv("OPENAI_API_KEY"))
-chat <- chat_openai(model = "gpt-5-nano")
+chat <- ellmer::chat("openai/gpt-5-nano")
 chat$chat("Responde solamente: conexión correcta.")
 ```
 
@@ -374,11 +377,11 @@ shinychat::chat_ui(
 ::: {.fragment}
 ### El chat en el server
 
-En el server, `chat_openai()` crea el cliente. `observeEvent()` escucha `input$chat_user_input` y
+En el server, `ellmer::chat()` crea el cliente. `observeEvent()` escucha `input$chat_user_input` y
 `chat_append()` devuelve el stream al componente con el mismo id.
 
 ```r
-chat <- ellmer::chat_openai(...)
+chat <- ellmer::chat("openai/gpt-5-nano")
 
 observeEvent(input$chat_user_input, {
   stream <- chat$stream_async(!!!input$chat_user_input)
@@ -923,13 +926,14 @@ herramientas de otros servicios desde nuestra aplicación.
 - `{mcptools}` las convierte en tools de `{ellmer}`. El modelo decide cuándo llamarlas.
 - El servidor consulta los datos; el modelo usa el resultado para responder.
 
-Usaremos el [servidor comunitario de cyanheads](https://github.com/cyanheads/worldbank-mcp-server).
-La fuente es el Banco Mundial; el MCP no es un servicio oficial. No requiere un token del Banco Mundial.
+Usaremos el [servidor comunitario de cyanheads](https://github.com/cyanheads/imf-mcp-server).
+La fuente es el FMI; el MCP no es un servicio oficial. No requiere un token propio.
 El modelo sigue necesitando `OPENAI_API_KEY`.
 
-## El mismo modelo, sin y con MCP {.mcp-comparison}
+## Comparación guardada · Banco Mundial {.mcp-comparison}
 
-Respuestas reales cacheadas: mismo modelo, mismo prompt neutral y conversaciones independientes.
+Ejemplo anterior con el Banco Mundial: mismo modelo, prompt neutral y conversaciones independientes.
+La demo que sigue usa el FMI; esta comparación conserva su fuente original.
 
 ```{r}
 #| echo: false
@@ -956,19 +960,19 @@ Compara cifra, precisión, año y fuente. Las llamadas se conservan en `app-09/d
 ## App 09 · Conectar herramientas externas con MCP {.pattern-overview}
 
 MCP aporta herramientas remotas al mismo chat que ya usa nuestras tools locales de R.
-El ejemplo consulta datos del Banco Mundial y los pasa a `guardar_datos()` para actualizar Shiny.
+El ejemplo consulta crecimiento, inflación y población del FMI y actualiza Shiny con `guardar_datos()`.
 
 `data()` contiene `pais`, `anio`, `x_var`, `y_var`, `size_var`, `color_var` y `map_var`, con nombres y unidades.
 Cada carga reemplaza la anterior: mapa, dispersión y tabla muestran los países recibidos.
-La app consulta un año o el último dato por país; no muestra series temporales ni usa SQL.
+La app compara países en un año común; no muestra series temporales ni usa SQL local.
 
 `mcp.json` indica a qué servidor conectarse:
 
 ```json
 {
   "mcpServers": {
-    "worldbank": {
-      "url": "https://worldbank.caseyjhand.com/mcp"
+    "imf": {
+      "url": "https://imf.caseyjhand.com/mcp"
     }
   }
 }
@@ -976,9 +980,9 @@ La app consulta un año o el último dato por país; no muestra series temporale
 
 ## App 09 · Registrar las herramientas {.pattern-overview}
 
-Script `R/06_ellmer_mcp.R`: ejemplo de consola para consultar el MCP con ellmer.
-`mcp_tools()` descubre las herramientas remotas. El script prepara las tres tools de datos
-y ajusta los argumentos de consulta para el cliente del taller; `set_tools()` las registra.
+Script `R/06_ellmer_mcp.R`: ejemplo interactivo básico con el MCP comunitario del FMI.
+`mcp_tools()` descubre todas las herramientas remotas y `set_tools()` las registra.
+El modelo elige cuáles usar para responder.
 
 ```{r}
 #| echo: false
@@ -986,15 +990,15 @@ y ajusta los argumentos de consulta para el cliente del taller; `set_tools()` la
 code_block(
   "../R/06_ellmer_mcp.R",
   c(
-    "5-9" = "Descubre las herramientas remotas y conserva las tres de indicadores y datos.",
-    "11-14" = "Ajusta los argumentos de consulta para el cliente del taller.",
-    "17-22" = "Crea el chat y registra las tools del MCP.",
-    "25" = "El modelo consulta la fuente para responder con un dato real."
+    "5-8" = "Crea una conversación con ellmer.",
+    "11" = "Descubre y registra todas las herramientas del MCP, sin seleccionar ni adaptar.",
+    "14" = "El modelo elige las herramientas para consultar la fuente y responder.",
+    "16" = "live_console permite seguir conversando con el mismo agente."
   )
 )
 ```
 
-En App 09, las tools locales permiten además guardar los datos y actualizar la vista de Shiny.
+App 09 agrega tools locales para actualizar la vista de Shiny con los datos recibidos del FMI.
 
 ## App 09 · Del MCP a Shiny {.content-centered}
 
@@ -1009,7 +1013,7 @@ El agente consulta la fuente externa y usa una tool local para actualizar Shiny.
 ::: {.notes}
 El MCP ofrece herramientas remotas. El agente recibe sus observaciones y llama a guardar_datos().
 La tool local actualiza data(); Shiny recalcula los outputs por reactividad.
-En este ejemplo, el servidor comunitario lo mantiene cyanheads y la fuente es el Banco Mundial.
+En este ejemplo, el servidor comunitario lo mantiene cyanheads y la fuente es el FMI.
 :::
 
 ## App 09 · De los datos a la vista {.pattern-overview}
@@ -1044,8 +1048,8 @@ code_block(
     "65-83" = "Área proporcional o tamaño logarítmico; color y escalas de los ejes son independientes.",
     "85-102" = "inner_join dibuja solo países con map_var y prepara su tooltip.",
     "105-117" = "Guardar, leer y configurar las escalas son acciones separadas.",
-    "120-150" = "Registra el MCP y describe los argumentos de las tres tools locales.",
-    "151-154" = "El chat transmite respuestas y ejecuta las herramientas en secuencia."
+    "120-149" = "Registra todas las tools del FMI y describe las tres tools locales.",
+    "150-153" = "El chat transmite respuestas y ejecuta las herramientas en secuencia."
   )
 )
 ```
@@ -1058,22 +1062,23 @@ shiny::runApp("app-09")
 
 ### Pide
 
-«Colorea el mapa con el último dato disponible de esperanza de vida de cada país».
+«Colorea los países de América Latina según su inflación promedio anual en 2023».
 
-«Ahora genera un gráfico con PIB per cápita en X y la esperanza de vida ya descargada en Y.
-Usa escala logarítmica en X y conserva el mapa».
+«Ahora agrega un gráfico con crecimiento real del PIB en X, inflación en Y y población como tamaño.
+Conserva el mapa».
 
-«Ahora filtra solamente los países y territorios de América, reutilizando los datos cargados».
+«Ahora consulta las mismas variables para 2020 y actualiza la vista».
 
 ### Observa
 
-El mapa conserva la esperanza de vida al agregar el gráfico. El filtro reutiliza los datos sin otra descarga.
-**Datos** permite comprobar países, años y valores; la escala logarítmica solo cambia la visualización.
+El mapa conserva la inflación al agregar el gráfico. Al cambiar de año se actualizan todas las vistas.
+**Datos** permite comprobar países, años y valores; los ejes lineales conservan el crecimiento negativo.
 
 ## App 09 v2 · Conversar con herramientas MCP {.pattern-overview}
 
 Script `app-09-v2/app.R`: el chat registra todas las herramientas del MCP y usa `page_chat()`.
 `mcp_tools()` descubre las herramientas y `set_tools()` las registra, sin archivos auxiliares.
+Usa el MCP comunitario de cyanheads para el FMI; conserva la configuración del Banco Mundial para comparar.
 
 ```{r}
 #| echo: false
@@ -1082,9 +1087,9 @@ code_block(
   "../app-09-v2/app.R",
   c(
     "7" = "page_chat crea la interfaz de conversación a pantalla completa.",
-    "11-18" = "Cada sesión tiene su cliente ellmer y un prompt breve, con los parámetros por defecto.",
-    "19" = "Descubre todas las herramientas remotas y las registra en el cliente.",
-    "20" = "chat_server gestiona los mensajes, las herramientas y el streaming."
+    "11-17" = "Cada sesión tiene su cliente ellmer y un prompt breve, con los parámetros por defecto.",
+    "18" = "Descubre todas las herramientas remotas y las registra en el cliente.",
+    "19" = "chat_server gestiona los mensajes, las herramientas y el streaming."
   )
 )
 ```
@@ -1097,7 +1102,7 @@ shiny::runApp("app-09-v2")
 
 ### Pide
 
-«¿Cuál fue la esperanza de vida al nacer en Colombia en 2023?».
+«Según WEO del FMI, ¿cuál fue la tasa de desempleo de España en 2023?».
 
 ### Observa
 

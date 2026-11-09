@@ -2,7 +2,7 @@ import sys
 from typing import Annotated
 
 import pandas as pd
-from chatlas import ChatOpenAI
+from chatlas import ChatAuto
 from pydantic import Field
 
 # data --------------------------------------------------------------------
@@ -31,8 +31,8 @@ def resumir_continente(
 
 
 # chat --------------------------------------------------------------------
-chat = ChatOpenAI(
-    model="gpt-5-nano",
+chat = ChatAuto(
+    "openai/gpt-5-nano",
     system_prompt=(
         "Responde brevemente en español. "
         "Usa resumir_continente para toda pregunta sobre los datos y no inventes resultados."

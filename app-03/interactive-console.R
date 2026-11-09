@@ -21,8 +21,8 @@ resumir_continente <- function(continente) {
 }
 
 # chat --------------------------------------------------------------------
-chat <- chat_openai(
-  model = "gpt-5-nano",
+chat <- ellmer::chat(
+  "openai/gpt-5-nano",
   system_prompt = paste(
     "Responde brevemente en español.",
     "Usa resumir_continente para toda pregunta sobre los datos y no inventes resultados."

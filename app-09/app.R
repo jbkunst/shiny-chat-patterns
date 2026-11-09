@@ -88,7 +88,7 @@ server <- function(input, output, session) {
     if (!nrow(mapa)) return(map)
     info <- data()$variables |> filter(columna == "map_var")
     mapa <- mapa |> mutate(detalle = str_glue(
-      "{name_es}<br>{info$nombre}: {round(map_var, 4)} {info$unidad}<br>Año: {anio}<br>Banco Mundial"
+      "{name_es}<br>{info$nombre}: {round(map_var, 4)} {info$unidad}<br>Año: {anio}<br>FMI · WEO"
     ))
     rango <- range(mapa$map_var)
     if (diff(rango) == 0) rango <- rango + c(-0.5, 0.5)
@@ -117,9 +117,8 @@ server <- function(input, output, session) {
   }
 
   # chat ------------------------------------------------------------------
-  chat <- ellmer::chat_openai(model = "gpt-5.6-luna", system_prompt = prompt_sistema)
-  source("mcp-tools.R", local = TRUE, encoding = "UTF-8")
-  chat$set_tools(tools)
+  chat <- ellmer::chat("openai/gpt-5.6-luna", system_prompt = prompt_sistema)
+  chat$set_tools(mcp_tools("mcp.json"))
   chat$register_tool(tool(
     guardar_datos, "Reemplaza la carga completa que comparten mapa, dispersión y tabla.",
     arguments = list(
@@ -145,7 +144,7 @@ server <- function(input, output, session) {
     configurar_grafico, "Cambia las escalas de ejes y tamaño; conserva los datos.",
     arguments = list(
       log = type_enum(c("", "x", "y", "xy"), "Ejes logarítmicos; vacío para lineales.", required = FALSE),
-      tamano = type_enum(c("area", "log10"), "Área proporcional al valor o tamaño logarítmico.", required = FALSE)
+      tamano = type_enum(c("area", "log10"), "Área proporcional o tamaño logarítmico.", required = FALSE)
     )
   ))
   observeEvent(input$chat_user_input, {

@@ -32,7 +32,9 @@ Reserva `00–49` para el recorrido del taller, `50–89` para casos de aplicaci
 - `app-07`: compara filtros tradicionales con una consulta solicitada por chat.
 - `app-08`: conserva el globo y las actualizaciones de cámara tipo proxy; completa
   `mostrar_grafico()` para abrir el modal y devolver la imagen al modelo.
-- `app-09`: extensión en R con el MCP comunitario de cyanheads para datos del Banco Mundial.
+- `app-09`: extensión en R con el MCP comunitario de cyanheads para datos del FMI.
+  Registra todas sus tools directamente con mcp_tools("mcp.json"), sin ajustes ni source auxiliar.
+  mcp-tools.R y mcp-worldbank.json se conservan como ajuste específico del MCP del Banco Mundial.
   Sin SQL ni datos numéricos iniciales. Solo data() guarda filas y metadatos para todos los outputs.
   Las filas tienen pais, anio, x_var, y_var, size_var, color_var y map_var.
   Los metadatos conservan indicador, nombre y unidad.
@@ -47,11 +49,14 @@ Reserva `00–49` para el recorrido del taller, `50–89` para casos de aplicaci
   Debajo de los indicadores, navset_card_tab() separa Visualización de Datos.
   Visualización contiene dos cards con título: Mapa y Gráfico; Datos contiene la tabla.
   La comparación sin y con MCP usa respuestas reales cacheadas; no se consulta al modelo al renderizar slides.
-  Compara esperanza de vida en Colombia en 2023; la demo consulta el mapa y tres variables por país.
+  La comparación histórica sigue siendo del Banco Mundial: esperanza de vida en Colombia en 2023.
+  La demo del FMI usa inflación en el mapa, crecimiento en X, inflación en Y y población como tamaño.
+  Compara América Latina en 2023 y 2020, con ejes lineales para conservar crecimientos negativos.
   La versión Python queda pendiente hasta revisar el ejemplo R.
 - `app-09-v2`: variante mínima en R con page_chat(), chat_server() y un cliente ellmer por sesión.
   Conversa con herramientas MCP sin dashboard ni tools locales de visualización.
-  Registra todas las tools directamente con set_tools(mcp_tools("mcp.json")), sin adaptar sus esquemas.
+  Registra todas las tools del FMI con set_tools(mcp_tools("mcp-imf.json")), sin adaptar sus esquemas.
+  Conserva mcp.json con el Banco Mundial como alternativa para comparar.
 - `app-50-colombia-territorial`: caso territorial con datos departamentales de
   Colombia y chat flotante.
 - `app-51-banrep-sdmx`: caso económico que consulta series de Banrep mediante
@@ -88,6 +93,8 @@ Conserva su identidad visual; no los simplifiques para hacerlos iguales a las ap
 
 ## Chat, prompts y tools
 
+- Crea clientes con `ellmer::chat("proveedor/modelo")` en R y `ChatAuto("proveedor/modelo")` en Python.
+  Conserva el modelo de cada ejemplo; el taller usa OpenAI, pero el constructor permite cambiar de proveedor.
 - Mantén el greeting y el system prompt inline mientras quepan cómodamente en
   una expresión corta. Usa `greeting.md` y `prompt.md` cuando crezcan.
 - Enfoca cada app en una capacidad nueva: conversación, acceso a datos, SQL,

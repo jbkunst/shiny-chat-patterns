@@ -8,6 +8,7 @@
 .quarto
 /catalog/_site/
 /catalog/index_cache/
+/app-09/data/*.pending.json
 .Renviron
 .env
 __pycache__/

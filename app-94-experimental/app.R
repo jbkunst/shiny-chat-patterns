@@ -5,8 +5,8 @@ library(shinychat)
 
 # agents ------------------------------------------------------------------
 analyst_agent <- function(question) {
-  chat <- ellmer::chat_openai(
-    model = "gpt-5-nano",
+  chat <- ellmer::chat(
+    "openai/gpt-5-nano",
     system_prompt = paste(
       "You are analyst_agent.",
       "The user asks questions about a toy table named sales with columns:",
@@ -22,8 +22,8 @@ analyst_agent <- function(question) {
 writer_agent <- function(question, analysis, data) {
   data_text <- paste(capture.output(print(data, row.names = FALSE)), collapse = "\n")
 
-  chat <- ellmer::chat_openai(
-    model = "gpt-5-nano",
+  chat <- ellmer::chat(
+    "openai/gpt-5-nano",
     system_prompt = paste(
       "You are writer_agent.",
       "Answer clearly and briefly using only the supplied query result.",

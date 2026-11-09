@@ -246,15 +246,6 @@ LatinR 2026
           display:block!important;
       }</style></aside>
 </section>
-<section id="cómo-avanzaremos-por-el-taller" class="slide level2 center">
-<h2>Cómo avanzaremos por el taller</h2>
-<ol type="1">
-<li class="fragment"><strong>Partimos</strong> de una aplicación existente.</li>
-<li class="fragment"><strong>Agregamos</strong> una sola funcionalidad nueva.</li>
-<li class="fragment"><strong>Explicamos</strong> qué cambia y cómo funciona en el código.</li>
-<li class="fragment"><strong>Continuamos</strong> con la siguiente app.</li>
-</ol>
-</section>
 <section id="el-recorrido-del-taller" class="slide level2 workshop-agenda">
 <h2>El recorrido del taller</h2>
 <ol type="1">
@@ -275,12 +266,21 @@ LatinR 2026
 </ul></li>
 <li class="fragment"><p><strong>Conectar herramientas externas</strong></p>
 <ul>
-<li>MCP con datos del Banco Mundial y un gráfico local.</li>
+<li>MCP con datos del FMI y visualizaciones locales.</li>
 </ul></li>
 <li class="fragment"><p><strong>Organizar las tools en aplicaciones más completas</strong></p>
 <ul>
 <li>Casos territorial y económico de Colombia.</li>
 </ul></li>
+</ol>
+</section>
+<section id="cómo-avanzaremos-por-este-recorrido" class="slide level2 center">
+<h2>Cómo avanzaremos por este recorrido</h2>
+<ol type="1">
+<li class="fragment"><strong>Partimos</strong> de una aplicación existente.</li>
+<li class="fragment"><strong>Agregamos</strong> una sola funcionalidad nueva.</li>
+<li class="fragment"><strong>Explicamos</strong> qué cambia y cómo funciona en el código.</li>
+<li class="fragment"><strong>Continuamos</strong> con la siguiente app.</li>
 </ol>
 </section>
 <section id="antes-de-partir-repo-y-entornos" class="slide level2">
@@ -316,6 +316,7 @@ LatinR 2026
 <p>Usaremos <strong>GPT-5 nano</strong> y <strong>GPT-5.6 Luna</strong> por su relación entre costo y capacidad para las tareas de este curso: conversar, usar herramientas y trabajar con imágenes.</p>
 <h3 id="también-con-otros-proveedores">También con otros proveedores</h3>
 <p>Es posible obtener resultados similares con modelos de <strong>Anthropic</strong> u otros proveedores que admitan las capacidades del ejemplo. Los patrones de Shiny se mantienen.</p>
+<p>Usamos <code>ellmer::chat("proveedor/modelo")</code> en R y <code>ChatAuto("proveedor/modelo")</code> en Python. El proveedor se elige en la cadena, con sus credenciales correspondientes.</p>
 </section>
 <section id="antes-de-partir-api-y-primera-prueba" class="slide level2">
 <h2>Antes de partir · API y primera prueba</h2>
@@ -325,7 +326,7 @@ LatinR 2026
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="" aria-label="1"></a><span class="fu">library</span>(ellmer)</span>
 <span id="cb4-2"><a href="" aria-label="2"></a><span class="fu">readRenviron</span>(<span class="st">".Renviron"</span>)</span>
 <span id="cb4-3"><a href="" aria-label="3"></a><span class="fu">nzchar</span>(<span class="fu">Sys.getenv</span>(<span class="st">"OPENAI_API_KEY"</span>))</span>
-<span id="cb4-4"><a href="" aria-label="4"></a>chat <span class="ot">&lt;-</span> <span class="fu">chat_openai</span>(<span class="at">model =</span> <span class="st">"gpt-5-nano"</span>)</span>
+<span id="cb4-4"><a href="" aria-label="4"></a>chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat</span>(<span class="st">"openai/gpt-5-nano"</span>)</span>
 <span id="cb4-5"><a href="" aria-label="5"></a>chat<span class="sc">$</span><span class="fu">chat</span>(<span class="st">"Responde solamente: conexión correcta."</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <aside class="notes">
 <p>App 00–08 tienen versiones equivalentes en R y Python. La configuración completa está en el README. La clave es personal y .Renviron queda fuera de Git. App 00–01 funcionan sin clave. App 09 está, por ahora, solo en R. readRenviron() carga .Renviron sin tener que reiniciar la sesión para esta prueba. En Python, uv run –env-file .Renviron carga la clave antes de ejecutar el comando correspondiente. La confirmación de la clave no demuestra que sea válida: la consulta a la API comprueba el acceso al modelo.</p>
@@ -550,7 +551,7 @@ LatinR 2026
 <p>Script <code>R/01_ellmer.R</code>: un ejemplo mínimo de conversación antes de conectarlo a una aplicación.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource r workshop-code number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="" aria-label="1"></a><span class="fu">library</span>(ellmer)</span>
 <span id="cb7-2"><a href="" aria-label="2"></a></span>
-<span id="cb7-3"><a href="" aria-label="3"></a>chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat_openai</span>(<span class="at">model =</span> <span class="st">"gpt-5-nano"</span>, <span class="at">system_prompt =</span> <span class="st">"Eres un bot muy alegre."</span>)</span>
+<span id="cb7-3"><a href="" aria-label="3"></a>chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat</span>(<span class="st">"openai/gpt-5-nano"</span>, <span class="at">system_prompt =</span> <span class="st">"Eres un bot muy alegre."</span>)</span>
 <span id="cb7-4"><a href="" aria-label="4"></a></span>
 <span id="cb7-5"><a href="" aria-label="5"></a>chat<span class="sc">$</span><span class="fu">chat</span>(<span class="st">"Salúdame"</span>)</span>
 <span id="cb7-6"><a href="" aria-label="6"></a></span>
@@ -576,8 +577,8 @@ LatinR 2026
 </div>
 <div class="fragment">
 <h3 id="el-chat-en-el-server">El chat en el server</h3>
-<p>En el server, <code>chat_openai()</code> crea el cliente. <code>observeEvent()</code> escucha <code>input$chat_user_input</code> y <code>chat_append()</code> devuelve el stream al componente con el mismo id.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="" aria-label="1"></a>chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat_openai</span>(...)</span>
+<p>En el server, <code>ellmer::chat()</code> crea el cliente. <code>observeEvent()</code> escucha <code>input$chat_user_input</code> y <code>chat_append()</code> devuelve el stream al componente con el mismo id.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="" aria-label="1"></a>chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat</span>(<span class="st">"openai/gpt-5-nano"</span>)</span>
 <span id="cb9-2"><a href="" aria-label="2"></a></span>
 <span id="cb9-3"><a href="" aria-label="3"></a><span class="fu">observeEvent</span>(input<span class="sc">$</span>chat_user_input, {</span>
 <span id="cb9-4"><a href="" aria-label="4"></a>  stream <span class="ot">&lt;-</span> chat<span class="sc">$</span><span class="fu">stream_async</span>(<span class="sc">!!!</span>input<span class="sc">$</span>chat_user_input)</span>
@@ -640,8 +641,8 @@ LatinR 2026
 <span id="annotated-cell-10-50"><a href="#annotated-cell-10-50" aria-label="50"></a>  output<span class="sc">$</span>table <span class="ot">&lt;-</span> <span class="fu">renderTable</span>(<span class="fu">data</span>(), <span class="at">striped =</span> <span class="cn">TRUE</span>, <span class="at">hover =</span> <span class="cn">TRUE</span>)</span>
 <span id="annotated-cell-10-51"><a href="#annotated-cell-10-51" aria-label="51"></a></span>
 <span id="annotated-cell-10-52"><a href="#annotated-cell-10-52" aria-label="52"></a>  <span class="co"># chat ------------------------------------------------------------------</span></span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-10" data-target-annotation="3">3</button><span id="annotated-cell-10-53" class="code-annotation-target"><a href="#annotated-cell-10-53" aria-label="53"></a>  chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat_openai</span>(</span>
-<span id="annotated-cell-10-54"><a href="#annotated-cell-10-54" aria-label="54"></a>    <span class="at">model =</span> <span class="st">"gpt-5-nano"</span>,</span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-10" data-target-annotation="3">3</button><span id="annotated-cell-10-53" class="code-annotation-target"><a href="#annotated-cell-10-53" aria-label="53"></a>  chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat</span>(</span>
+<span id="annotated-cell-10-54"><a href="#annotated-cell-10-54" aria-label="54"></a>    <span class="st">"openai/gpt-5-nano"</span>,</span>
 <span id="annotated-cell-10-55"><a href="#annotated-cell-10-55" aria-label="55"></a>    <span class="at">system_prompt =</span> <span class="fu">paste</span>(</span>
 <span id="annotated-cell-10-56"><a href="#annotated-cell-10-56" aria-label="56"></a>      <span class="st">"Responde brevemente en español sobre los países de Gapminder en su último año."</span>,</span>
 <span id="annotated-cell-10-57"><a href="#annotated-cell-10-57" aria-label="57"></a>      <span class="st">"No inventes resultados numéricos."</span></span>
@@ -723,8 +724,8 @@ LatinR 2026
 <span id="annotated-cell-12-32"><a href="#annotated-cell-12-32" aria-label="32"></a><span class="co"># Prueba primero la función sin el modelo:</span></span>
 <span id="annotated-cell-12-33"><a href="#annotated-cell-12-33" aria-label="33"></a><span class="fu">consultar_pronostico</span>(<span class="st">"Madrid"</span>, fecha_ejemplo)</span>
 <span id="annotated-cell-12-34"><a href="#annotated-cell-12-34" aria-label="34"></a></span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-12" data-target-annotation="3">3</button><span id="annotated-cell-12-35" class="code-annotation-target"><a href="#annotated-cell-12-35" aria-label="35"></a>chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat_openai</span>(</span>
-<span id="annotated-cell-12-36"><a href="#annotated-cell-12-36" aria-label="36"></a>  <span class="at">model =</span> <span class="st">"gpt-5-nano"</span>,</span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-12" data-target-annotation="3">3</button><span id="annotated-cell-12-35" class="code-annotation-target"><a href="#annotated-cell-12-35" aria-label="35"></a>chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat</span>(</span>
+<span id="annotated-cell-12-36"><a href="#annotated-cell-12-36" aria-label="36"></a>  <span class="st">"openai/gpt-5-nano"</span>,</span>
 <span id="annotated-cell-12-37"><a href="#annotated-cell-12-37" aria-label="37"></a>  <span class="at">system_prompt =</span> <span class="fu">paste</span>(</span>
 <span id="annotated-cell-12-38"><a href="#annotated-cell-12-38" aria-label="38"></a>    <span class="st">"Responde en español. Usa consultar_pronostico; no inventes datos meteorológicos."</span>,</span>
 <span id="annotated-cell-12-39"><a href="#annotated-cell-12-39" aria-label="39"></a>    <span class="st">"Si no tienes una tool disponible para consultar el pronóstico, explica que no puedes obtenerlo."</span></span>
@@ -862,8 +863,8 @@ LatinR 2026
 <span id="annotated-cell-14-67"><a href="#annotated-cell-14-67" aria-label="67"></a>  }</span>
 <span id="annotated-cell-14-68"><a href="#annotated-cell-14-68" aria-label="68"></a></span>
 <span id="annotated-cell-14-69"><a href="#annotated-cell-14-69" aria-label="69"></a>  <span class="co"># chat ------------------------------------------------------------------</span></span>
-<span id="annotated-cell-14-70"><a href="#annotated-cell-14-70" aria-label="70"></a>  chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat_openai</span>(</span>
-<span id="annotated-cell-14-71"><a href="#annotated-cell-14-71" aria-label="71"></a>    <span class="at">model =</span> <span class="st">"gpt-5-nano"</span>,</span>
+<span id="annotated-cell-14-70"><a href="#annotated-cell-14-70" aria-label="70"></a>  chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat</span>(</span>
+<span id="annotated-cell-14-71"><a href="#annotated-cell-14-71" aria-label="71"></a>    <span class="st">"openai/gpt-5-nano"</span>,</span>
 <span id="annotated-cell-14-72"><a href="#annotated-cell-14-72" aria-label="72"></a>    <span class="at">system_prompt =</span> <span class="fu">paste</span>(</span>
 <span id="annotated-cell-14-73"><a href="#annotated-cell-14-73" aria-label="73"></a>      <span class="st">"Responde brevemente en español."</span>,</span>
 <span id="annotated-cell-14-74"><a href="#annotated-cell-14-74" aria-label="74"></a>      <span class="st">"Usa resumir_datos_visibles para responder sobre el dashboard y no inventes resultados."</span></span>
@@ -1002,7 +1003,7 @@ LatinR 2026
 <span id="annotated-cell-17-71"><a href="#annotated-cell-17-71" aria-label="71"></a>  }</span>
 <span id="annotated-cell-17-72"><a href="#annotated-cell-17-72" aria-label="72"></a></span>
 <span id="annotated-cell-17-73"><a href="#annotated-cell-17-73" aria-label="73"></a>  <span class="co"># chat ------------------------------------------------------------------</span></span>
-<span id="annotated-cell-17-74"><a href="#annotated-cell-17-74" aria-label="74"></a>  chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat_openai</span>(<span class="at">model =</span> <span class="st">"gpt-5-nano"</span>, <span class="at">system_prompt =</span> prompt_sistema)</span>
+<span id="annotated-cell-17-74"><a href="#annotated-cell-17-74" aria-label="74"></a>  chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat</span>(<span class="st">"openai/gpt-5-nano"</span>, <span class="at">system_prompt =</span> prompt_sistema)</span>
 <span id="annotated-cell-17-75"><a href="#annotated-cell-17-75" aria-label="75"></a></span>
 <button class="code-annotation-anchor" data-target-cell="annotated-cell-17" data-target-annotation="4">4</button><span id="annotated-cell-17-76" class="code-annotation-target"><a href="#annotated-cell-17-76" aria-label="76"></a>  chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
 <span id="annotated-cell-17-77"><a href="#annotated-cell-17-77" aria-label="77"></a>    consultar_paises,</span>
@@ -1119,8 +1120,8 @@ LatinR 2026
 <span id="annotated-cell-19-54"><a href="#annotated-cell-19-54" aria-label="54"></a><span class="co"># Prueba primero la función sin el modelo:</span></span>
 <span id="annotated-cell-19-55"><a href="#annotated-cell-19-55" aria-label="55"></a><span class="fu">consultar_pronostico</span>(<span class="st">"Madrid"</span>, fecha_ejemplo)</span>
 <span id="annotated-cell-19-56"><a href="#annotated-cell-19-56" aria-label="56"></a></span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-19" data-target-annotation="4">4</button><span id="annotated-cell-19-57" class="code-annotation-target"><a href="#annotated-cell-19-57" aria-label="57"></a>chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat_openai</span>(</span>
-<span id="annotated-cell-19-58"><a href="#annotated-cell-19-58" aria-label="58"></a>  <span class="at">model =</span> <span class="st">"gpt-5-nano"</span>,</span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-19" data-target-annotation="4">4</button><span id="annotated-cell-19-57" class="code-annotation-target"><a href="#annotated-cell-19-57" aria-label="57"></a>chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat</span>(</span>
+<span id="annotated-cell-19-58"><a href="#annotated-cell-19-58" aria-label="58"></a>  <span class="st">"openai/gpt-5-nano"</span>,</span>
 <span id="annotated-cell-19-59"><a href="#annotated-cell-19-59" aria-label="59"></a>  <span class="at">system_prompt =</span> <span class="fu">paste</span>(</span>
 <span id="annotated-cell-19-60"><a href="#annotated-cell-19-60" aria-label="60"></a>    <span class="st">"Responde en español."</span>,</span>
 <span id="annotated-cell-19-61"><a href="#annotated-cell-19-61" aria-label="61"></a>    <span class="st">"Para fechas relativas, consulta primero consultar_fecha_actual y calcula la fecha."</span>,</span>
@@ -1358,7 +1359,7 @@ LatinR 2026
 <span id="annotated-cell-22-76"><a href="#annotated-cell-22-76" aria-label="76"></a>  }</span>
 <span id="annotated-cell-22-77"><a href="#annotated-cell-22-77" aria-label="77"></a></span>
 <span id="annotated-cell-22-78"><a href="#annotated-cell-22-78" aria-label="78"></a>  <span class="co"># chat ------------------------------------------------------------------</span></span>
-<span id="annotated-cell-22-79"><a href="#annotated-cell-22-79" aria-label="79"></a>  chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat_openai</span>(<span class="at">model =</span> <span class="st">"gpt-5-nano"</span>, <span class="at">system_prompt =</span> prompt_sistema)</span>
+<span id="annotated-cell-22-79"><a href="#annotated-cell-22-79" aria-label="79"></a>  chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat</span>(<span class="st">"openai/gpt-5-nano"</span>, <span class="at">system_prompt =</span> prompt_sistema)</span>
 <span id="annotated-cell-22-80"><a href="#annotated-cell-22-80" aria-label="80"></a></span>
 <span id="annotated-cell-22-81"><a href="#annotated-cell-22-81" aria-label="81"></a>  chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
 <span id="annotated-cell-22-82"><a href="#annotated-cell-22-82" aria-label="82"></a>    consultar_paises,</span>
@@ -1552,7 +1553,7 @@ LatinR 2026
 <span id="annotated-cell-25-113"><a href="#annotated-cell-25-113" aria-label="113"></a>  }</span>
 <span id="annotated-cell-25-114"><a href="#annotated-cell-25-114" aria-label="114"></a></span>
 <span id="annotated-cell-25-115"><a href="#annotated-cell-25-115" aria-label="115"></a>  <span class="co"># chat ------------------------------------------------------------------</span></span>
-<span id="annotated-cell-25-116"><a href="#annotated-cell-25-116" aria-label="116"></a>  chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat_openai</span>(<span class="at">model =</span> <span class="st">"gpt-5-nano"</span>, <span class="at">system_prompt =</span> prompt_sistema)</span>
+<span id="annotated-cell-25-116"><a href="#annotated-cell-25-116" aria-label="116"></a>  chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat</span>(<span class="st">"openai/gpt-5-nano"</span>, <span class="at">system_prompt =</span> prompt_sistema)</span>
 <span id="annotated-cell-25-117"><a href="#annotated-cell-25-117" aria-label="117"></a></span>
 <span id="annotated-cell-25-118"><a href="#annotated-cell-25-118" aria-label="118"></a>  chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
 <span id="annotated-cell-25-119"><a href="#annotated-cell-25-119" aria-label="119"></a>    consultar_paises,</span>
@@ -1691,8 +1692,8 @@ LatinR 2026
 <span id="annotated-cell-28-42"><a href="#annotated-cell-28-42" aria-label="42"></a><span class="fu">lapply</span>(resultado, class)</span>
 <span id="annotated-cell-28-43"><a href="#annotated-cell-28-43" aria-label="43"></a><span class="fu">str</span>(resultado, <span class="at">max.level =</span> <span class="dv">1</span>)</span>
 <span id="annotated-cell-28-44"><a href="#annotated-cell-28-44" aria-label="44"></a></span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-28" data-target-annotation="5">5</button><span id="annotated-cell-28-45" class="code-annotation-target"><a href="#annotated-cell-28-45" aria-label="45"></a>chat <span class="ot">&lt;-</span> <span class="fu">chat_openai</span>(</span>
-<span id="annotated-cell-28-46"><a href="#annotated-cell-28-46" aria-label="46"></a>  <span class="at">model =</span> <span class="st">"gpt-5.6-luna"</span>,</span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-28" data-target-annotation="5">5</button><span id="annotated-cell-28-45" class="code-annotation-target"><a href="#annotated-cell-28-45" aria-label="45"></a>chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat</span>(</span>
+<span id="annotated-cell-28-46"><a href="#annotated-cell-28-46" aria-label="46"></a>  <span class="st">"openai/gpt-5.6-luna"</span>,</span>
 <span id="annotated-cell-28-47"><a href="#annotated-cell-28-47" aria-label="47"></a>  <span class="at">system_prompt =</span> <span class="fu">paste</span>(</span>
 <span id="annotated-cell-28-48"><a href="#annotated-cell-28-48" aria-label="48"></a>    <span class="st">"No describas ningún gráfico sin recibir su imagen mediante mostrar_puntos."</span>,</span>
 <span id="annotated-cell-28-49"><a href="#annotated-cell-28-49" aria-label="49"></a>    <span class="st">"Cada petición de un gráfico nuevo requiere una nueva llamada a mostrar_puntos."</span>,</span>
@@ -2022,7 +2023,7 @@ LatinR 2026
 <span id="annotated-cell-31-187"><a href="#annotated-cell-31-187" aria-label="187"></a>  }</span>
 <span id="annotated-cell-31-188"><a href="#annotated-cell-31-188" aria-label="188"></a></span>
 <span id="annotated-cell-31-189"><a href="#annotated-cell-31-189" aria-label="189"></a>  <span class="co"># chat ------------------------------------------------------------------</span></span>
-<span id="annotated-cell-31-190"><a href="#annotated-cell-31-190" aria-label="190"></a>  chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat_openai</span>(<span class="at">model =</span> <span class="st">"gpt-5.6-luna"</span>, <span class="at">system_prompt =</span> prompt_sistema)</span>
+<span id="annotated-cell-31-190"><a href="#annotated-cell-31-190" aria-label="190"></a>  chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat</span>(<span class="st">"openai/gpt-5.6-luna"</span>, <span class="at">system_prompt =</span> prompt_sistema)</span>
 <span id="annotated-cell-31-191"><a href="#annotated-cell-31-191" aria-label="191"></a></span>
 <span id="annotated-cell-31-192"><a href="#annotated-cell-31-192" aria-label="192"></a>  chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
 <span id="annotated-cell-31-193"><a href="#annotated-cell-31-193" aria-label="193"></a>    consultar_paises,</span>
@@ -2121,11 +2122,11 @@ LatinR 2026
 <li><code>{mcptools}</code> las convierte en tools de <code>{ellmer}</code>. El modelo decide cuándo llamarlas.</li>
 <li>El servidor consulta los datos; el modelo usa el resultado para responder.</li>
 </ul>
-<p>Usaremos el <a href="https://github.com/cyanheads/worldbank-mcp-server">servidor comunitario de cyanheads</a>. La fuente es el Banco Mundial; el MCP no es un servicio oficial. No requiere un token del Banco Mundial. El modelo sigue necesitando <code>OPENAI_API_KEY</code>.</p>
+<p>Usaremos el <a href="https://github.com/cyanheads/imf-mcp-server">servidor comunitario de cyanheads</a>. La fuente es el FMI; el MCP no es un servicio oficial. No requiere un token propio. El modelo sigue necesitando <code>OPENAI_API_KEY</code>.</p>
 </section>
-<section id="el-mismo-modelo-sin-y-con-mcp" class="slide level2 mcp-comparison">
-<h2>El mismo modelo, sin y con MCP</h2>
-<p>Respuestas reales cacheadas: mismo modelo, mismo prompt neutral y conversaciones independientes.</p>
+<section id="comparación-guardada-banco-mundial" class="slide level2 mcp-comparison">
+<h2>Comparación guardada · Banco Mundial</h2>
+<p>Ejemplo anterior con el Banco Mundial: mismo modelo, prompt neutral y conversaciones independientes. La demo que sigue usa el FMI; esta comparación conserva su fuente original.</p>
 <table class="caption-top">
 <colgroup>
 <col style="width: 20%">
@@ -2152,64 +2153,55 @@ LatinR 2026
 </section>
 <section id="app-09-conectar-herramientas-externas-con-mcp" class="slide level2 pattern-overview">
 <h2>App 09 · Conectar herramientas externas con MCP</h2>
-<p>MCP aporta herramientas remotas al mismo chat que ya usa nuestras tools locales de R. El ejemplo consulta datos del Banco Mundial y los pasa a <code>guardar_datos()</code> para actualizar Shiny.</p>
-<p><code>data()</code> contiene <code>pais</code>, <code>anio</code>, <code>x_var</code>, <code>y_var</code>, <code>size_var</code>, <code>color_var</code> y <code>map_var</code>, con nombres y unidades. Cada carga reemplaza la anterior: mapa, dispersión y tabla muestran los países recibidos. La app consulta un año o el último dato por país; no muestra series temporales ni usa SQL.</p>
+<p>MCP aporta herramientas remotas al mismo chat que ya usa nuestras tools locales de R. El ejemplo consulta crecimiento, inflación y población del FMI y actualiza Shiny con <code>guardar_datos()</code>.</p>
+<p><code>data()</code> contiene <code>pais</code>, <code>anio</code>, <code>x_var</code>, <code>y_var</code>, <code>size_var</code>, <code>color_var</code> y <code>map_var</code>, con nombres y unidades. Cada carga reemplaza la anterior: mapa, dispersión y tabla muestran los países recibidos. La app compara países en un año común; no muestra series temporales ni usa SQL local.</p>
 <p><code>mcp.json</code> indica a qué servidor conectarse:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode numberSource json number-lines code-with-copy"><code class="sourceCode json"><span id="cb21-1"><a href="" aria-label="1"></a><span class="fu">{</span></span>
 <span id="cb21-2"><a href="" aria-label="2"></a>  <span class="dt">"mcpServers"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb21-3"><a href="" aria-label="3"></a>    <span class="dt">"worldbank"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb21-4"><a href="" aria-label="4"></a>      <span class="dt">"url"</span><span class="fu">:</span> <span class="st">"https://worldbank.caseyjhand.com/mcp"</span></span>
+<span id="cb21-3"><a href="" aria-label="3"></a>    <span class="dt">"imf"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb21-4"><a href="" aria-label="4"></a>      <span class="dt">"url"</span><span class="fu">:</span> <span class="st">"https://imf.caseyjhand.com/mcp"</span></span>
 <span id="cb21-5"><a href="" aria-label="5"></a>    <span class="fu">}</span></span>
 <span id="cb21-6"><a href="" aria-label="6"></a>  <span class="fu">}</span></span>
 <span id="cb21-7"><a href="" aria-label="7"></a><span class="fu">}</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="app-09-registrar-las-herramientas" class="slide level2 pattern-overview">
 <h2>App 09 · Registrar las herramientas</h2>
-<p>Script <code>R/06_ellmer_mcp.R</code>: ejemplo de consola para consultar el MCP con ellmer. <code>mcp_tools()</code> descubre las herramientas remotas. El script prepara las tres tools de datos y ajusta los argumentos de consulta para el cliente del taller; <code>set_tools()</code> las registra.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-34" data-workshop-highlights="5-9|11-14|17-22|25"><pre class="sourceCode numberSource r workshop-code code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-34-1"><a href="#annotated-cell-34-1" aria-label="1"></a><span class="fu">library</span>(ellmer)</span>
+<p>Script <code>R/06_ellmer_mcp.R</code>: ejemplo interactivo básico con el MCP comunitario del FMI. <code>mcp_tools()</code> descubre todas las herramientas remotas y <code>set_tools()</code> las registra. El modelo elige cuáles usar para responder.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-34" data-workshop-highlights="5-8|11|14|16"><pre class="sourceCode numberSource r workshop-code code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-34-1"><a href="#annotated-cell-34-1" aria-label="1"></a><span class="fu">library</span>(ellmer)</span>
 <span id="annotated-cell-34-2"><a href="#annotated-cell-34-2" aria-label="2"></a><span class="fu">library</span>(mcptools)</span>
 <span id="annotated-cell-34-3"><a href="#annotated-cell-34-3" aria-label="3"></a></span>
-<span id="annotated-cell-34-4"><a href="#annotated-cell-34-4" aria-label="4"></a><span class="co"># tools -------------------------------------------------------------------</span></span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-34" data-target-annotation="1">1</button><span id="annotated-cell-34-5" class="code-annotation-target"><a href="#annotated-cell-34-5" aria-label="5"></a>tools <span class="ot">&lt;-</span> <span class="fu">mcp_tools</span>(<span class="st">"app-09/mcp.json"</span>)</span>
-<span id="annotated-cell-34-6"><a href="#annotated-cell-34-6" aria-label="6"></a>tools <span class="ot">&lt;-</span> <span class="fu">Filter</span>(<span class="cf">function</span>(x) x<span class="sc">@</span>name <span class="sc">%in%</span> <span class="fu">c</span>(</span>
-<span id="annotated-cell-34-7"><a href="#annotated-cell-34-7" aria-label="7"></a>  <span class="st">"worldbank_search_indicators"</span>, <span class="st">"worldbank_get_indicator"</span>, <span class="st">"worldbank_get_data"</span></span>
-<span id="annotated-cell-34-8"><a href="#annotated-cell-34-8" aria-label="8"></a>), tools)</span>
-<span id="annotated-cell-34-9"><a href="#annotated-cell-34-9" aria-label="9"></a><span class="fu">names</span>(tools) <span class="ot">&lt;-</span> <span class="fu">vapply</span>(tools, <span class="cf">function</span>(x) x<span class="sc">@</span>name, <span class="st">""</span>)</span>
-<span id="annotated-cell-34-10"><a href="#annotated-cell-34-10" aria-label="10"></a></span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-34" data-target-annotation="2">2</button><span id="annotated-cell-34-11" class="code-annotation-target"><a href="#annotated-cell-34-11" aria-label="11"></a><span class="co"># Conserva los argumentos del taller: la unión opcional de frequency falla con este cliente/modelo.</span></span>
-<span id="annotated-cell-34-12"><a href="#annotated-cell-34-12" aria-label="12"></a>tools<span class="sc">$</span>worldbank_get_data<span class="sc">@</span>arguments<span class="sc">@</span>properties <span class="ot">&lt;-</span> tools<span class="sc">$</span>worldbank_get_data<span class="sc">@</span>arguments<span class="sc">@</span>properties[</span>
-<span id="annotated-cell-34-13"><a href="#annotated-cell-34-13" aria-label="13"></a>  <span class="fu">c</span>(<span class="st">"indicator_id"</span>, <span class="st">"countries"</span>, <span class="st">"date_range"</span>, <span class="st">"mrnev"</span>, <span class="st">"page"</span>, <span class="st">"per_page"</span>)</span>
-<span id="annotated-cell-34-14"><a href="#annotated-cell-34-14" aria-label="14"></a>]</span>
+<span id="annotated-cell-34-4"><a href="#annotated-cell-34-4" aria-label="4"></a><span class="co"># chat --------------------------------------------------------------------</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-34" data-target-annotation="1">1</button><span id="annotated-cell-34-5" class="code-annotation-target"><a href="#annotated-cell-34-5" aria-label="5"></a>chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat</span>(</span>
+<span id="annotated-cell-34-6"><a href="#annotated-cell-34-6" aria-label="6"></a>  <span class="st">"openai/gpt-5.6-luna"</span>,</span>
+<span id="annotated-cell-34-7"><a href="#annotated-cell-34-7" aria-label="7"></a>  <span class="at">system_prompt =</span> <span class="st">"Responde en español. Consulta el MCP e indica país, año, valor, unidad y fuente."</span></span>
+<span id="annotated-cell-34-8"><a href="#annotated-cell-34-8" aria-label="8"></a>)</span>
+<span id="annotated-cell-34-9"><a href="#annotated-cell-34-9" aria-label="9"></a></span>
+<span id="annotated-cell-34-10"><a href="#annotated-cell-34-10" aria-label="10"></a><span class="co"># tools -------------------------------------------------------------------</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-34" data-target-annotation="2">2</button><span id="annotated-cell-34-11" class="code-annotation-target"><a href="#annotated-cell-34-11" aria-label="11"></a>chat<span class="sc">$</span><span class="fu">set_tools</span>(<span class="fu">mcp_tools</span>(<span class="st">"app-09-v2/mcp-imf.json"</span>))</span>
+<span id="annotated-cell-34-12"><a href="#annotated-cell-34-12" aria-label="12"></a></span>
+<span id="annotated-cell-34-13"><a href="#annotated-cell-34-13" aria-label="13"></a><span class="co"># conversation ------------------------------------------------------------</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-34" data-target-annotation="3">3</button><span id="annotated-cell-34-14" class="code-annotation-target"><a href="#annotated-cell-34-14" aria-label="14"></a>chat<span class="sc">$</span><span class="fu">chat</span>(<span class="st">"Según WEO del FMI, ¿cuál fue la tasa de desempleo de España en 2023?"</span>)</span>
 <span id="annotated-cell-34-15"><a href="#annotated-cell-34-15" aria-label="15"></a></span>
-<span id="annotated-cell-34-16"><a href="#annotated-cell-34-16" aria-label="16"></a><span class="co"># chat --------------------------------------------------------------------</span></span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-34" data-target-annotation="3">3</button><span id="annotated-cell-34-17" class="code-annotation-target"><a href="#annotated-cell-34-17" aria-label="17"></a>chat <span class="ot">&lt;-</span> <span class="fu">chat_openai</span>(</span>
-<span id="annotated-cell-34-18"><a href="#annotated-cell-34-18" aria-label="18"></a>  <span class="at">model =</span> <span class="st">"gpt-5.6-luna"</span>,</span>
-<span id="annotated-cell-34-19"><a href="#annotated-cell-34-19" aria-label="19"></a>  <span class="at">system_prompt =</span> <span class="st">"Responde en español. Consulta el MCP e indica país, año, valor, unidad y fuente."</span></span>
-<span id="annotated-cell-34-20"><a href="#annotated-cell-34-20" aria-label="20"></a>)</span>
-<span id="annotated-cell-34-21"><a href="#annotated-cell-34-21" aria-label="21"></a></span>
-<span id="annotated-cell-34-22"><a href="#annotated-cell-34-22" aria-label="22"></a>chat<span class="sc">$</span><span class="fu">set_tools</span>(tools)</span>
-<span id="annotated-cell-34-23"><a href="#annotated-cell-34-23" aria-label="23"></a></span>
-<span id="annotated-cell-34-24"><a href="#annotated-cell-34-24" aria-label="24"></a><span class="co"># conversation ------------------------------------------------------------</span></span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-34" data-target-annotation="4">4</button><span id="annotated-cell-34-25" class="code-annotation-target"><a href="#annotated-cell-34-25" aria-label="25"></a>chat<span class="sc">$</span><span class="fu">chat</span>(<span class="st">"¿Cuál fue la esperanza de vida al nacer en Colombia en 2023?"</span>)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-34" data-target-annotation="4">4</button><span id="annotated-cell-34-16" class="code-annotation-target"><a href="#annotated-cell-34-16" aria-label="16"></a><span class="fu">live_console</span>(chat)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <dl class="code-annotation-container-hidden code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-34" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-34" data-code-lines="5" data-code-annotation="1"><strong>1.</strong> Descubre las herramientas remotas y conserva las tres de indicadores y datos.</span>
+<span data-code-cell="annotated-cell-34" data-code-lines="5" data-code-annotation="1"><strong>1.</strong> Crea una conversación con ellmer.</span>
 </dd>
 <dt data-target-cell="annotated-cell-34" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-cell="annotated-cell-34" data-code-lines="11" data-code-annotation="2"><strong>2.</strong> Ajusta los argumentos de consulta para el cliente del taller.</span>
+<span data-code-cell="annotated-cell-34" data-code-lines="11" data-code-annotation="2"><strong>2.</strong> Descubre y registra todas las herramientas del MCP, sin seleccionar ni adaptar.</span>
 </dd>
 <dt data-target-cell="annotated-cell-34" data-target-annotation="3">3</dt>
 <dd>
-<span data-code-cell="annotated-cell-34" data-code-lines="17" data-code-annotation="3"><strong>3.</strong> Crea el chat y registra las tools del MCP.</span>
+<span data-code-cell="annotated-cell-34" data-code-lines="14" data-code-annotation="3"><strong>3.</strong> El modelo elige las herramientas para consultar la fuente y responder.</span>
 </dd>
 <dt data-target-cell="annotated-cell-34" data-target-annotation="4">4</dt>
 <dd>
-<span data-code-cell="annotated-cell-34" data-code-lines="25" data-code-annotation="4"><strong>4.</strong> El modelo consulta la fuente para responder con un dato real.</span>
+<span data-code-cell="annotated-cell-34" data-code-lines="16" data-code-annotation="4"><strong>4.</strong> live_console permite seguir conversando con el mismo agente.</span>
 </dd>
 </dl>
-<p>En App 09, las tools locales permiten además guardar los datos y actualizar la vista de Shiny.</p>
+<p>App 09 agrega tools locales para actualizar la vista de Shiny con los datos recibidos del FMI.</p>
 </section>
 <section id="app-09-del-mcp-a-shiny" class="slide level2 content-centered">
 <h2>App 09 · Del MCP a Shiny</h2>
@@ -2283,7 +2275,7 @@ LatinR 2026
 
 </div>
 <aside class="notes">
-<p>El MCP ofrece herramientas remotas. El agente recibe sus observaciones y llama a guardar_datos(). La tool local actualiza data(); Shiny recalcula los outputs por reactividad. En este ejemplo, el servidor comunitario lo mantiene cyanheads y la fuente es el Banco Mundial.</p>
+<p>El MCP ofrece herramientas remotas. El agente recibe sus observaciones y llama a guardar_datos(). La tool local actualiza data(); Shiny recalcula los outputs por reactividad. En este ejemplo, el servidor comunitario lo mantiene cyanheads y la fuente es el FMI.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -2313,7 +2305,7 @@ LatinR 2026
 </section>
 <section id="app-09-el-código" class="slide level2">
 <h2>App 09 · El código</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-36" data-workshop-highlights="24-45|49-63|65-83|85-102|105-117|120-150|151-154"><pre class="sourceCode numberSource r workshop-code code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-36-1"><a href="#annotated-cell-36-1" aria-label="1"></a><span class="fu">library</span>(shiny)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-36" data-workshop-highlights="24-45|49-63|65-83|85-102|105-117|120-149|150-153"><pre class="sourceCode numberSource r workshop-code code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-36-1"><a href="#annotated-cell-36-1" aria-label="1"></a><span class="fu">library</span>(shiny)</span>
 <span id="annotated-cell-36-2"><a href="#annotated-cell-36-2" aria-label="2"></a><span class="fu">library</span>(bslib)</span>
 <span id="annotated-cell-36-3"><a href="#annotated-cell-36-3" aria-label="3"></a><span class="fu">library</span>(dplyr)</span>
 <span id="annotated-cell-36-4"><a href="#annotated-cell-36-4" aria-label="4"></a><span class="fu">library</span>(ggplot2)</span>
@@ -2403,7 +2395,7 @@ LatinR 2026
 <span id="annotated-cell-36-88"><a href="#annotated-cell-36-88" aria-label="88"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">nrow</span>(mapa)) <span class="fu">return</span>(map)</span>
 <span id="annotated-cell-36-89"><a href="#annotated-cell-36-89" aria-label="89"></a>    info <span class="ot">&lt;-</span> <span class="fu">data</span>()<span class="sc">$</span>variables <span class="sc">|&gt;</span> <span class="fu">filter</span>(columna <span class="sc">==</span> <span class="st">"map_var"</span>)</span>
 <span id="annotated-cell-36-90"><a href="#annotated-cell-36-90" aria-label="90"></a>    mapa <span class="ot">&lt;-</span> mapa <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">detalle =</span> <span class="fu">str_glue</span>(</span>
-<span id="annotated-cell-36-91"><a href="#annotated-cell-36-91" aria-label="91"></a>      <span class="st">"{name_es}&lt;br&gt;{info$nombre}: {round(map_var, 4)} {info$unidad}&lt;br&gt;Año: {anio}&lt;br&gt;Banco Mundial"</span></span>
+<span id="annotated-cell-36-91"><a href="#annotated-cell-36-91" aria-label="91"></a>      <span class="st">"{name_es}&lt;br&gt;{info$nombre}: {round(map_var, 4)} {info$unidad}&lt;br&gt;Año: {anio}&lt;br&gt;FMI · WEO"</span></span>
 <span id="annotated-cell-36-92"><a href="#annotated-cell-36-92" aria-label="92"></a>    ))</span>
 <span id="annotated-cell-36-93"><a href="#annotated-cell-36-93" aria-label="93"></a>    rango <span class="ot">&lt;-</span> <span class="fu">range</span>(mapa<span class="sc">$</span>map_var)</span>
 <span id="annotated-cell-36-94"><a href="#annotated-cell-36-94" aria-label="94"></a>    <span class="cf">if</span> (<span class="fu">diff</span>(rango) <span class="sc">==</span> <span class="dv">0</span>) rango <span class="ot">&lt;-</span> rango <span class="sc">+</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>)</span>
@@ -2432,44 +2424,43 @@ LatinR 2026
 <span id="annotated-cell-36-117"><a href="#annotated-cell-36-117" aria-label="117"></a>  }</span>
 <span id="annotated-cell-36-118"><a href="#annotated-cell-36-118" aria-label="118"></a></span>
 <span id="annotated-cell-36-119"><a href="#annotated-cell-36-119" aria-label="119"></a>  <span class="co"># chat ------------------------------------------------------------------</span></span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-36" data-target-annotation="6">6</button><span id="annotated-cell-36-120" class="code-annotation-target"><a href="#annotated-cell-36-120" aria-label="120"></a>  chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat_openai</span>(<span class="at">model =</span> <span class="st">"gpt-5.6-luna"</span>, <span class="at">system_prompt =</span> prompt_sistema)</span>
-<span id="annotated-cell-36-121"><a href="#annotated-cell-36-121" aria-label="121"></a>  <span class="fu">source</span>(<span class="st">"mcp-tools.R"</span>, <span class="at">local =</span> <span class="cn">TRUE</span>, <span class="at">encoding =</span> <span class="st">"UTF-8"</span>)</span>
-<span id="annotated-cell-36-122"><a href="#annotated-cell-36-122" aria-label="122"></a>  chat<span class="sc">$</span><span class="fu">set_tools</span>(tools)</span>
-<span id="annotated-cell-36-123"><a href="#annotated-cell-36-123" aria-label="123"></a>  chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
-<span id="annotated-cell-36-124"><a href="#annotated-cell-36-124" aria-label="124"></a>    guardar_datos, <span class="st">"Reemplaza la carga completa que comparten mapa, dispersión y tabla."</span>,</span>
-<span id="annotated-cell-36-125"><a href="#annotated-cell-36-125" aria-label="125"></a>    <span class="at">arguments =</span> <span class="fu">list</span>(</span>
-<span id="annotated-cell-36-126"><a href="#annotated-cell-36-126" aria-label="126"></a>      <span class="at">datos =</span> <span class="fu">type_array</span>(<span class="fu">type_object</span>(</span>
-<span id="annotated-cell-36-127"><a href="#annotated-cell-36-127" aria-label="127"></a>        <span class="at">pais =</span> <span class="fu">type_string</span>(<span class="st">"Código ISO3 del país, sin agregados."</span>),</span>
-<span id="annotated-cell-36-128"><a href="#annotated-cell-36-128" aria-label="128"></a>        <span class="at">anio =</span> <span class="fu">type_integer</span>(<span class="st">"Año real de los valores de esta fila."</span>),</span>
-<span id="annotated-cell-36-129"><a href="#annotated-cell-36-129" aria-label="129"></a>        <span class="at">x_var =</span> <span class="fu">type_number</span>(<span class="st">"Valor del eje X; null si no se usa."</span>, <span class="at">required =</span> <span class="cn">FALSE</span>),</span>
-<span id="annotated-cell-36-130"><a href="#annotated-cell-36-130" aria-label="130"></a>        <span class="at">y_var =</span> <span class="fu">type_number</span>(<span class="st">"Valor del eje Y; null si no se usa."</span>, <span class="at">required =</span> <span class="cn">FALSE</span>),</span>
-<span id="annotated-cell-36-131"><a href="#annotated-cell-36-131" aria-label="131"></a>        <span class="at">size_var =</span> <span class="fu">type_number</span>(<span class="st">"Valor positivo para el tamaño; null si no se usa."</span>, <span class="at">required =</span> <span class="cn">FALSE</span>),</span>
-<span id="annotated-cell-36-132"><a href="#annotated-cell-36-132" aria-label="132"></a>        <span class="at">color_var =</span> <span class="fu">type_number</span>(<span class="st">"Valor para el color del punto; null para color uniforme."</span>, <span class="at">required =</span> <span class="cn">FALSE</span>),</span>
-<span id="annotated-cell-36-133"><a href="#annotated-cell-36-133" aria-label="133"></a>        <span class="at">map_var =</span> <span class="fu">type_number</span>(<span class="st">"Valor para el color del país; null si no se usa."</span>, <span class="at">required =</span> <span class="cn">FALSE</span>)</span>
-<span id="annotated-cell-36-134"><a href="#annotated-cell-36-134" aria-label="134"></a>      ), <span class="st">"Una fila por país; valores reales del MCP a cuatro decimales."</span>),</span>
-<span id="annotated-cell-36-135"><a href="#annotated-cell-36-135" aria-label="135"></a>      <span class="at">variables =</span> <span class="fu">type_array</span>(<span class="fu">type_object</span>(</span>
-<span id="annotated-cell-36-136"><a href="#annotated-cell-36-136" aria-label="136"></a>        <span class="at">columna =</span> <span class="fu">type_enum</span>(<span class="fu">c</span>(<span class="st">"x_var"</span>, <span class="st">"y_var"</span>, <span class="st">"size_var"</span>, <span class="st">"color_var"</span>, <span class="st">"map_var"</span>), <span class="st">"Papel en la vista."</span>),</span>
-<span id="annotated-cell-36-137"><a href="#annotated-cell-36-137" aria-label="137"></a>        <span class="at">indicador =</span> <span class="fu">type_string</span>(<span class="st">"ID exacto del indicador del MCP."</span>),</span>
-<span id="annotated-cell-36-138"><a href="#annotated-cell-36-138" aria-label="138"></a>        <span class="at">nombre =</span> <span class="fu">type_string</span>(<span class="st">"Nombre breve del indicador."</span>),</span>
-<span id="annotated-cell-36-139"><a href="#annotated-cell-36-139" aria-label="139"></a>        <span class="at">unidad =</span> <span class="fu">type_string</span>(<span class="st">"Unidad original de la fuente."</span>)</span>
-<span id="annotated-cell-36-140"><a href="#annotated-cell-36-140" aria-label="140"></a>      ), <span class="st">"Nombre y unidad de cada columna utilizada. Un indicador puede tener varios usos."</span>)</span>
-<span id="annotated-cell-36-141"><a href="#annotated-cell-36-141" aria-label="141"></a>    )</span>
-<span id="annotated-cell-36-142"><a href="#annotated-cell-36-142" aria-label="142"></a>  ))</span>
-<span id="annotated-cell-36-143"><a href="#annotated-cell-36-143" aria-label="143"></a>  chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(ver_datos, <span class="st">"Lee la carga actual, sus nombres y unidades, sin modificarla."</span>))</span>
-<span id="annotated-cell-36-144"><a href="#annotated-cell-36-144" aria-label="144"></a>  chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
-<span id="annotated-cell-36-145"><a href="#annotated-cell-36-145" aria-label="145"></a>    configurar_grafico, <span class="st">"Cambia las escalas de ejes y tamaño; conserva los datos."</span>,</span>
-<span id="annotated-cell-36-146"><a href="#annotated-cell-36-146" aria-label="146"></a>    <span class="at">arguments =</span> <span class="fu">list</span>(</span>
-<span id="annotated-cell-36-147"><a href="#annotated-cell-36-147" aria-label="147"></a>      <span class="at">log =</span> <span class="fu">type_enum</span>(<span class="fu">c</span>(<span class="st">""</span>, <span class="st">"x"</span>, <span class="st">"y"</span>, <span class="st">"xy"</span>), <span class="st">"Ejes logarítmicos; vacío para lineales."</span>, <span class="at">required =</span> <span class="cn">FALSE</span>),</span>
-<span id="annotated-cell-36-148"><a href="#annotated-cell-36-148" aria-label="148"></a>      <span class="at">tamano =</span> <span class="fu">type_enum</span>(<span class="fu">c</span>(<span class="st">"area"</span>, <span class="st">"log10"</span>), <span class="st">"Área proporcional al valor o tamaño logarítmico."</span>, <span class="at">required =</span> <span class="cn">FALSE</span>)</span>
-<span id="annotated-cell-36-149"><a href="#annotated-cell-36-149" aria-label="149"></a>    )</span>
-<span id="annotated-cell-36-150"><a href="#annotated-cell-36-150" aria-label="150"></a>  ))</span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-36" data-target-annotation="7">7</button><span id="annotated-cell-36-151" class="code-annotation-target"><a href="#annotated-cell-36-151" aria-label="151"></a>  <span class="fu">observeEvent</span>(input<span class="sc">$</span>chat_user_input, {</span>
-<span id="annotated-cell-36-152"><a href="#annotated-cell-36-152" aria-label="152"></a>    stream <span class="ot">&lt;-</span> chat<span class="sc">$</span><span class="fu">stream_async</span>(<span class="sc">!!!</span>input<span class="sc">$</span>chat_user_input, <span class="at">tool_mode =</span> <span class="st">"sequential"</span>, <span class="at">stream =</span> <span class="st">"content"</span>)</span>
-<span id="annotated-cell-36-153"><a href="#annotated-cell-36-153" aria-label="153"></a>    shinychat<span class="sc">::</span><span class="fu">chat_append</span>(<span class="st">"chat"</span>, stream)</span>
-<span id="annotated-cell-36-154"><a href="#annotated-cell-36-154" aria-label="154"></a>  })</span>
-<span id="annotated-cell-36-155"><a href="#annotated-cell-36-155" aria-label="155"></a>}</span>
-<span id="annotated-cell-36-156"><a href="#annotated-cell-36-156" aria-label="156"></a></span>
-<span id="annotated-cell-36-157"><a href="#annotated-cell-36-157" aria-label="157"></a><span class="fu">shinyApp</span>(ui, server)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-36" data-target-annotation="6">6</button><span id="annotated-cell-36-120" class="code-annotation-target"><a href="#annotated-cell-36-120" aria-label="120"></a>  chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat</span>(<span class="st">"openai/gpt-5.6-luna"</span>, <span class="at">system_prompt =</span> prompt_sistema)</span>
+<span id="annotated-cell-36-121"><a href="#annotated-cell-36-121" aria-label="121"></a>  chat<span class="sc">$</span><span class="fu">set_tools</span>(<span class="fu">mcp_tools</span>(<span class="st">"mcp.json"</span>))</span>
+<span id="annotated-cell-36-122"><a href="#annotated-cell-36-122" aria-label="122"></a>  chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
+<span id="annotated-cell-36-123"><a href="#annotated-cell-36-123" aria-label="123"></a>    guardar_datos, <span class="st">"Reemplaza la carga completa que comparten mapa, dispersión y tabla."</span>,</span>
+<span id="annotated-cell-36-124"><a href="#annotated-cell-36-124" aria-label="124"></a>    <span class="at">arguments =</span> <span class="fu">list</span>(</span>
+<span id="annotated-cell-36-125"><a href="#annotated-cell-36-125" aria-label="125"></a>      <span class="at">datos =</span> <span class="fu">type_array</span>(<span class="fu">type_object</span>(</span>
+<span id="annotated-cell-36-126"><a href="#annotated-cell-36-126" aria-label="126"></a>        <span class="at">pais =</span> <span class="fu">type_string</span>(<span class="st">"Código ISO3 del país, sin agregados."</span>),</span>
+<span id="annotated-cell-36-127"><a href="#annotated-cell-36-127" aria-label="127"></a>        <span class="at">anio =</span> <span class="fu">type_integer</span>(<span class="st">"Año real de los valores de esta fila."</span>),</span>
+<span id="annotated-cell-36-128"><a href="#annotated-cell-36-128" aria-label="128"></a>        <span class="at">x_var =</span> <span class="fu">type_number</span>(<span class="st">"Valor del eje X; null si no se usa."</span>, <span class="at">required =</span> <span class="cn">FALSE</span>),</span>
+<span id="annotated-cell-36-129"><a href="#annotated-cell-36-129" aria-label="129"></a>        <span class="at">y_var =</span> <span class="fu">type_number</span>(<span class="st">"Valor del eje Y; null si no se usa."</span>, <span class="at">required =</span> <span class="cn">FALSE</span>),</span>
+<span id="annotated-cell-36-130"><a href="#annotated-cell-36-130" aria-label="130"></a>        <span class="at">size_var =</span> <span class="fu">type_number</span>(<span class="st">"Valor positivo para el tamaño; null si no se usa."</span>, <span class="at">required =</span> <span class="cn">FALSE</span>),</span>
+<span id="annotated-cell-36-131"><a href="#annotated-cell-36-131" aria-label="131"></a>        <span class="at">color_var =</span> <span class="fu">type_number</span>(<span class="st">"Valor para el color del punto; null para color uniforme."</span>, <span class="at">required =</span> <span class="cn">FALSE</span>),</span>
+<span id="annotated-cell-36-132"><a href="#annotated-cell-36-132" aria-label="132"></a>        <span class="at">map_var =</span> <span class="fu">type_number</span>(<span class="st">"Valor para el color del país; null si no se usa."</span>, <span class="at">required =</span> <span class="cn">FALSE</span>)</span>
+<span id="annotated-cell-36-133"><a href="#annotated-cell-36-133" aria-label="133"></a>      ), <span class="st">"Una fila por país; valores reales del MCP a cuatro decimales."</span>),</span>
+<span id="annotated-cell-36-134"><a href="#annotated-cell-36-134" aria-label="134"></a>      <span class="at">variables =</span> <span class="fu">type_array</span>(<span class="fu">type_object</span>(</span>
+<span id="annotated-cell-36-135"><a href="#annotated-cell-36-135" aria-label="135"></a>        <span class="at">columna =</span> <span class="fu">type_enum</span>(<span class="fu">c</span>(<span class="st">"x_var"</span>, <span class="st">"y_var"</span>, <span class="st">"size_var"</span>, <span class="st">"color_var"</span>, <span class="st">"map_var"</span>), <span class="st">"Papel en la vista."</span>),</span>
+<span id="annotated-cell-36-136"><a href="#annotated-cell-36-136" aria-label="136"></a>        <span class="at">indicador =</span> <span class="fu">type_string</span>(<span class="st">"ID exacto del indicador del MCP."</span>),</span>
+<span id="annotated-cell-36-137"><a href="#annotated-cell-36-137" aria-label="137"></a>        <span class="at">nombre =</span> <span class="fu">type_string</span>(<span class="st">"Nombre breve del indicador."</span>),</span>
+<span id="annotated-cell-36-138"><a href="#annotated-cell-36-138" aria-label="138"></a>        <span class="at">unidad =</span> <span class="fu">type_string</span>(<span class="st">"Unidad original de la fuente."</span>)</span>
+<span id="annotated-cell-36-139"><a href="#annotated-cell-36-139" aria-label="139"></a>      ), <span class="st">"Nombre y unidad de cada columna utilizada. Un indicador puede tener varios usos."</span>)</span>
+<span id="annotated-cell-36-140"><a href="#annotated-cell-36-140" aria-label="140"></a>    )</span>
+<span id="annotated-cell-36-141"><a href="#annotated-cell-36-141" aria-label="141"></a>  ))</span>
+<span id="annotated-cell-36-142"><a href="#annotated-cell-36-142" aria-label="142"></a>  chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(ver_datos, <span class="st">"Lee la carga actual, sus nombres y unidades, sin modificarla."</span>))</span>
+<span id="annotated-cell-36-143"><a href="#annotated-cell-36-143" aria-label="143"></a>  chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
+<span id="annotated-cell-36-144"><a href="#annotated-cell-36-144" aria-label="144"></a>    configurar_grafico, <span class="st">"Cambia las escalas de ejes y tamaño; conserva los datos."</span>,</span>
+<span id="annotated-cell-36-145"><a href="#annotated-cell-36-145" aria-label="145"></a>    <span class="at">arguments =</span> <span class="fu">list</span>(</span>
+<span id="annotated-cell-36-146"><a href="#annotated-cell-36-146" aria-label="146"></a>      <span class="at">log =</span> <span class="fu">type_enum</span>(<span class="fu">c</span>(<span class="st">""</span>, <span class="st">"x"</span>, <span class="st">"y"</span>, <span class="st">"xy"</span>), <span class="st">"Ejes logarítmicos; vacío para lineales."</span>, <span class="at">required =</span> <span class="cn">FALSE</span>),</span>
+<span id="annotated-cell-36-147"><a href="#annotated-cell-36-147" aria-label="147"></a>      <span class="at">tamano =</span> <span class="fu">type_enum</span>(<span class="fu">c</span>(<span class="st">"area"</span>, <span class="st">"log10"</span>), <span class="st">"Área proporcional o tamaño logarítmico."</span>, <span class="at">required =</span> <span class="cn">FALSE</span>)</span>
+<span id="annotated-cell-36-148"><a href="#annotated-cell-36-148" aria-label="148"></a>    )</span>
+<span id="annotated-cell-36-149"><a href="#annotated-cell-36-149" aria-label="149"></a>  ))</span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-36" data-target-annotation="7">7</button><span id="annotated-cell-36-150" class="code-annotation-target"><a href="#annotated-cell-36-150" aria-label="150"></a>  <span class="fu">observeEvent</span>(input<span class="sc">$</span>chat_user_input, {</span>
+<span id="annotated-cell-36-151"><a href="#annotated-cell-36-151" aria-label="151"></a>    stream <span class="ot">&lt;-</span> chat<span class="sc">$</span><span class="fu">stream_async</span>(<span class="sc">!!!</span>input<span class="sc">$</span>chat_user_input, <span class="at">tool_mode =</span> <span class="st">"sequential"</span>, <span class="at">stream =</span> <span class="st">"content"</span>)</span>
+<span id="annotated-cell-36-152"><a href="#annotated-cell-36-152" aria-label="152"></a>    shinychat<span class="sc">::</span><span class="fu">chat_append</span>(<span class="st">"chat"</span>, stream)</span>
+<span id="annotated-cell-36-153"><a href="#annotated-cell-36-153" aria-label="153"></a>  })</span>
+<span id="annotated-cell-36-154"><a href="#annotated-cell-36-154" aria-label="154"></a>}</span>
+<span id="annotated-cell-36-155"><a href="#annotated-cell-36-155" aria-label="155"></a></span>
+<span id="annotated-cell-36-156"><a href="#annotated-cell-36-156" aria-label="156"></a><span class="fu">shinyApp</span>(ui, server)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <dl class="code-annotation-container-hidden code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-36" data-target-annotation="1">1</dt>
 <dd>
@@ -2493,11 +2484,11 @@ LatinR 2026
 </dd>
 <dt data-target-cell="annotated-cell-36" data-target-annotation="6">6</dt>
 <dd>
-<span data-code-cell="annotated-cell-36" data-code-lines="120" data-code-annotation="6"><strong>6.</strong> Registra el MCP y describe los argumentos de las tres tools locales.</span>
+<span data-code-cell="annotated-cell-36" data-code-lines="120" data-code-annotation="6"><strong>6.</strong> Registra todas las tools del FMI y describe las tres tools locales.</span>
 </dd>
 <dt data-target-cell="annotated-cell-36" data-target-annotation="7">7</dt>
 <dd>
-<span data-code-cell="annotated-cell-36" data-code-lines="151" data-code-annotation="7"><strong>7.</strong> El chat transmite respuestas y ejecuta las herramientas en secuencia.</span>
+<span data-code-cell="annotated-cell-36" data-code-lines="150" data-code-annotation="7"><strong>7.</strong> El chat transmite respuestas y ejecuta las herramientas en secuencia.</span>
 </dd>
 </dl>
 </section>
@@ -2505,38 +2496,37 @@ LatinR 2026
 <h2>App 09 · Ejecutar y explorar</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="" aria-label="1"></a>shiny<span class="sc">::</span><span class="fu">runApp</span>(<span class="st">"app-09"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <h3 id="pide-3">Pide</h3>
-<p>«Colorea el mapa con el último dato disponible de esperanza de vida de cada país».</p>
-<p>«Ahora genera un gráfico con PIB per cápita en X y la esperanza de vida ya descargada en Y. Usa escala logarítmica en X y conserva el mapa».</p>
-<p>«Ahora filtra solamente los países y territorios de América, reutilizando los datos cargados».</p>
+<p>«Colorea los países de América Latina según su inflación promedio anual en 2023».</p>
+<p>«Ahora agrega un gráfico con crecimiento real del PIB en X, inflación en Y y población como tamaño. Conserva el mapa».</p>
+<p>«Ahora consulta las mismas variables para 2020 y actualiza la vista».</p>
 <h3 id="observa-7">Observa</h3>
-<p>El mapa conserva la esperanza de vida al agregar el gráfico. El filtro reutiliza los datos sin otra descarga. <strong>Datos</strong> permite comprobar países, años y valores; la escala logarítmica solo cambia la visualización.</p>
+<p>El mapa conserva la inflación al agregar el gráfico. Al cambiar de año se actualizan todas las vistas. <strong>Datos</strong> permite comprobar países, años y valores; los ejes lineales conservan el crecimiento negativo.</p>
 </section>
 <section id="app-09-v2-conversar-con-herramientas-mcp" class="slide level2 pattern-overview">
 <h2>App 09 v2 · Conversar con herramientas MCP</h2>
-<p>Script <code>app-09-v2/app.R</code>: el chat registra todas las herramientas del MCP y usa <code>page_chat()</code>. <code>mcp_tools()</code> descubre las herramientas y <code>set_tools()</code> las registra, sin archivos auxiliares.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-38" data-workshop-highlights="7|11-18|19|20"><pre class="sourceCode numberSource r workshop-code code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-38-1"><a href="#annotated-cell-38-1" aria-label="1"></a><span class="fu">library</span>(shiny)</span>
+<p>Script <code>app-09-v2/app.R</code>: el chat registra todas las herramientas del MCP y usa <code>page_chat()</code>. <code>mcp_tools()</code> descubre las herramientas y <code>set_tools()</code> las registra, sin archivos auxiliares. Usa el MCP comunitario de cyanheads para el FMI; conserva la configuración del Banco Mundial para comparar.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-38" data-workshop-highlights="7|11-17|18|19"><pre class="sourceCode numberSource r workshop-code code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-38-1"><a href="#annotated-cell-38-1" aria-label="1"></a><span class="fu">library</span>(shiny)</span>
 <span id="annotated-cell-38-2"><a href="#annotated-cell-38-2" aria-label="2"></a><span class="fu">library</span>(shinychat)</span>
 <span id="annotated-cell-38-3"><a href="#annotated-cell-38-3" aria-label="3"></a><span class="fu">library</span>(ellmer)</span>
 <span id="annotated-cell-38-4"><a href="#annotated-cell-38-4" aria-label="4"></a><span class="fu">library</span>(mcptools)</span>
 <span id="annotated-cell-38-5"><a href="#annotated-cell-38-5" aria-label="5"></a></span>
 <span id="annotated-cell-38-6"><a href="#annotated-cell-38-6" aria-label="6"></a><span class="co"># user interface ----------------------------------------------------------</span></span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-38" data-target-annotation="1">1</button><span id="annotated-cell-38-7" class="code-annotation-target"><a href="#annotated-cell-38-7" aria-label="7"></a>ui <span class="ot">&lt;-</span> <span class="fu">page_chat</span>(<span class="st">"App 09 v2 · Conversar con herramientas MCP"</span>, <span class="at">sidebar =</span> <span class="cn">FALSE</span>, <span class="at">allow_attachments =</span> <span class="cn">FALSE</span>)</span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-38" data-target-annotation="1">1</button><span id="annotated-cell-38-7" class="code-annotation-target"><a href="#annotated-cell-38-7" aria-label="7"></a>ui <span class="ot">&lt;-</span> <span class="fu">page_chat</span>(<span class="st">"App 09 v2 · Conversar con herramientas MCP FMI"</span>)</span>
 <span id="annotated-cell-38-8"><a href="#annotated-cell-38-8" aria-label="8"></a></span>
 <span id="annotated-cell-38-9"><a href="#annotated-cell-38-9" aria-label="9"></a><span class="co"># server ------------------------------------------------------------------</span></span>
 <span id="annotated-cell-38-10"><a href="#annotated-cell-38-10" aria-label="10"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output, session) {</span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-38" data-target-annotation="2">2</button><span id="annotated-cell-38-11" class="code-annotation-target"><a href="#annotated-cell-38-11" aria-label="11"></a>  chat <span class="ot">&lt;-</span> <span class="fu">chat_openai</span>(</span>
-<span id="annotated-cell-38-12"><a href="#annotated-cell-38-12" aria-label="12"></a>    <span class="at">model =</span> <span class="st">"gpt-5.6-luna"</span>,</span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-38" data-target-annotation="2">2</button><span id="annotated-cell-38-11" class="code-annotation-target"><a href="#annotated-cell-38-11" aria-label="11"></a>  chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat</span>(</span>
+<span id="annotated-cell-38-12"><a href="#annotated-cell-38-12" aria-label="12"></a>    <span class="st">"openai/gpt-5.6-luna"</span>,</span>
 <span id="annotated-cell-38-13"><a href="#annotated-cell-38-13" aria-label="13"></a>    <span class="at">system_prompt =</span> <span class="fu">paste</span>(</span>
 <span id="annotated-cell-38-14"><a href="#annotated-cell-38-14" aria-label="14"></a>      <span class="st">"Responde en español."</span>,</span>
-<span id="annotated-cell-38-15"><a href="#annotated-cell-38-15" aria-label="15"></a>      <span class="st">"Usa MCP para consultar datos; indica año, unidad y fuente."</span>,</span>
-<span id="annotated-cell-38-16"><a href="#annotated-cell-38-16" aria-label="16"></a>      <span class="st">"Resume los resultados y evita listar series largas completas."</span></span>
-<span id="annotated-cell-38-17"><a href="#annotated-cell-38-17" aria-label="17"></a>    )</span>
-<span id="annotated-cell-38-18"><a href="#annotated-cell-38-18" aria-label="18"></a>  )</span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-38" data-target-annotation="3">3</button><span id="annotated-cell-38-19" class="code-annotation-target"><a href="#annotated-cell-38-19" aria-label="19"></a>  chat<span class="sc">$</span><span class="fu">set_tools</span>(<span class="fu">mcp_tools</span>(<span class="st">"mcp.json"</span>))</span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-38" data-target-annotation="4">4</button><span id="annotated-cell-38-20" class="code-annotation-target"><a href="#annotated-cell-38-20" aria-label="20"></a>  <span class="fu">chat_server</span>(<span class="st">"chat"</span>, chat, <span class="at">history =</span> <span class="cn">FALSE</span>)</span>
-<span id="annotated-cell-38-21"><a href="#annotated-cell-38-21" aria-label="21"></a>}</span>
-<span id="annotated-cell-38-22"><a href="#annotated-cell-38-22" aria-label="22"></a></span>
-<span id="annotated-cell-38-23"><a href="#annotated-cell-38-23" aria-label="23"></a><span class="fu">shinyApp</span>(ui, server)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="annotated-cell-38-15"><a href="#annotated-cell-38-15" aria-label="15"></a>      <span class="st">"Resume los resultados y evita listar series largas completas."</span></span>
+<span id="annotated-cell-38-16"><a href="#annotated-cell-38-16" aria-label="16"></a>    )</span>
+<span id="annotated-cell-38-17"><a href="#annotated-cell-38-17" aria-label="17"></a>  )</span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-38" data-target-annotation="3">3</button><span id="annotated-cell-38-18" class="code-annotation-target"><a href="#annotated-cell-38-18" aria-label="18"></a>  chat<span class="sc">$</span><span class="fu">set_tools</span>(<span class="fu">mcp_tools</span>(<span class="st">"mcp-imf.json"</span>))</span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-38" data-target-annotation="4">4</button><span id="annotated-cell-38-19" class="code-annotation-target"><a href="#annotated-cell-38-19" aria-label="19"></a>  <span class="fu">chat_server</span>(<span class="st">"chat"</span>, chat, <span class="at">history =</span> <span class="cn">FALSE</span>)</span>
+<span id="annotated-cell-38-20"><a href="#annotated-cell-38-20" aria-label="20"></a>}</span>
+<span id="annotated-cell-38-21"><a href="#annotated-cell-38-21" aria-label="21"></a></span>
+<span id="annotated-cell-38-22"><a href="#annotated-cell-38-22" aria-label="22"></a><span class="fu">shinyApp</span>(ui, server)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <dl class="code-annotation-container-hidden code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-38" data-target-annotation="1">1</dt>
 <dd>
@@ -2548,11 +2538,11 @@ LatinR 2026
 </dd>
 <dt data-target-cell="annotated-cell-38" data-target-annotation="3">3</dt>
 <dd>
-<span data-code-cell="annotated-cell-38" data-code-lines="19" data-code-annotation="3"><strong>3.</strong> Descubre todas las herramientas remotas y las registra en el cliente.</span>
+<span data-code-cell="annotated-cell-38" data-code-lines="18" data-code-annotation="3"><strong>3.</strong> Descubre todas las herramientas remotas y las registra en el cliente.</span>
 </dd>
 <dt data-target-cell="annotated-cell-38" data-target-annotation="4">4</dt>
 <dd>
-<span data-code-cell="annotated-cell-38" data-code-lines="20" data-code-annotation="4"><strong>4.</strong> chat_server gestiona los mensajes, las herramientas y el streaming.</span>
+<span data-code-cell="annotated-cell-38" data-code-lines="19" data-code-annotation="4"><strong>4.</strong> chat_server gestiona los mensajes, las herramientas y el streaming.</span>
 </dd>
 </dl>
 </section>
@@ -2560,7 +2550,7 @@ LatinR 2026
 <h2>App 09 v2 · Ejecutar y explorar</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="" aria-label="1"></a>shiny<span class="sc">::</span><span class="fu">runApp</span>(<span class="st">"app-09-v2"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <h3 id="pide-4">Pide</h3>
-<p>«¿Cuál fue la esperanza de vida al nacer en Colombia en 2023?».</p>
+<p>«Según WEO del FMI, ¿cuál fue la tasa de desempleo de España en 2023?».</p>
 <h3 id="observa-8">Observa</h3>
 <p>El agente busca el indicador y consulta el MCP. Las llamadas y los resultados aparecen en el chat. El mismo patrón funciona sin el dashboard: <code>chat_server()</code> se encarga de la conversación.</p>
 </section>

@@ -45,9 +45,10 @@ Las demos usan los mismos márgenes generales para títulos, párrafos y código
 
 Después de App 08, el cuarto capítulo continúa el recorrido principal con MCP y App 09, por ahora solo en R.
 Incluye una definición breve, una comparación real cacheada sin y con MCP, el código de la app y
-«Ejecutar y explorar». cyanheads mantiene el servidor comunitario; la fuente es el Banco Mundial.
+«Ejecutar y explorar». cyanheads mantiene el servidor comunitario; la demo usa datos del FMI.
 La tabla lee `app-09/data/comparacion.json`: pregunta neutral sobre esperanza de vida en Colombia en 2023.
-La demo colorea por el último dato de cada país y combina tres variables de un año común en una dispersión.
+La comparación se identifica como histórica del Banco Mundial, sin presentarla como una ejecución del FMI.
+La demo colorea América Latina por inflación y combina crecimiento, inflación y población en 2023 y 2020.
 App 09 usa un solo data() con pais, anio, x_var, y_var, size_var, color_var y map_var, más nombres y unidades.
 El agente arma esa carga desde el MCP y llama a guardar_datos(); ver_datos() lee lo mostrado.
 La slide «Del MCP a Shiny» muestra el intercambio agente/MCP, la tool local, data() y los cuatro outputs.
@@ -64,7 +65,7 @@ El prompt común no menciona MCP, herramientas ni el taller. Las cifras de las r
 contrastan con las llamadas guardadas; `app-09/verify-comparison.R` permite repetir esa comprobación
 sin usar el modelo ni conectarse al servidor. La caché no representa una consulta en tiempo real.
 
-Después de MCP se presentan los casos 91 y 92 como aplicaciones más completas. Una separadora azul
+Después de MCP se presentan los casos 50 y 51 como aplicaciones más completas. Una separadora azul
 introduce una tabla con responsabilidades por filas y nombres de tools por aplicación, seguida de las demos.
 Es una decisión de organización de estos ejemplos: resolver, consultar, mostrar e inspeccionar.
 La 50 usa datos locales y la 51 un servicio remoto. Cada demo incluye cómo ejecutarla, qué pedir y qué observar.

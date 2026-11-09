@@ -27,8 +27,8 @@ ui <- page_sidebar(
 server <- function(input, output) {
   output$titulo <- renderText("Sin serie seleccionada")
 
-  chat <- ellmer::chat_openai(
-    model = "gpt-5-nano",
+  chat <- ellmer::chat(
+    "openai/gpt-5-nano",
     system_prompt = paste(
       "Eres un asistente sobre series estadísticas del Banco Central de Chile.",
       "Responde brevemente en español y ayuda a formular preguntas sobre ellas."

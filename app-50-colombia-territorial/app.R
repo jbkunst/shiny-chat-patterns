@@ -195,7 +195,7 @@ server <- function(input, output, session) {
     visualizar_indicador()
   })
 
-  chat <- ellmer::chat_openai(model = "gpt-5-nano", system_prompt = prompt_sistema)
+  chat <- ellmer::chat("openai/gpt-5-nano", system_prompt = prompt_sistema)
   chat$register_tool(tool(
     resolver_catalogo,
     "Busca indicadores y departamentos en el catálogo local; devuelve nombres, unidades, años y códigos.",

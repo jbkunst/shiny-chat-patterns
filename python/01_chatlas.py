@@ -1,6 +1,6 @@
-from chatlas import ChatOpenAI
+from chatlas import ChatAuto
 
-chat = ChatOpenAI(model="gpt-5-nano", system_prompt="Eres un bot muy alegre.")
+chat = ChatAuto("openai/gpt-5-nano", system_prompt="Eres un bot muy alegre.")
 
 chat.chat("Salúdame")
 

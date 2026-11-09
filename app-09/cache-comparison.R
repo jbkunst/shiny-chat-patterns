@@ -13,8 +13,9 @@ source("mcp-tools.R", local = TRUE, encoding = "UTF-8")
 
 # comparison --------------------------------------------------------------
 ejecutar <- function(usar_mcp) {
-  chat <- chat_openai(
-    model = modelo, system_prompt = prompt, params = params(max_tokens = 16384, reasoning_effort = "low")
+  chat <- ellmer::chat(
+    paste0("openai/", modelo),
+    system_prompt = prompt, params = params(max_tokens = 16384, reasoning_effort = "low")
   )
   if (usar_mcp) chat$set_tools(tools)
   respuesta <- as.character(chat$chat(pregunta, echo = "none"))
