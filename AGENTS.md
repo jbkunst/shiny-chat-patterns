@@ -109,6 +109,8 @@ Conserva su identidad visual; no los simplifiques para hacerlos iguales a las ap
 
 ## Ejemplos de consola y slides
 
+- El README raíz es la guía del taller: conserva el recorrido, las tablas y la configuración común.
+  Documenta la implementación, preparación de datos y particularidades en el README de cada app.
 - Conserva parejas equivalentes entre `R/01_ellmer.R`–`R/04_ellmer_imagen.R` y los scripts de `python/`.
 - Carga todas las librerías e imports al inicio. Cada script debe poder ejecutarse de forma independiente.
 - En los ejemplos 02–04, pregunta sin tools, regístralas y vuelve a preguntar en la misma conversación.
