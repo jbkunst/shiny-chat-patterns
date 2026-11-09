@@ -131,7 +131,7 @@ Puente al taller: construiremos paso a paso las capacidades que conectan convers
 4. **Conectar herramientas externas**
 
    ::: {.nonincremental}
-   - MCP con datos del FMI y visualizaciones locales.
+   - Descubrir y usar herramientas externas mediante MCP.
    :::
 
 5. **Organizar las tools en aplicaciones más completas**
