@@ -5,7 +5,7 @@ library(shinychat)
 
 # user interface ----------------------------------------------------------
 ui <- page_sidebar(
-  title = "App 11 · Chat sobre series del Banco Central",
+  title = "App 91 · Chat sobre series del Banco Central",
   fillable = TRUE,
   sidebar = sidebar(
     shinychat::chat_ui(

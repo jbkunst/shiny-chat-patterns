@@ -1,4 +1,4 @@
-Title: App 21 · Orquestación de agentes
+Title: App 95 · Orquestación de agentes
 Description: Una función orquestadora coordina dos agentes persistentes y una
     base DuckDB de solo lectura.
 Imports:

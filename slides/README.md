@@ -67,7 +67,7 @@ sin usar el modelo ni conectarse al servidor. La caché no representa una consul
 Después de MCP se presentan los casos 91 y 92 como aplicaciones más completas. Una separadora azul
 introduce una tabla con responsabilidades por filas y nombres de tools por aplicación, seguida de las demos.
 Es una decisión de organización de estos ejemplos: resolver, consultar, mostrar e inspeccionar.
-La 91 usa datos locales y la 92 un servicio remoto. Cada demo incluye cómo ejecutarla, qué pedir y qué observar.
+La 50 usa datos locales y la 51 un servicio remoto. Cada demo incluye cómo ejecutarla, qué pedir y qué observar.
 Los casos conservan su interfaz y no agregan pasos intermedios al recorrido incremental App 00–09.
 
 - La portada, los capítulos y el cierre comparten el fondo azul oscuro.

@@ -2165,13 +2165,51 @@ LatinR 2026
 </section>
 <section id="app-09-registrar-las-herramientas" class="slide level2 pattern-overview">
 <h2>App 09 · Registrar las herramientas</h2>
-<p><code>mcp_tools()</code> descubre las tools remotas. <code>app-09/mcp-tools.R</code> selecciona las de indicadores y datos, permitiendo un año o el último dato por país. El agente recibe los datos y llama a la tool local de guardado.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="" aria-label="1"></a>chat <span class="ot">&lt;-</span> <span class="fu">chat_openai</span>(<span class="at">model =</span> <span class="st">"gpt-5.6-luna"</span>, <span class="at">system_prompt =</span> prompt_sistema)</span>
-<span id="cb22-2"><a href="" aria-label="2"></a></span>
-<span id="cb22-3"><a href="" aria-label="3"></a><span class="fu">source</span>(<span class="st">"mcp-tools.R"</span>, <span class="at">local =</span> <span class="cn">TRUE</span>, <span class="at">encoding =</span> <span class="st">"UTF-8"</span>)</span>
-<span id="cb22-4"><a href="" aria-label="4"></a></span>
-<span id="cb22-5"><a href="" aria-label="5"></a>chat<span class="sc">$</span><span class="fu">set_tools</span>(tools)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Las tools locales guardan los datos, permiten leerlos y cambian la escala del gráfico por separado.</p>
+<p>Script <code>R/06_ellmer_mcp.R</code>: ejemplo de consola para consultar el MCP con ellmer. <code>mcp_tools()</code> descubre las herramientas remotas. El script prepara las tres tools de datos y ajusta los argumentos de consulta para el cliente del taller; <code>set_tools()</code> las registra.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-34" data-workshop-highlights="5-9|11-14|17-22|25"><pre class="sourceCode numberSource r workshop-code code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-34-1"><a href="#annotated-cell-34-1" aria-label="1"></a><span class="fu">library</span>(ellmer)</span>
+<span id="annotated-cell-34-2"><a href="#annotated-cell-34-2" aria-label="2"></a><span class="fu">library</span>(mcptools)</span>
+<span id="annotated-cell-34-3"><a href="#annotated-cell-34-3" aria-label="3"></a></span>
+<span id="annotated-cell-34-4"><a href="#annotated-cell-34-4" aria-label="4"></a><span class="co"># tools -------------------------------------------------------------------</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-34" data-target-annotation="1">1</button><span id="annotated-cell-34-5" class="code-annotation-target"><a href="#annotated-cell-34-5" aria-label="5"></a>tools <span class="ot">&lt;-</span> <span class="fu">mcp_tools</span>(<span class="st">"app-09/mcp.json"</span>)</span>
+<span id="annotated-cell-34-6"><a href="#annotated-cell-34-6" aria-label="6"></a>tools <span class="ot">&lt;-</span> <span class="fu">Filter</span>(<span class="cf">function</span>(x) x<span class="sc">@</span>name <span class="sc">%in%</span> <span class="fu">c</span>(</span>
+<span id="annotated-cell-34-7"><a href="#annotated-cell-34-7" aria-label="7"></a>  <span class="st">"worldbank_search_indicators"</span>, <span class="st">"worldbank_get_indicator"</span>, <span class="st">"worldbank_get_data"</span></span>
+<span id="annotated-cell-34-8"><a href="#annotated-cell-34-8" aria-label="8"></a>), tools)</span>
+<span id="annotated-cell-34-9"><a href="#annotated-cell-34-9" aria-label="9"></a><span class="fu">names</span>(tools) <span class="ot">&lt;-</span> <span class="fu">vapply</span>(tools, <span class="cf">function</span>(x) x<span class="sc">@</span>name, <span class="st">""</span>)</span>
+<span id="annotated-cell-34-10"><a href="#annotated-cell-34-10" aria-label="10"></a></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-34" data-target-annotation="2">2</button><span id="annotated-cell-34-11" class="code-annotation-target"><a href="#annotated-cell-34-11" aria-label="11"></a><span class="co"># Conserva los argumentos del taller: la unión opcional de frequency falla con este cliente/modelo.</span></span>
+<span id="annotated-cell-34-12"><a href="#annotated-cell-34-12" aria-label="12"></a>tools<span class="sc">$</span>worldbank_get_data<span class="sc">@</span>arguments<span class="sc">@</span>properties <span class="ot">&lt;-</span> tools<span class="sc">$</span>worldbank_get_data<span class="sc">@</span>arguments<span class="sc">@</span>properties[</span>
+<span id="annotated-cell-34-13"><a href="#annotated-cell-34-13" aria-label="13"></a>  <span class="fu">c</span>(<span class="st">"indicator_id"</span>, <span class="st">"countries"</span>, <span class="st">"date_range"</span>, <span class="st">"mrnev"</span>, <span class="st">"page"</span>, <span class="st">"per_page"</span>)</span>
+<span id="annotated-cell-34-14"><a href="#annotated-cell-34-14" aria-label="14"></a>]</span>
+<span id="annotated-cell-34-15"><a href="#annotated-cell-34-15" aria-label="15"></a></span>
+<span id="annotated-cell-34-16"><a href="#annotated-cell-34-16" aria-label="16"></a><span class="co"># chat --------------------------------------------------------------------</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-34" data-target-annotation="3">3</button><span id="annotated-cell-34-17" class="code-annotation-target"><a href="#annotated-cell-34-17" aria-label="17"></a>chat <span class="ot">&lt;-</span> <span class="fu">chat_openai</span>(</span>
+<span id="annotated-cell-34-18"><a href="#annotated-cell-34-18" aria-label="18"></a>  <span class="at">model =</span> <span class="st">"gpt-5.6-luna"</span>,</span>
+<span id="annotated-cell-34-19"><a href="#annotated-cell-34-19" aria-label="19"></a>  <span class="at">system_prompt =</span> <span class="st">"Responde en español. Consulta el MCP e indica país, año, valor, unidad y fuente."</span></span>
+<span id="annotated-cell-34-20"><a href="#annotated-cell-34-20" aria-label="20"></a>)</span>
+<span id="annotated-cell-34-21"><a href="#annotated-cell-34-21" aria-label="21"></a></span>
+<span id="annotated-cell-34-22"><a href="#annotated-cell-34-22" aria-label="22"></a>chat<span class="sc">$</span><span class="fu">set_tools</span>(tools)</span>
+<span id="annotated-cell-34-23"><a href="#annotated-cell-34-23" aria-label="23"></a></span>
+<span id="annotated-cell-34-24"><a href="#annotated-cell-34-24" aria-label="24"></a><span class="co"># conversation ------------------------------------------------------------</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-34" data-target-annotation="4">4</button><span id="annotated-cell-34-25" class="code-annotation-target"><a href="#annotated-cell-34-25" aria-label="25"></a>chat<span class="sc">$</span><span class="fu">chat</span>(<span class="st">"¿Cuál fue la esperanza de vida al nacer en Colombia en 2023?"</span>)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<dl class="code-annotation-container-hidden code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-34" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-34" data-code-lines="5" data-code-annotation="1"><strong>1.</strong> Descubre las herramientas remotas y conserva las tres de indicadores y datos.</span>
+</dd>
+<dt data-target-cell="annotated-cell-34" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-34" data-code-lines="11" data-code-annotation="2"><strong>2.</strong> Ajusta los argumentos de consulta para el cliente del taller.</span>
+</dd>
+<dt data-target-cell="annotated-cell-34" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-34" data-code-lines="17" data-code-annotation="3"><strong>3.</strong> Crea el chat y registra las tools del MCP.</span>
+</dd>
+<dt data-target-cell="annotated-cell-34" data-target-annotation="4">4</dt>
+<dd>
+<span data-code-cell="annotated-cell-34" data-code-lines="25" data-code-annotation="4"><strong>4.</strong> El modelo consulta la fuente para responder con un dato real.</span>
+</dd>
+</dl>
+<p>En App 09, las tools locales permiten además guardar los datos y actualizar la vista de Shiny.</p>
 </section>
 <section id="app-09-del-mcp-a-shiny" class="slide level2 content-centered">
 <h2>App 09 · Del MCP a Shiny</h2>
@@ -2261,17 +2299,17 @@ LatinR 2026
 <section id="app-09-de-los-datos-a-la-vista" class="slide level2 pattern-overview">
 <h2>App 09 · De los datos a la vista</h2>
 <p>En <code>app-09/app.R</code>, el agente asigna los valores a los ejes, tamaño y color del mapa. <code>guardar_datos()</code> reemplaza la carga; todos los outputs se recalculan desde <code>data()</code>.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="" aria-label="1"></a>guardar_datos <span class="ot">&lt;-</span> <span class="cf">function</span>(datos, variables) {</span>
-<span id="cb23-2"><a href="" aria-label="2"></a>  <span class="fu">data</span>(<span class="fu">list</span>(<span class="at">datos =</span> <span class="fu">bind_rows</span>(<span class="fu">isolate</span>(<span class="fu">data</span>())<span class="sc">$</span>datos[<span class="dv">0</span>, ], datos),</span>
-<span id="cb23-3"><a href="" aria-label="3"></a>    <span class="at">variables =</span> <span class="fu">bind_rows</span>(variables)))</span>
-<span id="cb23-4"><a href="" aria-label="4"></a>  <span class="fu">paste</span>(<span class="st">"Vista actualizada:"</span>, <span class="fu">length</span>(datos), <span class="st">"países."</span>)</span>
-<span id="cb23-5"><a href="" aria-label="5"></a>}</span>
-<span id="cb23-6"><a href="" aria-label="6"></a></span>
-<span id="cb23-7"><a href="" aria-label="7"></a>output<span class="sc">$</span>table <span class="ot">&lt;-</span> <span class="fu">renderTable</span>(<span class="fu">data</span>()<span class="sc">$</span>datos, <span class="at">digits =</span> <span class="dv">4</span>, <span class="at">striped =</span> <span class="cn">TRUE</span>, <span class="at">hover =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb23-8"><a href="" aria-label="8"></a></span>
-<span id="cb23-9"><a href="" aria-label="9"></a>output<span class="sc">$</span>n_paises <span class="ot">&lt;-</span> <span class="fu">renderText</span>(<span class="fu">n_distinct</span>(<span class="fu">data</span>()<span class="sc">$</span>datos<span class="sc">$</span>pais))</span>
-<span id="cb23-10"><a href="" aria-label="10"></a></span>
-<span id="cb23-11"><a href="" aria-label="11"></a>output<span class="sc">$</span>n_variables <span class="ot">&lt;-</span> <span class="fu">renderText</span>(<span class="fu">n_distinct</span>(<span class="fu">data</span>()<span class="sc">$</span>variables<span class="sc">$</span>indicador))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="" aria-label="1"></a>guardar_datos <span class="ot">&lt;-</span> <span class="cf">function</span>(datos, variables) {</span>
+<span id="cb22-2"><a href="" aria-label="2"></a>  <span class="fu">data</span>(<span class="fu">list</span>(<span class="at">datos =</span> <span class="fu">bind_rows</span>(<span class="fu">isolate</span>(<span class="fu">data</span>())<span class="sc">$</span>datos[<span class="dv">0</span>, ], datos),</span>
+<span id="cb22-3"><a href="" aria-label="3"></a>    <span class="at">variables =</span> <span class="fu">bind_rows</span>(variables)))</span>
+<span id="cb22-4"><a href="" aria-label="4"></a>  <span class="fu">paste</span>(<span class="st">"Vista actualizada:"</span>, <span class="fu">length</span>(datos), <span class="st">"países."</span>)</span>
+<span id="cb22-5"><a href="" aria-label="5"></a>}</span>
+<span id="cb22-6"><a href="" aria-label="6"></a></span>
+<span id="cb22-7"><a href="" aria-label="7"></a>output<span class="sc">$</span>table <span class="ot">&lt;-</span> <span class="fu">renderTable</span>(<span class="fu">data</span>()<span class="sc">$</span>datos, <span class="at">digits =</span> <span class="dv">4</span>, <span class="at">striped =</span> <span class="cn">TRUE</span>, <span class="at">hover =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb22-8"><a href="" aria-label="8"></a></span>
+<span id="cb22-9"><a href="" aria-label="9"></a>output<span class="sc">$</span>n_paises <span class="ot">&lt;-</span> <span class="fu">renderText</span>(<span class="fu">n_distinct</span>(<span class="fu">data</span>()<span class="sc">$</span>datos<span class="sc">$</span>pais))</span>
+<span id="cb22-10"><a href="" aria-label="10"></a></span>
+<span id="cb22-11"><a href="" aria-label="11"></a>output<span class="sc">$</span>n_variables <span class="ot">&lt;-</span> <span class="fu">renderText</span>(<span class="fu">n_distinct</span>(<span class="fu">data</span>()<span class="sc">$</span>variables<span class="sc">$</span>indicador))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="app-09-el-código" class="slide level2">
 <h2>App 09 · El código</h2>
@@ -2465,7 +2503,7 @@ LatinR 2026
 </section>
 <section id="app-09-ejecutar-y-explorar" class="slide level2 app-demo">
 <h2>App 09 · Ejecutar y explorar</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="" aria-label="1"></a>shiny<span class="sc">::</span><span class="fu">runApp</span>(<span class="st">"app-09"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="" aria-label="1"></a>shiny<span class="sc">::</span><span class="fu">runApp</span>(<span class="st">"app-09"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <h3 id="pide-3">Pide</h3>
 <p>«Colorea el mapa con el último dato disponible de esperanza de vida de cada país».</p>
 <p>«Ahora genera un gráfico con PIB per cápita en X y la esperanza de vida ya descargada en Y. Usa escala logarítmica en X y conserva el mapa».</p>
@@ -2520,7 +2558,7 @@ LatinR 2026
 </section>
 <section id="app-09-v2-ejecutar-y-explorar" class="slide level2 app-demo">
 <h2>App 09 v2 · Ejecutar y explorar</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="" aria-label="1"></a>shiny<span class="sc">::</span><span class="fu">runApp</span>(<span class="st">"app-09-v2"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="" aria-label="1"></a>shiny<span class="sc">::</span><span class="fu">runApp</span>(<span class="st">"app-09-v2"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <h3 id="pide-4">Pide</h3>
 <p>«¿Cuál fue la esperanza de vida al nacer en Colombia en 2023?».</p>
 <h3 id="observa-8">Observa</h3>
@@ -2564,20 +2602,20 @@ LatinR 2026
 </tr>
 </tbody>
 </table>
-<p>La 91 consulta datos locales; la 92 usa un servicio remoto.</p>
+<p>La 50 consulta datos locales; la 51 usa un servicio remoto.</p>
 </section>
-<section id="app-91-colombia-territorial" class="slide level2 app-demo">
-<h2>App 91 · Colombia territorial</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="" aria-label="1"></a>shiny<span class="sc">::</span><span class="fu">runApp</span>(<span class="st">"app-91-colombia-territorial"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="app-50-colombia-territorial" class="slide level2 app-demo">
+<h2>App 50 · Colombia territorial</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="" aria-label="1"></a>shiny<span class="sc">::</span><span class="fu">runApp</span>(<span class="st">"app-50-colombia-territorial"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <h3 id="pide-5">Pide</h3>
 <p>«Colorea los departamentos según el porcentaje de hogares con internet».</p>
 <h3 id="observa-9">Observa</h3>
 <p>El mapa y la leyenda cambian; la respuesta usa los datos de la vista.</p>
 <p>21 indicadores en 32 departamentos y Bogotá · ECV 2025 y geometría del MGN 2018.</p>
 </section>
-<section id="app-92-series-del-banco-de-la-república" class="slide level2 app-demo">
-<h2>App 92 · Series del Banco de la República</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="" aria-label="1"></a>shiny<span class="sc">::</span><span class="fu">runApp</span>(<span class="st">"app-92-banrep-sdmx"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="app-51-series-del-banco-de-la-república" class="slide level2 app-demo">
+<h2>App 51 · Series del Banco de la República</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="" aria-label="1"></a>shiny<span class="sc">::</span><span class="fu">runApp</span>(<span class="st">"app-51-banrep-sdmx"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <h3 id="pide-6">Pide</h3>
 <p>«Grafica la TRM de 2025 y dime cómo terminó el año».</p>
 <h3 id="observa-10">Observa</h3>

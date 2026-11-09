@@ -71,6 +71,9 @@ la carpeta pueda publicarse como una unidad. El render también lee los scripts 
 
 ## Sobre el repositorio
 
+La numeración reserva `00–49` para el recorrido del taller, `50–89` para casos de aplicación
+y `90` en adelante para apps experimentales.
+
 El recorrido principal comprende `app-00`–`app-09`: una aplicación que crece paso a paso,
 incorporando conversación, datos, acciones de interfaz y herramientas remotas. Cada carpeta conserva
 una versión independiente para reconocer el cambio y ejecutarlo durante el taller.
@@ -87,7 +90,8 @@ en ambos lenguajes. Las versiones de chat usan `ellmer` y `chatlas`, respectivam
 
 ## Ejemplos de consola
 
-Los ejemplos de consola también tienen versiones equivalentes en R (`ellmer`) y Python (`chatlas`).
+Los primeros cuatro ejemplos de consola tienen versiones en R (`ellmer`) y Python (`chatlas`).
+El ejemplo MCP está disponible por ahora en R.
 Ejecuta los scripts desde la raíz del repositorio y carga primero todas sus librerías o imports.
 
 | Patrón | R | Python |
@@ -96,6 +100,7 @@ Ejecuta los scripts desde la raíz del repositorio y carga primero todas sus lib
 | Pronóstico con una tool | `R/02_ellmer_tool.R` | `python/02_chatlas_tool.py` |
 | Fecha actual y pronóstico con dos tools | `R/03_ellmer_dos_tools.R` | `python/03_chatlas_dos_tools.py` |
 | Imagen de puntos aleatorios | `R/04_ellmer_imagen.R` | `python/04_chatlas_imagen.py` |
+| Herramientas remotas con MCP | `R/06_ellmer_mcp.R` | Pendiente |
 
 En los ejemplos 02–04 se pregunta primero sin tools, se registran y se vuelve a preguntar en la misma
 conversación. Las llamadas directas permiten inspeccionar los resultados sin llamar al modelo.
@@ -172,14 +177,14 @@ deliberadas a la UI mínima de las apps de enseñanza; no tienen que conservar e
 
 | App | Fuente | Patrón |
 |---|---|---|
-| `app-91-colombia-territorial` | ECV 2025 · MGN 2018 | Mapa de indicadores con chat flotante |
-| `app-92-banrep-sdmx` | Banco de la República | Chat, gráfico de una serie y últimas observaciones |
+| `app-50-colombia-territorial` | ECV 2025 · MGN 2018 | Mapa de indicadores con chat flotante |
+| `app-51-banrep-sdmx` | Banco de la República | Chat, gráfico de una serie y últimas observaciones |
 
 Después de MCP, una tabla compara cómo estos casos separan responsabilidades entre sus tools:
 resolver el catálogo, consultar datos, mostrar el resultado e inspeccionar la vista para responder.
-La 91 consulta datos locales; la 92 descarga observaciones desde el servicio de Banrep.
+La 50 consulta datos locales; la 51 descarga observaciones desde el servicio de Banrep.
 
-`app-91-colombia-territorial` incluye datos departamentales locales para funcionar durante el
+`app-50-colombia-territorial` incluye datos departamentales locales para funcionar durante el
 taller. Su chat flotante es una excepción al sidebar del recorrido principal. Para reconstruir los
 indicadores desde los anexos Excel del DANE y la geometría MGN 2018 de data_ColOpenData, ejecuta
 dentro de su carpeta:
@@ -188,7 +193,7 @@ dentro de su carpeta:
 source("prepare-data.R")
 ```
 
-`app-92-banrep-sdmx` consulta el servicio público en tiempo de ejecución, por lo que requiere
+`app-51-banrep-sdmx` consulta el servicio público en tiempo de ejecución, por lo que requiere
 conexión a internet además de `OPENAI_API_KEY`.
 
 Cada carpeta entre `app-00` y `app-08` incluye un `DESCRIPTION` con su título,
@@ -214,13 +219,7 @@ Gapminder incluido en Plotly.
 
 ## Aplicaciones experimentales
 
-Las carpetas con sufijo `-experimental` contienen aplicaciones en exploración. Todavía no forman una
-secuencia formal ni están incorporadas al curso.
-
-App 10, 12 y 13 usan `bcchr`, el catálogo local `data/series_catalog.rds` y `BCCH_TOKEN` para consultar
-el Banco Central de Chile. App 11 solo conversa y requiere `OPENAI_API_KEY`.
-App 13 conserva las tools de búsqueda y actualización de App 12;
-la actualización también devuelve un resumen y una imagen al modelo.
+Las apps numeradas desde `90` son experimentales y quedan fuera del recorrido del taller.
 
 ## Alcance
 

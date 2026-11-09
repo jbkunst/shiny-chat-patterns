@@ -13,10 +13,10 @@ prompt_sistema <- paste(readLines("prompt.md", warn = FALSE), collapse = "\n")
 
 # user interface ----------------------------------------------------------
 ui <- page_sidebar(
-  title = "App 13 · Tools que devuelven contexto",
+  title = "App 92 · Tools para actualizar la aplicación",
   fillable = TRUE,
   sidebar = sidebar(
-    shinychat::chat_ui("chat", greeting = saludo, placeholder = "Pregunta por la serie visible..."),
+    shinychat::chat_ui("chat", greeting = saludo, placeholder = "Busca una serie..."),
     width = 400
   ),
   layout_columns(
@@ -31,6 +31,20 @@ ui <- page_sidebar(
 server <- function(input, output) {
   serie_actual   <- reactiveVal(NULL)
   datos_actuales <- reactiveVal(NULL)
+
+  output$titulo <- renderText({
+    if (is.null(serie_actual())) "Busca y consulta una serie" else serie_actual()$spanish_title
+  })
+
+  output$plot <- renderPlot({
+    req(datos_actuales())
+    bcchr::plot_series(datos_actuales())
+  })
+
+  output$table <- renderTable({
+    req(datos_actuales())
+    transform(datos_actuales(), date = format(date, "%Y-%m-%d"))
+  }, striped = TRUE, hover = TRUE)
 
   buscar_series <- function(texto) {
     terminos <- texto |> iconv(to = "ASCII//TRANSLIT") |> str_to_lower() |> str_split("\\s+") |> unlist()
@@ -51,38 +65,8 @@ server <- function(input, output) {
     serie_actual(info)
     datos_actuales(datos)
 
-    validos <- datos |> filter(!is.na(value))
-    minimo  <- validos |> slice_min(value, n = 1, with_ties = FALSE)
-    maximo  <- validos |> slice_max(value, n = 1, with_ties = FALSE)
-    resumen <- list(
-      promedio = mean(validos$value),
-      minimo = minimo$value, fecha_minimo = format(minimo$date, "%Y-%m-%d"),
-      maximo = maximo$value, fecha_maximo = format(maximo$date, "%Y-%m-%d")
-    )
-
-    archivo <- tempfile(fileext = ".png")
-    ggplot2::ggsave(archivo, bcchr::plot_series(datos), width = 10, height = 6, dpi = 120)
-    on.exit(unlink(archivo))
-
-    list(
-      ellmer::ContentText(paste(capture.output(dput(resumen)), collapse = "\n")),
-      ellmer::content_image_file(archivo, resize = "none")
-    )
+    "Dashboard actualizado."
   }
-
-  output$titulo <- renderText({
-    if (is.null(serie_actual())) "Busca y consulta una serie" else serie_actual()$spanish_title
-  })
-
-  output$plot <- renderPlot({
-    req(datos_actuales())
-    bcchr::plot_series(datos_actuales())
-  })
-
-  output$table <- renderTable({
-    req(datos_actuales())
-    transform(datos_actuales(), date = format(date, "%Y-%m-%d"))
-  }, striped = TRUE, hover = TRUE)
 
   # tools -----------------------------------------------------------------
   chat <- ellmer::chat_openai(model = "gpt-5-nano", system_prompt = prompt_sistema)
@@ -95,7 +79,7 @@ server <- function(input, output) {
 
   chat$register_tool(tool(
     actualizar_dashboard,
-    "Actualiza el dashboard y devuelve un resumen y el gráfico para interpretarlos.",
+    "Descarga una serie y envía sus datos al título, gráfico y tabla.",
     arguments = list(
       codigo = type_string("Código exacto obtenido con buscar_series."),
       desde = type_string("Fecha inicial YYYY-MM-DD.", required = FALSE),

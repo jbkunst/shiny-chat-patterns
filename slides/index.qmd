@@ -976,18 +976,25 @@ La app consulta un año o el último dato por país; no muestra series temporale
 
 ## App 09 · Registrar las herramientas {.pattern-overview}
 
-`mcp_tools()` descubre las tools remotas. `app-09/mcp-tools.R` selecciona las de indicadores y datos,
-permitiendo un año o el último dato por país. El agente recibe los datos y llama a la tool local de guardado.
+Script `R/06_ellmer_mcp.R`: ejemplo de consola para consultar el MCP con ellmer.
+`mcp_tools()` descubre las herramientas remotas. El script prepara las tres tools de datos
+y ajusta los argumentos de consulta para el cliente del taller; `set_tools()` las registra.
 
-```r
-chat <- chat_openai(model = "gpt-5.6-luna", system_prompt = prompt_sistema)
-
-source("mcp-tools.R", local = TRUE, encoding = "UTF-8")
-
-chat$set_tools(tools)
+```{r}
+#| echo: false
+#| results: asis
+code_block(
+  "../R/06_ellmer_mcp.R",
+  c(
+    "5-9" = "Descubre las herramientas remotas y conserva las tres de indicadores y datos.",
+    "11-14" = "Ajusta los argumentos de consulta para el cliente del taller.",
+    "17-22" = "Crea el chat y registra las tools del MCP.",
+    "25" = "El modelo consulta la fuente para responder con un dato real."
+  )
+)
 ```
 
-Las tools locales guardan los datos, permiten leerlos y cambian la escala del gráfico por separado.
+En App 09, las tools locales permiten además guardar los datos y actualizar la vista de Shiny.
 
 ## App 09 · Del MCP a Shiny {.content-centered}
 
@@ -1112,12 +1119,12 @@ Estos dos ejemplos comparten una organización de tools.
 | **Mostrar** | `visualizar_indicador()` | `visualizar_serie()` |
 | **Inspeccionar** | `inspeccionar_vista()` | `inspeccionar_vista()` |
 
-La 91 consulta datos locales; la 92 usa un servicio remoto.
+La 50 consulta datos locales; la 51 usa un servicio remoto.
 
-## App 91 · Colombia territorial {.app-demo}
+## App 50 · Colombia territorial {.app-demo}
 
 ```r
-shiny::runApp("app-91-colombia-territorial")
+shiny::runApp("app-50-colombia-territorial")
 ```
 
 ### Pide
@@ -1130,10 +1137,10 @@ El mapa y la leyenda cambian; la respuesta usa los datos de la vista.
 
 21 indicadores en 32 departamentos y Bogotá · ECV 2025 y geometría del MGN 2018.
 
-## App 92 · Series del Banco de la República {.app-demo}
+## App 51 · Series del Banco de la República {.app-demo}
 
 ```r
-shiny::runApp("app-92-banrep-sdmx")
+shiny::runApp("app-51-banrep-sdmx")
 ```
 
 ### Pide

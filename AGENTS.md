@@ -17,6 +17,8 @@ literal línea por línea.
 
 ## Secuencia de apps
 
+Reserva `00–49` para el recorrido del taller, `50–89` para casos de aplicación y `90+` para experimentos.
+
 - `app-00`: widgets y outputs de Shiny, sin chat.
 - `app-01`: un dashboard reactivo pequeño.
 - `app-02`: agrega chat, sin tools ni acceso a los datos de la app.
@@ -50,15 +52,15 @@ literal línea por línea.
 - `app-09-v2`: variante mínima en R con page_chat(), chat_server() y un cliente ellmer por sesión.
   Conversa con herramientas MCP sin dashboard ni tools locales de visualización.
   Registra todas las tools directamente con set_tools(mcp_tools("mcp.json")), sin adaptar sus esquemas.
-- `app-91-colombia-territorial`: caso territorial con datos departamentales de
+- `app-50-colombia-territorial`: caso territorial con datos departamentales de
   Colombia y chat flotante.
-- `app-92-banrep-sdmx`: caso económico que consulta series de Banrep mediante
+- `app-51-banrep-sdmx`: caso económico que consulta series de Banrep mediante
   SDMX REST/XML.
-- `app-10-experimental`: explorador manual de series del Banco Central de Chile.
-- `app-11-experimental`: integra un chat sin tools ni acceso a los datos de la app.
-- `app-12-experimental`: agrega tools para encontrar y mostrar una serie.
-- `app-13-experimental`: conserva las tools de App 12 y devuelve resumen e imagen al modelo al actualizar.
-- `app-20-experimental` en adelante: orquestación, agentes y bots especializados.
+- `app-90-experimental`: explorador manual de series del Banco Central de Chile.
+- `app-91-experimental`: integra un chat sin tools ni acceso a los datos de la app.
+- `app-92-experimental`: agrega tools para encontrar y mostrar una serie.
+- `app-93-experimental`: conserva las tools de App 92 y devuelve resumen e imagen al modelo al actualizar.
+- `app-94-experimental` en adelante: orquestación, agentes y bots especializados.
 
 Agrega una app intermedia en vez de introducir varios conceptos nuevos en el
 mismo paso.
@@ -66,7 +68,7 @@ mismo paso.
 ## Interfaz
 
 Estas convenciones de UI mínima y continuidad aplican al recorrido de enseñanza `app-00`–`app-08`.
-Los casos `app-91-colombia-territorial` y `app-92-banrep-sdmx` son excepciones deliberadas: pueden
+Los casos `app-50-colombia-territorial` y `app-51-banrep-sdmx` son excepciones deliberadas: pueden
 usar estilos y layouts propios para motivar y mostrar aplicaciones concretas de los patrones.
 Conserva su identidad visual; no los simplifiques para hacerlos iguales a las apps de enseñanza.
 

@@ -60,7 +60,7 @@ orchestrate <- function(question) {
 
 # user interface ----------------------------------------------------------
 ui <- page_sidebar(
-  title = "App 20 · Dos agentes",
+  title = "App 94 · Dos agentes",
   sidebar = sidebar(
     width = 420,
     shinychat::chat_ui(

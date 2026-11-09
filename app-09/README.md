@@ -106,6 +106,10 @@ para mostrar nombres y unidades dinámicos. Se conserva ggplot2 para mantener es
 
 ## Conexión MCP
 
+`R/06_ellmer_mcp.R` muestra el registro de herramientas en una conversación de consola.
+Se ejecuta desde la raíz con `source("R/06_ellmer_mcp.R", encoding = "UTF-8")`.
+Incluye la selección de tres tools y el ajuste de esquema de App 09, sin cargar un script auxiliar.
+
 `mcp.json` configura el endpoint con un timeout de 60 segundos.
 `mcp-tools.R` prepara búsqueda, metadatos y observaciones:
 

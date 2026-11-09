@@ -20,7 +20,7 @@ buscar_series <- function(texto, n = 20) {
 
 # user interface ----------------------------------------------------------
 ui <- page_sidebar(
-  title = "App 10 · Explorador manual",
+  title = "App 90 · Explorador manual",
   fillable = TRUE,
   sidebar = sidebar(
     textInput("busqueda", "Buscar", placeholder = "Escribe al menos 5 caracteres..."),

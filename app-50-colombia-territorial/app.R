@@ -43,7 +43,7 @@ prompt_sistema <- paste(readLines("prompt.md", warn = FALSE), collapse = "\n")
 
 # user interface ----------------------------------------------------------
 ui <- page_fillable(
-  title = "App 91 · Colombia territorial",
+  title = "App 50 · Colombia territorial",
   padding = 0,
   tags$style(HTML("
     .territorial-map { height: 100dvh; }
