@@ -1,7 +1,7 @@
 # Ejecuta desde la carpeta extraída del ZIP de GitHub, antes de cargar paquetes.
 local({
   if (!file.exists("renv.lock") || !dir.exists("app-00")) {
-    stop("Abre instalar.R y usa Session > Set Working Directory > To Source File Location.")
+    stop("Abre shiny-chat-patterns.Rproj y ejecuta instalar.R desde la raíz del proyecto.")
   }
   if (getRversion() < "4.6.1") stop("Instala R 4.6.1 o posterior antes de continuar.")
 
@@ -32,5 +32,5 @@ local({
   )
   if (!requireNamespace("mcptools", quietly = TRUE)) stop("No se pudo instalar mcptools para App 09.")
 
-  message("Instalación terminada. Completa tu clave en .Renviron y sigue PREPARAR-R.md.")
+  message("Instalación terminada. Completa tu clave en .Renviron y continúa con las slides del taller.")
 })

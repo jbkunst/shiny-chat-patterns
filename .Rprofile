@@ -1,7 +1,9 @@
-# Use Posit Package Manager so renv can restore pinned package versions from binaries.
-options(renv.config.repos.override = "https://packagemanager.posit.co/cran/latest")
+# Git clones use renv automatically; GitHub ZIP downloads use instalar.R.
+if (file.exists(".git")) {
+  options(renv.config.repos.override = "https://packagemanager.posit.co/cran/latest")
+  source("renv/activate.R")
+}
 
-source("renv/activate.R")
 options(
   bslib.color_contrast_warnings = FALSE,
   shiny.minified = TRUE,

@@ -56,11 +56,14 @@ El contenido usa la utilidad general `.content-centered` para centrarse vertical
 Cada columna muestra el nombre y la captura enlazados a la aplicación. Las imágenes originales provienen
 de `kpstudio.io`, se guardan en `assets/apps/` y la fuente queda en notas.
 
-Después de «El recorrido del taller», tres slides «Antes de partir» presentan la preparación
-en una columna, con R primero y Python como alternativa secundaria. Incluyen el repo,
-`renv::restore()`, `uv sync --locked` y la configuración de `.Renviron`. La primera prueba
+Después de «El recorrido del taller», las slides «Antes de partir» presentan dos rutas de preparación:
+ZIP de GitHub con `instalar.R` e `install.packages()`, o Git con `renv::restore()`.
+La primera evita que renv se active automáticamente en esa copia; la segunda restaura las versiones fijadas.
+Ambas abren `shiny-chat-patterns.Rproj` para establecer la raíz y usar UTF-8 en RStudio.
+Python queda como alternativa secundaria en las notas. Después se configura `.Renviron`. La primera prueba
 carga ellmer y `.Renviron` y consulta el modelo para comprobar la conexión.
-Los comandos se ejecutan desde la raíz. `.Rprofile` ya activa `renv`; Python carga la clave con `--env-file`.
+Los comandos se ejecutan desde la raíz. `.Rprofile` activa `renv` cuando encuentra `.git`;
+Python carga la clave con `--env-file`.
 Entre los entornos y la prueba de API se presenta OpenAI como proveedor del taller, con GPT-5 nano
 y GPT-5.6 Luna. Los mismos patrones pueden aplicarse
 con Anthropic u otros proveedores que admitan las capacidades de cada ejemplo.

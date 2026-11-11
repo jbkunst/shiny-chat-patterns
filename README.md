@@ -143,10 +143,12 @@ Para las apps R se necesita **R 4.6.1 o posterior**. Elige una de estas dos ruta
 ### Opción 1 · ZIP de GitHub e install.packages
 
 Para quienes no usan Git: en GitHub, selecciona **Code → Download ZIP**, extrae todo el archivo,
-abre `instalar.R` en RStudio y ejecútalo desde la carpeta extraída.
+abre `shiny-chat-patterns.Rproj` en RStudio y ejecuta `source("instalar.R", encoding = "UTF-8")`.
 
-La [guía paso a paso para enviar antes del taller](PREPARAR-R.md) explica la descarga, la instalación,
-la clave y una primera prueba. No hay un ZIP distinto: se usa el que entrega GitHub.
+Las slides «Antes de partir · ZIP e install.packages()» y «Antes de partir · Git y renv» presentan
+las dos opciones. No hay un ZIP distinto: se usa el que entrega GitHub.
+El `.Rproj` establece la carpeta de trabajo y usa UTF-8. El ZIP de GitHub no contiene `.git`,
+por lo que `.Rprofile` no activa `renv` al abrirlo.
 
 El script usa `install.packages()` y desactiva la carga automática de `renv` solo en esta copia,
 mediante `RENV_CONFIG_AUTOLOADER_ENABLED=FALSE` en `.Renviron`. Instala además la versión de `mcptools`
@@ -162,14 +164,14 @@ git clone https://github.com/jbkunst/shiny-chat-patterns.git
 cd shiny-chat-patterns
 ```
 
-Abre R en esa carpeta y restaura el entorno:
+Abre `shiny-chat-patterns.Rproj` en RStudio y restaura el entorno:
 
 ```r
 if (!requireNamespace("renv", quietly = TRUE)) install.packages("renv")
 renv::restore()
 ```
 
-`.Rprofile` activa `renv` por defecto; `renv.lock` fija las versiones de los paquetes.
+`.Rprofile` activa `renv` automáticamente en los clones de Git; `renv.lock` fija las versiones.
 No ejecutes `instalar.R` en esta ruta. Si reutilizas una copia preparada con el instalador simple,
 cambia `RENV_CONFIG_AUTOLOADER_ENABLED=FALSE` por `TRUE` en `.Renviron` y reinicia R antes de restaurar.
 
