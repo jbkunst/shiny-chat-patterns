@@ -230,6 +230,10 @@ html.reveal-print .reveal .slides {
   padding: 0;
 }
 
+.reveal .codewindow pre > code.sourceCode {
+  max-height: calc(var(--code-max-height) - var(--codewindow-header-height) - 2px);
+}
+
 .reveal .cell > .code-copy-outer-scaffold + .cell-output {
   margin-top: var(--content-gap);
 }

@@ -400,6 +400,9 @@ continentes
 
 Esta será la aplicación base que iremos modificando paso a paso.
 
+::: {.codewindow .r chrome="none"}
+app-01/app.R
+
 ```{r}
 #| echo: false
 #| results: asis
@@ -412,6 +415,7 @@ code_block(
   )
 )
 ```
+:::
 
 ## App 01 · Explorar y filtrar datos · Diagrama {.content-centered}
 
@@ -452,11 +456,15 @@ Los indicadores, el gráfico y la tabla cambian juntos: todos dependen de los mi
 
 Script `R/01_ellmer.R`: un ejemplo mínimo de conversación antes de conectarlo a una aplicación.
 
+::: {.codewindow .r chrome="none"}
+R/01_ellmer.R
+
 ```{r}
 #| echo: false
 #| results: asis
 code_block("../R/01_ellmer.R")
 ```
+:::
 
 El cliente conserva el historial entre llamadas a `chat$chat()`. La clave se lee desde el entorno.
 
@@ -500,6 +508,9 @@ observeEvent(input$chat_user_input, {
 
 ## App 02 · Conversar sin acceso a datos · Código
 
+::: {.codewindow .r chrome="none"}
+app-02/app.R
+
 ```{r}
 #| echo: false
 #| results: asis
@@ -513,6 +524,7 @@ code_block(
   )
 )
 ```
+:::
 
 ## App 02 · Conversar sin acceso a datos · Diagrama {.content-centered}
 
@@ -552,6 +564,9 @@ App 03–05 · Dar acceso a los datos y modificar el estado reactivo.
 
 Script `R/02_ellmer_tool.R`: definimos una función, la usamos directamente y la registramos como tool.
 
+::: {.codewindow .r chrome="none"}
+R/02_ellmer_tool.R
+
 ```{r}
 #| echo: false
 #| results: asis
@@ -566,6 +581,7 @@ code_block(
   )
 )
 ```
+:::
 
 ## Ejercicio · Una regresión con pingüinos
 
@@ -637,6 +653,9 @@ chat$register_tool(tool(
 Con tools, agregamos `stream = "content"`: es necesario para mostrar sus llamadas y resultados en el chat.
 Las tools también se ejecutan sin ese argumento.
 
+::: {.codewindow .r chrome="none"}
+app-03/app.R
+
 ```{r}
 #| echo: false
 #| results: asis
@@ -650,6 +669,7 @@ code_block(
   )
 )
 ```
+:::
 
 ## App 03 · Consultar datos visibles · Diagrama {.content-centered}
 
@@ -707,6 +727,9 @@ consultar_tabla("SELECT COUNT(*) AS paises FROM paises WHERE continente = 'Europ
 
 ## App 04 · Consultar con SQL · Código
 
+::: {.codewindow .r chrome="none"}
+app-04/app.R
+
 ```{r}
 #| echo: false
 #| results: asis
@@ -723,6 +746,7 @@ code_block(
   )
 )
 ```
+:::
 
 ::: {.notes}
 validar_select() revisa que la consulta empiece con SELECT, mencione paises y no tenga punto y coma.
@@ -775,6 +799,9 @@ Script `R/03_ellmer_dos_tools.R`: contiene un ejemplo mínimo con dos tools.
 
 El modelo consulta primero la fecha actual y luego el pronóstico.
 
+::: {.codewindow .r chrome="none"}
+R/03_ellmer_dos_tools.R
+
 ```{r}
 #| echo: false
 #| results: asis
@@ -790,6 +817,7 @@ code_block(
   )
 )
 ```
+:::
 
 ## App 05 · Actualizar el dashboard · Patrón {.pattern-overview}
 
@@ -868,6 +896,9 @@ La tabla representa uno de los outputs: indicadores y gráfico leen el mismo dat
 
 ## App 05 · Actualizar el dashboard · Código
 
+::: {.codewindow .r chrome="none"}
+app-05/app.R
+
 ```{r}
 #| echo: false
 #| results: asis
@@ -882,6 +913,7 @@ code_block(
   )
 )
 ```
+:::
 
 ## App 05 · Actualizar el dashboard · Ejecutar {.app-demo}
 
@@ -924,6 +956,9 @@ mostrar_tabla <- function(n, titulo) {
 
 ## App 06 · Mostrar tablas y gráficos · Código
 
+::: {.codewindow .r chrome="none"}
+app-06/app.R
+
 ```{r}
 #| echo: false
 #| results: asis
@@ -936,6 +971,7 @@ code_block(
   )
 )
 ```
+:::
 
 ## App 06 · Mostrar tablas y gráficos · Diagrama {.content-centered}
 
@@ -1007,6 +1043,9 @@ Ambos muestran los mismos países. La última interacción determina el modo act
 Script `R/04_ellmer_imagen.R`: cada gráfico puede mostrar un patrón distinto.
 El modelo recibe la misma imagen que genera la función.
 
+::: {.codewindow .r chrome="none"}
+R/04_ellmer_imagen.R
+
 ```{r}
 #| echo: false
 #| results: asis
@@ -1023,6 +1062,7 @@ code_block(
   )
 )
 ```
+:::
 
 ## App 08 · Mapa e imágenes · Cámara {.pattern-overview}
 
@@ -1116,6 +1156,9 @@ mostrar_grafico <- function(x, y, color, titulo) {
 
 ## App 08 · Mapa e imágenes · Código
 
+::: {.codewindow .r chrome="none"}
+app-08/app.R
+
 ```{r}
 #| echo: false
 #| results: asis
@@ -1130,6 +1173,7 @@ code_block(
   )
 )
 ```
+:::
 
 ## App 08 · Mapa e imágenes · Diagrama {.content-centered}
 
@@ -1236,6 +1280,9 @@ Script `R/06_ellmer_mcp.R`: ejemplo interactivo básico con el MCP comunitario d
 `mcp_tools()` descubre todas las herramientas remotas y `set_tools()` las registra.
 El modelo elige cuáles usar para responder.
 
+::: {.codewindow .r chrome="none"}
+R/06_ellmer_mcp.R
+
 ```{r}
 #| echo: false
 #| results: asis
@@ -1249,6 +1296,7 @@ code_block(
   )
 )
 ```
+:::
 
 App 09 agrega tools locales para actualizar la vista de Shiny con los datos recibidos del FMI.
 
@@ -1291,6 +1339,9 @@ output$n_variables <- renderText(n_distinct(data()$variables$indicador))
 
 ## App 09 · Conectar con MCP · Código
 
+::: {.codewindow .r chrome="none"}
+app-09/app.R
+
 ```{r}
 #| echo: false
 #| results: asis
@@ -1307,6 +1358,7 @@ code_block(
   )
 )
 ```
+:::
 
 ## App 09 · Conectar con MCP · Ejecutar {.app-demo}
 
@@ -1333,6 +1385,9 @@ Script `app-09-v2/app.R`: el chat registra todas las herramientas del MCP y usa 
 `mcp_tools()` descubre las herramientas y `set_tools()` las registra, sin archivos auxiliares.
 Usa el MCP comunitario de cyanheads para el FMI; conserva la configuración del Banco Mundial para comparar.
 
+::: {.codewindow .r chrome="none"}
+app-09-v2/app.R
+
 ```{r}
 #| echo: false
 #| results: asis
@@ -1346,6 +1401,7 @@ code_block(
   )
 )
 ```
+:::
 
 ## App 09 v2 · Conversar con MCP · Diagrama {.content-centered}
 

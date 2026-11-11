@@ -65,7 +65,9 @@ Python queda como alternativa secundaria en las notas. Después se configura `.R
 recomienda reiniciar R para cargar `.Renviron` y luego consulta el modelo para comprobar la conexión.
 `readRenviron()` se muestra solo como alternativa manual, no como parte de las apps.
 El bloque `.Renviron` usa `codewindow` con `chrome="none"` para mostrar el nombre del archivo.
-El código completo de App 00 también lo usa como prueba, conservando sus anotaciones y resaltados.
+Todos los archivos mostrados con `code_block()` usan esa ventana con su ruta como nombre,
+tanto los `app.R` como los scripts de `R/`. Conservan sus anotaciones y resaltados.
+El límite de 500 px incluye la barra del archivo; el código largo conserva su scroll.
 La extensión está incluida en el repositorio; sus colores y espaciado se ajustan en `theme.scss`.
 Después de la tool básica hay un ejercicio con `datos::pinguinos`: devolver el resumen textual de una
 regresión por especie e interpretarlo, sin gráficos. La solución está en `R/ejercicio_pinguinos.R`.
