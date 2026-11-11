@@ -15,6 +15,7 @@ El render lee también los ejemplos de `R/` y los `app.R` del recorrido principa
 - `assets/code-highlights.js`: resaltado y scroll de los archivos completos con una sola copia del código.
 - `assets/code-tooltips.js`: posición de las anotaciones durante el resaltado y el scroll.
 - `_extensions/mcanouil/codefrag/`: navegación progresiva por anotaciones de código.
+- `_extensions/emilhvitfeldt/codewindow/`: ventana de archivo para el ejemplo `.Renviron` (versión 1.6.0).
 - La demo de `app-00` se ejecuta en el navegador mediante Shinylive.
 
 ## Contraste para proyector
@@ -63,6 +64,11 @@ En Positron se abre la carpeta; en RStudio se abre `shiny-chat-patterns.Rproj`.
 Python queda como alternativa secundaria en las notas. Después se configura `.Renviron`. La primera prueba
 recomienda reiniciar R para cargar `.Renviron` y luego consulta el modelo para comprobar la conexión.
 `readRenviron()` se muestra solo como alternativa manual, no como parte de las apps.
+El bloque `.Renviron` usa `codewindow` con `chrome="none"` para mostrar el nombre del archivo.
+El código completo de App 00 también lo usa como prueba, conservando sus anotaciones y resaltados.
+La extensión está incluida en el repositorio; sus colores y espaciado se ajustan en `theme.scss`.
+Después de la tool básica hay un ejercicio con `datos::pinguinos`: devolver el resumen textual de una
+regresión por especie e interpretarlo, sin gráficos. La solución está en `R/ejercicio_pinguinos.R`.
 Los comandos se ejecutan desde la raíz. `.Rprofile` activa `renv` cuando encuentra `.git`;
 Python carga la clave con `--env-file`.
 Entre los entornos y la prueba de API se presenta OpenAI como proveedor del taller, con GPT-5 nano

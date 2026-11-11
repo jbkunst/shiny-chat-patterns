@@ -43,6 +43,7 @@ Al finalizar el taller, quienes participen podrán:
 **Consultar y actualizar · App 03–05**
 
 - Primera tool para consultar los datos visibles.
+- Ejercicio con `datos::pinguinos`: una tool ajusta una regresión por especie y el chat interpreta `summary(lm)`.
 - Consultas SQL de solo lectura.
 - Actualización del estado reactivo desde una tool.
 

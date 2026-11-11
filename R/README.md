@@ -23,3 +23,11 @@ source("R/06_ellmer_mcp.R", encoding = "UTF-8")
 
 Los scripts de preparación de datos y `run_all_apps.R` son utilidades del repositorio,
 no pasos adicionales de esta secuencia. El lanzador se documenta en [catalog/](../catalog/).
+
+## Ejercicio con pingüinos
+
+Después de la tool básica, las slides proponen crear `ajustar_regresion(especie, x, y)` con
+`datos::pinguinos`. Filtra una especie, ajusta `lm()` y devuelve `summary()` como texto para que
+el chat interprete la pendiente y el R², sin gráficos.
+La [solución de referencia](ejercicio_pinguinos.R) incluye una llamada directa y el registro de la tool.
+Ejecuta el script con la clave cargada; la llamada directa permite revisar el cálculo sin consultar al modelo.

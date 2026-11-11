@@ -194,24 +194,42 @@ html.reveal-print .reveal .slides {
 
 /* Content spacing is shared by paragraphs, headings, code and columns. */
 .reveal .slides section.slide:not(.quarto-title-block):not(.section-slide)
-  :where(p, h3, .code-copy-outer-scaffold, .cell, .columns, table) {
+  :where(p, h3, .code-copy-outer-scaffold, .cell, .columns, .codewindow, table) {
   margin: 0;
 }
 
 .reveal .slides section.slide:not(.quarto-title-block):not(.section-slide)
-  :where(p, h3, .code-copy-outer-scaffold, .cell, .columns, table, .reactivity-flow, .architecture-diagram)
-  + :where(p, h3, .code-copy-outer-scaffold, .cell, .columns, table, .reactivity-flow, .architecture-diagram) {
+  :where(p, h3, .code-copy-outer-scaffold, .cell, .columns, .codewindow, table, .reactivity-flow, .architecture-diagram)
+  + :where(p, h3, .code-copy-outer-scaffold, .cell, .columns, .codewindow, table, .reactivity-flow, .architecture-diagram) {
   margin-top: var(--content-gap);
 }
 
 .reveal .slides section.slide:not(.quarto-title-block):not(.section-slide)
-  :where(p, h3) + :where(.code-copy-outer-scaffold, .cell),
+  :where(p, h3) + :where(.code-copy-outer-scaffold, .cell, .codewindow),
 .reveal .slides section.slide:not(.quarto-title-block):not(.section-slide)
-  :where(.code-copy-outer-scaffold, .cell) + :where(p, h3) {
+  :where(.code-copy-outer-scaffold, .cell, .codewindow) + :where(p, h3) {
   margin-top: var(--code-gap);
 }
 
 /* Executed R chunks use a cell wrapper around code and console output. */
+.reveal .codewindow {
+  --codewindow-bg: var(--paper-raised);
+  --codewindow-header-bg: var(--rule);
+  --codewindow-color: var(--text);
+  --codewindow-shadow-color: transparent;
+  --codewindow-header-height: 46px;
+  border: 1px solid var(--rule);
+  font-size: 22px;
+}
+
+.reveal .codewindow .textarea > .code-copy-outer-scaffold {
+  margin-top: 0;
+}
+
+.reveal .codewindow .textarea {
+  padding: 0;
+}
+
 .reveal .cell > .code-copy-outer-scaffold + .cell-output {
   margin-top: var(--content-gap);
 }

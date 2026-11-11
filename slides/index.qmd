@@ -35,6 +35,7 @@ format:
     highlight-style: github
 revealjs-plugins:
   - codefrag
+  - codewindow
 ---
 
 ```{r}
@@ -238,9 +239,13 @@ Desde App 02, el chat necesita internet y una `OPENAI_API_KEY` con acceso y sald
 
 Guarda tu clave en `.Renviron`, en la raíz del repo:
 
-```dotenv
+::: {.codewindow chrome="none"}
+.Renviron
+
+```{.bash code-line-numbers="false"}
 OPENAI_API_KEY="sk-proj-Rms74..."
 ```
+:::
 
 :::
 ::: {.column width="55%"}
@@ -280,6 +285,9 @@ App 00–02 · De inputs y outputs a una conversación en Shiny.
 
 ## App 00 · Conectar inputs y outputs · Código
 
+::: {.codewindow .r chrome="none"}
+app-00/app.R
+
 ```{r}
 #| echo: false
 #| results: asis
@@ -293,6 +301,7 @@ code_block(
   )
 )
 ```
+:::
 
 
 ## App 00 · Conectar inputs y outputs · Diagrama {.content-centered}
@@ -557,6 +566,46 @@ code_block(
   )
 )
 ```
+
+## Ejercicio · Una regresión con pingüinos
+
+Construye una tool `ajustar_regresion(especie, x, y)` y pide al chat que interprete su resultado.
+
+:::: {.columns}
+::: {.column width="48%"}
+### Datos
+
+```r
+library(datos)
+pinguinos <- datos::pinguinos
+names(pinguinos)
+unique(pinguinos$especie)
+```
+
+Variables: `largo_pico_mm`, `alto_pico_mm`, `largo_aleta_mm` y `masa_corporal_g`.
+
+:::
+::: {.column width="52%"}
+### Tu desafío
+
+Filtra una especie, ajusta `lm(y ~ x)` y devuelve `summary()` como texto, usando `capture.output()`.
+
+Registra la tool con argumentos acotados y pregunta:
+
+«Para Adelia, ajusta la masa corporal según el largo de la aleta. Interpreta la pendiente y el R²».
+
+Sin gráficos: R calcula y el chat interpreta.
+:::
+::::
+
+::: {.notes}
+Solución de referencia: R/ejercicio_pinguinos.R, para revisar después del intento.
+Usar reformulate(x, response = y) para construir la fórmula a partir de nombres de columnas.
+`paste(capture.output(summary(modelo)), collapse = "\n")` devuelve el resumen como texto al modelo.
+lm() omite por defecto las filas con valores faltantes en las variables del ajuste.
+Comprobar la llamada de la tool y comparar su interpretación con la salida directa de R.
+La pendiente expresa el cambio esperado en Y por unidad de X dentro de esa especie; no implica causalidad.
+:::
 
 ## App 03 · Consultar datos visibles · Patrón {.pattern-overview}
 

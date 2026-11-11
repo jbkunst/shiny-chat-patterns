@@ -1,5 +1,5 @@
 paquetes <- c(
-  "brand.yml", "bslib", "countrycode", "DBI", "dplyr", "duckdb", "ellmer", "forecast",
+  "brand.yml", "bslib", "countrycode", "datos", "DBI", "dplyr", "duckdb", "ellmer", "forecast",
   "gapminder", "ggplot2", "httr", "httr2", "jsonlite", "mapgl", "ragg", "readr",
   "remotes", "rnaturalearthdata", "sf", "shiny", "shinychat", "stringr", "thematic",
   "tinyplot", "xml2"
