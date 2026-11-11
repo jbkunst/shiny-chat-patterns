@@ -42,7 +42,7 @@ jobs:
       - name: Install render dependencies
         shell: Rscript {0}
         run: |
-          packages <- c("rmarkdown", "shinylive", "shiny", "bslib", "forecast")
+          packages <- c("rmarkdown", "shinylive", "shiny", "bslib", "forecast", "dplyr", "jsonlite")
           install.packages(packages, repos = Sys.getenv("RSPM", "https://cloud.r-project.org"))
           stopifnot(all(vapply(packages, requireNamespace, logical(1), quietly = TRUE)))
 

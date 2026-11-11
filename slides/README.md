@@ -324,6 +324,7 @@ El workflow `.github/workflows/slides-pages.yml` renderiza `slides/index.qmd` y 
 GitHub Pages. Se activa al cambiar las slides, las apps o los scripts de `R/` en `main`, y también
 permite ejecución manual. En la configuración del repositorio, usa **GitHub Actions** como fuente de Pages.
 
-El job de publicación usa `R_PROFILE_USER=/dev/null` e instala `rmarkdown`, `shinylive` y los paquetes
-de la demo embebida (`shiny`, `bslib`, `forecast`) en la librería del runner, con CRAN explícito.
+El job de publicación usa `R_PROFILE_USER=/dev/null` e instala `rmarkdown`, `shinylive`, los paquetes
+de la demo embebida (`shiny`, `bslib`, `forecast`), `dplyr` para `glimpse()` y `jsonlite` para leer
+las respuestas cacheadas del MCP en la librería del runner, con CRAN explícito.
 Así el perfil `renv` de las apps no cambia la librería que usan Quarto y el filtro Shinylive.
