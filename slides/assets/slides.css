@@ -6,6 +6,9 @@
   --night-soft: #123254;
   --blue: #174a70;
   --blue-bright: #62a8ff;
+  --chapter-background:
+    radial-gradient(circle at 78% 44%, rgb(98 168 255 / 22%), transparent 31%),
+    linear-gradient(135deg, var(--night) 0%, var(--night-soft) 58%, var(--blue) 100%);
   --paper: #f5f4ef;
   --paper-raised: #fffefa;
   --text: #263338;
@@ -77,6 +80,18 @@ html.reveal-print .reveal .slides {
 
 .reveal:where(.overview) .slides > .quarto-title-block {
   display: flex !important;
+}
+
+.reveal.overview .slides section.slide.section-slide:not(.package-slide) {
+  background: var(--chapter-background);
+}
+
+/* A warm highlight and dark halo keep the current thumbnail visible on both backgrounds. */
+.reveal.overview .slides > .present:not(.stack),
+.reveal.overview .slides > .stack.present > .present {
+  outline: 16px solid #ffd166;
+  outline-offset: 10px;
+  box-shadow: 0 0 0 30px rgb(7 20 38 / 90%), 0 0 80px 34px rgb(255 209 102 / 60%);
 }
 
 .reveal .progress {
@@ -433,16 +448,20 @@ html.reveal-print .reveal .slides {
   color: #edf3fb;
 }
 
-body:has(.section-slide.present:not(.package-slide)) {
+body:has(
+  .slides > .section-slide.present:not(.package-slide),
+  .slides > .stack.present > .section-slide.present:not(.package-slide)
+) {
   background: var(--night);
 }
 
 /* Pinta fuera del lienzo 16:9: evita franjas y juntas al escalar la slide en una ventana. */
-body:has(.section-slide.present:not(.package-slide)) .reveal {
+body:has(
+  .slides > .section-slide.present:not(.package-slide),
+  .slides > .stack.present > .section-slide.present:not(.package-slide)
+) .reveal {
   --r-background-color: transparent;
-  background:
-    radial-gradient(circle at 78% 44%, rgb(98 168 255 / 22%), transparent 31%),
-    linear-gradient(135deg, var(--night) 0%, var(--night-soft) 58%, var(--blue) 100%);
+  background: var(--chapter-background);
 }
 
 html.reveal-print .reveal .slides section.slide.section-slide:not(.package-slide) {
@@ -490,8 +509,8 @@ html.reveal-print .reveal .slides section.slide.section-slide:not(.package-slide
   color: var(--text);
 }
 
-body:has(.package-slide.present),
-body:has(.package-slide.present) .reveal {
+body:has(.slides > .package-slide.present, .slides > .stack.present > .package-slide.present),
+body:has(.slides > .package-slide.present, .slides > .stack.present > .package-slide.present) .reveal {
   background: var(--paper);
 }
 

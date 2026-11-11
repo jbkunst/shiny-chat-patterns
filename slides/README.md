@@ -40,6 +40,10 @@ Los capítulos y el cierre usan encabezados `#` con `.section-slide`; las slides
 (`O` o `Esc`). Las flechas izquierda/derecha cambian de capítulo, arriba/abajo recorren sus slides y
 Espacio avanza por todo el recorrido. Los paquetes conservan `##` y `.package-slide` dentro del capítulo.
 Los estilos se aplican a las slides internas, sin dar formato de slide al contenedor de cada columna.
+En la vista general, la slide actual usa un contorno amarillo con halo oscuro y brillo suave para
+distinguirla sobre las portadas azules y las slides claras. El efecto solo se aplica mientras `O` está activo.
+El fondo exterior y el resaltado siguen únicamente la slide del capítulo activo; las slides recordadas
+en otros capítulos no deben cambiar el fondo al usar ventanas con proporciones distintas de 16:9.
 
 El recorrido se divide en tres capítulos: preparar y conversar (App 00–02), consultar y actualizar
 (App 03–05) y actuar sobre la interfaz (App 06–08). App 01–08 terminan con «Ejecutar»:
