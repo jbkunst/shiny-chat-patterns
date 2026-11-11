@@ -75,7 +75,7 @@ code_block <- function(path, descriptions = NULL, single_copy = TRUE) {
 }
 ```
 
-# 00 · Antes de empezar {.section-slide}
+# Antes de empezar {.section-slide}
 
 Motivación, recorrido del taller y preparación del entorno.
 
@@ -247,7 +247,7 @@ En Python, uv run --env-file .Renviron carga la clave antes de ejecutar el coman
 La respuesta «conexión correcta» confirma el acceso al modelo.
 :::
 
-# 01 · Preparar y conversar {.section-slide}
+# Preparar y conversar {.section-slide}
 
 App 00–02 · De inputs y outputs a una conversación en Shiny.
 
@@ -512,7 +512,7 @@ shiny::runApp("app-02")
 
 El chat puede conversar, pero todavía no puede consultar los datos ni conocer el filtro seleccionado.
 
-# 02 · Consultar y actualizar {.section-slide}
+# Consultar y actualizar {.section-slide}
 
 App 03–05 · Dar acceso a los datos y modificar el estado reactivo.
 
@@ -825,7 +825,7 @@ shiny::runApp("app-05")
 
 La tool cambia el estado reactivo: se actualizan los indicadores, el gráfico y la tabla.
 
-# 03 · Actuar sobre la interfaz {.section-slide}
+# Actuar sobre la interfaz {.section-slide}
 
 App 06–08 · Abrir vistas, comparar filtros y entregar gráficos al modelo.
 
@@ -1092,7 +1092,7 @@ shiny::runApp("app-08")
 El vuelo usa el proxy. La otra tool abre el gráfico en un modal y entrega su imagen al modelo.
 Pregunta «Describe el gráfico anterior» para reutilizar la imagen sin abrir otro modal.
 
-# 04 · Conectar herramientas con MCP {.section-slide}
+# Conectar herramientas con MCP {.section-slide}
 
 App 09 · Conectar herramientas externas con MCP.
 
@@ -1307,7 +1307,7 @@ shiny::runApp("app-09-v2")
 El agente busca el indicador y consulta el MCP. Las llamadas y los resultados aparecen en el chat.
 El mismo patrón funciona sin el dashboard: `chat_server()` se encarga de la conversación.
 
-# 05 · Aplicaciones más completas {.section-slide}
+# Aplicaciones más completas {.section-slide}
 
 Casos 50 y 51 · Combinar los patrones del taller con datos de Colombia.
 

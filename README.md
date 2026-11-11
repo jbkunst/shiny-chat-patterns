@@ -35,12 +35,12 @@ Al finalizar el taller, quienes participen podrán:
 
 ### Contenidos
 
-**Capítulo 1 · Preparar y conversar · App 00–02**
+**Preparar y conversar · App 00–02**
 
 - Dashboard y reactividad como punto de partida.
 - Chat sin acceso a los datos de la aplicación.
 
-**Capítulo 2 · Consultar y actualizar · App 03–05**
+**Consultar y actualizar · App 03–05**
 
 - Primera tool para consultar los datos visibles.
 - Consultas SQL de solo lectura.
@@ -48,13 +48,13 @@ Al finalizar el taller, quienes participen podrán:
 
 **Pausa**
 
-**Capítulo 3 · Actuar sobre la interfaz · App 06–08**
+**Actuar sobre la interfaz · App 06–08**
 
 - Acciones de interfaz: tablas, gráficos y modales.
 - Comparación y uso complementario de filtros tradicionales y consultas por chat.
 - Control del globo y su cámara, y entrega del gráfico de un modal al modelo para interpretarlo.
 
-**Capítulo 4 · Conectar herramientas externas con MCP · App 09**
+**Conectar herramientas externas con MCP · App 09**
 
 - Descubrimiento y uso de herramientas remotas mediante MCP.
 - Una carga con `pais`, `anio`, `x` e `y`: mapa con Y, gráfico y tabla con X e Y.
