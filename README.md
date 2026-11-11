@@ -143,7 +143,7 @@ Para las apps R se necesita **R 4.6.1 o posterior**. Elige una de estas dos ruta
 ### Opción 1 · ZIP de GitHub e install.packages
 
 Para quienes no usan Git: en GitHub, selecciona **Code → Download ZIP** y extrae todo el archivo.
-Abre la carpeta en Positron o, si usas RStudio, abre `shiny-chat-patterns.Rproj` (opcional).
+Abre la carpeta en Positron o, si usas RStudio, abre `shiny-chat-patterns.Rproj`.
 Desde la raíz del proyecto, ejecuta `source("R/instalar.R", encoding = "UTF-8")`.
 
 Las slides «Antes de partir · Instalación simple» y «Antes de partir · Git + renv» presentan
@@ -207,7 +207,7 @@ library(ellmer)
 readRenviron(".Renviron")
 nzchar(Sys.getenv("OPENAI_API_KEY"))
 chat <- ellmer::chat("openai/gpt-5-nano")
-chat$chat("Responde solamente: conexión correcta.")
+chat$chat("Responde solo: OK")
 ```
 
 La tercera línea debe devolver `TRUE` sin mostrar la clave. La última comprueba el acceso a la API.

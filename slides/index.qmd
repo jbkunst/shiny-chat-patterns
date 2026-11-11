@@ -163,7 +163,7 @@ Puente al taller: construiremos paso a paso las capacidades que conectan convers
 
 1. Abre [el repositorio en GitHub](https://github.com/jbkunst/shiny-chat-patterns) y pulsa **Code → Download ZIP**.
 2. Extrae el ZIP. En **Positron**, abre la carpeta. En **RStudio**, puedes abrir
-   `shiny-chat-patterns.Rproj` (opcional).
+   `shiny-chat-patterns.Rproj`.
 3. Desde la carpeta del proyecto, ejecuta en la consola de R:
 
 ```r
@@ -256,7 +256,7 @@ library(ellmer)
 readRenviron(".Renviron")
 
 chat <- ellmer::chat("openai/gpt-5-nano")
-chat$chat("Responde solamente: conexión correcta.")
+chat$chat("Responde solo: OK")
 ```
 
 :::
@@ -269,7 +269,7 @@ App 00–01 funcionan sin clave. App 09 está, por ahora, solo en R.
 Puedes copiar .Renviron.example a .Renviron y completar tu clave.
 readRenviron() carga .Renviron sin tener que reiniciar la sesión para esta prueba.
 En Python, uv run --env-file .Renviron carga la clave antes de ejecutar el comando correspondiente.
-La respuesta «conexión correcta» confirma el acceso al modelo.
+La respuesta «OK» confirma el acceso al modelo.
 :::
 
 # Preparar y conversar {.section-slide}
