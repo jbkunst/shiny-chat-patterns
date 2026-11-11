@@ -30,5 +30,5 @@ Después de App 05, las slides proponen crear `ajustar_regresion(especie, x, y)`
 `datos::pinguinos`. Filtra una especie, ajusta `lm()` y devuelve `summary()` como texto para que
 el chat interprete la pendiente y el R². Actualizar un gráfico X/Y queda como desafío adicional.
 La [solución en Shiny](../app-99/app.R) reúne todo en un archivo y usa `dplyr`, del tidyverse.
-La [versión de consola](ejercicio_pinguinos.R) incluye una llamada directa y el registro de la tool.
-Ejecuta el script con la clave cargada; la llamada directa permite revisar el cálculo sin consultar al modelo.
+El [punto de partida](ejercicio_pinguinos.R) incluye paquetes, datos, la función, su prueba directa,
+la UI y el servidor del chat. El registro de la herramienta queda pendiente para completarlo en el ejercicio.

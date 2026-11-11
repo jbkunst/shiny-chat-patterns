@@ -1,13 +1,16 @@
-library(datos)
+library(shiny)
+library(bslib)
+library(shinychat)
 library(ellmer)
 library(dplyr)
+library(datos)
 
-# data --------------------------------------------------------------------
-pinguinos <- datos::pinguinos
+# datos -------------------------------------------------------------------
+datos::pinguinos
 
-# tools -------------------------------------------------------------------
+# función disponible ------------------------------------------------------
 ajustar_regresion <- function(especie, x, y) {
-  df <- pinguinos |>
+  df <- datos::pinguinos |>
     filter(especie == !!especie) |>
     rename(x = !!x, y = !!y)
   modelo <- lm(y ~ x, data = df)
@@ -15,30 +18,25 @@ ajustar_regresion <- function(especie, x, y) {
   paste(resumen, collapse = "\n")
 }
 
-# Comprueba el resultado en R antes de registrarlo como tool.
-cat(ajustar_regresion("Adelia", "largo_aleta_mm", "masa_corporal_g"))
+# Pruébala en R antes de conectarla al chat.
+ajustar_regresion("Adelia", "largo_aleta_mm", "masa_corporal_g")
 
-# chat --------------------------------------------------------------------
-chat <- ellmer::chat(
-  "openai/gpt-5-nano",
-  system_prompt = paste(
-    "Responde en español. Usa ajustar_regresion para calcular regresiones con pingüinos.",
-    "Interpreta el summary recibido: pendiente con sus unidades, R² y observaciones utilizadas.",
-    "No inventes resultados ni interpretes la asociación como causalidad. No generes gráficos."
+# user interface ----------------------------------------------------------
+ui <- page_fillable(chat_ui("chat"), fillable_mobile = TRUE)
+
+# server ------------------------------------------------------------------
+server <- function(input, output, session) {
+  chat <- ellmer::chat(
+    "openai/gpt-5-nano",
+    system_prompt = "Responde en español."
   )
-)
 
-chat$register_tool(tool(
-  ajustar_regresion,
-  "Ajusta una regresión lineal Y ~ X para una especie y devuelve summary(lm) como texto.",
-  arguments = list(
-    especie = type_string("Especie: Adelia, Barbijo o Papúa."),
-    x = type_string("X: largo_pico_mm, alto_pico_mm, largo_aleta_mm o masa_corporal_g."),
-    y = type_string("Y: largo_pico_mm, alto_pico_mm, largo_aleta_mm o masa_corporal_g.")
-  )
-))
+  # TODO: registra ajustar_regresion como herramienta con los argumentos especie, x e y.
 
-chat$chat(paste(
-  "Para Adelia, ajusta la masa corporal según el largo de la aleta.",
-  "Interpreta la pendiente y el R²."
-))
+  observeEvent(input$chat_user_input, {
+    stream <- chat$stream_async(!!!input$chat_user_input, stream = "content")
+    shinychat::chat_append("chat", stream)
+  })
+}
+
+shinyApp(ui, server)

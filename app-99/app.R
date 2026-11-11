@@ -5,12 +5,9 @@ library(ellmer)
 library(dplyr)
 library(datos)
 
-# data --------------------------------------------------------------------
-pinguinos <- datos::pinguinos
-
 # tools -------------------------------------------------------------------
 ajustar_regresion <- function(especie, x, y) {
-  df <- pinguinos |>
+  df <- datos::pinguinos |>
     filter(especie == !!especie) |>
     rename(x = !!x, y = !!y)
   modelo <- lm(y ~ x, data = df)

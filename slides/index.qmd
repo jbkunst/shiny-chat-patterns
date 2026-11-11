@@ -891,95 +891,38 @@ shiny::runApp("app-05")
 
 La tool cambia el estado reactivo: se actualizan los indicadores, el gráfico y la tabla.
 
-## Ejercicio · Paquetes y función
+## Haz que el agente use la herramienta {.conversation-slide .tool-console-slide}
 
-Usa estos paquetes y la función preparada. El ejercicio consiste en integrarla al chat como herramienta.
+Registra la función preparada para que el chat pueda ajustar una regresión e interpretar su resumen.
 
-:::: {.columns}
-::: {.column width="48%"}
-### Paquetes
+::: {.codewindow .r chrome="none"}
+R/ejercicio_pinguinos.R
 
-```r
-library(shiny)     # Aplicación y eventos
-library(bslib)     # Layout de la página
-library(shinychat) # Interfaz del chat
-library(ellmer)    # Modelo y herramientas
-library(dplyr)     # Filtrar y renombrar
-library(datos)     # Pingüinos en español
-
-pinguinos <- datos::pinguinos
-```
-
-:::
-::: {.column width="52%"}
-### Función disponible
-
-```r
-ajustar_regresion <- function(especie, x, y) {
-  df <- pinguinos |>
-    filter(especie == !!especie) |>
-    rename(x = !!x, y = !!y)
-  modelo <- lm(y ~ x, data = df)
-  resumen <- capture.output(summary(modelo))
-  paste(resumen, collapse = "\n")
-}
-```
-
-**Primero pruébala en R**, antes de conectar el chat:
-
-`cat(ajustar_regresion("Adelia", "largo_aleta_mm", "masa_corporal_g"))`
-:::
-::::
-
-::: {.notes}
-!!especie usa el argumento de la función; especie sin !! es la columna dentro de filter.
-rename usa los nombres recibidos con !! y los renombra a x e y para usar una fórmula fija.
-capture.output captura la impresión de summary como texto. cat sirve para verlo en consola,
-pero la tool debe devolver el texto, no el resultado NULL de cat.
-:::
-
-## Ejercicio · Integrar la herramienta
-
-Partiendo de esta UI y la función anterior, crea un chat que ajuste regresiones e interprete el resumen.
-
-:::: {.columns}
-::: {.column width="48%"}
-### UI de partida
-
-```r
-ui <- page_fillable(
-  chat_ui("chat"),
-  fillable_mobile = TRUE
+```{r}
+#| echo: false
+#| results: asis
+code_block(
+  "../R/ejercicio_pinguinos.R",
+  c(
+    "1-6" = "Usa estos paquetes para construir la app y trabajar con pingüinos.",
+    "9" = "Estos son los datos disponibles: datos::pinguinos, sin asignarlos a otro objeto.",
+    "12-22" = "Usa esta función y pruébala directamente en R antes de conectarla al chat.",
+    "25" = "Esta es la UI de partida: una página con el chat.",
+    "28-40" = "El chat ya puede conversar, pero todavía no tiene acceso a la función.",
+    "34" = "Completa el registro de ajustar_regresion con los argumentos especie, x e y."
+  )
 )
 ```
-
-Variables: `largo_pico_mm`, `alto_pico_mm`, `largo_aleta_mm` y `masa_corporal_g`.
-
 :::
-::: {.column width="52%"}
-### Tu desafío
-
-Conecta el chat con ellmer usando `observeEvent()` y `chat_append()`, como en las apps anteriores.
-
-Registra `ajustar_regresion()` con tres argumentos `type_string()` y pregunta:
-
-«Para Adelia, ajusta la masa corporal según el largo de la aleta. Interpreta la pendiente y el R²».
-
-Extra: actualiza un gráfico con la especie y las variables elegidas.
-:::
-::::
 
 ::: {.notes}
-Solución de referencia: app-99/app.R, con todo en un archivo, para revisar después del intento.
-Ejecutar desde la raíz con shiny::runApp("app-99"). La versión de consola está en R/ejercicio_pinguinos.R.
-La función de regresión se entrega preparada: el objetivo es integrarla como tool.
-`paste(capture.output(summary(modelo)), collapse = "\n")` devuelve el resumen como texto al modelo.
-lm() omite por defecto las filas con valores faltantes en las variables del ajuste.
-Comprobar la llamada de la tool y comparar su interpretación con la salida directa de R.
-La pendiente expresa el cambio esperado en Y por unidad de X dentro de esa especie; no implica causalidad.
-La solución básica usa observeEvent, stream_async y chat_append, como las apps anteriores.
-No usa page_chat, chat_server, gráficos ni estado reactivo adicional.
-Como desafío extra, guardar datos, especie, X e Y en un reactiveVal para actualizar renderPlot.
+La función se entrega preparada. El objetivo es integrarla como herramienta, no escribir una regresión.
+Prueba primero la llamada directa y revisa summary antes de conectar el modelo.
+El bloque TODO es el lugar para agregar chat$register_tool(tool(...)), con tres argumentos type_string().
+Prueba antes y después: «Para Adelia, ajusta la masa corporal según el largo de la aleta.
+Interpreta la pendiente y el R²».
+La función existente en el archivo no queda disponible para el modelo hasta registrarla.
+La solución completa está en app-99/app.R, fuera de run_all_apps.
 :::
 
 # Actuar sobre la interfaz {.section-slide}

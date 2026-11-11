@@ -69,11 +69,10 @@ Todos los archivos mostrados con `code_block()` usan esa ventana con su ruta com
 tanto los `app.R` como los scripts de `R/`. Conservan sus anotaciones y resaltados.
 El límite de 500 px incluye la barra del archivo; el código largo conserva su scroll.
 La extensión está incluida en el repositorio; sus colores y espaciado se ajustan en `theme.scss`.
-Después de App 05 hay un ejercicio con `datos::pinguinos`: primero presenta los paquetes y una función
-de regresión ya preparada. El objetivo es integrarla como tool partiendo de `page_fillable(chat_ui("chat"))`
-y devolver su resumen textual al chat. Usa `dplyr`, del tidyverse,
-y argumentos `type_string()`. Actualizar un gráfico X/Y queda como desafío adicional.
-La solución Shiny está en `app-99/app.R`, en un solo archivo; `R/ejercicio_pinguinos.R` conserva la consola.
+Después de App 05, «Haz que el agente use la herramienta» presenta en una sola slide
+`R/ejercicio_pinguinos.R`: paquetes, `datos::pinguinos` sin asignación, función y prueba directa,
+UI simple y servidor del chat. El chat inicial no tiene acceso a la función de regresión.
+El objetivo es completar su registro como herramienta. La solución está en `app-99/app.R`.
 Los comandos se ejecutan desde la raíz. `.Rprofile` activa `renv` cuando encuentra `.git`;
 Python carga la clave con `--env-file`.
 Entre los entornos y la prueba de API se presenta OpenAI como proveedor del taller, con GPT-5 nano

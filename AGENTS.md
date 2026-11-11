@@ -83,6 +83,8 @@ Reserva `00–49` para el recorrido del taller, `50–89` para casos de aplicaci
   summary como texto con capture.output. Usa page_fillable con chat_ui y argumentos type_string.
   Conserva observeEvent, stream_async y chat_append; sin page_chat, chat_server ni gráfico.
   El ejercicio va después de App 05; actualizar un gráfico queda como desafío adicional.
+  R/ejercicio_pinguinos.R es el punto de partida: muestra los datos sin asignación y entrega
+  función, prueba directa, UI y servidor, dejando pendiente registrar la herramienta.
 
 Agrega una app intermedia en vez de introducir varios conceptos nuevos en el
 mismo paso.
