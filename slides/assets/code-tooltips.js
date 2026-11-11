@@ -4,7 +4,7 @@
  * que crea una copia por paso: en ese caso la referencia debe seguir el marcador de la copia activa.
  * El tooltip se monta en la slide para evitar el recorte del código; z-index por sí solo
  * no evita ese recorte. La posición superior no usa flip y se calcula en coordenadas de
- * la slide para compensar tanto CSS zoom como transform: scale(). Su apariencia vive en slides.css.
+ * la slide para compensar tanto CSS zoom como transform: scale(). Su apariencia vive en theme.scss.
  * Al actualizar Quarto/codefrag, comprobar estos selectores y la API _tippy: son detalles internos.
  * Revisar pasos iniciales/finales, regreso a una slide y dos tamaños de ventana (ver ../README.md).
  */

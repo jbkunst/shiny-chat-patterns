@@ -148,7 +148,7 @@ Conserva su identidad visual; no los simplifiques para hacerlos iguales a las ap
   Ajusta la distribución y reduce la fuente si hace falta, verificando que siga siendo legible al proyectar.
 - En las tools de visualización del diagrama, muestra los argumentos en gris tenue para distinguir
   los parámetros que elige el agente de los datos reactivos que usa la tool.
-- Conserva el espaciado general de `slides/assets/slides.css`: `--content-gap: 40px`,
+- Conserva el espaciado general de `slides/assets/theme.scss`: `--content-gap: 40px`,
   `--code-gap: 48px` entre texto y código o resultados, y `--section-gap: 56px` antes de subtítulos.
   Incluye los contenedores `.cell` de Quarto en esas reglas; no agregues márgenes específicos por slide.
 - Al mostrar `head(datos, n)`, aclara que son las primeras `n` filas, no el dataset completo.

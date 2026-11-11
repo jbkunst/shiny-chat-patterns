@@ -14,9 +14,7 @@ embed-resources: false
 format:
   revealjs:
     theme: [default, assets/theme.scss]
-    css:
-      - assets/slides.css
-      # - assets/slides-contrast.css
+    # css: assets/slides-contrast.css
     width: 1600
     height: 900
     margin: 0
@@ -51,7 +49,7 @@ code_block <- function(path, descriptions = NULL, single_copy = TRUE) {
   # Cuidados de mantenimiento (detalle en README.md):
   # - path es relativo a este QMD; los rangos corresponden al archivo original completo.
   # - Conservar .workshop-code en ambos modos: aplica fuente de 19 px a los archivos completos.
-  #   Todo el código comparte el límite general de altura y los márgenes de assets/slides.css.
+  #   Todo el código comparte el límite general de altura y los márgenes de assets/theme.scss.
   # - El CSS también define el ancho, fondo y z-index del tooltip para mantenerlo legible.
   # - assets/code-highlights.js resalta un único bloque; single_copy = FALSE recupera las copias de Reveal.
   # - assets/code-tooltips.js mantiene el tooltip encima del marcador y fuera del contenedor con scroll.

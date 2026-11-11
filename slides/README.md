@@ -8,8 +8,7 @@ El render lee también los ejemplos de `R/` y los `app.R` del recorrido principa
 
 - `index.qmd`: fuente Quarto y contenido del taller.
 - `index.html`: presentación renderizada por Quarto.
-- `assets/theme.scss`: variables tipográficas y cromáticas de RevealJS.
-- `assets/slides.css`: estilos de portada, capítulos, paquetes, contenido y demostraciones.
+- `assets/theme.scss`: fuentes, colores y todos los estilos propios de la presentación.
 - `assets/slides-contrast.css`: ajustes opcionales para proyector y salas con luz ambiental.
 - `assets/cover.html`: estructura de la visualización animada de portada.
 - `assets/cover.js`: animación de portada inspirada en el landing de jkunst.com.
@@ -23,21 +22,22 @@ El render lee también los ejemplos de `R/` y los `app.R` del recorrido principa
 El YAML de `index.qmd` carga el diseño habitual y deja comentada la capa de contraste:
 
 ```yaml
-    css:
-      - assets/slides.css
-      # - assets/slides-contrast.css
+    theme: [default, assets/theme.scss]
+    # css: assets/slides-contrast.css
 ```
 
 Para activarla, quita únicamente el `#` de la última línea y vuelve a renderizar:
 
 ```yaml
-    css:
-      - assets/slides.css
-      - assets/slides-contrast.css
+    theme: [default, assets/theme.scss]
+    css: assets/slides-contrast.css
 ```
 
-Para desactivarla, comenta de nuevo esa línea y renderiza. No reemplaces `slides.css`:
-el archivo adicional se carga después y contiene solo los cambios de contraste.
+Para desactivarla, comenta de nuevo la línea `css:` y renderiza. El tema conserva el diseño habitual;
+el CSS adicional se carga después y contiene solo los cambios de contraste.
+
+`theme.scss` reúne las importaciones de fuentes (`scss:uses`), las variables que configuran el tema
+base (`scss:defaults`) y las reglas propias (`scss:rules`). No hay un CSS base adicional.
 
 La variante oscurece los textos grises, usa peso 400 en párrafos y listas, aumenta el código
 a 22 px (21 px en archivos completos y resultados), refuerza los números de línea y los colores
@@ -280,7 +280,7 @@ La firma actual es `code_block(path, descriptions = NULL, single_copy = TRUE)`:
 Con `descriptions = NULL`, muestra el archivo sin anotaciones ni pasos de resaltado. Los rangos usan
 los números de línea del archivo original; al editar una app, revisa las llamadas correspondientes.
 
-Ambos modos emiten la clase `.workshop-code`. En `assets/slides.css`, esta clase establece fuente de
+Ambos modos emiten la clase `.workshop-code`. En `assets/theme.scss`, esta clase establece fuente de
 19 px. Los ejemplos escritos directamente en las slides usan fuente de 20 px. Todos comparten
 el mismo límite `--code-max-height: 500px`: un archivo corto ocupa menos espacio y uno largo tiene scroll.
 
@@ -331,7 +331,7 @@ de vista. El ajuste admite tanto ese motor como el resaltado de una sola copia.
 4. Convierte las coordenadas a la escala de la slide, incluido el uso de CSS `zoom` o `transform`.
 5. Recalcula la posición durante el scroll y coordina la selección con `code-highlights.js`.
 
-El `z-index` y la apariencia se definen en `assets/slides.css`. Subir solo el `z-index` no resuelve
+El `z-index` y la apariencia se definen en `assets/theme.scss`. Subir solo el `z-index` no resuelve
 el recorte por overflow ni una referencia vinculada a la copia equivocada. El ajuste vive fuera de
 `_extensions/` para facilitar las actualizaciones de la extensión.
 

@@ -1,4 +1,4 @@
-/* Optional projector layer. Load after slides.css; see ../README.md. */
+/* Optional projector layer. Load after theme.scss; see ../README.md. */
 :root {
   --muted: #414e54;
   --rule: #75858d;
