@@ -158,6 +158,16 @@ Puente al taller: construiremos paso a paso las capacidades que conectan convers
 4. **Continuamos** con la siguiente app.
 :::
 
+## Antes de partir · Materiales
+
+### Slides del taller
+
+[jkunst.com/shiny-chat-patterns](https://jkunst.com/shiny-chat-patterns/)
+
+### Repositorio y código
+
+[github.com/jbkunst/shiny-chat-patterns](https://github.com/jbkunst/shiny-chat-patterns)
+
 ## Antes de partir · Setup simple
 
 **Sin Git ni renv.** Necesitas R 4.6.1 o posterior.
