@@ -1,0 +1,89 @@
+/* Optional projector layer. Load after slides.css; see ../README.md. */
+:root {
+  --muted: #414e54;
+  --rule: #75858d;
+  --code-rule: #75858d;
+}
+
+.reveal .slides section.slide:not(.quarto-title-block):not(.section-slide) :is(p, li) {
+  font-weight: 400;
+}
+
+.reveal pre > code.sourceCode {
+  font-size: 22px;
+}
+
+.reveal pre.workshop-code > code.sourceCode,
+.reveal .cell-output pre > code {
+  font-size: 21px;
+}
+
+/* Reserve a real gutter so wrapped lines stay inside the code block. */
+.reveal pre.numberSource > code.sourceCode {
+  padding-left: calc(30px + 2.1em);
+}
+
+.reveal pre.numberSource code > span {
+  left: 0;
+  min-height: 1.25em;
+  vertical-align: top;
+}
+
+.reveal pre.numberSource code > span > a:first-child::before {
+  position: absolute;
+  left: -2.1em;
+  width: 1.5em;
+  padding: 0;
+  color: #414e54;
+  opacity: 1;
+}
+
+/* Keep context readable while distinguishing the current code step. */
+.reveal div.sourceCode pre code.has-line-highlights > span:not(.highlight-line) {
+  opacity: 1;
+}
+
+.reveal div.sourceCode pre code.has-line-highlights > span.highlight-line {
+  background-color: #dce9f1;
+}
+
+.reveal code.sourceCode span:is(.an, .co, .cv, .do, .in, .re) {
+  color: #414e54;
+}
+
+.reveal code.sourceCode span.va {
+  color: #8a3a00;
+}
+
+.reveal code.sourceCode span:is(.al, .at, .bu, .cf, .dt, .er, .ex, .kw, .pp, .wa) {
+  color: #a72133;
+}
+
+.reveal code.sourceCode span.fu {
+  color: #59319b;
+}
+
+.reveal code.sourceCode span:is(.bn, .cn, .dv, .fl, .sc) {
+  color: #00478f;
+}
+
+/* Inline SVGs retain gray context and blue additions; no source diagram is changed. */
+.reveal .architecture-diagram text {
+  font-weight: 400;
+}
+
+.reveal .architecture-diagram [fill="#5f6d72"] {
+  fill: #414e54;
+}
+
+.reveal .architecture-diagram [stroke="#8c9aa0"] {
+  stroke: #64737a;
+}
+
+.reveal .architecture-diagram [stroke="#ced9dc"] {
+  stroke: #75858d;
+}
+
+.reveal .architecture-diagram path[stroke-width="2.5"] {
+  stroke-width: 3.5;
+}

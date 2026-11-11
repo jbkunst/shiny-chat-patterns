@@ -10,12 +10,43 @@ El render lee también los ejemplos de `R/` y los `app.R` del recorrido principa
 - `index.html`: presentación renderizada por Quarto.
 - `assets/theme.scss`: variables tipográficas y cromáticas de RevealJS.
 - `assets/slides.css`: estilos de portada, capítulos, paquetes, contenido y demostraciones.
+- `assets/slides-contrast.css`: ajustes opcionales para proyector y salas con luz ambiental.
 - `assets/cover.html`: estructura de la visualización animada de portada.
 - `assets/cover.js`: animación de portada inspirada en el landing de jkunst.com.
 - `assets/code-highlights.js`: resaltado y scroll de los archivos completos con una sola copia del código.
 - `assets/code-tooltips.js`: posición de las anotaciones durante el resaltado y el scroll.
 - `_extensions/mcanouil/codefrag/`: navegación progresiva por anotaciones de código.
 - La demo de `app-00` se ejecuta en el navegador mediante Shinylive.
+
+## Contraste para proyector
+
+El YAML de `index.qmd` carga el diseño habitual y deja comentada la capa de contraste:
+
+```yaml
+    css:
+      - assets/slides.css
+      # - assets/slides-contrast.css
+```
+
+Para activarla, quita únicamente el `#` de la última línea y vuelve a renderizar:
+
+```yaml
+    css:
+      - assets/slides.css
+      - assets/slides-contrast.css
+```
+
+Para desactivarla, comenta de nuevo esa línea y renderiza. No reemplaces `slides.css`:
+el archivo adicional se carga después y contiene solo los cambios de contraste.
+
+La variante oscurece los textos grises, usa peso 400 en párrafos y listas, aumenta el código
+a 22 px (21 px en archivos completos y resultados), refuerza los números de línea y los colores
+del código, y mantiene legibles las líneas fuera del paso resaltado. Los diagramas conservan
+el contexto gris y las novedades azules, con textos más oscuros y flechas más gruesas.
+Conserva las portadas, el espaciado y el límite de altura del código; los bloques largos usan scroll.
+Los SVG originales no se modifican: los ajustes se aplican al render de las slides.
+
+Estos ajustes no sustituyen una prueba desde el fondo de la sala con el proyector real.
 
 ## Arquitectura visual
 

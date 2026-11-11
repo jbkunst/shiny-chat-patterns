@@ -14,7 +14,9 @@ embed-resources: false
 format:
   revealjs:
     theme: [default, assets/theme.scss]
-    css: assets/slides.css
+    css:
+      - assets/slides.css
+      # - assets/slides-contrast.css
     width: 1600
     height: 900
     margin: 0
