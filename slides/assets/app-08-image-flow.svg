@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 540" role="img"
+  aria-labelledby="app-08-image-flow-title app-08-image-flow-desc">
+  <title id="app-08-image-flow-title">El gráfico del modal también llega al agente como imagen</title>
+  <desc id="app-08-image-flow-desc">
+    En gris se conserva consulta_actual, data, los outputs y el modal que ya abría mostrar_grafico. La
+    función dibujar produce el gráfico del modal y ahora también un PNG. La nueva ruta azul devuelve esa
+    imagen y una confirmación al agente para interpretarla. El agente lee los mismos datos visibles; no
+    se crea un dataset separado. El agente elige x, y, color y titulo, mostrados en gris tenue.
+  </desc>
+  <defs>
+    <marker id="app-08-image-flow-old" viewBox="0 0 10 10" refX="9" refY="5"
+      markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#8c9aa0" stroke-width="1.6"/>
+    </marker>
+    <marker id="app-08-image-flow-new" viewBox="0 0 10 10" refX="9" refY="5"
+      markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#174a70" stroke-width="1.6"/>
+    </marker>
+  </defs>
+  <path d="M 370 100 H 508" fill="none" stroke="#8c9aa0" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-08-image-flow-old)"/>
+  <path d="M 980 100 H 1050 V 45 H 1108" fill="none" stroke="#8c9aa0" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-08-image-flow-old)"/>
+  <path d="M 980 100 H 1050 V 135 H 1108" fill="none" stroke="#8c9aa0" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-08-image-flow-old)"/>
+  <path d="M 980 100 H 1050 V 225 H 1108" fill="none" stroke="#8c9aa0" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-08-image-flow-old)"/>
+  <path d="M 320 410 H 508" fill="none" stroke="#8c9aa0" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-08-image-flow-old)"/>
+  <path d="M 750 155 V 328" fill="none" stroke="#8c9aa0" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-08-image-flow-old)"/>
+  <path d="M 980 380 H 1050 V 315 H 1108" fill="none" stroke="#8c9aa0" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-08-image-flow-old)"/>
+  <path d="M 980 440 H 1108" fill="none" stroke="#174a70" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-08-image-flow-new)"/>
+  <path d="M 1250 510 V 535 H 170 V 487" fill="none" stroke="#174a70" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-08-image-flow-new)"/>
+  <rect x="20" y="45" width="350" height="110" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="520" y="45" width="460" height="110" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="1120" y="10" width="260" height="70" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="1120" y="100" width="260" height="70" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="1120" y="190" width="260" height="70" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="20" y="365" width="300" height="110" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="520" y="340" width="460" height="140" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="1120" y="270" width="260" height="95" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="1120" y="420" width="260" height="90" rx="16"
+    fill="#e5edf1" stroke="#174a70" stroke-width="2"/>
+  <g font-family="inherit" text-anchor="middle">
+    <text x="195.0" y="92.0" font-size="24" fill="#5f6d72"
+      font-family="IBM Plex Mono, monospace">consulta_actual()</text>
+    <text x="195.0" y="124.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Consulta SQL</text>
+    <text x="750.0" y="92.0" font-size="30" fill="#5f6d72"
+      font-family="IBM Plex Mono, monospace">data()</text>
+    <text x="750.0" y="124.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Países visibles</text>
+    <text x="1250.0" y="53.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Indicadores</text>
+    <text x="1250.0" y="143.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Gráfico</text>
+    <text x="1250.0" y="233.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Tabla y mapa</text>
+    <text x="195" y="25" font-size="20" fill="#5f6d72"
+      font-family="inherit">FLUJO YA CONOCIDO</text>
+    <text x="170.0" y="412.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Agente</text>
+    <text x="170.0" y="444.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Interpreta la imagen</text>
+    <text x="750" y="375" font-size="24" fill="#5f6d72"
+      font-family="IBM Plex Mono, monospace">mostrar_grafico</text>
+    <text x="750" y="403" font-size="20" fill="#5f6d72"
+      font-family="IBM Plex Mono, monospace">(x, y, color, titulo)</text>
+    <text x="750.0" y="434" font-size="23" fill="#5f6d72"
+      font-family="inherit">Lee los datos visibles</text>
+    <text x="750.0" y="462" font-size="24" fill="#5f6d72"
+      font-family="IBM Plex Mono, monospace">dibujar()</text>
+    <text x="1250.0" y="309.5" font-size="25" fill="#5f6d72"
+      font-family="inherit">Modal</text>
+    <text x="1250.0" y="341.5" font-size="25" fill="#5f6d72"
+      font-family="inherit">Para la persona</text>
+    <text x="1250.0" y="457.0" font-size="25" fill="#174a70"
+      font-family="inherit">PNG</text>
+    <text x="1250.0" y="489.0" font-size="25" fill="#174a70"
+      font-family="inherit">Mismo gráfico</text>
+    <text x="420" y="390" font-size="21" fill="#5f6d72"
+      font-family="inherit">llama</text>
+    <text x="930" y="300" font-size="21" fill="#5f6d72"
+      font-family="inherit">lectura con isolate()</text>
+    <text x="700" y="523" font-size="21" fill="#174a70"
+      font-family="inherit">NUEVO: IMAGEN + CONFIRMACIÓN AL AGENTE</text>
+  </g>
+</svg>

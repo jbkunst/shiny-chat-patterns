@@ -27,15 +27,15 @@ de `kpstudio.io`, se guardan en `assets/apps/` y la fuente queda en notas.
 
 Después de «El recorrido del taller», tres slides «Antes de partir» presentan la preparación
 en una columna, con R primero y Python como alternativa secundaria. Incluyen el repo,
-`renv::restore()`, `uv sync --locked` y la configuración de `.Renviron`. La primera prueba muestra
-cinco líneas de R: carga ellmer y `.Renviron`, comprueba la clave sin mostrarla y consulta el modelo.
+`renv::restore()`, `uv sync --locked` y la configuración de `.Renviron`. La primera prueba
+carga ellmer y `.Renviron` y consulta el modelo para comprobar la conexión.
 Los comandos se ejecutan desde la raíz. `.Rprofile` ya activa `renv`; Python carga la clave con `--env-file`.
 Entre los entornos y la prueba de API se presenta OpenAI como proveedor del taller, con GPT-5 nano
-y GPT-5.6 Luna por su relación entre costo y capacidad. Los mismos patrones pueden aplicarse
+y GPT-5.6 Luna. Los mismos patrones pueden aplicarse
 con Anthropic u otros proveedores que admitan las capacidades de cada ejemplo.
 
 El recorrido se divide en tres capítulos: preparar y conversar (App 00–02), consultar y actualizar
-(App 03–05) y actuar sobre la interfaz (App 06–08). App 01–08 terminan con «Ejecutar y explorar»:
+(App 03–05) y actuar sobre la interfaz (App 06–08). App 01–08 terminan con «Ejecutar»:
 comando de R,
 acción o pregunta sugerida y comportamiento a observar. Ejecuta los comandos desde la raíz del repositorio.
 App 00 muestra solo la demo Shinylive, con un visor de 650 px y la app al 80 % de escala.
@@ -45,18 +45,22 @@ Las demos usan los mismos márgenes generales para títulos, párrafos y código
 
 Después de App 08, el cuarto capítulo continúa el recorrido principal con MCP y App 09, por ahora solo en R.
 Incluye una definición breve, una comparación real cacheada sin y con MCP, el código de la app y
-«Ejecutar y explorar». cyanheads mantiene el servidor comunitario; la demo usa datos del FMI.
+«Ejecutar». cyanheads mantiene el servidor comunitario; la demo usa datos del FMI.
 La tabla lee `app-09/data/comparacion.json`: pregunta neutral sobre esperanza de vida en Colombia en 2023.
 La comparación se identifica como histórica del Banco Mundial, sin presentarla como una ejecución del FMI.
-La demo colorea América Latina por inflación y combina crecimiento, inflación y población en 2023 y 2020.
-App 09 usa un solo data() con pais, anio, x_var, y_var, size_var, color_var y map_var, más nombres y unidades.
+La demo colorea América Latina por inflación y agrega crecimiento en X en 2023 y 2020.
+App 09 usa un solo data() con pais, anio, x e y, más nombres, indicadores y unidades.
+Y es la variable de interés: se comparte entre el color del mapa y el eje vertical del gráfico.
 El agente arma esa carga desde el MCP y llama a guardar_datos(); ver_datos() lee lo mostrado.
-La slide «Del MCP a Shiny» muestra el intercambio agente/MCP, la tool local, data() y los cuatro outputs.
+La slide «App 09 · Conectar con MCP · Diagrama» muestra agente/MCP, la tool local, data() y los outputs.
 Cada carga reemplaza la anterior. Mapa y dispersión solo dibujan los países y puntos de esa carga.
 Debajo de los indicadores, Visualización reúne dos cards, Mapa y Gráfico; Datos contiene la tabla.
-La preparación usa dplyr/stringr y la dispersión usa ggplot2 con theme_minimal y escalas logarítmicas opcionales.
-El canvas inicial muestra solo los ejes. Color y tamaño son opcionales; cuatro decimales bastan para el ejemplo.
+La preparación usa dplyr/stringr y la dispersión usa ggplot2 con theme_minimal.
+El canvas inicial muestra ejes vacíos. Los puntos tienen tamaño y color fijos; los ejes son lineales.
+Para un mapa se puede omitir X; filas_vacias conserva las cuatro columnas. No se configuran escalas.
 Las apps R 00–09 usan thematic y ragg para heredar la tipografía de la UI.
+Solo se muestran App 09 y App 09 v2. App 09 v3 conserva la versión configurable como referencia
+fuera de las slides y del catálogo por defecto.
 Después se muestra App 09 v2: el archivo completo con page_chat(), MCP y chat_server(),
 seguido de cómo ejecutarla y una pregunta de ejemplo. Registra todas las tools directamente,
 sin adaptar sus esquemas. El lanzador también incluye esta variante.
@@ -66,9 +70,10 @@ contrastan con las llamadas guardadas; `app-09/verify-comparison.R` permite repe
 sin usar el modelo ni conectarse al servidor. La caché no representa una consulta en tiempo real.
 
 Después de MCP se presentan los casos 50 y 51 como aplicaciones más completas. Una separadora azul
-introduce una tabla con responsabilidades por filas y nombres de tools por aplicación, seguida de las demos.
-Es una decisión de organización de estos ejemplos: resolver, consultar, mostrar e inspeccionar.
-La 50 usa datos locales y la 51 un servicio remoto. Cada demo incluye cómo ejecutarla, qué pedir y qué observar.
+introduce sus diagramas y demos. La 50 usa datos locales y la 51 un servicio remoto.
+Cada demo incluye cómo ejecutarla, qué pedir y qué observar.
+Después de ambas apps, una slide breve describe sus cuatro tareas y muestra los nombres de las funciones.
+No usa tabla y aclara que son ideas útiles para organizar tools, no un framework.
 Los casos conservan su interfaz y no agregan pasos intermedios al recorrido incremental App 00–09.
 
 - La portada, los capítulos y el cierre comparten el fondo azul oscuro.
@@ -86,14 +91,41 @@ de forma general con `--content-gap: 40px` y `--code-gap: 48px`, también dentro
 Los subtítulos después de un párrafo, lista o tabla usan `--section-gap: 56px`, por ejemplo «Observa».
 Las columnas dejan `--column-gap: 40px` a cada lado de su línea divisoria, con separación simétrica.
 No hay excepciones de márgenes por app. Todo el código comparte `--code-max-height: 500px` y scroll.
+Los chunks ejecutados usan contenedores `.cell`: deben conservar esos mismos espacios entre texto,
+código y resultados. La salida de consola usa fuente de 20 px y separación de líneas de 1.44.
+La slide «Los datos que usaremos» muestra las dos líneas de carga, `dplyr::glimpse(paises, width = 100)`
+y el vector `continentes`. `glimpse()` presenta las dimensiones, tipos de columnas y valores de ejemplo,
+sin imprimir todas las filas. Los resultados se calculan desde el CSV al renderizar.
 App 04 incluye debajo una llamada directa y su resultado real:
 30 países de Europa en `data/paises.csv`.
 En App 02, la utilidad reutilizable `.fragment-swap` muestra UI y server uno por vez en el mismo espacio.
 Los archivos completos presentados con `code_block()` conservan sus estilos propios.
 
-Los títulos de las apps nombran la capacidad que se incorpora. App 05 muestra el esquema de propagación
-del cambio y, debajo, el código anotado en la misma slide. Repite la función completa de la slide anterior
-y recorre la llamada del agente, la validación, el estado reactivo, los datos y un output.
+Los títulos siguen `App NN · Nombre · Tipo`, con el mismo nombre en todo el bloque de cada app.
+`Código` se reserva para la app Shiny completa, una vez por app. Los fragmentos usan un nombre que describe
+su contenido, como `Reactividad`, `Cámara`, `Imagen` o `Datos`; los scripts auxiliares usan `Consola`.
+Los demás tipos incluyen `Patrón`, `Diagrama` y `Ejecutar`; la demo Shinylive de App 00 usa `Explorar`.
+Usa siempre `·` como separador y un solo tipo por slide, sin agregar subtipos.
+App 00–09, App 09 v2 y los casos 50–51 incluyen diagramas
+SVG en `assets/`, insertados como HTML dentro de `.architecture-diagram` y centrados con `.content-centered`.
+Comparten la paleta, las flechas y los nodos del diagrama aprobado de App 03.
+El flujo que ya existía queda en gris; los nodos y conexiones nuevos se destacan en azul.
+Conserva el contexto reactivo necesario para ver cómo inputs, datos y outputs siguen conectados.
+Los flujos omitidos de una app anterior no se deben dibujar como si todavía existieran.
+App 00 establece el patrón base; App 09 v2 conserva el agente y el MCP, pero elimina el dashboard.
+En los casos 50–51, el patrón de consultar y mostrar es conocido; se destacan las fuentes de datos.
+Cada diagrama muestra el patrón principal y las notas explican sus límites. Ajusta posiciones y fuentes
+antes de reducir la legibilidad; los nombres largos de tools pueden usar una fuente menor.
+App 02 separa chat y dashboard; App 03 y 04 distinguen llamadas de resultados; App 06 separa el modal
+de la confirmación. App 07 presenta los dos modos que alimentan `data()`.
+App 08 tiene dos diagramas: cámara por proxy y gráfico devuelto al modelo.
+App 09 indica las columnas de cada output: mapa (y), gráfico (x, y) y tabla (x, y).
+guardar_datos recibe datos y variables; el diagrama separa esos argumentos de las columnas de las filas.
+App 09 v2 muestra la conversación con MCP sin dashboard.
+Conserva IDs únicos y textos accesibles en cada SVG, y verifica las flechas contra el código de la app.
+App 05 muestra primero su diagrama de propagación y luego el código anotado en otra slide.
+Repite la función completa de la slide anterior y recorre la llamada del agente, la validación,
+el estado reactivo, los datos y un output.
 En las slides centradas, el código se ajusta al alto disponible y conserva el scroll y las anotaciones.
 App 07 reúne en una sola slide el comando de ejecución, la comparación del mismo filtro mediante
 controles y chat, y el resultado a observar. El recorrido inicial enumera las capacidades sin repetir las apps.

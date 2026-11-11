@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 540" role="img"
+  aria-labelledby="app-08-camera-flow-title app-08-camera-flow-desc">
+  <title id="app-08-camera-flow-title">Datos y proxy actúan sobre el mismo mapa por caminos distintos</title>
+  <desc id="app-08-camera-flow-desc">
+    En gris se conserva actualizar_dashboard, consulta_actual, data y los outputs. El mapa es un nuevo
+    output de data. ir_a_pais consulta coordenadas y usa maplibre_proxy y fly_to para mover la cámara
+    del mismo mapa existente. La nueva ruta azul no modifica data ni consulta_actual y devuelve una
+    confirmación al agente.
+  </desc>
+  <defs>
+    <marker id="app-08-camera-flow-old" viewBox="0 0 10 10" refX="9" refY="5"
+      markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#8c9aa0" stroke-width="1.6"/>
+    </marker>
+    <marker id="app-08-camera-flow-new" viewBox="0 0 10 10" refX="9" refY="5"
+      markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#174a70" stroke-width="1.6"/>
+    </marker>
+  </defs>
+  <path d="M 320 90 H 398" fill="none" stroke="#8c9aa0" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-08-camera-flow-old)"/>
+  <path d="M 710 90 H 788" fill="none" stroke="#8c9aa0" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-08-camera-flow-old)"/>
+  <path d="M 1020 90 H 1108" fill="none" stroke="#8c9aa0" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-08-camera-flow-old)"/>
+  <path d="M 145 350 V 157" fill="none" stroke="#8c9aa0" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-08-camera-flow-old)"/>
+  <path d="M 910 145 V 230 H 1260 V 338" fill="none" stroke="#174a70" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-08-camera-flow-new)"/>
+  <path d="M 270 390 H 348" fill="none" stroke="#174a70" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-08-camera-flow-new)"/>
+  <path d="M 360 435 H 282" fill="none" stroke="#174a70" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-08-camera-flow-new)"/>
+  <path d="M 680 405 H 758" fill="none" stroke="#174a70" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-08-camera-flow-new)"/>
+  <path d="M 1050 405 H 1128" fill="none" stroke="#174a70" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-08-camera-flow-new)"/>
+  <rect x="20" y="35" width="300" height="110" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="410" y="35" width="300" height="110" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="800" y="35" width="220" height="110" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="1120" y="10" width="260" height="110" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="20" y="350" width="250" height="110" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="360" y="350" width="320" height="110" rx="16"
+    fill="#e5edf1" stroke="#174a70" stroke-width="2"/>
+  <rect x="770" y="350" width="280" height="110" rx="16"
+    fill="#e5edf1" stroke="#174a70" stroke-width="2"/>
+  <rect x="1140" y="350" width="240" height="110" rx="16"
+    fill="#e5edf1" stroke="#174a70" stroke-width="2"/>
+  <g font-family="inherit" text-anchor="middle">
+    <text x="170.0" y="82.0" font-size="21" fill="#5f6d72"
+      font-family="IBM Plex Mono, monospace">actualizar_dashboard()</text>
+    <text x="170.0" y="114.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Actualiza el SQL</text>
+    <text x="560.0" y="98.0" font-size="23" fill="#5f6d72"
+      font-family="IBM Plex Mono, monospace">consulta_actual()</text>
+    <text x="910.0" y="98.0" font-size="30" fill="#5f6d72"
+      font-family="IBM Plex Mono, monospace">data()</text>
+    <text x="1250.0" y="57.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Indicadores</text>
+    <text x="1250.0" y="89.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Gráfico y tabla</text>
+    <text x="145.0" y="413.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Agente</text>
+    <text x="520.0" y="397.0" font-size="27" fill="#174a70"
+      font-family="IBM Plex Mono, monospace">ir_a_pais()</text>
+    <text x="520.0" y="429.0" font-size="25" fill="#174a70"
+      font-family="inherit">Busca coordenadas</text>
+    <text x="910.0" y="397.0" font-size="22" fill="#174a70"
+      font-family="IBM Plex Mono, monospace">maplibre_proxy()</text>
+    <text x="910.0" y="429.0" font-size="25" fill="#174a70"
+      font-family="IBM Plex Mono, monospace">fly_to()</text>
+    <text x="1260.0" y="397.0" font-size="25" fill="#174a70"
+      font-family="inherit">Mapa</text>
+    <text x="1260.0" y="429.0" font-size="25" fill="#174a70"
+      font-family="inherit">Centro y zoom</text>
+    <text x="1130" y="215" font-size="22" fill="#174a70"
+      font-family="inherit">datos: redibuja</text>
+    <text x="1100" y="490" font-size="22" fill="#174a70"
+      font-family="inherit">proxy: mueve la cámara</text>
+    <text x="520" y="320" font-size="20" fill="#174a70"
+      font-family="inherit">NUEVO: CONTROL DE CÁMARA</text>
+    <text x="315" y="480" font-size="20" fill="#174a70"
+      font-family="inherit">confirmación</text>
+  </g>
+</svg>

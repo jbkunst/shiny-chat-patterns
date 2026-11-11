@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 540" role="img"
+  aria-labelledby="app-04-flow-title app-04-flow-desc">
+  <title id="app-04-flow-title">SQL sobre la tabla completa y dashboard con filtro manual</title>
+  <desc id="app-04-flow-desc">
+    En gris se conserva el filtro que actualiza data y los outputs. En azul, consultar_tabla valida un
+    SELECT y consulta la tabla completa paises en DuckDB. El agente recibe las filas para responder;
+    esta tool no cambia el filtro ni los datos reactivos del dashboard.
+  </desc>
+  <defs>
+    <marker id="app-04-flow-old" viewBox="0 0 10 10" refX="9" refY="5"
+      markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#8c9aa0" stroke-width="1.6"/>
+    </marker>
+    <marker id="app-04-flow-new" viewBox="0 0 10 10" refX="9" refY="5"
+      markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#174a70" stroke-width="1.6"/>
+    </marker>
+  </defs>
+  <path d="M 370 100 H 508" fill="none" stroke="#8c9aa0" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-04-flow-old)"/>
+  <path d="M 980 100 H 1050 V 45 H 1108" fill="none" stroke="#8c9aa0" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-04-flow-old)"/>
+  <path d="M 980 100 H 1050 V 135 H 1108" fill="none" stroke="#8c9aa0" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-04-flow-old)"/>
+  <path d="M 980 100 H 1050 V 225 H 1108" fill="none" stroke="#8c9aa0" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-04-flow-old)"/>
+  <path d="M 370 390 H 508" fill="none" stroke="#174a70" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-04-flow-new)"/>
+  <path d="M 520 435 H 382" fill="none" stroke="#174a70" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-04-flow-new)"/>
+  <path d="M 980 390 H 1108" fill="none" stroke="#174a70" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-04-flow-new)"/>
+  <path d="M 1120 435 H 992" fill="none" stroke="#174a70" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-04-flow-new)"/>
+  <rect x="20" y="45" width="350" height="110" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="520" y="45" width="460" height="110" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="1120" y="10" width="260" height="70" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="1120" y="100" width="260" height="70" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="1120" y="190" width="260" height="70" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="20" y="355" width="350" height="110" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="520" y="355" width="460" height="110" rx="16"
+    fill="#e5edf1" stroke="#174a70" stroke-width="2"/>
+  <rect x="1120" y="355" width="260" height="110" rx="16"
+    fill="#e5edf1" stroke="#174a70" stroke-width="2"/>
+  <g font-family="inherit" text-anchor="middle">
+    <text x="195.0" y="92.0" font-size="24" fill="#5f6d72"
+      font-family="IBM Plex Mono, monospace">input$continente</text>
+    <text x="195.0" y="124.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Filtro de continente</text>
+    <text x="750.0" y="92.0" font-size="30" fill="#5f6d72"
+      font-family="IBM Plex Mono, monospace">data()</text>
+    <text x="750.0" y="124.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Países visibles</text>
+    <text x="1250.0" y="53.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Indicadores</text>
+    <text x="1250.0" y="143.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Gráfico</text>
+    <text x="1250.0" y="233.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Tabla</text>
+    <text x="195" y="25" font-size="20" fill="#5f6d72"
+      font-family="inherit">FLUJO YA CONOCIDO</text>
+    <text x="195.0" y="402.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Agente</text>
+    <text x="195.0" y="434.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Pregunta y respuesta</text>
+    <text x="750.0" y="402.0" font-size="24" fill="#174a70"
+      font-family="IBM Plex Mono, monospace">consultar_tabla(consulta)</text>
+    <text x="750.0" y="434.0" font-size="25" fill="#174a70"
+      font-family="inherit">Valida el SELECT</text>
+    <text x="1250.0" y="402.0" font-size="25" fill="#174a70"
+      font-family="inherit">DuckDB</text>
+    <text x="1250.0" y="434.0" font-size="25" fill="#174a70"
+      font-family="inherit">paises completa</text>
+    <text x="445" y="370" font-size="21" fill="#174a70"
+      font-family="inherit">llama</text>
+    <text x="445" y="480" font-size="21" fill="#174a70"
+      font-family="inherit">filas</text>
+    <text x="1050" y="370" font-size="21" fill="#174a70"
+      font-family="inherit">SELECT</text>
+    <text x="1050" y="480" font-size="21" fill="#174a70"
+      font-family="inherit">filas</text>
+    <text x="750" y="325" font-size="20" fill="#174a70"
+      font-family="inherit">NUEVO: CONSULTA SQL DE SOLO LECTURA</text>
+  </g>
+</svg>

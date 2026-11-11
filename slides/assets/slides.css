@@ -150,21 +150,31 @@ html.reveal-print .reveal .slides {
 
 /* Content spacing is shared by paragraphs, headings, code and columns. */
 .reveal .slides > section:not(.quarto-title-block):not(.section-slide)
-  :where(p, h3, .code-copy-outer-scaffold, .columns, table) {
+  :where(p, h3, .code-copy-outer-scaffold, .cell, .columns, table) {
   margin: 0;
 }
 
 .reveal .slides > section:not(.quarto-title-block):not(.section-slide)
-  :where(p, h3, .code-copy-outer-scaffold, .columns, table, .reactivity-flow, .architecture-diagram)
-  + :where(p, h3, .code-copy-outer-scaffold, .columns, table, .reactivity-flow, .architecture-diagram) {
+  :where(p, h3, .code-copy-outer-scaffold, .cell, .columns, table, .reactivity-flow, .architecture-diagram)
+  + :where(p, h3, .code-copy-outer-scaffold, .cell, .columns, table, .reactivity-flow, .architecture-diagram) {
   margin-top: var(--content-gap);
 }
 
 .reveal .slides > section:not(.quarto-title-block):not(.section-slide)
-  :where(p, h3) + .code-copy-outer-scaffold,
+  :where(p, h3) + :where(.code-copy-outer-scaffold, .cell),
 .reveal .slides > section:not(.quarto-title-block):not(.section-slide)
-  .code-copy-outer-scaffold + :where(p, h3) {
+  :where(.code-copy-outer-scaffold, .cell) + :where(p, h3) {
   margin-top: var(--code-gap);
+}
+
+/* Executed R chunks use a cell wrapper around code and console output. */
+.reveal .cell > .code-copy-outer-scaffold + .cell-output {
+  margin-top: var(--content-gap);
+}
+
+.reveal .cell-output pre > code {
+  font-size: 20px;
+  line-height: 1.44;
 }
 
 /* Separate a new subsection from the preceding paragraph, list or table. */
@@ -306,33 +316,6 @@ html.reveal-print .reveal .slides {
 
 .reveal .mcp-comparison th:first-child {
   width: 27%;
-}
-
-.reveal .case-structure table {
-  width: 100%;
-  table-layout: fixed;
-  margin: 32px 0;
-  font-size: 25px;
-  line-height: 1.35;
-}
-
-.reveal .case-structure th,
-.reveal .case-structure td {
-  padding: 18px 16px;
-  vertical-align: top;
-}
-
-.reveal .case-structure th:first-child {
-  width: 22%;
-}
-
-.reveal .case-structure code {
-  font-size: 23px;
-}
-
-.reveal .slides > section.case-structure:not(.section-slide) > p {
-  margin: 0 0 24px;
-  font-size: 27px;
 }
 
 .reveal .slides > section.comparison-slide > table {
@@ -735,7 +718,8 @@ body:has(.package-slide.present) .reveal {
 }
 
 /* Content components --------------------------------------------------- */
-.reveal .columns {
+.reveal .slides .columns {
+  display: flex;
   gap: 0;
   margin-top: var(--content-gap);
 }

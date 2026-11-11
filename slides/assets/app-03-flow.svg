@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 540" role="img"
+  aria-labelledby="app-03-flow-title app-03-flow-desc">
+  <title id="app-03-flow-title">El filtro actualiza la vista y la tool consulta los datos visibles</title>
+  <desc id="app-03-flow-desc">
+    El filtro de continente cambia data y Shiny actualiza indicadores, gráfico y tabla.
+    El agente llama a resumir_datos_visibles, que lee isolate(data()) y devuelve un resumen.
+    El flujo reactivo anterior aparece en gris; la conexión nueva del agente aparece en azul.
+    La tool lee los países visibles al ejecutarse, sin modificar los datos ni los outputs.
+  </desc>
+  <defs>
+    <marker id="app-03-flow-arrow" viewBox="0 0 10 10" refX="9" refY="5"
+      markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#174a70" stroke-width="1.6"/>
+    </marker>
+    <marker id="app-03-reactive-arrow" viewBox="0 0 10 10" refX="9" refY="5"
+      markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#8c9aa0" stroke-width="1.6"/>
+    </marker>
+  </defs>
+
+  <g fill="none" stroke="#8c9aa0" stroke-width="2.5" stroke-linecap="round">
+    <path d="M 370 125 H 508" marker-end="url(#app-03-reactive-arrow)"/>
+    <path d="M 980 125 H 1050"/>
+    <path d="M 1050 55 V 235"/>
+    <path d="M 1050 55 H 1108" marker-end="url(#app-03-reactive-arrow)"/>
+    <path d="M 1050 145 H 1108" marker-end="url(#app-03-reactive-arrow)"/>
+    <path d="M 1050 235 H 1108" marker-end="url(#app-03-reactive-arrow)"/>
+  </g>
+  <g fill="none" stroke="#174a70" stroke-width="2.5" stroke-linecap="round">
+    <path d="M 370 405 H 508" marker-end="url(#app-03-flow-arrow)"/>
+    <path d="M 520 455 H 382" marker-end="url(#app-03-flow-arrow)"/>
+    <path d="M 690 370 V 192" marker-end="url(#app-03-flow-arrow)"/>
+    <path d="M 810 180 V 358" marker-end="url(#app-03-flow-arrow)"/>
+  </g>
+
+  <g fill="#fffefa" stroke="#ced9dc" stroke-width="2">
+    <rect x="20" y="70" width="350" height="110" rx="16"/>
+    <rect x="520" y="70" width="460" height="110" rx="16"/>
+    <rect x="1120" y="20" width="260" height="70" rx="12"/>
+    <rect x="1120" y="110" width="260" height="70" rx="12"/>
+    <rect x="1120" y="200" width="260" height="70" rx="12"/>
+    <rect x="20" y="370" width="350" height="130" rx="16"/>
+  </g>
+  <rect x="520" y="370" width="460" height="130" rx="16"
+    fill="#e5edf1" stroke="#174a70" stroke-width="2.5"/>
+
+  <g font-family="inherit" text-anchor="middle" fill="#5f6d72">
+    <text x="195" y="35" font-size="21">FLUJO REACTIVO DE APP 01</text>
+    <text x="195" y="114" font-size="28">Filtro de continente</text>
+    <text x="195" y="150" font-size="24"
+      font-family="IBM Plex Mono, monospace">input$continente</text>
+    <text x="750" y="114" font-size="32" font-family="IBM Plex Mono, monospace">data()</text>
+    <text x="750" y="150" font-size="27">Países visibles</text>
+    <g font-size="27">
+      <text x="1250" y="65">Indicadores</text>
+      <text x="1250" y="155">Gráfico</text>
+      <text x="1250" y="245">Tabla</text>
+    </g>
+  </g>
+  <g font-family="inherit" text-anchor="middle" fill="#174a70">
+    <text x="195" y="335" font-size="21">NUEVO EN APP 03</text>
+    <text x="445" y="385" font-size="21">llama</text>
+    <text x="445" y="485" font-size="21">resumen</text>
+    <text x="650" y="280" font-size="23">lee</text>
+    <text x="925" y="280" font-size="23">países visibles</text>
+    <text x="750" y="535" font-size="22">Lectura puntual con isolate(data())</text>
+    <text x="750" y="425" font-size="25"
+      font-family="IBM Plex Mono, monospace">resumir_datos_visibles()</text>
+  </g>
+  <g font-family="inherit" text-anchor="middle" fill="#263338" font-size="27">
+    <text x="195" y="425">Agente</text>
+    <text x="195" y="460">Pregunta y respuesta</text>
+    <text x="750" y="460">Calcula un resumen</text>
+  </g>
+</svg>

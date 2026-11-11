@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 540" role="img"
+  aria-labelledby="app-07-flow-title app-07-flow-desc">
+  <title id="app-07-flow-title">Dos modos alimentan los mismos datos y outputs</title>
+  <desc id="app-07-flow-desc">
+    El agente y actualizar_dashboard conservan en gris la consulta SQL del ejemplo anterior. En azul se
+    agregan los filtros tradicionales, data_inputs y la selección del modo activo. data elige el
+    resultado de la consulta SQL o los filtros manuales y alimenta los mismos outputs. La última
+    interacción selecciona el modo; el chat reinicia los controles antes de activar query.
+  </desc>
+  <defs>
+    <marker id="app-07-flow-old" viewBox="0 0 10 10" refX="9" refY="5"
+      markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#8c9aa0" stroke-width="1.6"/>
+    </marker>
+    <marker id="app-07-flow-new" viewBox="0 0 10 10" refX="9" refY="5"
+      markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#174a70" stroke-width="1.6"/>
+    </marker>
+  </defs>
+  <path d="M 300 110 H 358" fill="none" stroke="#174a70" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-07-flow-new)"/>
+  <path d="M 720 110 L 838 240" fill="none" stroke="#174a70" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-07-flow-new)"/>
+  <path d="M 300 400 H 358" fill="none" stroke="#8c9aa0" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-07-flow-old)"/>
+  <path d="M 720 395 L 838 300" fill="none" stroke="#174a70" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-07-flow-new)"/>
+  <path d="M 1070 270 H 1148" fill="none" stroke="#8c9aa0" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-07-flow-old)"/>
+  <rect x="20" y="55" width="280" height="110" rx="16"
+    fill="#e5edf1" stroke="#174a70" stroke-width="2"/>
+  <rect x="370" y="55" width="350" height="110" rx="16"
+    fill="#e5edf1" stroke="#174a70" stroke-width="2"/>
+  <rect x="20" y="345" width="280" height="110" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="370" y="325" width="350" height="140" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="850" y="200" width="220" height="140" rx="16"
+    fill="#e5edf1" stroke="#174a70" stroke-width="2"/>
+  <rect x="1160" y="200" width="220" height="140" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <g font-family="inherit" text-anchor="middle">
+    <text x="160.0" y="102.0" font-size="25" fill="#174a70"
+      font-family="inherit">Controles</text>
+    <text x="160.0" y="134.0" font-size="25" fill="#174a70"
+      font-family="inherit">Filtros manuales</text>
+    <text x="545.0" y="102.0" font-size="27" fill="#174a70"
+      font-family="IBM Plex Mono, monospace">data_inputs()</text>
+    <text x="545.0" y="134.0" font-size="25" fill="#174a70"
+      font-family="inherit">Filtra los países</text>
+    <text x="160.0" y="392.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Agente</text>
+    <text x="160.0" y="424.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Pedido por chat</text>
+    <text x="545.0" y="387.0" font-size="23" fill="#5f6d72"
+      font-family="IBM Plex Mono, monospace">actualizar_dashboard()</text>
+    <text x="545.0" y="419.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Guarda consulta_actual()</text>
+    <text x="960.0" y="262.0" font-size="30" fill="#174a70"
+      font-family="IBM Plex Mono, monospace">data()</text>
+    <text x="960.0" y="294.0" font-size="25" fill="#174a70"
+      font-family="inherit">Según modo()</text>
+    <text x="1270.0" y="246.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Outputs</text>
+    <text x="1270.0" y="278.0" font-size="22" fill="#5f6d72"
+      font-family="inherit">Indicadores</text>
+    <text x="1270.0" y="310.0" font-size="22" fill="#5f6d72"
+      font-family="inherit">Gráfico y tabla</text>
+    <text x="545" y="25" font-size="20" fill="#174a70"
+      font-family="inherit">NUEVO: FILTROS Y SELECCIÓN DEL MODO</text>
+    <text x="545" y="500" font-size="20" fill="#5f6d72"
+      font-family="inherit">CONSULTA SQL YA CONOCIDA</text>
+  </g>
+</svg>

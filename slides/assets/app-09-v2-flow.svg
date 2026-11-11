@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 540" role="img"
+  aria-labelledby="app-09-v2-flow-title app-09-v2-flow-desc">
+  <title id="app-09-v2-flow-title">El mismo agente con MCP se usa en un chat mínimo</title>
+  <desc id="app-09-v2-flow-desc">
+    El cliente ellmer, el servidor MCP y los datos del FMI ya se conocen y aparecen en gris. En azul se
+    destaca la variante page_chat y chat_server: presenta la conversación y gestiona mensajes,
+    herramientas y streaming. Esta variante no incluye dashboard, data reactiva para outputs ni tools
+    locales de visualización.
+  </desc>
+  <defs>
+    <marker id="app-09-v2-flow-old" viewBox="0 0 10 10" refX="9" refY="5"
+      markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#8c9aa0" stroke-width="1.6"/>
+    </marker>
+    <marker id="app-09-v2-flow-new" viewBox="0 0 10 10" refX="9" refY="5"
+      markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#174a70" stroke-width="1.6"/>
+    </marker>
+  </defs>
+  <path d="M 330 250 H 438" fill="none" stroke="#174a70" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-09-v2-flow-new)"/>
+  <path d="M 450 300 H 342" fill="none" stroke="#174a70" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-09-v2-flow-new)"/>
+  <path d="M 720 250 H 828" fill="none" stroke="#8c9aa0" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-09-v2-flow-old)"/>
+  <path d="M 840 300 H 732" fill="none" stroke="#8c9aa0" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-09-v2-flow-old)"/>
+  <path d="M 1110 250 H 1218" fill="none" stroke="#8c9aa0" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-09-v2-flow-old)"/>
+  <path d="M 1230 300 H 1122" fill="none" stroke="#8c9aa0" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-09-v2-flow-old)"/>
+  <rect x="20" y="210" width="310" height="130" rx="16"
+    fill="#e5edf1" stroke="#174a70" stroke-width="2"/>
+  <rect x="450" y="220" width="270" height="110" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="840" y="220" width="270" height="110" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="1230" y="220" width="150" height="110" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <g font-family="inherit" text-anchor="middle">
+    <text x="175.0" y="267.0" font-size="25" fill="#174a70"
+      font-family="IBM Plex Mono, monospace">page_chat()</text>
+    <text x="175.0" y="299.0" font-size="25" fill="#174a70"
+      font-family="IBM Plex Mono, monospace">chat_server()</text>
+    <text x="585.0" y="267.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Agente</text>
+    <text x="585.0" y="299.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">ellmer por sesión</text>
+    <text x="975.0" y="267.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Servidor MCP</text>
+    <text x="975.0" y="299.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Tools remotas</text>
+    <text x="1305.0" y="267.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">FMI</text>
+    <text x="1305.0" y="299.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Datos</text>
+    <text x="390.0" y="220" font-size="21" fill="#174a70"
+      font-family="inherit">mensaje</text>
+    <text x="390.0" y="370" font-size="21" fill="#174a70"
+      font-family="inherit">respuesta</text>
+    <text x="780.0" y="220" font-size="21" fill="#5f6d72"
+      font-family="inherit">llamada</text>
+    <text x="780.0" y="370" font-size="21" fill="#5f6d72"
+      font-family="inherit">resultado</text>
+    <text x="1170.0" y="220" font-size="21" fill="#5f6d72"
+      font-family="inherit">consulta</text>
+    <text x="1170.0" y="370" font-size="21" fill="#5f6d72"
+      font-family="inherit">datos</text>
+    <text x="700" y="100" font-size="20" fill="#174a70"
+      font-family="inherit">NUEVO: INTERFAZ MÍNIMA, SIN DASHBOARD</text>
+  </g>
+</svg>

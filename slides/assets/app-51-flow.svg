@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 540" role="img"
+  aria-labelledby="app-51-flow-title app-51-flow-desc">
+  <title id="app-51-flow-title">La consulta SDMX alimenta una visualización elegida por el agente</title>
+  <desc id="app-51-flow-desc">
+    En gris se conserva el patrón de resolver, consultar y mostrar una vista reactiva. La fuente de
+    Banrep y consultar_sdmx aparecen en azul: descargan XML por REST, extraen observaciones y las
+    guardan en consultas. El catálogo de series es local. visualizar_serie selecciona una serie
+    descargada en serie_visible; los outputs muestran el gráfico y la tabla. Descargar por sí solo no
+    cambia la serie visible.
+  </desc>
+  <defs>
+    <marker id="app-51-flow-old" viewBox="0 0 10 10" refX="9" refY="5"
+      markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#8c9aa0" stroke-width="1.6"/>
+    </marker>
+    <marker id="app-51-flow-new" viewBox="0 0 10 10" refX="9" refY="5"
+      markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#174a70" stroke-width="1.6"/>
+    </marker>
+  </defs>
+  <path d="M 195 355 V 157" fill="none" stroke="#8c9aa0" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-51-flow-old)"/>
+  <path d="M 420 90 H 558" fill="none" stroke="#174a70" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-51-flow-new)"/>
+  <path d="M 370 410 H 558" fill="none" stroke="#174a70" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-51-flow-new)"/>
+  <path d="M 690 335 V 157" fill="none" stroke="#174a70" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-51-flow-new)"/>
+  <path d="M 850 145 V 323" fill="none" stroke="#174a70" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-51-flow-new)"/>
+  <path d="M 970 410 H 1068" fill="none" stroke="#8c9aa0" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-51-flow-old)"/>
+  <path d="M 1230 350 V 157" fill="none" stroke="#8c9aa0" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-51-flow-old)"/>
+  <rect x="20" y="35" width="400" height="110" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="570" y="35" width="400" height="110" rx="16"
+    fill="#e5edf1" stroke="#174a70" stroke-width="2"/>
+  <rect x="1080" y="35" width="300" height="110" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="20" y="355" width="350" height="110" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="570" y="335" width="400" height="150" rx="16"
+    fill="#e5edf1" stroke="#174a70" stroke-width="2"/>
+  <rect x="1080" y="350" width="300" height="130" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <g font-family="inherit" text-anchor="middle">
+    <text x="220.0" y="82.0" font-size="26" fill="#5f6d72"
+      font-family="IBM Plex Mono, monospace">resolver_serie()</text>
+    <text x="220.0" y="114.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Resuelve el pedido</text>
+    <text x="770.0" y="82.0" font-size="25" fill="#174a70"
+      font-family="inherit">Catálogo local de series</text>
+    <text x="770.0" y="114.0" font-size="25" fill="#174a70"
+      font-family="inherit">Banrep · SDMX REST/XML</text>
+    <text x="1230.0" y="82.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Gráfico y tabla</text>
+    <text x="1230.0" y="114.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Serie visible</text>
+    <text x="195.0" y="418.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Agente</text>
+    <text x="770.0" y="386.0" font-size="25" fill="#174a70"
+      font-family="IBM Plex Mono, monospace">consultar_sdmx()</text>
+    <text x="770.0" y="418.0" font-size="25" fill="#174a70"
+      font-family="inherit">Obtiene y prepara datos</text>
+    <text x="770.0" y="450.0" font-size="23" fill="#174a70"
+      font-family="IBM Plex Mono, monospace">consultas()</text>
+    <text x="1230.0" y="407.0" font-size="22" fill="#5f6d72"
+      font-family="IBM Plex Mono, monospace">visualizar_serie()</text>
+    <text x="1230.0" y="439.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Actualiza la vista</text>
+    <text x="495" y="65" font-size="21" fill="#174a70"
+      font-family="inherit">catálogo</text>
+    <text x="470" y="385" font-size="21" fill="#174a70"
+      font-family="inherit">consulta</text>
+    <text x="640" y="250" font-size="21" fill="#174a70"
+      font-family="inherit">REST</text>
+    <text x="955" y="250" font-size="21" fill="#174a70"
+      font-family="inherit">observaciones</text>
+    <text x="1020" y="385" font-size="21" fill="#5f6d72"
+      font-family="inherit">prepara</text>
+    <text x="1300" y="255" font-size="21" fill="#5f6d72"
+      font-family="inherit">estado</text>
+    <text x="770" y="525" font-size="20" fill="#174a70"
+      font-family="inherit">CASO NUEVO: SERVICIO SDMX DE BANREP</text>
+  </g>
+</svg>

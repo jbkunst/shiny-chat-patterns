@@ -32,7 +32,25 @@ Reserva `00–49` para el recorrido del taller, `50–89` para casos de aplicaci
 - `app-07`: compara filtros tradicionales con una consulta solicitada por chat.
 - `app-08`: conserva el globo y las actualizaciones de cámara tipo proxy; completa
   `mostrar_grafico()` para abrir el modal y devolver la imagen al modelo.
-- `app-09`: extensión en R con el MCP comunitario de cyanheads para datos del FMI.
+- `app-09`: dashboard sencillo en R con el MCP comunitario de cyanheads para el FMI.
+  Registra todas sus tools directamente con set_tools(mcp_tools("mcp.json")), sin adaptar sus esquemas.
+  Sin SQL ni datos numéricos iniciales. Solo data() guarda la carga que alimenta todos los outputs.
+  Las filas tienen pais, anio, x e y; los metadatos conservan columna, indicador, nombre y unidad.
+  Y es la variable de interés: se usa en el mapa y en el eje vertical; X es el eje horizontal.
+  La tabla muestra pais, anio, x e y. El gráfico usa tamaño fijo, color uniforme y ejes lineales.
+  Para un mapa se puede omitir X. filas_vacias conserva las columnas opcionales al guardar.
+  guardar_datos(datos, variables) reemplaza la carga; ver_datos() la devuelve sin modificarla.
+  Solo se dibujan países y puntos recibidos. Sin filtros regionales, series ni configuración de escalas.
+  Usa theme_minimal(), ejes vacíos sin datos y la misma separación Visualización/Datos de la variante anterior.
+  La demo usa crecimiento en X e inflación en Y y en el mapa; compara América Latina en 2023 y 2020.
+  La comparación cacheada sigue siendo del Banco Mundial: esperanza de vida en Colombia en 2023.
+  Las slides muestran solo app-09 y app-09-v2. La versión Python sigue pendiente.
+- `app-09-v2`: variante mínima en R con page_chat(), chat_server() y un cliente ellmer por sesión.
+  Conversa con herramientas MCP sin dashboard ni tools locales de visualización.
+  Registra todas las tools del FMI con set_tools(mcp_tools("mcp-imf.json")), sin adaptar sus esquemas.
+  Conserva mcp.json con el Banco Mundial como alternativa para comparar.
+- `app-09-v3`: variante configurable conservada como referencia fuera de las slides y del catálogo.
+  Mantiene la extensión en R con el MCP comunitario de cyanheads para datos del FMI.
   Registra todas sus tools directamente con mcp_tools("mcp.json"), sin ajustes ni source auxiliar.
   mcp-tools.R y mcp-worldbank.json se conservan como ajuste específico del MCP del Banco Mundial.
   Sin SQL ni datos numéricos iniciales. Solo data() guarda filas y metadatos para todos los outputs.
@@ -53,10 +71,6 @@ Reserva `00–49` para el recorrido del taller, `50–89` para casos de aplicaci
   La demo del FMI usa inflación en el mapa, crecimiento en X, inflación en Y y población como tamaño.
   Compara América Latina en 2023 y 2020, con ejes lineales para conservar crecimientos negativos.
   La versión Python queda pendiente hasta revisar el ejemplo R.
-- `app-09-v2`: variante mínima en R con page_chat(), chat_server() y un cliente ellmer por sesión.
-  Conversa con herramientas MCP sin dashboard ni tools locales de visualización.
-  Registra todas las tools del FMI con set_tools(mcp_tools("mcp-imf.json")), sin adaptar sus esquemas.
-  Conserva mcp.json con el Banco Mundial como alternativa para comparar.
 - `app-50-colombia-territorial`: caso territorial con datos departamentales de
   Colombia y chat flotante.
 - `app-51-banrep-sdmx`: caso económico que consulta series de Banrep mediante
@@ -104,11 +118,15 @@ Conserva su identidad visual; no los simplifiques para hacerlos iguales a las ap
   de dos tools del clima conserva las validaciones de ciudad y fecha.
 - Los ejemplos SQL deben ser de solo lectura y estar restringidos a la tabla
   correspondiente.
+- App 04–08 llaman `consultar_tabla(consulta)` a la tool SQL de lectura sobre la tabla `paises`.
+  Conserva ese nombre en R, Python, prompts, consolas, documentación y slides.
 - No inventes resultados numéricos cuando una tool pueda obtenerlos desde los
   datos.
 
 ## Ejemplos de consola y slides
 
+- Después de modificar una slide o su diagrama, informa su línea de inicio actual en `slides/index.qmd`
+  con un enlace al archivo y la línea, para abrirla y renderizarla directamente en el Viewer.
 - El README raíz es la guía del taller: conserva el recorrido, las tablas y la configuración común.
   Documenta la implementación, preparación de datos y particularidades en el README de cada app.
 - Conserva parejas equivalentes entre `R/01_ellmer.R`–`R/04_ellmer_imagen.R` y los scripts de `python/`.
@@ -118,6 +136,25 @@ Conserva su identidad visual; no los simplifiques para hacerlos iguales a las ap
 - Divide las slides en los tres capítulos principales y una extensión MCP después de App 08.
   Los capítulos son azules; los paquetes, claros.
 - App 01–08 terminan con cómo ejecutar la app, qué hacer y qué observar. App 00 usa solo Shinylive.
+- Los títulos de slides de una app siguen `App NN · Nombre · Tipo`, conservando el mismo nombre
+  en todo su bloque. Reserva `Código` solo para la app Shiny completa, una vez por app.
+  Los fragmentos nombran su contenido, por ejemplo `Reactividad`, `Cámara`, `Imagen` o `Datos`;
+  los scripts auxiliares usan `Consola`. Usa también `Patrón`, `Diagrama` y `Ejecutar` según corresponda.
+  App 00 termina con `Explorar`.
+  Usa siempre `·` como separador y solo esas tres partes, sin subtipos como `Código · Datos`.
+- En los diagramas, conserva el contexto necesario de la app anterior en gris y destaca la capacidad
+  nueva en azul. Incluye las conexiones entre inputs, datos y outputs cuando sigan presentes.
+  No arrastres componentes eliminados ni sugieras actualizaciones reactivas donde se usa `isolate()`.
+  Ajusta la distribución y reduce la fuente si hace falta, verificando que siga siendo legible al proyectar.
+- En las tools de visualización del diagrama, muestra los argumentos en gris tenue para distinguir
+  los parámetros que elige el agente de los datos reactivos que usa la tool.
+- Conserva el espaciado general de `slides/assets/slides.css`: `--content-gap: 40px`,
+  `--code-gap: 48px` entre texto y código o resultados, y `--section-gap: 56px` antes de subtítulos.
+  Incluye los contenedores `.cell` de Quarto en esas reglas; no agregues márgenes específicos por slide.
+- Al mostrar `head(datos, n)`, aclara que son las primeras `n` filas, no el dataset completo.
+- Al agregar, eliminar o mover líneas en un archivo mostrado con `code_block()`, revisa y actualiza
+  sus rangos en `slides/index.qmd`. Comprueba contra el archivo fuente que cada rango resalte
+  exactamente el código descrito por su comentario, no solo que los números de línea existan.
 
 ## Estilo de código
 

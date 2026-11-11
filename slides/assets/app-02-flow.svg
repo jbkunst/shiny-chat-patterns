@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 540" role="img"
+  aria-labelledby="app-02-flow-title app-02-flow-desc">
+  <title id="app-02-flow-title">El chat se agrega al dashboard sin compartir sus datos</title>
+  <desc id="app-02-flow-desc">
+    El filtro, data y los outputs conservan en gris el flujo de App 01. El camino nuevo del mensaje al
+    modelo y de la respuesta al chat aparece en azul. Los dos caminos todavía no están conectados.
+  </desc>
+  <defs>
+    <marker id="app-02-flow-old" viewBox="0 0 10 10" refX="9" refY="5"
+      markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#8c9aa0" stroke-width="1.6"/>
+    </marker>
+    <marker id="app-02-flow-new" viewBox="0 0 10 10" refX="9" refY="5"
+      markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#174a70" stroke-width="1.6"/>
+    </marker>
+  </defs>
+  <path d="M 370 100 H 508" fill="none" stroke="#8c9aa0" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-02-flow-old)"/>
+  <path d="M 980 100 H 1050 V 45 H 1108" fill="none" stroke="#8c9aa0" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-02-flow-old)"/>
+  <path d="M 980 100 H 1050 V 135 H 1108" fill="none" stroke="#8c9aa0" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-02-flow-old)"/>
+  <path d="M 980 100 H 1050 V 225 H 1108" fill="none" stroke="#8c9aa0" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-02-flow-old)"/>
+  <path d="M 370 405 H 508" fill="none" stroke="#174a70" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-02-flow-new)"/>
+  <path d="M 980 405 H 1108" fill="none" stroke="#174a70" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#app-02-flow-new)"/>
+  <rect x="20" y="45" width="350" height="110" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="520" y="45" width="460" height="110" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="1120" y="10" width="260" height="70" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="1120" y="100" width="260" height="70" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="1120" y="190" width="260" height="70" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="20" y="350" width="350" height="110" rx="16"
+    fill="#e5edf1" stroke="#174a70" stroke-width="2"/>
+  <rect x="520" y="350" width="460" height="110" rx="16"
+    fill="#e5edf1" stroke="#174a70" stroke-width="2"/>
+  <rect x="1120" y="350" width="260" height="110" rx="16"
+    fill="#e5edf1" stroke="#174a70" stroke-width="2"/>
+  <g font-family="inherit" text-anchor="middle">
+    <text x="195.0" y="92.0" font-size="24" fill="#5f6d72"
+      font-family="IBM Plex Mono, monospace">input$continente</text>
+    <text x="195.0" y="124.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Filtro de continente</text>
+    <text x="750.0" y="92.0" font-size="30" fill="#5f6d72"
+      font-family="IBM Plex Mono, monospace">data()</text>
+    <text x="750.0" y="124.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Países visibles</text>
+    <text x="1250.0" y="53.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Indicadores</text>
+    <text x="1250.0" y="143.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Gráfico</text>
+    <text x="1250.0" y="233.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Tabla</text>
+    <text x="195" y="25" font-size="20" fill="#5f6d72"
+      font-family="inherit">FLUJO YA CONOCIDO</text>
+    <text x="195.0" y="397.0" font-size="25" fill="#174a70"
+      font-family="inherit">Mensaje</text>
+    <text x="195.0" y="429.0" font-size="23" fill="#174a70"
+      font-family="IBM Plex Mono, monospace">input$chat_user_input</text>
+    <text x="750.0" y="397.0" font-size="25" fill="#174a70"
+      font-family="inherit">Modelo</text>
+    <text x="750.0" y="429.0" font-size="27" fill="#174a70"
+      font-family="IBM Plex Mono, monospace">ellmer::chat()</text>
+    <text x="1250.0" y="397.0" font-size="25" fill="#174a70"
+      font-family="inherit">Respuesta</text>
+    <text x="1250.0" y="429.0" font-size="22" fill="#174a70"
+      font-family="IBM Plex Mono, monospace">chat_append()</text>
+    <text x="700" y="295" font-size="20" fill="#174a70"
+      font-family="inherit">NUEVO: CHAT SIN ACCESO A LOS DATOS</text>
+  </g>
+</svg>

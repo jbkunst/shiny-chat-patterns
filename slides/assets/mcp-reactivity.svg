@@ -1,68 +1,97 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 580" role="img"
-  aria-labelledby="mcp-flow-title mcp-flow-desc">
-  <title id="mcp-flow-title">Del agente y el MCP a los outputs de Shiny</title>
-  <desc id="mcp-flow-desc">El agente consulta el servidor MCP y recibe sus datos.
-    Luego llama a guardar_datos, que actualiza data. Los datos reactivos alimentan
-    el mapa, el gráfico, la tabla y los indicadores.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 540" role="img"
+  aria-labelledby="mcp-reactivity-title mcp-reactivity-desc">
+  <title id="mcp-reactivity-title">El MCP actualiza X e Y para toda la vista</title>
+  <desc id="mcp-reactivity-desc">
+    El agente consulta el MCP del FMI y llama a guardar_datos(datos, variables). Las filas tienen pais,
+    anio, x e y; variables conserva nombres, indicadores y unidades. La tool reemplaza data. El mapa usa
+    y; el gráfico usa x e y; la tabla muestra pais, anio, x e y. La infraestructura reactiva conocida
+    aparece en gris y la nueva ruta MCP en azul.
+  </desc>
   <defs>
-    <marker id="mcp-arrow" viewBox="0 0 10 10" refX="9" refY="5"
+    <marker id="mcp-reactivity-old" viewBox="0 0 10 10" refX="9" refY="5"
+      markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#8c9aa0" stroke-width="1.6"/>
+    </marker>
+    <marker id="mcp-reactivity-new" viewBox="0 0 10 10" refX="9" refY="5"
       markerWidth="8" markerHeight="8" orient="auto-start-reverse">
       <path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#174a70" stroke-width="1.6"/>
     </marker>
   </defs>
-
-  <g fill="none" stroke="#174a70" stroke-width="2.5" stroke-linecap="round">
-    <path d="M 72 293 V 184" marker-end="url(#mcp-arrow)"/>
-    <path d="M 214 184 V 293" marker-end="url(#mcp-arrow)"/>
-    <path d="M 282 360 H 358" marker-end="url(#mcp-arrow)"/>
-    <path d="M 682 360 H 778" marker-end="url(#mcp-arrow)"/>
-    <path d="M 1002 360 H 1080"/>
-    <path d="M 1080 160 V 490"/>
-    <path d="M 1080 160 H 1138" marker-end="url(#mcp-arrow)"/>
-    <path d="M 1080 270 H 1138" marker-end="url(#mcp-arrow)"/>
-    <path d="M 1080 380 H 1138" marker-end="url(#mcp-arrow)"/>
-    <path d="M 1080 490 H 1138" marker-end="url(#mcp-arrow)"/>
-  </g>
-
-  <g fill="#fffefa" stroke="#ced9dc" stroke-width="2">
-    <rect x="20" y="60" width="250" height="110" rx="16"/>
-    <rect x="20" y="305" width="250" height="110" rx="16"/>
-    <rect x="370" y="305" width="300" height="110" rx="16"/>
-    <rect x="1150" y="120" width="230" height="80" rx="12"/>
-    <rect x="1150" y="230" width="230" height="80" rx="12"/>
-    <rect x="1150" y="340" width="230" height="80" rx="12"/>
-    <rect x="1150" y="450" width="230" height="80" rx="12"/>
-  </g>
-  <rect x="790" y="305" width="200" height="110" rx="16"
-    fill="#e5edf1" stroke="#174a70" stroke-width="2.5"/>
-
-  <g font-family="inherit" fill="#263338" text-anchor="middle">
-    <g font-size="30" font-weight="500">
-      <text x="145" y="108">Servidor MCP</text>
-      <text x="145" y="352">Agente</text>
-    </g>
-    <g font-size="22" fill="#5f6d72">
-      <text x="145" y="140">Datos externos</text>
-      <text x="145" y="384">ellmer</text>
-      <text x="520" y="343">Tool local de R</text>
-      <text x="890" y="384">Estado reactivo</text>
-    </g>
-    <g font-family="IBM Plex Mono, monospace" fill="#174a70">
-      <text x="520" y="382" font-size="26">guardar_datos()</text>
-      <text x="890" y="352" font-size="36">data()</text>
-    </g>
-    <g font-size="27">
-      <text x="1265" y="170">Mapa</text>
-      <text x="1265" y="280">Gráfico</text>
-      <text x="1265" y="390">Tabla</text>
-      <text x="1265" y="500">Indicadores</text>
-    </g>
-    <text x="1265" y="85" font-size="21" font-weight="500" fill="#174a70">OUTPUTS DE SHINY</text>
-    <g font-size="20" fill="#5f6d72">
-      <text x="92" y="242" text-anchor="start">consulta</text>
-      <text x="230" y="242" text-anchor="start">datos</text>
-      <text x="320" y="337">llama</text>
-      <text x="730" y="337">actualiza</text>
-    </g>
+  <path d="M 1070 405 H 1110 V 77 H 1138" fill="none" stroke="#8c9aa0" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#mcp-reactivity-old)"/>
+  <path d="M 1070 405 H 1110 V 197 H 1138" fill="none" stroke="#8c9aa0" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#mcp-reactivity-old)"/>
+  <path d="M 1070 405 H 1110 V 317 H 1138" fill="none" stroke="#8c9aa0" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#mcp-reactivity-old)"/>
+  <path d="M 1070 405 H 1110 V 437 H 1138" fill="none" stroke="#8c9aa0" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#mcp-reactivity-old)"/>
+  <path d="M 100 350 V 157" fill="none" stroke="#174a70" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#mcp-reactivity-new)"/>
+  <path d="M 210 145 V 338" fill="none" stroke="#174a70" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#mcp-reactivity-new)"/>
+  <path d="M 290 390 H 388" fill="none" stroke="#174a70" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#mcp-reactivity-new)"/>
+  <path d="M 400 435 H 302" fill="none" stroke="#174a70" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#mcp-reactivity-new)"/>
+  <path d="M 760 405 H 838" fill="none" stroke="#174a70" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"
+    marker-end="url(#mcp-reactivity-new)"/>
+  <rect x="20" y="35" width="270" height="110" rx="16"
+    fill="#e5edf1" stroke="#174a70" stroke-width="2"/>
+  <rect x="20" y="350" width="270" height="110" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="400" y="330" width="360" height="150" rx="16"
+    fill="#e5edf1" stroke="#174a70" stroke-width="2"/>
+  <rect x="850" y="350" width="220" height="110" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="1150" y="35" width="230" height="85" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="1150" y="155" width="230" height="85" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="1150" y="275" width="230" height="85" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <rect x="1150" y="395" width="230" height="85" rx="16"
+    fill="#fffefa" stroke="#ced9dc" stroke-width="2"/>
+  <g font-family="inherit" text-anchor="middle">
+    <text x="155.0" y="82.0" font-size="25" fill="#174a70"
+      font-family="inherit">Servidor MCP</text>
+    <text x="155.0" y="114.0" font-size="25" fill="#174a70"
+      font-family="inherit">Datos del FMI</text>
+    <text x="155.0" y="413.0" font-size="25" fill="#5f6d72"
+      font-family="inherit">Agente</text>
+    <text x="580" y="375" font-size="26" fill="#174a70"
+      font-family="IBM Plex Mono, monospace">guardar_datos</text>
+    <text x="580" y="408" font-size="20" fill="#5f6d72"
+      font-family="IBM Plex Mono, monospace">(datos, variables)</text>
+    <text x="580" y="447" font-size="20" fill="#5f6d72"
+      font-family="inherit">filas: pais, anio, x, y</text>
+    <text x="960.0" y="397.0" font-size="32" fill="#5f6d72"
+      font-family="IBM Plex Mono, monospace">data()</text>
+    <text x="960.0" y="429.0" font-size="21" fill="#5f6d72"
+      font-family="inherit">X, Y y metadatos</text>
+    <text x="1265.0" y="85.5" font-size="25" fill="#5f6d72"
+      font-family="inherit">Indicadores</text>
+    <text x="1265.0" y="205.5" font-size="25" fill="#5f6d72"
+      font-family="inherit">Mapa (y)</text>
+    <text x="1265.0" y="325.5" font-size="25" fill="#5f6d72"
+      font-family="inherit">Gráfico (x, y)</text>
+    <text x="1265.0" y="445.5" font-size="25" fill="#5f6d72"
+      font-family="inherit">Tabla (x, y)</text>
+    <text x="45" y="260" font-size="21" fill="#174a70"
+      font-family="inherit">consulta</text>
+    <text x="260" y="260" font-size="21" fill="#174a70"
+      font-family="inherit">datos</text>
+    <text x="345" y="370" font-size="21" fill="#174a70"
+      font-family="inherit">llama</text>
+    <text x="685" y="260" font-size="20" fill="#174a70"
+      font-family="inherit">Y SE COMPARTE ENTRE EL MAPA Y EL GRÁFICO</text>
   </g>
 </svg>
