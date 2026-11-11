@@ -138,20 +138,43 @@ Las apps numeradas desde `90` son experimentales y quedan fuera del recorrido de
 
 ## Instalar
 
-Se necesita R 4.6.1 y Python 3.12 o posterior, gestionado con [`uv`](https://docs.astral.sh/uv/).
-Después de clonar el repositorio, restaura
-los entornos desde la raíz:
+Para las apps R se necesita **R 4.6.1 o posterior**. Elige una de estas dos rutas:
+
+### Opción 1 · ZIP de GitHub e install.packages
+
+Para quienes no usan Git: en GitHub, selecciona **Code → Download ZIP**, extrae todo el archivo,
+abre `instalar.R` en RStudio y ejecútalo desde la carpeta extraída.
+
+La [guía paso a paso para enviar antes del taller](PREPARAR-R.md) explica la descarga, la instalación,
+la clave y una primera prueba. No hay un ZIP distinto: se usa el que entrega GitHub.
+
+El script usa `install.packages()` y desactiva la carga automática de `renv` solo en esta copia,
+mediante `RENV_CONFIG_AUTOLOADER_ENABLED=FALSE` en `.Renviron`. Instala además la versión de `mcptools`
+necesaria para App 09 desde GitHub, automáticamente y sin necesitar Git instalado.
+Esta ruta usa las versiones disponibles de los paquetes CRAN; no reproduce exactamente `renv.lock`.
+
+### Opción 2 · GitHub y renv
+
+Para restaurar las versiones fijadas del taller, clona el repositorio:
 
 ```console
-Rscript -e "if (!requireNamespace('renv', quietly = TRUE)) install.packages('renv')"
-Rscript -e "renv::restore()"
-uv sync
+git clone https://github.com/jbkunst/shiny-chat-patterns.git
+cd shiny-chat-patterns
 ```
 
-Los entornos son independientes y reproducibles:
+Abre R en esa carpeta y restaura el entorno:
 
-- `renv.lock` fija las dependencias de las apps R.
-- `uv.lock` fija las dependencias de las apps Python.
+```r
+if (!requireNamespace("renv", quietly = TRUE)) install.packages("renv")
+renv::restore()
+```
+
+`.Rprofile` activa `renv` por defecto; `renv.lock` fija las versiones de los paquetes.
+No ejecutes `instalar.R` en esta ruta. Si reutilizas una copia preparada con el instalador simple,
+cambia `RENV_CONFIG_AUTOLOADER_ENABLED=FALSE` por `TRUE` en `.Renviron` y reinicia R antes de restaurar.
+
+Para las versiones Python, opcionales e independientes del entorno R, se necesita Python 3.12 o posterior
+y [`uv`](https://docs.astral.sh/uv/). Ejecuta `uv sync --locked` desde la raíz; `uv.lock` fija sus dependencias.
 
 ## Configurar la API
 
@@ -163,10 +186,11 @@ Cada ejemplo conserva su modelo: GPT-5 nano o GPT-5.6 Luna.
 Las apps con chat, desde `app-02`, necesitan `OPENAI_API_KEY`. `app-00` y `app-01` funcionan sin una
 clave.
 
-Para R, crea un archivo `.Renviron` en la raíz:
+Para R, crea un archivo `.Renviron` en la raíz. Puedes copiar `.Renviron.example` y completar tu clave;
+el instalador simple ya crea ese archivo sin sobrescribir una clave existente:
 
 ```dotenv
-OPENAI_API_KEY=tu_clave_de_openai
+OPENAI_API_KEY="PEGA_TU_CLAVE_AQUI"
 ```
 
 Luego reinicia R. Si el archivo se creó con la sesión abierta, también puedes cargarlo sin reiniciar:

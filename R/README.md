@@ -1,6 +1,7 @@
 # Ejemplos de consola
 
-Ejecuta estos scripts desde la raíz del repositorio, con el entorno restaurado y la clave cargada.
+Ejecuta estos scripts desde la raíz del repositorio, con los paquetes instalados y la clave cargada.
+Puedes usar la [instalación simple desde ZIP o la ruta Git + renv](../README.md#instalar).
 Los ejemplos 01–04 tienen versiones equivalentes en [python/](../python/).
 
 | Script | Qué permite observar |
