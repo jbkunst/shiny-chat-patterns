@@ -157,32 +157,34 @@ Puente al taller: construiremos paso a paso las capacidades que conectan convers
 4. **Continuamos** con la siguiente app.
 :::
 
-## Antes de partir · ZIP e install.packages()
+## Antes de partir · Instalación simple
 
-**Opción simple · Sin Git ni renv.** Necesitas R 4.6.1 o posterior y RStudio.
+**Sin Git ni renv.** Necesitas R 4.6.1 o posterior.
 
 1. Abre [el repositorio en GitHub](https://github.com/jbkunst/shiny-chat-patterns) y pulsa **Code → Download ZIP**.
-2. Extrae todo el ZIP y abre `shiny-chat-patterns.Rproj` en RStudio.
-3. El proyecto deja lista la carpeta de trabajo. Desde la consola, ejecuta:
+2. Extrae el ZIP. En **Positron**, abre la carpeta. En **RStudio**, puedes abrir
+   `shiny-chat-patterns.Rproj` (opcional).
+3. Desde la carpeta del proyecto, ejecuta en la consola de R:
 
 ```r
-source("instalar.R", encoding = "UTF-8")
+source("R/instalar.R", encoding = "UTF-8")
 ```
 
-El script instala los paquetes con `install.packages()` y prepara esta copia para trabajar sin renv.
+El script instala los paquetes con `install.packages()`.
 Después configura tu clave en `.Renviron`.
 
 ::: {.notes}
 No hace falta crear ni entregar otro ZIP: se descarga el que genera GitHub.
 El .Rproj abre la raíz del repositorio y usa UTF-8, sin restaurar un workspace anterior.
+En RStudio sin .Rproj: Session → Set Working Directory → Choose Directory y elige la carpeta extraída.
+En Positron usa File → Open Folder para abrir esa misma carpeta.
 El ZIP de GitHub no contiene .git, por lo que .Rprofile no activa renv al abrirlo.
 El script instala además la versión de mcptools necesaria para App 09 desde GitHub, sin necesitar Git.
-Si renv ya estaba activo, el script pide reiniciar R y ejecutarlo de nuevo.
-La instalación simple deja RENV_CONFIG_AUTOLOADER_ENABLED=FALSE en el .Renviron local.
-No sobrescribe una clave existente. Las versiones CRAN no quedan fijadas como en renv.lock.
+El script no modifica .Renviron; solo avisa al final si falta el archivo.
+Las versiones CRAN no quedan fijadas como en renv.lock.
 :::
 
-## Antes de partir · Git y renv
+## Antes de partir · Git + renv
 
 **Opción reproducible · Las versiones de los paquetes quedan fijadas en `renv.lock`.**
 
@@ -193,13 +195,13 @@ git clone https://github.com/jbkunst/shiny-chat-patterns.git
 cd shiny-chat-patterns
 ```
 
-Abre `shiny-chat-patterns.Rproj` en RStudio y restaura el entorno:
+Desde la carpeta del proyecto, en Positron o RStudio, restaura el entorno:
 
 ```r
 renv::restore()
 ```
 
-No ejecutes `instalar.R` en esta opción. Después configura tu clave en `.Renviron`.
+No ejecutes `R/instalar.R` en esta opción. Después configura tu clave en `.Renviron`.
 
 ::: {.notes}
 Instalación de uv: https://docs.astral.sh/uv/getting-started/installation/.
@@ -207,7 +209,6 @@ Para las versiones Python, opcionales: Python 3.12+ y uv sync --locked desde la 
 En los clones de Git, .Rprofile activa renv automáticamente al abrir el proyecto.
 renv::restore() instala las versiones fijadas: https://pkgs.rstudio.com/renv/reference/restore.html.
 Si renv no está instalado, el autoloader del proyecto ofrece instalarlo al iniciar R desde la raíz.
-Si reutilizas una copia de la instalación simple, cambia RENV_CONFIG_AUTOLOADER_ENABLED a TRUE y reinicia R.
 :::
 
 ## Antes de partir · Proveedor y modelos
@@ -265,7 +266,7 @@ chat$chat("Responde solamente: conexión correcta.")
 App 00–08 tienen versiones equivalentes en R y Python. La configuración completa está en el README.
 La clave es personal y .Renviron queda fuera de Git.
 App 00–01 funcionan sin clave. App 09 está, por ahora, solo en R.
-La ruta simple ya crea .Renviron: conserva su línea RENV_CONFIG_AUTOLOADER_ENABLED=FALSE al agregar la clave.
+Puedes copiar .Renviron.example a .Renviron y completar tu clave.
 readRenviron() carga .Renviron sin tener que reiniciar la sesión para esta prueba.
 En Python, uv run --env-file .Renviron carga la clave antes de ejecutar el comando correspondiente.
 La respuesta «conexión correcta» confirma el acceso al modelo.

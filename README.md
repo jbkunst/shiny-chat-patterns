@@ -142,17 +142,18 @@ Para las apps R se necesita **R 4.6.1 o posterior**. Elige una de estas dos ruta
 
 ### Opción 1 · ZIP de GitHub e install.packages
 
-Para quienes no usan Git: en GitHub, selecciona **Code → Download ZIP**, extrae todo el archivo,
-abre `shiny-chat-patterns.Rproj` en RStudio y ejecuta `source("instalar.R", encoding = "UTF-8")`.
+Para quienes no usan Git: en GitHub, selecciona **Code → Download ZIP** y extrae todo el archivo.
+Abre la carpeta en Positron o, si usas RStudio, abre `shiny-chat-patterns.Rproj` (opcional).
+Desde la raíz del proyecto, ejecuta `source("R/instalar.R", encoding = "UTF-8")`.
 
-Las slides «Antes de partir · ZIP e install.packages()» y «Antes de partir · Git y renv» presentan
+Las slides «Antes de partir · Instalación simple» y «Antes de partir · Git + renv» presentan
 las dos opciones. No hay un ZIP distinto: se usa el que entrega GitHub.
 El `.Rproj` establece la carpeta de trabajo y usa UTF-8. El ZIP de GitHub no contiene `.git`,
 por lo que `.Rprofile` no activa `renv` al abrirlo.
 
-El script usa `install.packages()` y desactiva la carga automática de `renv` solo en esta copia,
-mediante `RENV_CONFIG_AUTOLOADER_ENABLED=FALSE` en `.Renviron`. Instala además la versión de `mcptools`
-necesaria para App 09 desde GitHub, automáticamente y sin necesitar Git instalado.
+El script usa `install.packages()` e instala además la versión de `mcptools` necesaria para App 09
+desde GitHub, automáticamente y sin necesitar Git instalado. Al final avisa si falta `.Renviron`;
+no crea ni modifica ese archivo.
 Esta ruta usa las versiones disponibles de los paquetes CRAN; no reproduce exactamente `renv.lock`.
 
 ### Opción 2 · GitHub y renv
@@ -164,7 +165,7 @@ git clone https://github.com/jbkunst/shiny-chat-patterns.git
 cd shiny-chat-patterns
 ```
 
-Abre `shiny-chat-patterns.Rproj` en RStudio y restaura el entorno:
+Desde la raíz del proyecto, en Positron o RStudio, restaura el entorno:
 
 ```r
 if (!requireNamespace("renv", quietly = TRUE)) install.packages("renv")
@@ -172,8 +173,7 @@ renv::restore()
 ```
 
 `.Rprofile` activa `renv` automáticamente en los clones de Git; `renv.lock` fija las versiones.
-No ejecutes `instalar.R` en esta ruta. Si reutilizas una copia preparada con el instalador simple,
-cambia `RENV_CONFIG_AUTOLOADER_ENABLED=FALSE` por `TRUE` en `.Renviron` y reinicia R antes de restaurar.
+No ejecutes `R/instalar.R` en esta ruta.
 
 Para las versiones Python, opcionales e independientes del entorno R, se necesita Python 3.12 o posterior
 y [`uv`](https://docs.astral.sh/uv/). Ejecuta `uv sync --locked` desde la raíz; `uv.lock` fija sus dependencias.
@@ -188,8 +188,7 @@ Cada ejemplo conserva su modelo: GPT-5 nano o GPT-5.6 Luna.
 Las apps con chat, desde `app-02`, necesitan `OPENAI_API_KEY`. `app-00` y `app-01` funcionan sin una
 clave.
 
-Para R, crea un archivo `.Renviron` en la raíz. Puedes copiar `.Renviron.example` y completar tu clave;
-el instalador simple ya crea ese archivo sin sobrescribir una clave existente:
+Para R, crea un archivo `.Renviron` en la raíz. Puedes copiar `.Renviron.example` y completar tu clave:
 
 ```dotenv
 OPENAI_API_KEY="PEGA_TU_CLAVE_AQUI"

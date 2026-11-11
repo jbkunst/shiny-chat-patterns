@@ -57,9 +57,9 @@ Cada columna muestra el nombre y la captura enlazados a la aplicación. Las imá
 de `kpstudio.io`, se guardan en `assets/apps/` y la fuente queda en notas.
 
 Después de «El recorrido del taller», las slides «Antes de partir» presentan dos rutas de preparación:
-ZIP de GitHub con `instalar.R` e `install.packages()`, o Git con `renv::restore()`.
+ZIP de GitHub con `R/instalar.R` e `install.packages()`, o Git con `renv::restore()`.
 La primera evita que renv se active automáticamente en esa copia; la segunda restaura las versiones fijadas.
-Ambas abren `shiny-chat-patterns.Rproj` para establecer la raíz y usar UTF-8 en RStudio.
+En Positron se abre la carpeta; en RStudio se puede abrir `shiny-chat-patterns.Rproj` (opcional).
 Python queda como alternativa secundaria en las notas. Después se configura `.Renviron`. La primera prueba
 carga ellmer y `.Renviron` y consulta el modelo para comprobar la conexión.
 Los comandos se ejecutan desde la raíz. `.Rprofile` activa `renv` cuando encuentra `.git`;

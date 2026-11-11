@@ -1,4 +1,4 @@
-# Git clones use renv automatically; GitHub ZIP downloads use instalar.R.
+# Git clones use renv automatically; GitHub ZIP downloads use R/instalar.R.
 if (file.exists(".git")) {
   options(renv.config.repos.override = "https://packagemanager.posit.co/cran/latest")
   source("renv/activate.R")

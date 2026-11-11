@@ -287,18 +287,18 @@ LatinR 2026
 <li class="fragment"><strong>Continuamos</strong> con la siguiente app.</li>
 </ol>
 </section>
-<section id="antes-de-partir-zip-e-install.packages" class="slide level2">
-<h2>Antes de partir · ZIP e install.packages()</h2>
-<p><strong>Opción simple · Sin Git ni renv.</strong> Necesitas R 4.6.1 o posterior y RStudio.</p>
+<section id="antes-de-partir-instalación-simple" class="slide level2">
+<h2>Antes de partir · Instalación simple</h2>
+<p><strong>Sin Git ni renv.</strong> Necesitas R 4.6.1 o posterior.</p>
 <ol type="1">
 <li>Abre <a href="https://github.com/jbkunst/shiny-chat-patterns">el repositorio en GitHub</a> y pulsa <strong>Code → Download ZIP</strong>.</li>
-<li>Extrae todo el ZIP y abre <code>shiny-chat-patterns.Rproj</code> en RStudio.</li>
-<li>El proyecto deja lista la carpeta de trabajo. Desde la consola, ejecuta:</li>
+<li>Extrae el ZIP. En <strong>Positron</strong>, abre la carpeta. En <strong>RStudio</strong>, puedes abrir <code>shiny-chat-patterns.Rproj</code> (opcional).</li>
+<li>Desde la carpeta del proyecto, ejecuta en la consola de R:</li>
 </ol>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="" aria-label="1"></a><span class="fu">source</span>(<span class="st">"instalar.R"</span>, <span class="at">encoding =</span> <span class="st">"UTF-8"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<p>El script instala los paquetes con <code>install.packages()</code> y prepara esta copia para trabajar sin renv. Después configura tu clave en <code>.Renviron</code>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="" aria-label="1"></a><span class="fu">source</span>(<span class="st">"R/instalar.R"</span>, <span class="at">encoding =</span> <span class="st">"UTF-8"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<p>El script instala los paquetes con <code>install.packages()</code>. Después configura tu clave en <code>.Renviron</code>.</p>
 <aside class="notes">
-<p>No hace falta crear ni entregar otro ZIP: se descarga el que genera GitHub. El .Rproj abre la raíz del repositorio y usa UTF-8, sin restaurar un workspace anterior. El ZIP de GitHub no contiene .git, por lo que .Rprofile no activa renv al abrirlo. El script instala además la versión de mcptools necesaria para App 09 desde GitHub, sin necesitar Git. Si renv ya estaba activo, el script pide reiniciar R y ejecutarlo de nuevo. La instalación simple deja RENV_CONFIG_AUTOLOADER_ENABLED=FALSE en el .Renviron local. No sobrescribe una clave existente. Las versiones CRAN no quedan fijadas como en renv.lock.</p>
+<p>No hace falta crear ni entregar otro ZIP: se descarga el que genera GitHub. El .Rproj abre la raíz del repositorio y usa UTF-8, sin restaurar un workspace anterior. En RStudio sin .Rproj: Session → Set Working Directory → Choose Directory y elige la carpeta extraída. En Positron usa File → Open Folder para abrir esa misma carpeta. El ZIP de GitHub no contiene .git, por lo que .Rprofile no activa renv al abrirlo. El script instala además la versión de mcptools necesaria para App 09 desde GitHub, sin necesitar Git. El script no modifica .Renviron; solo avisa al final si falta el archivo. Las versiones CRAN no quedan fijadas como en renv.lock.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -311,17 +311,17 @@ LatinR 2026
           display:block!important;
       }</style></aside>
 </section>
-<section id="antes-de-partir-git-y-renv" class="slide level2">
-<h2>Antes de partir · Git y renv</h2>
+<section id="antes-de-partir-git-renv" class="slide level2">
+<h2>Antes de partir · Git + renv</h2>
 <p><strong>Opción reproducible · Las versiones de los paquetes quedan fijadas en <code>renv.lock</code>.</strong></p>
 <p>Clona el repositorio desde una terminal:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource console number-lines code-with-copy"><code class="sourceCode"><span id="cb2-1"><a href="" aria-label="1"></a>git clone https://github.com/jbkunst/shiny-chat-patterns.git</span>
 <span id="cb2-2"><a href="" aria-label="2"></a>cd shiny-chat-patterns</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Abre <code>shiny-chat-patterns.Rproj</code> en RStudio y restaura el entorno:</p>
+<p>Desde la carpeta del proyecto, en Positron o RStudio, restaura el entorno:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="" aria-label="1"></a>renv<span class="sc">::</span><span class="fu">restore</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<p>No ejecutes <code>instalar.R</code> en esta opción. Después configura tu clave en <code>.Renviron</code>.</p>
+<p>No ejecutes <code>R/instalar.R</code> en esta opción. Después configura tu clave en <code>.Renviron</code>.</p>
 <aside class="notes">
-<p>Instalación de uv: https://docs.astral.sh/uv/getting-started/installation/. Para las versiones Python, opcionales: Python 3.12+ y uv sync –locked desde la raíz. En los clones de Git, .Rprofile activa renv automáticamente al abrir el proyecto. renv::restore() instala las versiones fijadas: https://pkgs.rstudio.com/renv/reference/restore.html. Si renv no está instalado, el autoloader del proyecto ofrece instalarlo al iniciar R desde la raíz. Si reutilizas una copia de la instalación simple, cambia RENV_CONFIG_AUTOLOADER_ENABLED a TRUE y reinicia R.</p>
+<p>Instalación de uv: https://docs.astral.sh/uv/getting-started/installation/. Para las versiones Python, opcionales: Python 3.12+ y uv sync –locked desde la raíz. En los clones de Git, .Rprofile activa renv automáticamente al abrir el proyecto. renv::restore() instala las versiones fijadas: https://pkgs.rstudio.com/renv/reference/restore.html. Si renv no está instalado, el autoloader del proyecto ofrece instalarlo al iniciar R desde la raíz.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -363,7 +363,7 @@ LatinR 2026
 <span id="cb7-5"><a href="" aria-label="5"></a>chat<span class="sc">$</span><span class="fu">chat</span>(<span class="st">"Responde solamente: conexión correcta."</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div></div>
 <aside class="notes">
-<p>App 00–08 tienen versiones equivalentes en R y Python. La configuración completa está en el README. La clave es personal y .Renviron queda fuera de Git. App 00–01 funcionan sin clave. App 09 está, por ahora, solo en R. La ruta simple ya crea .Renviron: conserva su línea RENV_CONFIG_AUTOLOADER_ENABLED=FALSE al agregar la clave. readRenviron() carga .Renviron sin tener que reiniciar la sesión para esta prueba. En Python, uv run –env-file .Renviron carga la clave antes de ejecutar el comando correspondiente. La respuesta «conexión correcta» confirma el acceso al modelo.</p>
+<p>App 00–08 tienen versiones equivalentes en R y Python. La configuración completa está en el README. La clave es personal y .Renviron queda fuera de Git. App 00–01 funcionan sin clave. App 09 está, por ahora, solo en R. Puedes copiar .Renviron.example a .Renviron y completar tu clave. readRenviron() carga .Renviron sin tener que reiniciar la sesión para esta prueba. En Python, uv run –env-file .Renviron carga la clave antes de ejecutar el comando correspondiente. La respuesta «conexión correcta» confirma el acceso al modelo.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -594,7 +594,7 @@ $ pib_per_capita    &lt;dbl&gt; 974.5803, 5937.0295, 6223.3675, 4797.2313, 12779
 <p><code>continentes</code> es un <strong>vector de texto</strong> con las opciones del filtro, incluida «Todos».</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Todos"    "África"   "Américas" "Asia"     "Europa"   "Oceanía" </code></pre>
+<pre><code>[1] "Todos"    "Américas" "Asia"     "Europa"   "Oceanía"  "África"  </code></pre>
 </div>
 </div>
 </section>
