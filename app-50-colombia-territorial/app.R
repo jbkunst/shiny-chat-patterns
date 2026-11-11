@@ -45,31 +45,11 @@ prompt_sistema <- paste(readLines("prompt.md", warn = FALSE), collapse = "\n")
 ui <- page_fillable(
   title = "App 50 · Colombia territorial",
   padding = 0,
-  tags$style(HTML("
-    .territorial-map { height: 100dvh; }
-    .floating-chat { position: absolute; z-index: 10; top: 16px; left: 16px;
-      width: min(390px, calc(100% - 32px)); height: calc(100dvh - 32px);
-      display: flex; flex-direction: column; gap: 12px; padding: 16px;
-      min-height: 0; overflow: hidden; background: #fff;
-      border: 1px solid #d8dee4; border-radius: 10px; box-shadow: 0 4px 20px #0002; }
-    .floating-chat > :not(.chat-wrapper) { flex: 0 0 auto; }
-    .floating-chat h2 { margin: 0; font-size: 19px; font-weight: 600; color: #28334a; }
-    .floating-chat #contexto p { margin: 0; font-size: 14px; }
-    .chat-wrapper { display: flex; flex-direction: column; flex: 1 1 0;
-      min-height: 0; overflow: hidden; }
-    .chat-wrapper shiny-chat-container { flex: 1 1 auto; min-height: 0; }
-    .floating-chat footer { display: flex; flex-direction: column; gap: 8px; }
-    .floating-chat small { color: #59656d; font-size: 11px; }
-    @media (max-width: 700px) {
-      .floating-chat { top: auto; bottom: 16px; height: 48dvh; }
-      #escala-territorial { bottom: calc(48dvh + 24px); }
-    }
-  ")),
+  tags$link(rel = "stylesheet", type = "text/css", href = "styles.css"),
   div(class = "territorial-map", mapgl::maplibreOutput("map", height = "100%")),
   div(
     class = "floating-chat",
     h2("Colombia territorial"),
-    uiOutput("contexto"),
     div(class = "chat-wrapper",
       shinychat::chat_ui("chat", greeting = saludo, placeholder = "Explora Colombia...", height = "100%")
     ),
@@ -90,13 +70,6 @@ server <- function(input, output, session) {
     territorio <- territorio_actual()
     if (is.null(territorio)) departamentos else departamentos[departamentos$codigo == territorio, ]
   })
-  output$contexto <- renderUI({
-    info <- catalogo[catalogo$indicador == indicador_actual(), ]
-    territorio <- if (is.null(territorio_actual())) "Colombia · 33 territorios" else {
-      datos_visibles()$departamento
-    }
-    tags$p(tags$strong(info$titulo), paste0(" · ", info$unidad, " · ", info$anio), tags$br(), territorio)
-  })
 
   output$map <- mapgl::renderMaplibre({
     rango <- range(departamentos$poblacion)
@@ -116,14 +89,19 @@ server <- function(input, output, session) {
         before_id = "watername_ocean"
       ) |>
       mapgl::add_continuous_legend(
-        "Población estimada · personas", values = rango, colors = colores,
+        "Población estimada · personas · 2025<br>Colombia · 33 territorios",
+        values = rango, colors = colores,
         position = "bottom-right", unique_id = "escala-territorial"
       )
   })
 
-  observeEvent(indicador_actual(), {
+  observeEvent(list(indicador_actual(), territorio_actual()), {
     indicador <- indicador_actual()
     info <- catalogo[catalogo$indicador == indicador, ]
+    territorio <- if (is.null(territorio_actual())) "Colombia · 33 territorios" else {
+      datos_visibles()$departamento
+    }
+    titulo <- paste(paste(info$titulo, info$unidad, info$anio, sep = " · "), territorio, sep = "<br>")
     rango <- range(departamentos[[indicador]], na.rm = TRUE)
     valores <- seq(rango[1], rango[2], length.out = length(colores))
     mapgl::maplibre_proxy("map", session) |>
@@ -131,7 +109,7 @@ server <- function(input, output, session) {
         "departamentos", "fill-color", mapgl::interpolate(indicador, values = valores, stops = colores)
       ) |>
       mapgl::add_continuous_legend(
-        paste(info$titulo, info$unidad, sep = " · "), values = rango, colors = colores,
+        titulo, values = rango, colors = colores,
         position = "bottom-right", unique_id = "escala-territorial"
       )
   }, ignoreInit = TRUE)
