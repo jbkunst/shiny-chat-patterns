@@ -16,8 +16,8 @@ url_is_ready <- function(url, apps = NULL) {
   if (inherits(response, "try-error") || httr::status_code(response) >= 400) return(FALSE)
   if (is.null(apps)) return(TRUE)
   html <- httr::content(response, as = "text", encoding = "UTF-8")
-  ids <- regmatches(html, gregexpr('id="app-[^"]+"', html))[[1]]
-  expected <- paste0('id="', apps$app, '"')
+  ids <- regmatches(html, gregexpr('data-app-id="[^"]+"', html))[[1]]
+  expected <- paste0('data-app-id="', apps$app, '"')
   setequal(ids, expected) && all(vapply(apps$url, grepl, logical(1), x = html, fixed = TRUE))
 }
 
@@ -96,7 +96,7 @@ plan_apps <- function(root, include_experimental = FALSE, first_app_port = 8000L
   directories <- list.dirs(root, full.names = FALSE, recursive = FALSE)
   stable <- directories[
     grepl("^app-[0-9]+(-[a-z0-9-]+)?$", directories) &
-      !grepl("-experimental$", directories)
+      !grepl("-experimental$", directories) & directories != "app-09-v3"
   ]
   experimental <- directories[grepl("^app-[0-9]+(-[a-z0-9-]+)?-experimental$", directories)]
   apps <- if (include_experimental) c(stable, experimental) else stable

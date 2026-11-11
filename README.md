@@ -57,12 +57,13 @@ Al finalizar el taller, quienes participen podrán:
 **Capítulo 4 · Conectar herramientas externas con MCP · App 09**
 
 - Descubrimiento y uso de herramientas remotas mediante MCP.
-- Datos externos y actualización de la aplicación.
+- Una carga con `pais`, `anio`, `x` e `y`: mapa con Y, gráfico y tabla con X e Y.
+- App 09 v2 conserva la conversación con MCP sin dashboard; v3 queda como referencia adicional.
 
 **Casos de aplicación · Colombia territorial y series de Banrep**
 
 - Aplicaciones más completas que combinan los patrones del recorrido principal.
-- Separación de responsabilidades entre las tools de cada caso.
+- Ideas que comparten las funciones de ambos casos: resolver, consultar, mostrar e inspeccionar.
 
 Las [slides publicadas](https://jkunst.com/shiny-chat-patterns/) acompañan el recorrido.
 Su fuente y las instrucciones de render están en [slides/](slides/).
@@ -116,8 +117,9 @@ uv run --env-file .Renviron python python/02_chatlas_tool.py
 | [app-06](app-06/) | Mostrar tablas y gráficos en modales |
 | [app-07](app-07/) | Combinar controles y conversación |
 | [app-08](app-08/) | Mover el mapa e interpretar gráficos |
-| [app-09](app-09/) | Conectar herramientas externas mediante MCP |
+| [app-09](app-09/) | MCP y dashboard: mapa con Y, gráfico y tabla con X e Y |
 | [app-09-v2](app-09-v2/) | Conversar con MCP en una interfaz mínima |
+| [app-09-v3](app-09-v3/) | Referencia configurable; fuera de las slides y del catálogo por defecto |
 
 Los ejemplos de uso y las notas de implementación se documentan en la carpeta de cada app.
 
@@ -211,7 +213,8 @@ uv run shiny run --reload app-00/app.py
 ## Abrir todas las apps R
 
 El lanzador inicia cada app estable en un proceso de fondo y abre un catálogo Quarto con su título,
-descripción y una vista interactiva. Desde una sesión R en la raíz del repositorio:
+descripción, una vista interactiva y los diagramas de la app debajo.
+Desde una sesión R en la raíz del repositorio:
 
 ```r
 source("R/run_all_apps.R")

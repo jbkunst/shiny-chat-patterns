@@ -14,6 +14,7 @@ body {
 
 main.content {
   width: 100%;
+  min-width: 0;
   max-width: none;
 }
 
@@ -26,6 +27,7 @@ main.content {
   overflow: hidden;
   width: min(1320px, calc(100% + 3rem));
   max-width: none;
+  min-width: 0;
   justify-self: center;
   margin-inline: auto;
   margin-top: 2rem;
@@ -83,6 +85,27 @@ main.content {
   transform-origin: top left;
 }
 
+.app-diagram {
+  margin: 0;
+  min-width: 0;
+  max-width: 100%;
+  padding: 1.25rem 1.5rem;
+  border-top: 1px solid var(--catalog-line);
+  background: #f5f4ef;
+}
+
+.app-diagram figcaption {
+  margin-bottom: 1rem;
+  color: var(--catalog-muted);
+  font-size: 0.95rem;
+}
+
+.app-diagram svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 @media (max-width: 700px) {
   .app-entry {
     width: 100%;
@@ -96,5 +119,14 @@ main.content {
     width: 100%;
     height: 100%;
     transform: none;
+  }
+
+  .app-diagram {
+    overflow-x: auto;
+    padding: 1rem;
+  }
+
+  .app-diagram svg {
+    min-width: 960px;
   }
 }

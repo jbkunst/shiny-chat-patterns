@@ -33,3 +33,8 @@ course <- run_all_apps(
 
 Volver a cargar `R/run_all_apps.R` detiene la ejecución anterior antes de iniciar otra.
 Los títulos y descripciones del catálogo proceden del `DESCRIPTION` de cada app.
+Debajo de cada vista interactiva se muestran sus diagramas, leídos directamente de `slides/index.qmd`.
+App 08 muestra los dos: cámara e imagen. No se mantienen copias adicionales de los SVG.
+En pantallas pequeñas, los diagramas permiten desplazamiento horizontal para conservar el tamaño del texto.
+La comprobación de arranque identifica las apps con `data-app-id`, sin confundirlas con los IDs de los SVG.
+App 09 v3 permanece como referencia manual y no aparece en el catálogo por defecto.

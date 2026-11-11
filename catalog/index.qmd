@@ -23,6 +23,23 @@ escape_html <- function(text) {
   gsub('"', "&quot;", text, fixed = TRUE)
 }
 
+diagrams <- list()
+diagram_app <- NULL
+for (line in readLines("../slides/index.qmd", encoding = "UTF-8")) {
+  if (grepl("^## ", line)) {
+    diagram_app <- NULL
+    if (grepl("^## App [0-9]+( v[0-9]+)? .* Diagrama", line)) {
+      diagram_app <- regmatches(line, regexpr("App [0-9]+( v[0-9]+)?", line))
+      diagram_app <- gsub(" ", "-", tolower(diagram_app), fixed = TRUE)
+    }
+  }
+  if (!is.null(diagram_app) && grepl("include assets/.*[.]svg", line)) {
+    file <- sub(".*include (assets/[^ ]+).*", "\\1", line)
+    svg <- paste(readLines(file.path("..", "slides", file), encoding = "UTF-8"), collapse = "\n")
+    diagrams[[diagram_app]] <- c(diagrams[[diagram_app]], list(svg))
+  }
+}
+
 for (item in items) {
   app <- item$app
   title <- item$title
@@ -33,13 +50,22 @@ for (item in items) {
   cat(
     '\n\n::: {.app-entry .column-page}\n\n',
     '## ', title, ' {#', app, '}\n\n',
-    '<div class="app-meta"><code>', app, '</code></div>',
+    '<div class="app-meta" data-app-id="', app, '"><code>', app, '</code></div>',
     '<p class="app-description">', description, '</p>',
     '<div class="iframe-preview">',
     '<iframe src="', url, '" title="', html_title, '" loading="lazy"></iframe>',
     '</div>',
-    '\n\n:::\n\n',
     sep = ""
   )
+  diagram_key <- regmatches(app, regexpr("^app-[0-9]+(-v[0-9]+)?", app))
+  for (svg in diagrams[[diagram_key]]) {
+    caption <- regmatches(svg, regexpr("<title[^>]*>[^<]+</title>", svg))
+    caption <- gsub("<[^>]*>", "", caption)
+    cat(
+      '\n\n```{=html}\n<figure class="app-diagram"><figcaption>', escape_html(caption), '</figcaption>',
+      svg, '</figure>\n```\n\n', sep = ""
+    )
+  }
+  cat('\n\n:::\n\n')
 }
 ```
