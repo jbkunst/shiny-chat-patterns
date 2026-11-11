@@ -214,7 +214,7 @@ html.reveal-print .reveal .slides {
 /* Executed R chunks use a cell wrapper around code and console output. */
 .reveal .codewindow {
   --codewindow-bg: var(--paper-raised);
-  --codewindow-header-bg: var(--rule);
+  --codewindow-header-bg: #e7ecee;
   --codewindow-color: var(--text);
   --codewindow-shadow-color: transparent;
   --codewindow-header-height: 46px;
