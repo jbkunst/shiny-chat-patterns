@@ -173,7 +173,6 @@ renv::restore()
 ```
 
 `.Rprofile` activa `renv` automáticamente en los clones de Git; `renv.lock` fija las versiones.
-No ejecutes `R/instalar.R` en esta ruta.
 
 Para las versiones Python, opcionales e independientes del entorno R, se necesita Python 3.12 o posterior
 y [`uv`](https://docs.astral.sh/uv/). Ejecuta `uv sync --locked` desde la raíz; `uv.lock` fija sus dependencias.

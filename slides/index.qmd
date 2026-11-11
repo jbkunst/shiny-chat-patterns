@@ -200,8 +200,6 @@ Desde la carpeta del proyecto, en Positron o RStudio, restaura el entorno:
 renv::restore()
 ```
 
-No ejecutes `R/instalar.R` en esta opción. Después configura tu clave en `.Renviron`.
-
 ::: {.notes}
 Instalación de uv: https://docs.astral.sh/uv/getting-started/installation/.
 Para las versiones Python, opcionales: Python 3.12+ y uv sync --locked desde la raíz.
