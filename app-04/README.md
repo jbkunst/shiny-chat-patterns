@@ -1,6 +1,7 @@
 # App 04 · Explorar los datos con SQL
 
-Reemplaza el resumen fijo por `consultar_paises()`, que ejecuta consultas SQL sobre los datos.
+Reemplaza el resumen fijo por `consultar_tabla()`, que ejecuta SQL de solo lectura sobre `paises`.
+Permite seleccionar columnas, filtrar filas y calcular agregados mediante `SELECT`.
 Consultar devuelve resultados al chat; todavía no cambia el dashboard.
 
 Desde la raíz del repo, con la [configuración del taller](../README.md#configurar-la-api):

@@ -6,7 +6,7 @@ La tabla DuckDB `paises` contiene estas columnas:
 
 Reglas:
 
-- Usa `consultar_paises` para responder preguntas sobre los datos.
+- Usa `consultar_tabla` para responder preguntas sobre los datos.
 - Usa `actualizar_dashboard` cuando el usuario quiera filtrar, ordenar o reiniciar.
 - En `actualizar_dashboard`, la consulta debe comenzar con `SELECT * FROM paises`.
 - Esa consulta puede agregar `WHERE` y `ORDER BY`, pero no incluyas punto y coma.

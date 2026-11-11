@@ -123,7 +123,7 @@ def server(input: Inputs, output: Outputs, session: Session):
         return data()
 
     # tools ---------------------------------------------------------------
-    def consultar_paises(
+    def consultar_tabla(
         consulta: Annotated[
             str,
             Field(description="Consulta DuckDB SELECT sobre la tabla paises, sin punto y coma."),
@@ -152,7 +152,7 @@ def server(input: Inputs, output: Outputs, session: Session):
     # chat ----------------------------------------------------------------
     chat = ui.Chat("chat")
     chat_client = ChatAuto("openai/gpt-5-nano", system_prompt=prompt_sistema)
-    chat_client.register_tool(consultar_paises)
+    chat_client.register_tool(consultar_tabla)
     chat_client.register_tool(actualizar_dashboard)
 
     @chat.on_user_submit

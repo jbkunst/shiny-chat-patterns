@@ -67,7 +67,7 @@ server <- function(input, output, session) {
   output$table <- renderTable(data(), striped = TRUE, hover = TRUE)
 
   # tools -----------------------------------------------------------------
-  consultar_paises <- function(consulta) {
+  consultar_tabla <- function(consulta) {
     DBI::dbGetQuery(con, validar_select(consulta))
   }
 
@@ -116,7 +116,7 @@ server <- function(input, output, session) {
   chat <- ellmer::chat("openai/gpt-5-nano", system_prompt = prompt_sistema)
 
   chat$register_tool(tool(
-    consultar_paises,
+    consultar_tabla,
     "Ejecuta una consulta SELECT de solo lectura sobre la tabla DuckDB paises.",
     arguments = list(
       consulta = type_string("Consulta DuckDB SELECT sobre la tabla paises, sin punto y coma.")

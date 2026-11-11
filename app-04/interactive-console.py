@@ -31,7 +31,7 @@ def validar_select(consulta: str) -> str:
 
 
 # tool --------------------------------------------------------------------
-def consultar_paises(
+def consultar_tabla(
     consulta: Annotated[str, Field(description="Consulta DuckDB SELECT sobre paises, sin punto y coma.")],
 ) -> list[dict]:
     """Ejecuta una consulta SELECT de solo lectura sobre la tabla DuckDB paises."""
@@ -42,7 +42,7 @@ def consultar_paises(
 prompt_sistema = Path("app-04/prompt.md").read_text(encoding="utf-8")
 chat = ChatAuto("openai/gpt-5-nano", system_prompt=prompt_sistema)
 
-chat.register_tool(consultar_paises)
+chat.register_tool(consultar_tabla)
 
 if hasattr(sys, "ps1") or sys.stdin.isatty():
     try:
