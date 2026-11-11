@@ -34,6 +34,7 @@ Entre los entornos y la prueba de API se presenta OpenAI como proveedor del tall
 y GPT-5.6 Luna. Los mismos patrones pueden aplicarse
 con Anthropic u otros proveedores que admitan las capacidades de cada ejemplo.
 
+La sección 00, «Antes de empezar», agrupa la motivación, el recorrido y la preparación del entorno.
 Los capítulos y el cierre usan encabezados `#` con `.section-slide`; las slides internas usan `##`.
 `slide-level: 2` y `navigation-mode: vertical` agrupan cada capítulo en una columna en la vista general
 (`O` o `Esc`). Las flechas izquierda/derecha cambian de capítulo, arriba/abajo recorren sus slides y

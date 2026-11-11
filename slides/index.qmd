@@ -75,6 +75,10 @@ code_block <- function(path, descriptions = NULL, single_copy = TRUE) {
 }
 ```
 
+# 00 · Antes de empezar {.section-slide}
+
+Motivación, recorrido del taller y preparación del entorno.
+
 ## Motivación {.content-centered}
 
 Una pregunta en lenguaje natural puede activar consultas, cálculos y cambios en la vista.
