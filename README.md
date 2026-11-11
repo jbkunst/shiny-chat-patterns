@@ -137,6 +137,10 @@ Dos aplicaciones con datos de Colombia muestran los patrones del taller en conte
 
 Las apps numeradas desde `90` son experimentales y quedan fuera del recorrido del taller.
 
+[App 99](app-99/) es la solución mínima del ejercicio con pingüinos: usa `dplyr`, del tidyverse,
+para filtrar una especie y devuelve `summary(lm)` como texto al chat.
+Todo está en un solo `app.R`. El ejercicio se propone después de App 05, antes de App 06.
+
 ## Instalar
 
 Para las apps R se necesita **R 4.6.1 o posterior**. Elige una de estas dos rutas:

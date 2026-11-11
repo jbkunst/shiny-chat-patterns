@@ -583,45 +583,7 @@ code_block(
 ```
 :::
 
-## Ejercicio · Una regresión con pingüinos
-
-Construye una tool `ajustar_regresion(especie, x, y)` y pide al chat que interprete su resultado.
-
-:::: {.columns}
-::: {.column width="48%"}
-### Datos
-
-```r
-library(datos)
-pinguinos <- datos::pinguinos
-names(pinguinos)
-unique(pinguinos$especie)
-```
-
-Variables: `largo_pico_mm`, `alto_pico_mm`, `largo_aleta_mm` y `masa_corporal_g`.
-
-:::
-::: {.column width="52%"}
-### Tu desafío
-
-Filtra una especie, ajusta `lm(y ~ x)` y devuelve `summary()` como texto, usando `capture.output()`.
-
-Registra la tool con argumentos acotados y pregunta:
-
-«Para Adelia, ajusta la masa corporal según el largo de la aleta. Interpreta la pendiente y el R²».
-
-Sin gráficos: R calcula y el chat interpreta.
-:::
-::::
-
-::: {.notes}
-Solución de referencia: R/ejercicio_pinguinos.R, para revisar después del intento.
-Usar reformulate(x, response = y) para construir la fórmula a partir de nombres de columnas.
-`paste(capture.output(summary(modelo)), collapse = "\n")` devuelve el resumen como texto al modelo.
-lm() omite por defecto las filas con valores faltantes en las variables del ajuste.
-Comprobar la llamada de la tool y comparar su interpretación con la salida directa de R.
-La pendiente expresa el cambio esperado en Y por unidad de X dentro de esa especie; no implica causalidad.
-:::
+Guía oficial: [Crear y registrar tools con ellmer](https://ellmer.tidyverse.org/articles/tool-calling.html).
 
 ## App 03 · Consultar datos visibles · Patrón {.pattern-overview}
 
@@ -928,6 +890,97 @@ shiny::runApp("app-05")
 ### Observa
 
 La tool cambia el estado reactivo: se actualizan los indicadores, el gráfico y la tabla.
+
+## Ejercicio · Paquetes y función
+
+Usa estos paquetes y la función preparada. El ejercicio consiste en integrarla al chat como herramienta.
+
+:::: {.columns}
+::: {.column width="48%"}
+### Paquetes
+
+```r
+library(shiny)     # Aplicación y eventos
+library(bslib)     # Layout de la página
+library(shinychat) # Interfaz del chat
+library(ellmer)    # Modelo y herramientas
+library(dplyr)     # Filtrar y renombrar
+library(datos)     # Pingüinos en español
+
+pinguinos <- datos::pinguinos
+```
+
+:::
+::: {.column width="52%"}
+### Función disponible
+
+```r
+ajustar_regresion <- function(especie, x, y) {
+  df <- pinguinos |>
+    filter(especie == !!especie) |>
+    rename(x = !!x, y = !!y)
+  modelo <- lm(y ~ x, data = df)
+  resumen <- capture.output(summary(modelo))
+  paste(resumen, collapse = "\n")
+}
+```
+
+**Primero pruébala en R**, antes de conectar el chat:
+
+`cat(ajustar_regresion("Adelia", "largo_aleta_mm", "masa_corporal_g"))`
+:::
+::::
+
+::: {.notes}
+!!especie usa el argumento de la función; especie sin !! es la columna dentro de filter.
+rename usa los nombres recibidos con !! y los renombra a x e y para usar una fórmula fija.
+capture.output captura la impresión de summary como texto. cat sirve para verlo en consola,
+pero la tool debe devolver el texto, no el resultado NULL de cat.
+:::
+
+## Ejercicio · Integrar la herramienta
+
+Partiendo de esta UI y la función anterior, crea un chat que ajuste regresiones e interprete el resumen.
+
+:::: {.columns}
+::: {.column width="48%"}
+### UI de partida
+
+```r
+ui <- page_fillable(
+  chat_ui("chat"),
+  fillable_mobile = TRUE
+)
+```
+
+Variables: `largo_pico_mm`, `alto_pico_mm`, `largo_aleta_mm` y `masa_corporal_g`.
+
+:::
+::: {.column width="52%"}
+### Tu desafío
+
+Conecta el chat con ellmer usando `observeEvent()` y `chat_append()`, como en las apps anteriores.
+
+Registra `ajustar_regresion()` con tres argumentos `type_string()` y pregunta:
+
+«Para Adelia, ajusta la masa corporal según el largo de la aleta. Interpreta la pendiente y el R²».
+
+Extra: actualiza un gráfico con la especie y las variables elegidas.
+:::
+::::
+
+::: {.notes}
+Solución de referencia: app-99/app.R, con todo en un archivo, para revisar después del intento.
+Ejecutar desde la raíz con shiny::runApp("app-99"). La versión de consola está en R/ejercicio_pinguinos.R.
+La función de regresión se entrega preparada: el objetivo es integrarla como tool.
+`paste(capture.output(summary(modelo)), collapse = "\n")` devuelve el resumen como texto al modelo.
+lm() omite por defecto las filas con valores faltantes en las variables del ajuste.
+Comprobar la llamada de la tool y comparar su interpretación con la salida directa de R.
+La pendiente expresa el cambio esperado en Y por unidad de X dentro de esa especie; no implica causalidad.
+La solución básica usa observeEvent, stream_async y chat_append, como las apps anteriores.
+No usa page_chat, chat_server, gráficos ni estado reactivo adicional.
+Como desafío extra, guardar datos, especie, X e Y en un reactiveVal para actualizar renderPlot.
+:::
 
 # Actuar sobre la interfaz {.section-slide}
 

@@ -77,6 +77,12 @@ Reserva `00–49` para el recorrido del taller, `50–89` para casos de aplicaci
   SDMX REST/XML.
 - `app-90-orquestacion-simulada-experimental`: flujo de dos agentes con ejecución simulada.
 - `app-91-orquestacion-duckdb-experimental`: dos agentes persistentes y consultas reales en DuckDB.
+- `app-99`: solución en R del ejercicio con pingüinos, fuera del recorrido principal.
+  Excluida de run_all_apps, incluso con experimentales. Conserva solo app.R, sin DESCRIPTION ni README.
+  Todo en app.R: dplyr filtra por especie, una tool ajusta lm con X e Y y devuelve
+  summary como texto con capture.output. Usa page_fillable con chat_ui y argumentos type_string.
+  Conserva observeEvent, stream_async y chat_append; sin page_chat, chat_server ni gráfico.
+  El ejercicio va después de App 05; actualizar un gráfico queda como desafío adicional.
 
 Agrega una app intermedia en vez de introducir varios conceptos nuevos en el
 mismo paso.
