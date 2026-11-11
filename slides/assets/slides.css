@@ -62,11 +62,21 @@ html.reveal-print .reveal .slides {
   position: static !important;
 }
 
-.reveal .slides > section {
+.reveal .slides section.slide,
+.reveal .slides > .quarto-title-block {
   box-sizing: border-box;
   height: 100%;
   margin-left: 0 !important;
   text-align: left;
+}
+
+/* Show distant slides in overview while retaining each slide's flex/grid layout. */
+.reveal:where(.overview) .slides section.slide {
+  display: block !important;
+}
+
+.reveal:where(.overview) .slides > .quarto-title-block {
+  display: flex !important;
 }
 
 .reveal .progress {
@@ -81,13 +91,13 @@ html.reveal-print .reveal .slides {
 }
 
 /* Default content slide ------------------------------------------------ */
-.reveal .slides > section:not(.quarto-title-block):not(.section-slide) {
+.reveal .slides section.slide:not(.quarto-title-block):not(.section-slide) {
   padding: 154px 96px 72px;
   background: var(--paper);
   color: var(--text);
 }
 
-.reveal .slides > section:not(.quarto-title-block):not(.section-slide) h2 {
+.reveal .slides section.slide:not(.quarto-title-block):not(.section-slide) h2 {
   position: absolute;
   top: 0;
   right: 96px;
@@ -106,7 +116,7 @@ html.reveal-print .reveal .slides {
   line-height: 1.05;
 }
 
-.reveal .slides > section:not(.quarto-title-block):not(.section-slide) h3 {
+.reveal .slides section.slide:not(.quarto-title-block):not(.section-slide) h3 {
   margin: 4px 0 28px;
   color: var(--blue);
   font-size: 35px;
@@ -115,54 +125,54 @@ html.reveal-print .reveal .slides {
   line-height: 1.16;
 }
 
-.reveal .slides > section:not(.quarto-title-block):not(.section-slide) p,
-.reveal .slides > section:not(.quarto-title-block):not(.section-slide) li {
+.reveal .slides section.slide:not(.quarto-title-block):not(.section-slide) p,
+.reveal .slides section.slide:not(.quarto-title-block):not(.section-slide) li {
   color: var(--muted);
   font-size: 29px;
   font-weight: 300;
   line-height: 1.42;
 }
 
-.reveal .slides > section:not(.quarto-title-block):not(.section-slide) strong {
+.reveal .slides section.slide:not(.quarto-title-block):not(.section-slide) strong {
   color: var(--text);
   font-weight: 600;
 }
 
-.reveal .slides > section:not(.quarto-title-block):not(.section-slide) a,
-.reveal .slides > section:not(.quarto-title-block):not(.section-slide) code {
+.reveal .slides section.slide:not(.quarto-title-block):not(.section-slide) a,
+.reveal .slides section.slide:not(.quarto-title-block):not(.section-slide) code {
   color: var(--blue);
 }
 
-.reveal .slides > section:not(.quarto-title-block):not(.section-slide) ul,
-.reveal .slides > section:not(.quarto-title-block):not(.section-slide) ol {
+.reveal .slides section.slide:not(.quarto-title-block):not(.section-slide) ul,
+.reveal .slides section.slide:not(.quarto-title-block):not(.section-slide) ol {
   width: 86%;
   margin-top: 34px;
 }
 
-.reveal .slides > section:not(.quarto-title-block):not(.section-slide) li {
+.reveal .slides section.slide:not(.quarto-title-block):not(.section-slide) li {
   margin-bottom: 20px;
 }
 
-.reveal .slides > section:not(.quarto-title-block):not(.section-slide) li::marker {
+.reveal .slides section.slide:not(.quarto-title-block):not(.section-slide) li::marker {
   color: var(--blue);
   font-weight: 600;
 }
 
 /* Content spacing is shared by paragraphs, headings, code and columns. */
-.reveal .slides > section:not(.quarto-title-block):not(.section-slide)
+.reveal .slides section.slide:not(.quarto-title-block):not(.section-slide)
   :where(p, h3, .code-copy-outer-scaffold, .cell, .columns, table) {
   margin: 0;
 }
 
-.reveal .slides > section:not(.quarto-title-block):not(.section-slide)
+.reveal .slides section.slide:not(.quarto-title-block):not(.section-slide)
   :where(p, h3, .code-copy-outer-scaffold, .cell, .columns, table, .reactivity-flow, .architecture-diagram)
   + :where(p, h3, .code-copy-outer-scaffold, .cell, .columns, table, .reactivity-flow, .architecture-diagram) {
   margin-top: var(--content-gap);
 }
 
-.reveal .slides > section:not(.quarto-title-block):not(.section-slide)
+.reveal .slides section.slide:not(.quarto-title-block):not(.section-slide)
   :where(p, h3) + :where(.code-copy-outer-scaffold, .cell),
-.reveal .slides > section:not(.quarto-title-block):not(.section-slide)
+.reveal .slides section.slide:not(.quarto-title-block):not(.section-slide)
   :where(.code-copy-outer-scaffold, .cell) + :where(p, h3) {
   margin-top: var(--code-gap);
 }
@@ -178,57 +188,57 @@ html.reveal-print .reveal .slides {
 }
 
 /* Separate a new subsection from the preceding paragraph, list or table. */
-.reveal .slides > section:not(.quarto-title-block):not(.section-slide)
+.reveal .slides section.slide:not(.quarto-title-block):not(.section-slide)
   :where(p, table, ul, ol) + h3 {
   margin-top: var(--section-gap);
 }
 
 /* Tables share a readable default; component tables can retain their own layout. */
-.reveal :where(.slides > section:not(.quarto-title-block):not(.section-slide)) table {
+.reveal :where(.slides section.slide:not(.quarto-title-block):not(.section-slide)) table {
   width: 100%;
   font-size: 26px;
   line-height: 1.3;
 }
 
-.reveal :where(.slides > section:not(.quarto-title-block):not(.section-slide)) :is(th, td) {
+.reveal :where(.slides section.slide:not(.quarto-title-block):not(.section-slide)) :is(th, td) {
   padding: 10px 16px;
   vertical-align: top;
 }
 
 /* Reusable behavior for slides whose fragments replace each other. */
-.reveal .slides > section.fragment-swap {
+.reveal .slides section.slide.fragment-swap {
   display: grid !important;
 }
 
-.reveal .slides > section.fragment-swap > .fragment {
+.reveal .slides section.slide.fragment-swap > .fragment {
   grid-area: 1 / 1;
   align-self: start;
 }
 
-.reveal .slides > section.fragment-swap > .fragment.visible:not(.current-fragment) {
+.reveal .slides section.slide.fragment-swap > .fragment.visible:not(.current-fragment) {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
 }
 
-.reveal .slides > section.content-centered {
+.reveal .slides section.slide.content-centered {
   display: flex !important;
   flex-direction: column;
   justify-content: center;
 }
 
 /* Code shares the available height with the other content on centered slides. */
-.reveal .slides > section.content-centered > .code-copy-outer-scaffold {
+.reveal .slides section.slide.content-centered > .code-copy-outer-scaffold {
   flex: 1 1 0;
   min-height: 0;
   max-height: var(--code-max-height);
 }
 
-.reveal .slides > section.content-centered > .code-copy-outer-scaffold :is(div.sourceCode, pre.sourceCode) {
+.reveal .slides section.slide.content-centered > .code-copy-outer-scaffold :is(div.sourceCode, pre.sourceCode) {
   height: 100%;
 }
 
-.reveal .slides > section.content-centered > .code-copy-outer-scaffold code.sourceCode {
+.reveal .slides section.slide.content-centered > .code-copy-outer-scaffold code.sourceCode {
   height: 100%;
   max-height: 100%;
 }
@@ -294,7 +304,7 @@ html.reveal-print .reveal .slides {
   opacity: 1;
 }
 
-.reveal .slides > section.mcp-comparison:not(.quarto-title-block):not(.section-slide) > p {
+.reveal .slides section.slide.mcp-comparison:not(.quarto-title-block):not(.section-slide) > p {
   margin: 0 0 24px;
   font-size: 24px;
 }
@@ -318,20 +328,20 @@ html.reveal-print .reveal .slides {
   width: 27%;
 }
 
-.reveal .slides > section.comparison-slide > table {
+.reveal .slides section.slide.comparison-slide > table {
   width: 100%;
   margin: 36px 0;
   font-size: 29px;
   line-height: 1.4;
 }
 
-.reveal .slides > section.comparison-slide th,
-.reveal .slides > section.comparison-slide td {
+.reveal .slides section.slide.comparison-slide th,
+.reveal .slides section.slide.comparison-slide td {
   width: 50%;
   padding: 18px 22px;
 }
 
-.reveal .slides > section.tool-families-slide {
+.reveal .slides section.slide.tool-families-slide {
   display: flex !important;
   box-sizing: border-box;
   padding: 154px 96px 72px;
@@ -339,41 +349,41 @@ html.reveal-print .reveal .slides {
   justify-content: center;
 }
 
-.reveal .slides > section.tool-families-slide:not(.section-slide) > ol {
+.reveal .slides section.slide.tool-families-slide:not(.section-slide) > ol {
   margin: 0 0 44px;
 }
 
 /* Workshop progression slide ------------------------------------------- */
-.reveal .slides > section.center:not(.section-slide) {
+.reveal .slides section.slide.center:not(.section-slide) {
   display: flex !important;
   padding: 154px 160px 72px;
   flex-direction: column;
   justify-content: center;
 }
 
-.reveal .slides > section.center:not(.section-slide) ol {
+.reveal .slides section.slide.center:not(.section-slide) ol {
   margin: 0;
 }
 
-.reveal .slides > section.tool-families-slide:not(.section-slide) > ol,
-.reveal .slides > section.center:not(.section-slide) > ol {
+.reveal .slides section.slide.tool-families-slide:not(.section-slide) > ol,
+.reveal .slides section.slide.center:not(.section-slide) > ol {
   width: 100%;
 }
 
-.reveal .slides > section.tool-families-slide:not(.section-slide) > ol > li,
-.reveal .slides > section.center:not(.section-slide) > ol > li {
+.reveal .slides section.slide.tool-families-slide:not(.section-slide) > ol > li,
+.reveal .slides section.slide.center:not(.section-slide) > ol > li {
   margin-bottom: 36px;
   font-size: 32px;
   line-height: 1.4;
 }
 
-.reveal .slides > section.tool-families-slide:not(.section-slide) > ol > li:last-child,
-.reveal .slides > section.center:not(.section-slide) > ol > li:last-child {
+.reveal .slides section.slide.tool-families-slide:not(.section-slide) > ol > li:last-child,
+.reveal .slides section.slide.center:not(.section-slide) > ol > li:last-child {
   margin-bottom: 0;
 }
 
 /* Workshop agenda ------------------------------------------------------ */
-.reveal .slides > section.workshop-agenda:not(.section-slide) {
+.reveal .slides section.slide.workshop-agenda:not(.section-slide) {
   display: flex !important;
   padding-right: 160px;
   padding-left: 160px;
@@ -381,40 +391,40 @@ html.reveal-print .reveal .slides {
   justify-content: center;
 }
 
-.reveal .slides > section.workshop-agenda:not(.section-slide) > ol {
+.reveal .slides section.slide.workshop-agenda:not(.section-slide) > ol {
   width: 100%;
   margin: 0;
 }
 
-.reveal .slides > section.workshop-agenda:not(.section-slide) > ol > li {
+.reveal .slides section.slide.workshop-agenda:not(.section-slide) > ol > li {
   margin: 0 0 20px;
   font-size: 30px;
   line-height: 1.3;
 }
 
-.reveal .slides > section.workshop-agenda:not(.section-slide) > ol > li > p {
+.reveal .slides section.slide.workshop-agenda:not(.section-slide) > ol > li > p {
   margin: 0;
   font-size: inherit;
   line-height: inherit;
 }
 
-.reveal .slides > section.workshop-agenda:not(.section-slide) > ol > li ul {
+.reveal .slides section.slide.workshop-agenda:not(.section-slide) > ol > li ul {
   width: auto;
   margin: 10px 0 0 32px;
 }
 
-.reveal .slides > section.workshop-agenda:not(.section-slide) > ol > li ul > li {
+.reveal .slides section.slide.workshop-agenda:not(.section-slide) > ol > li ul > li {
   margin-bottom: 6px;
   font-size: 26px;
   line-height: 1.3;
 }
 
-.reveal .slides > section.workshop-agenda:not(.section-slide) > ol > li:last-child {
+.reveal .slides section.slide.workshop-agenda:not(.section-slide) > ol > li:last-child {
   margin-bottom: 0;
 }
 
 /* Section slide -------------------------------------------------------- */
-.reveal .slides > section.section-slide {
+.reveal .slides section.slide.section-slide {
   display: flex !important;
   padding: 0 120px;
   flex-direction: column;
@@ -435,11 +445,11 @@ body:has(.section-slide.present:not(.package-slide)) .reveal {
     linear-gradient(135deg, var(--night) 0%, var(--night-soft) 58%, var(--blue) 100%);
 }
 
-html.reveal-print .reveal .slides > section.section-slide:not(.package-slide) {
+html.reveal-print .reveal .slides section.slide.section-slide:not(.package-slide) {
   background: var(--night);
 }
 
-.reveal .slides > section.section-slide h2 {
+.reveal .slides section.slide.section-slide :is(h1, h2) {
   position: relative;
   width: 82%;
   margin: 0;
@@ -451,7 +461,7 @@ html.reveal-print .reveal .slides > section.section-slide:not(.package-slide) {
   line-height: .98;
 }
 
-.reveal .slides > section.section-slide h2::before {
+.reveal .slides section.slide.section-slide :is(h1, h2)::before {
   position: absolute;
   top: .08em;
   bottom: .06em;
@@ -462,7 +472,7 @@ html.reveal-print .reveal .slides > section.section-slide:not(.package-slide) {
   content: "";
 }
 
-.reveal .slides > section.section-slide > p {
+.reveal .slides section.slide.section-slide > p {
   max-width: 980px;
   margin: 34px 0 0 34px;
   color: #a9b9d2;
@@ -471,11 +481,11 @@ html.reveal-print .reveal .slides > section.section-slide:not(.package-slide) {
   line-height: 1.42;
 }
 
-.reveal .slides > section.section-slide:not(.package-slide) a {
+.reveal .slides section.slide.section-slide:not(.package-slide) a {
   color: var(--blue-bright);
 }
 
-.reveal .slides > section.package-slide {
+.reveal .slides section.slide.package-slide {
   background: var(--paper);
   color: var(--text);
 }
@@ -485,11 +495,11 @@ body:has(.package-slide.present) .reveal {
   background: var(--paper);
 }
 
-.reveal .slides > section.package-slide h2 {
+.reveal .slides section.slide.package-slide :is(h1, h2) {
   color: var(--blue);
 }
 
-.reveal .slides > section.package-slide > p {
+.reveal .slides section.slide.package-slide > p {
   color: var(--muted);
 }
 
@@ -891,11 +901,11 @@ body:has(.package-slide.present) .reveal {
 }
 
 /* code-tooltips.js monta el tooltip en la slide; aquí se define su capa y apariencia. */
-.reveal .slides > section:has(.code-annotation-code) > [data-tippy-root] {
+.reveal .slides section.slide:has(.code-annotation-code) > [data-tippy-root] {
   z-index: 100 !important;
 }
 
-.reveal .slides > section:has(.code-annotation-code) > [data-tippy-root] .tippy-box {
+.reveal .slides section.slide:has(.code-annotation-code) > [data-tippy-root] .tippy-box {
   border: 1px solid var(--rule);
   border-radius: 10px;
   background: var(--paper-raised);
@@ -905,7 +915,7 @@ body:has(.package-slide.present) .reveal {
   line-height: 1.3;
 }
 
-.reveal .slides > section:has(.code-annotation-code) > [data-tippy-root] .tippy-content {
+.reveal .slides section.slide:has(.code-annotation-code) > [data-tippy-root] .tippy-content {
   padding: 12px 16px;
 }
 

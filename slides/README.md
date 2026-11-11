@@ -34,6 +34,12 @@ Entre los entornos y la prueba de API se presenta OpenAI como proveedor del tall
 y GPT-5.6 Luna. Los mismos patrones pueden aplicarse
 con Anthropic u otros proveedores que admitan las capacidades de cada ejemplo.
 
+Los capítulos y el cierre usan encabezados `#` con `.section-slide`; las slides internas usan `##`.
+`slide-level: 2` y `navigation-mode: vertical` agrupan cada capítulo en una columna en la vista general
+(`O` o `Esc`). Las flechas izquierda/derecha cambian de capítulo, arriba/abajo recorren sus slides y
+Espacio avanza por todo el recorrido. Los paquetes conservan `##` y `.package-slide` dentro del capítulo.
+Los estilos se aplican a las slides internas, sin dar formato de slide al contenedor de cada columna.
+
 El recorrido se divide en tres capítulos: preparar y conversar (App 00–02), consultar y actualizar
 (App 03–05) y actuar sobre la interfaz (App 06–08). App 01–08 terminan con «Ejecutar»:
 comando de R,

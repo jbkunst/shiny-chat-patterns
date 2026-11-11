@@ -9,7 +9,7 @@
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
 
   function orderAnnotations(deck) {
-    document.querySelectorAll(".reveal .slides section").forEach((slide) => {
+    document.querySelectorAll(".reveal .slides section.slide").forEach((slide) => {
       const groups = new Map();
       slide.querySelectorAll(".code-annotation-fragment").forEach((fragment) => {
         const cell = fragment.dataset.targetCell;
@@ -104,7 +104,7 @@
     deck.on("resize", () => updateSlide(deck.getCurrentSlide(), false, true));
     deck.on("pdf-ready", () => {
       // codefrag creates print pages first; each page has its own current annotation.
-      document.querySelectorAll(".reveal .slides section").forEach((slide) => {
+      document.querySelectorAll(".reveal .slides section.slide").forEach((slide) => {
         updateSlide(slide, false, true);
       });
     });
