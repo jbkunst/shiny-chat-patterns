@@ -287,16 +287,16 @@ LatinR 2026
 <li class="fragment"><strong>Continuamos</strong> con la siguiente app.</li>
 </ol>
 </section>
-<section id="antes-de-partir-instalación-simple" class="slide level2">
-<h2>Antes de partir · Instalación simple</h2>
+<section id="antes-de-partir-setup-simple" class="slide level2">
+<h2>Antes de partir · Setup simple</h2>
 <p><strong>Sin Git ni renv.</strong> Necesitas R 4.6.1 o posterior.</p>
 <ol type="1">
 <li>Abre <a href="https://github.com/jbkunst/shiny-chat-patterns">el repositorio en GitHub</a> y pulsa <strong>Code → Download ZIP</strong>.</li>
-<li>Extrae el ZIP. En <strong>Positron</strong>, abre la carpeta. En <strong>RStudio</strong>, puedes abrir <code>shiny-chat-patterns.Rproj</code> (opcional).</li>
+<li>Extrae el ZIP. En <strong>Positron</strong>, abre la carpeta. En <strong>RStudio</strong>, puedes abrir <code>shiny-chat-patterns.Rproj</code>.</li>
 <li>Desde la carpeta del proyecto, ejecuta en la consola de R:</li>
 </ol>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="" aria-label="1"></a><span class="fu">source</span>(<span class="st">"R/instalar.R"</span>, <span class="at">encoding =</span> <span class="st">"UTF-8"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<p>El script instala los paquetes con <code>install.packages()</code>. Después configura tu clave en <code>.Renviron</code>.</p>
+<p>El script instala los paquetes con <code>install.packages()</code>.</p>
 <aside class="notes">
 <p>No hace falta crear ni entregar otro ZIP: se descarga el que genera GitHub. El .Rproj abre la raíz del repositorio y usa UTF-8, sin restaurar un workspace anterior. En RStudio sin .Rproj: Session → Set Working Directory → Choose Directory y elige la carpeta extraída. En Positron usa File → Open Folder para abrir esa misma carpeta. El ZIP de GitHub no contiene .git, por lo que .Rprofile no activa renv al abrirlo. El script instala además la versión de mcptools necesaria para App 09 desde GitHub, sin necesitar Git. El script no modifica .Renviron; solo avisa al final si falta el archivo. Las versiones CRAN no quedan fijadas como en renv.lock.</p>
 <style type="text/css">
@@ -311,8 +311,8 @@ LatinR 2026
           display:block!important;
       }</style></aside>
 </section>
-<section id="antes-de-partir-git-renv" class="slide level2">
-<h2>Antes de partir · Git + renv</h2>
+<section id="antes-de-partir-setup-git-renv" class="slide level2">
+<h2>Antes de partir · Setup Git + renv</h2>
 <p><strong>Opción reproducible · Las versiones de los paquetes quedan fijadas en <code>renv.lock</code>.</strong></p>
 <p>Clona el repositorio desde una terminal:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource console number-lines code-with-copy"><code class="sourceCode"><span id="cb2-1"><a href="" aria-label="1"></a>git clone https://github.com/jbkunst/shiny-chat-patterns.git</span>
@@ -354,16 +354,15 @@ LatinR 2026
 <p>Guarda tu clave en <code>.Renviron</code>, en la raíz del repo:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource dotenv number-lines code-with-copy"><code class="sourceCode"><span id="cb6-1"><a href="" aria-label="1"></a>OPENAI_API_KEY="sk-proj-Rms74..."</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column" style="width:55%;">
-<h3 id="prueba-la-conexión">2. Prueba la conexión</h3>
-<p>Carga <code>.Renviron</code> y envía un mensaje con ellmer:</p>
+<h3 id="reinicia-r-y-prueba">2. Reinicia R y prueba</h3>
+<p><strong>Recomendado:</strong> reinicia R con <strong>Session → Restart R</strong>.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="" aria-label="1"></a><span class="fu">library</span>(ellmer)</span>
-<span id="cb7-2"><a href="" aria-label="2"></a><span class="fu">readRenviron</span>(<span class="st">".Renviron"</span>)</span>
-<span id="cb7-3"><a href="" aria-label="3"></a></span>
-<span id="cb7-4"><a href="" aria-label="4"></a>chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat</span>(<span class="st">"openai/gpt-5-nano"</span>)</span>
-<span id="cb7-5"><a href="" aria-label="5"></a>chat<span class="sc">$</span><span class="fu">chat</span>(<span class="st">"Responde solamente: conexión correcta."</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb7-2"><a href="" aria-label="2"></a>chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat</span>(<span class="st">"openai/gpt-5-nano"</span>)</span>
+<span id="cb7-3"><a href="" aria-label="3"></a>chat<span class="sc">$</span><span class="fu">chat</span>(<span class="st">"Responde solo: OK"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Sin reiniciar: <code>readRenviron(".Renviron")</code>. Las apps no lo ejecutan.</p>
 </div></div>
 <aside class="notes">
-<p>App 00–08 tienen versiones equivalentes en R y Python. La configuración completa está en el README. La clave es personal y .Renviron queda fuera de Git. App 00–01 funcionan sin clave. App 09 está, por ahora, solo en R. Puedes copiar .Renviron.example a .Renviron y completar tu clave. readRenviron() carga .Renviron sin tener que reiniciar la sesión para esta prueba. En Python, uv run –env-file .Renviron carga la clave antes de ejecutar el comando correspondiente. La respuesta «conexión correcta» confirma el acceso al modelo.</p>
+<p>App 00–08 tienen versiones equivalentes en R y Python. La configuración completa está en el README. La clave es personal y .Renviron queda fuera de Git. App 00–01 funcionan sin clave. App 09 está, por ahora, solo en R. Puedes copiar .Renviron.example a .Renviron y completar tu clave. Reiniciar R carga .Renviron antes de ejecutar las apps; es la opción recomendada. readRenviron() es solo una alternativa manual para esta prueba, no forma parte de las apps. En Python, uv run –env-file .Renviron carga la clave antes de ejecutar el comando correspondiente. La respuesta «OK» confirma el acceso al modelo.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;

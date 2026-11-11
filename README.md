@@ -146,7 +146,7 @@ Para quienes no usan Git: en GitHub, selecciona **Code → Download ZIP** y extr
 Abre la carpeta en Positron o, si usas RStudio, abre `shiny-chat-patterns.Rproj`.
 Desde la raíz del proyecto, ejecuta `source("R/instalar.R", encoding = "UTF-8")`.
 
-Las slides «Antes de partir · Instalación simple» y «Antes de partir · Git + renv» presentan
+Las slides «Antes de partir · Setup simple» y «Antes de partir · Setup Git + renv» presentan
 las dos opciones. No hay un ZIP distinto: se usa el que entrega GitHub.
 El `.Rproj` establece la carpeta de trabajo y usa UTF-8. El ZIP de GitHub no contiene `.git`,
 por lo que `.Rprofile` no activa `renv` al abrirlo.

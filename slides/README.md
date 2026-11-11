@@ -61,7 +61,8 @@ ZIP de GitHub con `R/instalar.R` e `install.packages()`, o Git con `renv::restor
 La primera evita que renv se active automáticamente en esa copia; la segunda restaura las versiones fijadas.
 En Positron se abre la carpeta; en RStudio se abre `shiny-chat-patterns.Rproj`.
 Python queda como alternativa secundaria en las notas. Después se configura `.Renviron`. La primera prueba
-carga ellmer y `.Renviron` y consulta el modelo para comprobar la conexión.
+recomienda reiniciar R para cargar `.Renviron` y luego consulta el modelo para comprobar la conexión.
+`readRenviron()` se muestra solo como alternativa manual, no como parte de las apps.
 Los comandos se ejecutan desde la raíz. `.Rprofile` activa `renv` cuando encuentra `.git`;
 Python carga la clave con `--env-file`.
 Entre los entornos y la prueba de API se presenta OpenAI como proveedor del taller, con GPT-5 nano

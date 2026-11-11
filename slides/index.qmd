@@ -157,7 +157,7 @@ Puente al taller: construiremos paso a paso las capacidades que conectan convers
 4. **Continuamos** con la siguiente app.
 :::
 
-## Antes de partir · Instalación simple
+## Antes de partir · Setup simple
 
 **Sin Git ni renv.** Necesitas R 4.6.1 o posterior.
 
@@ -171,7 +171,6 @@ source("R/instalar.R", encoding = "UTF-8")
 ```
 
 El script instala los paquetes con `install.packages()`.
-Después configura tu clave en `.Renviron`.
 
 ::: {.notes}
 No hace falta crear ni entregar otro ZIP: se descarga el que genera GitHub.
@@ -184,7 +183,7 @@ El script no modifica .Renviron; solo avisa al final si falta el archivo.
 Las versiones CRAN no quedan fijadas como en renv.lock.
 :::
 
-## Antes de partir · Git + renv
+## Antes de partir · Setup Git + renv
 
 **Opción reproducible · Las versiones de los paquetes quedan fijadas en `renv.lock`.**
 
@@ -247,17 +246,17 @@ OPENAI_API_KEY="sk-proj-Rms74..."
 
 :::
 ::: {.column width="55%"}
-### 2. Prueba la conexión
+### 2. Reinicia R y prueba
 
-Carga `.Renviron` y envía un mensaje con ellmer:
+**Recomendado:** reinicia R con **Session → Restart R**.
 
 ```r
 library(ellmer)
-readRenviron(".Renviron")
-
 chat <- ellmer::chat("openai/gpt-5-nano")
 chat$chat("Responde solo: OK")
 ```
+
+Sin reiniciar: `readRenviron(".Renviron")`. Las apps no lo ejecutan.
 
 :::
 ::::
@@ -267,7 +266,8 @@ App 00–08 tienen versiones equivalentes en R y Python. La configuración compl
 La clave es personal y .Renviron queda fuera de Git.
 App 00–01 funcionan sin clave. App 09 está, por ahora, solo en R.
 Puedes copiar .Renviron.example a .Renviron y completar tu clave.
-readRenviron() carga .Renviron sin tener que reiniciar la sesión para esta prueba.
+Reiniciar R carga .Renviron antes de ejecutar las apps; es la opción recomendada.
+readRenviron() es solo una alternativa manual para esta prueba, no forma parte de las apps.
 En Python, uv run --env-file .Renviron carga la clave antes de ejecutar el comando correspondiente.
 La respuesta «OK» confirma el acceso al modelo.
 :::
