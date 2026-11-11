@@ -1,0 +1,21 @@
+Title: App 09 v3 · Dashboard configurable con MCP
+Description: Integra las herramientas de un servidor MCP externo con el chat y las tools locales de Shiny.
+    Consulta crecimiento, inflación y población del FMI y guarda una carga para mapa, dispersión y tabla.
+Imports:
+    ragg,
+    thematic,
+    bslib,
+    dplyr,
+    ggplot2,
+    readr,
+    stringr,
+    ellmer,
+    jsonlite,
+    mcptools,
+    mapgl,
+    rnaturalearthdata,
+    sf,
+    shiny,
+    shinychat
+Remotes: posit-dev/mcptools@714803bdfce903707a27d9c4740591d87f601aae
+Encoding: UTF-8

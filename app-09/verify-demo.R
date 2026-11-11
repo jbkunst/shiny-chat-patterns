@@ -1,13 +1,13 @@
 library(shiny)
 library(jsonlite)
 
-# cached conversation -----------------------------------------------------
+# cached observations -----------------------------------------------------
 if (!exists("archivo_demo", inherits = FALSE)) archivo_demo <- "data/demo-fmi.json"
 cache <- read_json(archivo_demo)
-stopifnot(cache$endpoint == "https://imf.caseyjhand.com/mcp", cache$formato == "fmi-crecimiento-inflacion")
-stopifnot(length(cache$pasos) == 3L)
+stopifnot(cache$endpoint == "https://imf.caseyjhand.com/mcp", length(cache$pasos) == 3L)
+stopifnot(cache$formato %in% c("fmi-crecimiento-inflacion", "fmi-xy"))
 
-# actual app without the chat or an MCP connection -------------------------
+# actual app without chat or MCP ------------------------------------------
 app <- new.env()
 expresiones <- parse("app.R", encoding = "UTF-8")
 for (x in expresiones[-length(expresiones)]) eval(x, app)
@@ -19,152 +19,105 @@ body(app$server) <- as.call(pasos[seq_len(inicio_chat - 1L)])
 expresion_plot <- Filter(function(x) {
   is.call(x) && identical(x[[1]], as.name("<-")) && identical(x[[2]], quote(output$plot))
 }, pasos)[[1]][[3]][[2]]
-puntos <- NULL
-app$ggplot <- function(data = NULL, mapping = ggplot2::aes(), ...) {
-  puntos <<- list(datos = data, mapping = mapping)
-  ggplot2::ggplot(data, mapping, ...)
-}
 
 shiny::testServer(app$server, {
   thematic::thematic_on(bg = "white", fg = "#202326", accent = "#0E4F5A", font = "sans")
   session$flushReact()
-  stopifnot(output$n_paises == "0", output$n_variables == "0")
-  stopifnot(!is.null(output$plot), is.null(puntos$datos))
-  mapa <- fromJSON(output$map, simplifyVector = FALSE)
-  stopifnot(length(mapa$x$layers) == 0L)
+  stopifnot(output$n_paises == "0", output$n_variables == "0", !is.null(output$plot))
+  stopifnot(length(fromJSON(output$map, simplifyVector = FALSE)$x$layers) == 0L)
   consultas <- list()
   for (i in seq_along(cache$pasos)) {
     paso <- cache$pasos[[i]]
-    anterior <- data()
     for (llamada in paso$llamadas) {
-      if (!is.null(llamada$error)) next
-      if (llamada$nombre == "imf_query_dataset") consultas[[length(consultas) + 1L]] <- llamada
-      if (llamada$nombre == "guardar_datos") {
-        args <- llamada$argumentos
-        filas <- dplyr::bind_rows(args$datos)
-        info <- dplyr::bind_rows(args$variables)
-        stopifnot(all(info$columna %in% c("x_var", "y_var", "size_var", "color_var", "map_var")))
-        stopifnot(all(nzchar(info$unidad)), all(nzchar(info$indicador)))
-        for (j in seq_len(nrow(info))) {
-          recibidos <- unlist(lapply(consultas, function(x) x$resultado$observations), recursive = FALSE)
-          recibidos <- rev(Filter(function(x) {
-            strsplit(x$series_key, ".", fixed = TRUE)[[1]][2] == info$indicador[j] && !is.null(x$value)
-          }, recibidos))
-          claves <- vapply(recibidos, function(x) {
-            paste(strsplit(x$series_key, ".", fixed = TRUE)[[1]][1], x$time_period)
-          }, "")
-          valores <- vapply(recibidos, function(x) x$value, numeric(1))
-          usados <- !is.na(filas[[info$columna[j]]])
-          idx <- match(paste(filas$pais[usados], filas$anio[usados]), claves)
-          stopifnot(!anyNA(idx))
-          stopifnot(all(abs(filas[[info$columna[j]]][usados] - valores[idx]) <= 0.00005 + 1e-8))
-        }
-        do.call(guardar_datos, args)
-        stopifnot(isTRUE(all.equal(data()$datos[names(filas)], filas)))
+      if (llamada$nombre == "imf_query_dataset" && is.null(llamada$error)) {
+        consultas[[length(consultas) + 1L]] <- llamada
       }
-      if (llamada$nombre == "ver_datos") stopifnot(identical(ver_datos(), data()))
-      if (llamada$nombre == "configurar_grafico") do.call(configurar_grafico, llamada$argumentos)
     }
+    args <- paso$carga
+    if (cache$formato == "fmi-crecimiento-inflacion") {
+      # Replay of the original trace: project its real observations to x/y without rewriting it.
+      args$datos <- lapply(args$datos, function(fila) {
+        list(pais = fila$pais, anio = fila$anio, x = fila$x_var, y = fila$map_var)
+      })
+      args$variables <- Filter(function(info) info$columna %in% c("x_var", "map_var"), args$variables)
+      args$variables <- lapply(args$variables, function(info) {
+        info$columna <- if (info$columna == "x_var") "x" else "y"
+        info
+      })
+    }
+    filas <- dplyr::bind_rows(filas_vacias, args$datos)
+    info <- dplyr::bind_rows(args$variables)
+    for (j in seq_len(nrow(info))) {
+      observaciones <- unlist(lapply(consultas, function(x) x$resultado$observations), recursive = FALSE)
+      observaciones <- rev(Filter(function(x) {
+        strsplit(x$series_key, ".", fixed = TRUE)[[1]][2] == info$indicador[j] && !is.null(x$value)
+      }, observaciones))
+      claves <- vapply(observaciones, function(x) {
+        paste(strsplit(x$series_key, ".", fixed = TRUE)[[1]][1], x$time_period)
+      }, "")
+      valores <- vapply(observaciones, function(x) x$value, numeric(1))
+      usados <- !is.na(filas[[info$columna[j]]])
+      idx <- match(paste(filas$pais[usados], filas$anio[usados]), claves)
+      stopifnot(!anyNA(idx))
+      stopifnot(all(abs(filas[[info$columna[j]]][usados] - valores[idx]) <= 0.00005 + 1e-8))
+    }
+    do.call(guardar_datos, args)
     session$flushReact()
-    df <- data()$datos
-    info <- data()$variables
-    stopifnot(nrow(df) > 0L, all(df$anio == if (i == 3L) 2020L else 2023L))
-    stopifnot(isTRUE(all.equal(df, dplyr::bind_rows(df[0, ], paso$carga$datos))))
-    stopifnot(output$n_paises == as.character(nrow(df)))
+    stopifnot(identical(names(data()$datos), c("pais", "anio", "x", "y")))
+    stopifnot(isTRUE(all.equal(data()$datos, filas)), identical(ver_datos(), data()))
+    stopifnot(output$n_paises == as.character(nrow(filas)))
     stopifnot(output$n_variables == as.character(dplyr::n_distinct(info$indicador)))
-
+    stopifnot(all(filas$anio == if (i == 3L) 2020L else 2023L))
     mapa <- fromJSON(output$map, simplifyVector = FALSE)
-    stopifnot(length(mapa$x$layers) == 1L)
     features <- mapa$x$layers[[1]]$source$data$features
-    esperados <- df$pais[!is.na(df$map_var) & df$pais %in% app$mundo$adm0_a3]
+    esperados <- filas$pais[!is.na(filas$y) & filas$pais %in% app$mundo$adm0_a3]
     stopifnot(setequal(vapply(features, function(x) x$properties$adm0_a3, ""), esperados))
     for (feature in features) {
-      p <- feature$properties
-      idx <- match(p$adm0_a3, df$pais)
-      stopifnot(isTRUE(all.equal(p$map_var, unname(df$map_var[idx]))))
-      stopifnot(grepl(as.character(df$anio[idx]), p$detalle, fixed = TRUE))
-      stopifnot(grepl(info$unidad[info$columna == "map_var"], p$detalle, fixed = TRUE))
-      stopifnot(grepl("FMI", p$detalle, fixed = TRUE))
+      idx <- match(feature$properties$adm0_a3, filas$pais)
+      stopifnot(isTRUE(all.equal(feature$properties$y, unname(filas$y[idx]))))
+      stopifnot(grepl(info$unidad[info$columna == "y"], feature$properties$detalle, fixed = TRUE))
     }
-    stopifnot(length(mapa$x$legend_html) > 0L)
+    stopifnot(length(mapa$x$legend_html) > 0L, !is.null(output$plot))
     tabla <- output$table
-    stopifnot(length(regmatches(tabla, gregexpr("<tr>", tabla, fixed = TRUE))[[1]]) == nrow(df) + 1L)
-
+    stopifnot(length(regmatches(tabla, gregexpr("<tr>", tabla, fixed = TRUE))[[1]]) == nrow(filas) + 1L)
     if (i >= 2L) {
-      imagen <- output$plot
-      stopifnot(!is.null(imagen))
-      stopifnot(identical(puntos$datos, dplyr::filter(df, !is.na(x_var), !is.na(y_var))))
-      stopifnot(identical(rlang::eval_tidy(puntos$mapping$x, puntos$datos), puntos$datos$x_var))
-      stopifnot(identical(rlang::eval_tidy(puntos$mapping$y, puntos$datos), puntos$datos$y_var))
-      stopifnot(identical(rlang::eval_tidy(puntos$mapping$size, puntos$datos), puntos$datos$size_var))
       construido <- ggplot2::ggplot_build(isolate(eval(expresion_plot)))
-      stopifnot(isTRUE(all.equal(construido$data[[1]]$x, puntos$datos$x_var)))
-      stopifnot(isTRUE(all.equal(construido$data[[1]]$y, puntos$datos$y_var)))
-      stopifnot(identical(isolate(escala()), ""))
-      stopifnot(info$indicador[info$columna == "x_var"] == "NGDP_RPCH")
-      stopifnot(info$indicador[info$columna == "y_var"] == "PCPIPCH")
-      stopifnot(info$indicador[info$columna == "size_var"] == "LP")
-      stopifnot(identical(df$y_var, df$map_var))
+      puntos <- dplyr::filter(filas, !is.na(x), !is.na(y))
+      stopifnot(isTRUE(all.equal(construido$data[[1]]$x, puntos$x)))
+      stopifnot(isTRUE(all.equal(construido$data[[1]]$y, puntos$y)))
+      stopifnot(all(construido$data[[1]]$size == 3), all(construido$data[[1]]$colour == "#0E4F5A"))
+      stopifnot(construido$plot$labels$y == paste(info$nombre[info$columna == "y"],
+        info$unidad[info$columna == "y"], sep = " · "))
     }
-    if (i == 2L) stopifnot(identical(df$map_var,
-      anterior$datos$map_var[match(df$pais, anterior$datos$pais)]))
-    cat("Paso", i, "verificado:", paso$pregunta, "\n")
+    cat("Paso", i, "verificado: mapa(y), gráfico(x, y), tabla(x, y).\n")
   }
-
-  # Prueba auxiliar de escalas con valores positivos conocidos; no modifica la caché de la demo.
-  original <- data()
-  filas <- head(original$datos, 1)
-  filas$x_var <- 10
-  filas$y_var <- 100
-  filas$color_var <- filas$y_var
-  info <- original$variables
-  color <- dplyr::filter(info, columna == "y_var")
-  color$columna <- "color_var"
-  info <- dplyr::bind_rows(info, color)
-  como_filas <- function(x) lapply(seq_len(nrow(x)), function(i) as.list(x[i, ]))
-  guardar_datos(como_filas(filas), como_filas(info))
-  carga_guardada <- data()
-  configurar_grafico(log = "x")
-  stopifnot(identical(data(), carga_guardada))
+  # Missing x, a single country and replacement instead of accumulation.
+  fila <- args$datos[[1]]
+  fila$x <- NULL
+  guardar_datos(list(fila), Filter(function(info) info$columna == "y", args$variables))
   session$flushReact()
-  imagen <- output$plot
-  stopifnot(!is.null(imagen), identical(data()$datos, filas))
-  stopifnot(identical(rlang::eval_tidy(puntos$mapping$colour, puntos$datos), filas$color_var))
-  construido <- ggplot2::ggplot_build(isolate(eval(expresion_plot)))
-  stopifnot(isTRUE(all.equal(construido$data[[1]]$x, log10(filas$x_var))))
-  stopifnot(isTRUE(all.equal(construido$data[[1]]$y, filas$y_var)))
-  stopifnot(identical(data()$datos$map_var, filas$map_var))
-  configurar_grafico(log = "xy")
-  session$flushReact()
-  construido <- ggplot2::ggplot_build(isolate(eval(expresion_plot)))
-  stopifnot(isTRUE(all.equal(construido$data[[1]]$y, log10(filas$y_var))))
-  stopifnot(identical(data()$datos, filas))
-
-  # El área es proporcional al valor; el log comprime el tamaño sin tocar los datos ni los ejes.
-  filas_tamano <- filas[rep(1L, 3L), ]
-  filas_tamano$size_var <- c(10, 100, 1000)
-  guardar_datos(como_filas(filas_tamano), como_filas(info))
-  configurar_grafico(log = "", tamano = "area")
-  construido <- ggplot2::ggplot_build(isolate(eval(expresion_plot)))
-  areas <- construido$data[[1]]$size ^ 2
-  stopifnot(isTRUE(all.equal(areas / max(areas), c(0.01, 0.1, 1))))
-  carga_guardada <- data()
-  configurar_grafico(tamano = "log10")
-  construido <- ggplot2::ggplot_build(isolate(eval(expresion_plot)))
-  escala_size <- construido$plot$scales$get_scales("size")
-  stopifnot(identical(escala_size$transform(c(10, 100, 1000)), c(1, 2, 3)))
-  stopifnot(identical(data(), carga_guardada), identical(isolate(escala()), ""))
-  configurar_grafico(tamano = "area")
-
-  # X e Y bastan: tamaño fijo y color uniforme si no se solicitan esos papeles.
-  xy <- filas[c("pais", "anio", "x_var", "y_var")]
-  guardar_datos(como_filas(xy), como_filas(dplyr::filter(info, columna %in% c("x_var", "y_var"))))
-  configurar_grafico(log = "")
-  session$flushReact()
-  imagen <- output$plot
-  stopifnot(!is.null(imagen))
-  construido <- ggplot2::ggplot_build(isolate(eval(expresion_plot)))
-  stopifnot(all(construido$data[[1]]$colour == "#0E4F5A"), all(construido$data[[1]]$size == 3))
-  cat("Canvas vacío, color, tamaño opcional y escalas x/xy verificados sin alterar valores.\n")
+  stopifnot(nrow(data()$datos) == 1L, all(is.na(data()$datos$x)), !is.null(output$plot))
+  stopifnot(length(fromJSON(output$map, simplifyVector = FALSE)$x$layers) == 1L)
+  if (cache$formato == "fmi-crecimiento-inflacion") {
+    poblacion <- cache$pasos[[2]]$carga
+    filas <- lapply(poblacion$datos, function(fila) {
+      list(pais = fila$pais, anio = fila$anio, x = fila$x_var, y = fila$size_var)
+    })
+    info <- Filter(function(info) info$columna %in% c("x_var", "size_var"), poblacion$variables)
+    info <- lapply(info, function(info) {
+      info$columna <- if (info$columna == "x_var") "x" else "y"
+      info
+    })
+    guardar_datos(filas, info)
+    session$flushReact()
+    construido <- ggplot2::ggplot_build(isolate(eval(expresion_plot)))
+    stopifnot(isTRUE(all.equal(construido$data[[1]]$y, data()$datos$y)))
+    mapa <- fromJSON(output$map, simplifyVector = FALSE)
+    for (feature in mapa$x$layers[[1]]$source$data$features) {
+      idx <- match(feature$properties$adm0_a3, data()$datos$pais)
+      stopifnot(isTRUE(all.equal(feature$properties$y, unname(data()$datos$y[idx]))))
+    }
+    cat("Población por crecimiento: población en Y y en el mapa, verificado.\n")
+  }
 })
-cat("Demo offline: carga única, cifras MCP, tabla, mapa sin países extra y puntos actuales correctos.\n")
+cat("Replay offline correcto: cifras MCP, columnas opcionales, mapa y gráfico comparten Y.\n")

@@ -1,0 +1,1653 @@
+{
+  "generado_utc": "2026-11-08 22:36:36 UTC",
+  "formato": "carga-unica",
+  "endpoint": "https://worldbank.caseyjhand.com/mcp",
+  "modelo": "gpt-5.6-luna",
+  "pasos": [
+    {
+      "pregunta": "Pinta el mapa con el último dato disponible de esperanza de vida de Chile, Perú y Colombia.",
+      "respuesta": "Mapa actualizado con el último dato disponible de **esperanza de vida al nacer (total)**:\n\n- **Chile:** 81,359 años (2024)\n- **Perú:** 77,941 años (2024)\n- **Colombia:** 77,913 años (2024)\n\nIndicador: `SP.DYN.LE00.IN`. Fuente: Banco Mundial, World Development Indicators.",
+      "llamadas": [
+        {
+          "nombre": "worldbank_search_indicators",
+          "argumentos": {
+            "query": "life expectancy at birth",
+            "topic_id": null,
+            "source_id": null,
+            "page": 1,
+            "per_page": 10
+          },
+          "resultado": {
+            "indicators": [
+              {
+                "id": "SP.DYN.LE00.IN",
+                "name": "Life expectancy at birth, total (years)",
+                "sourceId": "2",
+                "sourceName": "World Development Indicators",
+                "sourceNote": "Life expectancy at birth indicates the number of years a newborn infant would live if prevailing patterns of mortality at the time of its birth were t…",
+                "topics": [
+                  {
+                    "id": "8",
+                    "name": "Health "
+                  }
+                ]
+              },
+              {
+                "id": "SP.DYN.LE00.FE.IN",
+                "name": "Life expectancy at birth, female (years)",
+                "sourceId": "2",
+                "sourceName": "World Development Indicators",
+                "sourceNote": "Life expectancy at birth indicates the number of years a newborn infant would live if prevailing patterns of mortality at the time of its birth were t…",
+                "topics": [
+                  {
+                    "id": "8",
+                    "name": "Health "
+                  },
+                  {
+                    "id": "17",
+                    "name": "Gender"
+                  },
+                  {
+                    "id": "15",
+                    "name": "Social Development "
+                  }
+                ]
+              },
+              {
+                "id": "SP.DYN.LE00.MA.IN",
+                "name": "Life expectancy at birth, male (years)",
+                "sourceId": "2",
+                "sourceName": "World Development Indicators",
+                "sourceNote": "Life expectancy at birth indicates the number of years a newborn infant would live if prevailing patterns of mortality at the time of its birth were t…",
+                "topics": [
+                  {
+                    "id": "8",
+                    "name": "Health "
+                  },
+                  {
+                    "id": "17",
+                    "name": "Gender"
+                  },
+                  {
+                    "id": "15",
+                    "name": "Social Development "
+                  }
+                ]
+              },
+              {
+                "id": "UNDP.HDI.XD",
+                "name": "Human development index (HDI)",
+                "sourceId": "11",
+                "sourceName": "Africa Development Indicators",
+                "sourceNote": "The Human Development Index (HDI) is a summary measure of human development. It measures the average achievements in a country in three basic dimensio…",
+                "topics": []
+              }
+            ],
+            "appliedFilters": {
+              "query": "life expectancy at birth"
+            },
+            "effectiveQuery": "query=\"life expectancy at birth\"",
+            "totalCount": 4,
+            "currentPage": 1,
+            "totalPages": 1
+          },
+          "error": null
+        },
+        {
+          "nombre": "worldbank_get_data",
+          "argumentos": {
+            "indicator_id": "SP.DYN.LE00.IN",
+            "countries": [
+              "CHL",
+              "PER",
+              "COL"
+            ],
+            "date_range": null,
+            "mrnev": 1,
+            "page": 1,
+            "per_page": 1000
+          },
+          "resultado": {
+            "sourceId": "2",
+            "data": [
+              {
+                "countryCode": "CL",
+                "countryIso3": "CHL",
+                "countryName": "Chile",
+                "date": "2024",
+                "value": 81.359,
+                "obsStatus": "",
+                "isAggregate": false
+              },
+              {
+                "countryCode": "CO",
+                "countryIso3": "COL",
+                "countryName": "Colombia",
+                "date": "2024",
+                "value": 77.913,
+                "obsStatus": "",
+                "isAggregate": false
+              },
+              {
+                "countryCode": "PE",
+                "countryIso3": "PER",
+                "countryName": "Peru",
+                "date": "2024",
+                "value": 77.941,
+                "obsStatus": "",
+                "isAggregate": false
+              }
+            ],
+            "indicator": {
+              "id": "SP.DYN.LE00.IN",
+              "name": "Life expectancy at birth, total (years)"
+            },
+            "nullCount": 0,
+            "appliedFilters": {
+              "indicatorId": "SP.DYN.LE00.IN",
+              "countries": "CHL;PER;COL",
+              "mrnev": 1,
+              "page": 1,
+              "perPage": 1000
+            },
+            "totalCount": 3,
+            "currentPage": 1,
+            "totalPages": 1,
+            "lastUpdated": "2026-10-08"
+          },
+          "error": null
+        },
+        {
+          "nombre": "guardar_datos",
+          "argumentos": {
+            "datos": [
+              {
+                "pais": "CHL",
+                "anio": 2024,
+                "varx": null,
+                "vary": null,
+                "varz": null,
+                "varmapa": 81.359
+              },
+              {
+                "pais": "COL",
+                "anio": 2024,
+                "varx": null,
+                "vary": null,
+                "varz": null,
+                "varmapa": 77.913
+              },
+              {
+                "pais": "PER",
+                "anio": 2024,
+                "varx": null,
+                "vary": null,
+                "varz": null,
+                "varmapa": 77.941
+              }
+            ],
+            "variables": [
+              {
+                "columna": "varmapa",
+                "indicador": "SP.DYN.LE00.IN",
+                "nombre": "Esperanza de vida al nacer, total",
+                "unidad": "años"
+              }
+            ]
+          },
+          "resultado": "Vista actualizada: 6 países.",
+          "error": null
+        },
+        {
+          "nombre": "guardar_datos",
+          "argumentos": {
+            "datos": [
+              {
+                "pais": "CHL",
+                "anio": 2024,
+                "varx": null,
+                "vary": null,
+                "varz": null,
+                "varmapa": 81.359
+              },
+              {
+                "pais": "COL",
+                "anio": 2024,
+                "varx": null,
+                "vary": null,
+                "varz": null,
+                "varmapa": 77.913
+              },
+              {
+                "pais": "PER",
+                "anio": 2024,
+                "varx": null,
+                "vary": null,
+                "varz": null,
+                "varmapa": 77.941
+              }
+            ],
+            "variables": [
+              {
+                "columna": "varmapa",
+                "indicador": "SP.DYN.LE00.IN",
+                "nombre": "Esperanza de vida al nacer, total",
+                "unidad": "años"
+              }
+            ]
+          },
+          "resultado": "Vista actualizada: 6 países.",
+          "error": null
+        },
+        {
+          "nombre": "guardar_datos",
+          "argumentos": {
+            "datos": [
+              {
+                "pais": "CHL",
+                "anio": 2024,
+                "varx": null,
+                "vary": null,
+                "varz": null,
+                "varmapa": 81.359
+              },
+              {
+                "pais": "COL",
+                "anio": 2024,
+                "varx": null,
+                "vary": null,
+                "varz": null,
+                "varmapa": 77.913
+              },
+              {
+                "pais": "PER",
+                "anio": 2024,
+                "varx": null,
+                "vary": null,
+                "varz": null,
+                "varmapa": 77.941
+              }
+            ],
+            "variables": [
+              {
+                "columna": "varmapa",
+                "indicador": "SP.DYN.LE00.IN",
+                "nombre": "Esperanza de vida al nacer, total",
+                "unidad": "años"
+              }
+            ]
+          },
+          "resultado": "Vista actualizada: 6 países.",
+          "error": null
+        }
+      ],
+      "carga": {
+        "datos": [
+          {
+            "pais": "CHL",
+            "anio": 2024,
+            "varmapa": 81.359
+          },
+          {
+            "pais": "COL",
+            "anio": 2024,
+            "varmapa": 77.913
+          },
+          {
+            "pais": "PER",
+            "anio": 2024,
+            "varmapa": 77.941
+          }
+        ],
+        "variables": [
+          {
+            "columna": "varmapa",
+            "indicador": "SP.DYN.LE00.IN",
+            "nombre": "Esperanza de vida al nacer, total",
+            "unidad": "años"
+          }
+        ]
+      }
+    },
+    {
+      "pregunta": "Para Chile, Perú y Colombia en 2023, muestra una dispersión con PIB por habitante en USD corrientes en X, esperanza de vida en Y y población como tamaño. Pinta el mapa por esperanza de vida.",
+      "respuesta": "Dispersión y mapa actualizados para **Chile, Perú y Colombia**, todos en **2023**:\n\n- **Eje X:** PIB por habitante, USD corrientes.\n- **Eje Y:** Esperanza de vida al nacer, años.\n- **Tamaño:** Población total, personas.\n- **Color del mapa:** Esperanza de vida, años.\n\nDatos cargados:\n\n| País | PIB por habitante (USD) | Esperanza de vida (años) | Población |\n|---|---:|---:|---:|\n| Chile | 17.081,5181 | 81,1670 | 19.658.835 |\n| Colombia | 7.012,4917 | 77,7250 | 52.321.152 |\n| Perú | 7.919,0463 | 77,7400 | 33.845.617 |\n\nFuente: Banco Mundial, World Development Indicators.",
+      "llamadas": [
+        {
+          "nombre": "worldbank_search_indicators",
+          "argumentos": {
+            "query": "GDP per capita current US dollars",
+            "topic_id": null,
+            "source_id": null,
+            "page": 1,
+            "per_page": 10
+          },
+          "resultado": {
+            "indicators": [
+              {
+                "id": "NE.CON.PCAP.PP.CD",
+                "name": "Households and NPISHs Final consumption expenditure per capita, PPP (current international $)",
+                "sourceId": "2",
+                "sourceName": "World Development Indicators",
+                "sourceNote": "This indicator provides values for final consumption expenditure per person expressed in current international dollars, converted by purchasing power…",
+                "topics": []
+              },
+              {
+                "id": "NY.GDP.PCAP.CD",
+                "name": "GDP per capita (current US$)",
+                "sourceId": "2",
+                "sourceName": "World Development Indicators",
+                "sourceNote": "Gross domestic product is the total income earned through the production of goods and services in an economic territory during an accounting period. I…",
+                "topics": [
+                  {
+                    "id": "3",
+                    "name": "Economy & Growth"
+                  }
+                ]
+              },
+              {
+                "id": "NY.GDP.PCAP.PP.CD",
+                "name": "GDP per capita, PPP (current international $)",
+                "sourceId": "2",
+                "sourceName": "World Development Indicators",
+                "sourceNote": "This indicator provides values for gross domestic product (GDP) per person expressed in current international dollars, converted by purchasing power p…",
+                "topics": [
+                  {
+                    "id": "3",
+                    "name": "Economy & Growth"
+                  }
+                ]
+              },
+              {
+                "id": "NY.GNP.PCAP.PP.CD",
+                "name": "GNI per capita, PPP (current international $)",
+                "sourceId": "2",
+                "sourceName": "World Development Indicators",
+                "sourceNote": "This indicator provides values for gross national income (GNI) per person expressed in current international dollars, converted by purchasing power pa…",
+                "topics": [
+                  {
+                    "id": "3",
+                    "name": "Economy & Growth"
+                  }
+                ]
+              }
+            ],
+            "appliedFilters": {
+              "query": "GDP per capita current US dollars"
+            },
+            "effectiveQuery": "query=\"GDP per capita current US dollars\"",
+            "totalCount": 4,
+            "currentPage": 1,
+            "totalPages": 1
+          },
+          "error": null
+        },
+        {
+          "nombre": "worldbank_search_indicators",
+          "argumentos": {
+            "query": "population total",
+            "topic_id": null,
+            "source_id": null,
+            "page": 1,
+            "per_page": 10
+          },
+          "resultado": {
+            "indicators": [
+              {
+                "id": "SP.POP.TOTL",
+                "name": "Population, total",
+                "sourceId": "2",
+                "sourceName": "World Development Indicators",
+                "sourceNote": "Total population is based on the de facto definition of population, which counts all residents regardless of legal status or citizenship. The values s…",
+                "topics": [
+                  {
+                    "id": "19",
+                    "name": "Climate Change"
+                  },
+                  {
+                    "id": "8",
+                    "name": "Health "
+                  }
+                ]
+              },
+              {
+                "id": "JI.POP.URBN.ZS",
+                "name": "Urban population, total (% of total population)",
+                "sourceId": "86",
+                "sourceName": "Global Jobs Indicators Database (JOIN)",
+                "sourceNote": "",
+                "topics": []
+              },
+              {
+                "id": "EN.ATM.PM25.MC.ZS",
+                "name": "PM2.5 air pollution, population exposed to levels exceeding WHO guideline value (% of total)",
+                "sourceId": "2",
+                "sourceName": "World Development Indicators",
+                "sourceNote": "Percent of population exposed to ambient concentrations of PM2.5 that exceed the WHO guideline value is defined as the portion of a country’s populati…",
+                "topics": [
+                  {
+                    "id": "16",
+                    "name": "Urban Development "
+                  },
+                  {
+                    "id": "6",
+                    "name": "Environment "
+                  }
+                ]
+              },
+              {
+                "id": "EN.ATM.PM25.MC.T1.ZS",
+                "name": "PM2.5 pollution, population exposed to levels exceeding WHO Interim Target-1 value (% of total)",
+                "sourceId": "2",
+                "sourceName": "World Development Indicators",
+                "sourceNote": "Percent of population exposed to ambient concentrations of PM2.5 that exceed the World Health Organization (WHO) Interim Target 1 (IT-1) is defined as…",
+                "topics": [
+                  {
+                    "id": "6",
+                    "name": "Environment "
+                  }
+                ]
+              },
+              {
+                "id": "EN.ATM.PM25.MC.T2.ZS",
+                "name": "PM2.5 pollution, population exposed to levels exceeding WHO Interim Target-2 value (% of total)",
+                "sourceId": "2",
+                "sourceName": "World Development Indicators",
+                "sourceNote": "Percent of population exposed to ambient concentrations of PM2.5 that exceed the World Health Organization (WHO) Interim Target 2 (IT-2) is defined as…",
+                "topics": [
+                  {
+                    "id": "6",
+                    "name": "Environment "
+                  }
+                ]
+              },
+              {
+                "id": "EN.ATM.PM25.MC.T3.ZS",
+                "name": "PM2.5 pollution, population exposed to levels exceeding WHO Interim Target-3 value (% of total)",
+                "sourceId": "2",
+                "sourceName": "World Development Indicators",
+                "sourceNote": "Percent of population exposed to ambient concentrations of PM2.5 that exceed the World Health Organization (WHO) Interim Target 3 (IT-3) is defined as…",
+                "topics": [
+                  {
+                    "id": "6",
+                    "name": "Environment "
+                  }
+                ]
+              },
+              {
+                "id": "EN.POP.EL5M.ZS",
+                "name": "Population living in areas where elevation is below 5 meters (% of total population)",
+                "sourceId": "2",
+                "sourceName": "World Development Indicators",
+                "sourceNote": "Population below 5m is the percentage of the total population living in areas where the elevation is 5 meters or less.",
+                "topics": [
+                  {
+                    "id": "19",
+                    "name": "Climate Change"
+                  },
+                  {
+                    "id": "6",
+                    "name": "Environment "
+                  }
+                ]
+              },
+              {
+                "id": "EN.POP.EL5M.RU.ZS",
+                "name": "Rural population living in areas where elevation is below 5 meters (% of total population)",
+                "sourceId": "2",
+                "sourceName": "World Development Indicators",
+                "sourceNote": "Rural population below 5m is the percentage of the total population, living in areas where the elevation is 5 meters or less.",
+                "topics": [
+                  {
+                    "id": "1",
+                    "name": "Agriculture & Rural Development  "
+                  },
+                  {
+                    "id": "19",
+                    "name": "Climate Change"
+                  },
+                  {
+                    "id": "6",
+                    "name": "Environment "
+                  }
+                ]
+              },
+              {
+                "id": "EN.POP.EL5M.UR.ZS",
+                "name": "Urban population living in areas where elevation is below 5 meters (% of total population)",
+                "sourceId": "2",
+                "sourceName": "World Development Indicators",
+                "sourceNote": "Urban population below 5m is the percentage of the total population, living in areas where the elevation is 5 meters or less.",
+                "topics": [
+                  {
+                    "id": "19",
+                    "name": "Climate Change"
+                  },
+                  {
+                    "id": "16",
+                    "name": "Urban Development "
+                  },
+                  {
+                    "id": "6",
+                    "name": "Environment "
+                  }
+                ]
+              },
+              {
+                "id": "EN.URB.MCTY.TL.ZS",
+                "name": "Population in urban agglomerations of more than 1 million (% of total population)",
+                "sourceId": "2",
+                "sourceName": "World Development Indicators",
+                "sourceNote": "Population in urban agglomerations of more than one million is the percentage of a country's population living in metropolitan areas that in 2018 had…",
+                "topics": [
+                  {
+                    "id": "19",
+                    "name": "Climate Change"
+                  },
+                  {
+                    "id": "16",
+                    "name": "Urban Development "
+                  }
+                ]
+              }
+            ],
+            "appliedFilters": {
+              "query": "population total"
+            },
+            "effectiveQuery": "query=\"population total\"",
+            "totalCount": 2761,
+            "currentPage": 1,
+            "totalPages": 277
+          },
+          "error": null
+        },
+        {
+          "nombre": "worldbank_get_data",
+          "argumentos": {
+            "indicator_id": "NY.GDP.PCAP.CD",
+            "countries": [
+              "CHL",
+              "PER",
+              "COL"
+            ],
+            "date_range": "2023",
+            "mrnev": null,
+            "page": 1,
+            "per_page": 1000
+          },
+          "resultado": {
+            "sourceId": "2",
+            "data": [
+              {
+                "countryCode": "CL",
+                "countryIso3": "CHL",
+                "countryName": "Chile",
+                "date": "2023",
+                "value": 17081.5180740049,
+                "obsStatus": "",
+                "isAggregate": false
+              },
+              {
+                "countryCode": "CO",
+                "countryIso3": "COL",
+                "countryName": "Colombia",
+                "date": "2023",
+                "value": 7012.49169137756,
+                "obsStatus": "",
+                "isAggregate": false
+              },
+              {
+                "countryCode": "PE",
+                "countryIso3": "PER",
+                "countryName": "Peru",
+                "date": "2023",
+                "value": 7919.04634828547,
+                "obsStatus": "",
+                "isAggregate": false
+              }
+            ],
+            "indicator": {
+              "id": "NY.GDP.PCAP.CD",
+              "name": "GDP per capita (current US$)"
+            },
+            "nullCount": 0,
+            "appliedFilters": {
+              "indicatorId": "NY.GDP.PCAP.CD",
+              "countries": "CHL;PER;COL",
+              "dateRange": "2023",
+              "page": 1,
+              "perPage": 1000
+            },
+            "totalCount": 3,
+            "currentPage": 1,
+            "totalPages": 1,
+            "lastUpdated": "2026-10-08"
+          },
+          "error": null
+        },
+        {
+          "nombre": "worldbank_get_data",
+          "argumentos": {
+            "indicator_id": "SP.DYN.LE00.IN",
+            "countries": [
+              "CHL",
+              "PER",
+              "COL"
+            ],
+            "date_range": "2023",
+            "mrnev": null,
+            "page": 1,
+            "per_page": 1000
+          },
+          "resultado": {
+            "sourceId": "2",
+            "data": [
+              {
+                "countryCode": "CL",
+                "countryIso3": "CHL",
+                "countryName": "Chile",
+                "date": "2023",
+                "value": 81.167,
+                "obsStatus": "",
+                "isAggregate": false
+              },
+              {
+                "countryCode": "CO",
+                "countryIso3": "COL",
+                "countryName": "Colombia",
+                "date": "2023",
+                "value": 77.725,
+                "obsStatus": "",
+                "isAggregate": false
+              },
+              {
+                "countryCode": "PE",
+                "countryIso3": "PER",
+                "countryName": "Peru",
+                "date": "2023",
+                "value": 77.74,
+                "obsStatus": "",
+                "isAggregate": false
+              }
+            ],
+            "indicator": {
+              "id": "SP.DYN.LE00.IN",
+              "name": "Life expectancy at birth, total (years)"
+            },
+            "nullCount": 0,
+            "appliedFilters": {
+              "indicatorId": "SP.DYN.LE00.IN",
+              "countries": "CHL;PER;COL",
+              "dateRange": "2023",
+              "page": 1,
+              "perPage": 1000
+            },
+            "totalCount": 3,
+            "currentPage": 1,
+            "totalPages": 1,
+            "lastUpdated": "2026-10-08"
+          },
+          "error": null
+        },
+        {
+          "nombre": "worldbank_get_data",
+          "argumentos": {
+            "indicator_id": "SP.POP.TOTL",
+            "countries": [
+              "CHL",
+              "PER",
+              "COL"
+            ],
+            "date_range": "2023",
+            "mrnev": null,
+            "page": 1,
+            "per_page": 1000
+          },
+          "resultado": {
+            "sourceId": "2",
+            "data": [
+              {
+                "countryCode": "CL",
+                "countryIso3": "CHL",
+                "countryName": "Chile",
+                "date": "2023",
+                "value": 19658835,
+                "obsStatus": "",
+                "isAggregate": false
+              },
+              {
+                "countryCode": "CO",
+                "countryIso3": "COL",
+                "countryName": "Colombia",
+                "date": "2023",
+                "value": 52321152,
+                "obsStatus": "",
+                "isAggregate": false
+              },
+              {
+                "countryCode": "PE",
+                "countryIso3": "PER",
+                "countryName": "Peru",
+                "date": "2023",
+                "value": 33845617,
+                "obsStatus": "",
+                "isAggregate": false
+              }
+            ],
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "name": "Population, total"
+            },
+            "nullCount": 0,
+            "appliedFilters": {
+              "indicatorId": "SP.POP.TOTL",
+              "countries": "CHL;PER;COL",
+              "dateRange": "2023",
+              "page": 1,
+              "perPage": 1000
+            },
+            "totalCount": 3,
+            "currentPage": 1,
+            "totalPages": 1,
+            "lastUpdated": "2026-10-08"
+          },
+          "error": null
+        },
+        {
+          "nombre": "guardar_datos",
+          "argumentos": {
+            "datos": [
+              {
+                "pais": "CHL",
+                "anio": 2023,
+                "varx": 17081.5181,
+                "vary": 81.167,
+                "varz": 19658835,
+                "varmapa": 81.167
+              },
+              {
+                "pais": "COL",
+                "anio": 2023,
+                "varx": 7012.4917,
+                "vary": 77.725,
+                "varz": 52321152,
+                "varmapa": 77.725
+              },
+              {
+                "pais": "PER",
+                "anio": 2023,
+                "varx": 7919.0463,
+                "vary": 77.74,
+                "varz": 33845617,
+                "varmapa": 77.74
+              }
+            ],
+            "variables": [
+              {
+                "columna": "varx",
+                "indicador": "NY.GDP.PCAP.CD",
+                "nombre": "PIB por habitante",
+                "unidad": "USD corrientes"
+              },
+              {
+                "columna": "vary",
+                "indicador": "SP.DYN.LE00.IN",
+                "nombre": "Esperanza de vida al nacer, total",
+                "unidad": "años"
+              },
+              {
+                "columna": "varz",
+                "indicador": "SP.POP.TOTL",
+                "nombre": "Población total",
+                "unidad": "personas"
+              },
+              {
+                "columna": "varmapa",
+                "indicador": "SP.DYN.LE00.IN",
+                "nombre": "Esperanza de vida al nacer, total",
+                "unidad": "años"
+              }
+            ]
+          },
+          "resultado": "Vista actualizada: 6 países.",
+          "error": null
+        }
+      ],
+      "carga": {
+        "datos": [
+          {
+            "pais": "CHL",
+            "anio": 2023,
+            "varx": 17081.5181,
+            "vary": 81.167,
+            "varz": 19658835,
+            "varmapa": 81.167
+          },
+          {
+            "pais": "COL",
+            "anio": 2023,
+            "varx": 7012.4917,
+            "vary": 77.725,
+            "varz": 52321152,
+            "varmapa": 77.725
+          },
+          {
+            "pais": "PER",
+            "anio": 2023,
+            "varx": 7919.0463,
+            "vary": 77.74,
+            "varz": 33845617,
+            "varmapa": 77.74
+          }
+        ],
+        "variables": [
+          {
+            "columna": "varx",
+            "indicador": "NY.GDP.PCAP.CD",
+            "nombre": "PIB por habitante",
+            "unidad": "USD corrientes"
+          },
+          {
+            "columna": "vary",
+            "indicador": "SP.DYN.LE00.IN",
+            "nombre": "Esperanza de vida al nacer, total",
+            "unidad": "años"
+          },
+          {
+            "columna": "varz",
+            "indicador": "SP.POP.TOTL",
+            "nombre": "Población total",
+            "unidad": "personas"
+          },
+          {
+            "columna": "varmapa",
+            "indicador": "SP.DYN.LE00.IN",
+            "nombre": "Esperanza de vida al nacer, total",
+            "unidad": "años"
+          }
+        ]
+      }
+    },
+    {
+      "pregunta": "Pinta ahora el mapa por el PIB por habitante ya cargado. Conserva la dispersión sin descargar otra vez.",
+      "respuesta": "Mapa actualizado para colorear por **PIB por habitante en USD corrientes**, reutilizando los datos ya cargados.\n\nSe conserva la dispersión:\n\n- **X:** PIB por habitante\n- **Y:** Esperanza de vida\n- **Tamaño:** Población\n- **Mapa:** PIB por habitante\n\nPaíses visibles: **Chile, Colombia y Perú**, año **2023**. No se descargaron datos nuevamente.",
+      "llamadas": [
+        {
+          "nombre": "ver_datos",
+          "argumentos": {},
+          "resultado": {
+            "datos": [
+              {
+                "pais": "CHL",
+                "anio": 2023,
+                "varx": 17081.5181,
+                "vary": 81.167,
+                "varz": 19658835,
+                "varmapa": 81.167
+              },
+              {
+                "pais": "COL",
+                "anio": 2023,
+                "varx": 7012.4917,
+                "vary": 77.725,
+                "varz": 52321152,
+                "varmapa": 77.725
+              },
+              {
+                "pais": "PER",
+                "anio": 2023,
+                "varx": 7919.0463,
+                "vary": 77.74,
+                "varz": 33845617,
+                "varmapa": 77.74
+              }
+            ],
+            "variables": [
+              {
+                "columna": "varx",
+                "indicador": "NY.GDP.PCAP.CD",
+                "nombre": "PIB por habitante",
+                "unidad": "USD corrientes"
+              },
+              {
+                "columna": "vary",
+                "indicador": "SP.DYN.LE00.IN",
+                "nombre": "Esperanza de vida al nacer, total",
+                "unidad": "años"
+              },
+              {
+                "columna": "varz",
+                "indicador": "SP.POP.TOTL",
+                "nombre": "Población total",
+                "unidad": "personas"
+              },
+              {
+                "columna": "varmapa",
+                "indicador": "SP.DYN.LE00.IN",
+                "nombre": "Esperanza de vida al nacer, total",
+                "unidad": "años"
+              }
+            ]
+          },
+          "error": null
+        },
+        {
+          "nombre": "guardar_datos",
+          "argumentos": {
+            "datos": [
+              {
+                "pais": "CHL",
+                "anio": 2023,
+                "varx": 17081.5181,
+                "vary": 81.167,
+                "varz": 19658835,
+                "varmapa": 17081.5181
+              },
+              {
+                "pais": "COL",
+                "anio": 2023,
+                "varx": 7012.4917,
+                "vary": 77.725,
+                "varz": 52321152,
+                "varmapa": 7012.4917
+              },
+              {
+                "pais": "PER",
+                "anio": 2023,
+                "varx": 7919.0463,
+                "vary": 77.74,
+                "varz": 33845617,
+                "varmapa": 7919.0463
+              }
+            ],
+            "variables": [
+              {
+                "columna": "varx",
+                "indicador": "NY.GDP.PCAP.CD",
+                "nombre": "PIB por habitante",
+                "unidad": "USD corrientes"
+              },
+              {
+                "columna": "vary",
+                "indicador": "SP.DYN.LE00.IN",
+                "nombre": "Esperanza de vida al nacer, total",
+                "unidad": "años"
+              },
+              {
+                "columna": "varz",
+                "indicador": "SP.POP.TOTL",
+                "nombre": "Población total",
+                "unidad": "personas"
+              },
+              {
+                "columna": "varmapa",
+                "indicador": "NY.GDP.PCAP.CD",
+                "nombre": "PIB por habitante",
+                "unidad": "USD corrientes"
+              }
+            ]
+          },
+          "resultado": "Vista actualizada: 6 países.",
+          "error": null
+        }
+      ],
+      "carga": {
+        "datos": [
+          {
+            "pais": "CHL",
+            "anio": 2023,
+            "varx": 17081.5181,
+            "vary": 81.167,
+            "varz": 19658835,
+            "varmapa": 17081.5181
+          },
+          {
+            "pais": "COL",
+            "anio": 2023,
+            "varx": 7012.4917,
+            "vary": 77.725,
+            "varz": 52321152,
+            "varmapa": 7012.4917
+          },
+          {
+            "pais": "PER",
+            "anio": 2023,
+            "varx": 7919.0463,
+            "vary": 77.74,
+            "varz": 33845617,
+            "varmapa": 7919.0463
+          }
+        ],
+        "variables": [
+          {
+            "columna": "varx",
+            "indicador": "NY.GDP.PCAP.CD",
+            "nombre": "PIB por habitante",
+            "unidad": "USD corrientes"
+          },
+          {
+            "columna": "vary",
+            "indicador": "SP.DYN.LE00.IN",
+            "nombre": "Esperanza de vida al nacer, total",
+            "unidad": "años"
+          },
+          {
+            "columna": "varz",
+            "indicador": "SP.POP.TOTL",
+            "nombre": "Población total",
+            "unidad": "personas"
+          },
+          {
+            "columna": "varmapa",
+            "indicador": "NY.GDP.PCAP.CD",
+            "nombre": "PIB por habitante",
+            "unidad": "USD corrientes"
+          }
+        ]
+      }
+    },
+    {
+      "pregunta": "Descarga esas tres variables para 2022 y actualiza toda la vista. Pinta el mapa por PIB por habitante.",
+      "respuesta": "Vista completa actualizada para **2022** con Chile, Colombia y Perú.\n\n- **X:** PIB por habitante — USD corrientes\n- **Y:** Esperanza de vida — años\n- **Tamaño:** Población — personas\n- **Color del mapa:** PIB por habitante — USD corrientes\n\n| País | PIB por habitante | Esperanza de vida | Población |\n|---|---:|---:|---:|\n| Chile | 15.399,1045 | 79,1760 | 19.553.036 |\n| Colombia | 6.680,4451 | 76,5080 | 51.737.944 |\n| Perú | 7.353,7460 | 76,8340 | 33.475.438 |\n\nFuente: Banco Mundial, World Development Indicators.",
+      "llamadas": [
+        {
+          "nombre": "worldbank_get_data",
+          "argumentos": {
+            "indicator_id": "NY.GDP.PCAP.CD",
+            "countries": [
+              "CHL",
+              "PER",
+              "COL"
+            ],
+            "date_range": "2022",
+            "mrnev": null,
+            "page": 1,
+            "per_page": 1000
+          },
+          "resultado": {
+            "sourceId": "2",
+            "data": [
+              {
+                "countryCode": "CL",
+                "countryIso3": "CHL",
+                "countryName": "Chile",
+                "date": "2022",
+                "value": 15399.1044717559,
+                "obsStatus": "",
+                "isAggregate": false
+              },
+              {
+                "countryCode": "CO",
+                "countryIso3": "COL",
+                "countryName": "Colombia",
+                "date": "2022",
+                "value": 6680.44506854481,
+                "obsStatus": "",
+                "isAggregate": false
+              },
+              {
+                "countryCode": "PE",
+                "countryIso3": "PER",
+                "countryName": "Peru",
+                "date": "2022",
+                "value": 7353.74598721667,
+                "obsStatus": "",
+                "isAggregate": false
+              }
+            ],
+            "indicator": {
+              "id": "NY.GDP.PCAP.CD",
+              "name": "GDP per capita (current US$)"
+            },
+            "nullCount": 0,
+            "appliedFilters": {
+              "indicatorId": "NY.GDP.PCAP.CD",
+              "countries": "CHL;PER;COL",
+              "dateRange": "2022",
+              "page": 1,
+              "perPage": 1000
+            },
+            "totalCount": 3,
+            "currentPage": 1,
+            "totalPages": 1,
+            "lastUpdated": "2026-10-08"
+          },
+          "error": null
+        },
+        {
+          "nombre": "worldbank_get_data",
+          "argumentos": {
+            "indicator_id": "SP.DYN.LE00.IN",
+            "countries": [
+              "CHL",
+              "PER",
+              "COL"
+            ],
+            "date_range": "2022",
+            "mrnev": null,
+            "page": 1,
+            "per_page": 1000
+          },
+          "resultado": {
+            "sourceId": "2",
+            "data": [
+              {
+                "countryCode": "CL",
+                "countryIso3": "CHL",
+                "countryName": "Chile",
+                "date": "2022",
+                "value": 79.176,
+                "obsStatus": "",
+                "isAggregate": false
+              },
+              {
+                "countryCode": "CO",
+                "countryIso3": "COL",
+                "countryName": "Colombia",
+                "date": "2022",
+                "value": 76.508,
+                "obsStatus": "",
+                "isAggregate": false
+              },
+              {
+                "countryCode": "PE",
+                "countryIso3": "PER",
+                "countryName": "Peru",
+                "date": "2022",
+                "value": 76.834,
+                "obsStatus": "",
+                "isAggregate": false
+              }
+            ],
+            "indicator": {
+              "id": "SP.DYN.LE00.IN",
+              "name": "Life expectancy at birth, total (years)"
+            },
+            "nullCount": 0,
+            "appliedFilters": {
+              "indicatorId": "SP.DYN.LE00.IN",
+              "countries": "CHL;PER;COL",
+              "dateRange": "2022",
+              "page": 1,
+              "perPage": 1000
+            },
+            "totalCount": 3,
+            "currentPage": 1,
+            "totalPages": 1,
+            "lastUpdated": "2026-10-08"
+          },
+          "error": null
+        },
+        {
+          "nombre": "worldbank_get_data",
+          "argumentos": {
+            "indicator_id": "SP.POP.TOTL",
+            "countries": [
+              "CHL",
+              "PER",
+              "COL"
+            ],
+            "date_range": "2022",
+            "mrnev": null,
+            "page": 1,
+            "per_page": 1000
+          },
+          "resultado": {
+            "sourceId": "2",
+            "data": [
+              {
+                "countryCode": "CL",
+                "countryIso3": "CHL",
+                "countryName": "Chile",
+                "date": "2022",
+                "value": 19553036,
+                "obsStatus": "",
+                "isAggregate": false
+              },
+              {
+                "countryCode": "CO",
+                "countryIso3": "COL",
+                "countryName": "Colombia",
+                "date": "2022",
+                "value": 51737944,
+                "obsStatus": "",
+                "isAggregate": false
+              },
+              {
+                "countryCode": "PE",
+                "countryIso3": "PER",
+                "countryName": "Peru",
+                "date": "2022",
+                "value": 33475438,
+                "obsStatus": "",
+                "isAggregate": false
+              }
+            ],
+            "indicator": {
+              "id": "SP.POP.TOTL",
+              "name": "Population, total"
+            },
+            "nullCount": 0,
+            "appliedFilters": {
+              "indicatorId": "SP.POP.TOTL",
+              "countries": "CHL;PER;COL",
+              "dateRange": "2022",
+              "page": 1,
+              "perPage": 1000
+            },
+            "totalCount": 3,
+            "currentPage": 1,
+            "totalPages": 1,
+            "lastUpdated": "2026-10-08"
+          },
+          "error": null
+        },
+        {
+          "nombre": "guardar_datos",
+          "argumentos": {
+            "datos": [
+              {
+                "pais": "CHL",
+                "anio": 2022,
+                "varx": 15399.1045,
+                "vary": 79.176,
+                "varz": 19553036,
+                "varmapa": 15399.1045
+              },
+              {
+                "pais": "COL",
+                "anio": 2022,
+                "varx": 6680.4451,
+                "vary": 76.508,
+                "varz": 51737944,
+                "varmapa": 6680.4451
+              },
+              {
+                "pais": "PER",
+                "anio": 2022,
+                "varx": 7353.746,
+                "vary": 76.834,
+                "varz": 33475438,
+                "varmapa": 7353.746
+              }
+            ],
+            "variables": [
+              {
+                "columna": "varx",
+                "indicador": "NY.GDP.PCAP.CD",
+                "nombre": "PIB por habitante",
+                "unidad": "USD corrientes"
+              },
+              {
+                "columna": "vary",
+                "indicador": "SP.DYN.LE00.IN",
+                "nombre": "Esperanza de vida al nacer, total",
+                "unidad": "años"
+              },
+              {
+                "columna": "varz",
+                "indicador": "SP.POP.TOTL",
+                "nombre": "Población total",
+                "unidad": "personas"
+              },
+              {
+                "columna": "varmapa",
+                "indicador": "NY.GDP.PCAP.CD",
+                "nombre": "PIB por habitante",
+                "unidad": "USD corrientes"
+              }
+            ]
+          },
+          "resultado": "Vista actualizada: 6 países.",
+          "error": null
+        }
+      ],
+      "carga": {
+        "datos": [
+          {
+            "pais": "CHL",
+            "anio": 2022,
+            "varx": 15399.1045,
+            "vary": 79.176,
+            "varz": 19553036,
+            "varmapa": 15399.1045
+          },
+          {
+            "pais": "COL",
+            "anio": 2022,
+            "varx": 6680.4451,
+            "vary": 76.508,
+            "varz": 51737944,
+            "varmapa": 6680.4451
+          },
+          {
+            "pais": "PER",
+            "anio": 2022,
+            "varx": 7353.746,
+            "vary": 76.834,
+            "varz": 33475438,
+            "varmapa": 7353.746
+          }
+        ],
+        "variables": [
+          {
+            "columna": "varx",
+            "indicador": "NY.GDP.PCAP.CD",
+            "nombre": "PIB por habitante",
+            "unidad": "USD corrientes"
+          },
+          {
+            "columna": "vary",
+            "indicador": "SP.DYN.LE00.IN",
+            "nombre": "Esperanza de vida al nacer, total",
+            "unidad": "años"
+          },
+          {
+            "columna": "varz",
+            "indicador": "SP.POP.TOTL",
+            "nombre": "Población total",
+            "unidad": "personas"
+          },
+          {
+            "columna": "varmapa",
+            "indicador": "NY.GDP.PCAP.CD",
+            "nombre": "PIB por habitante",
+            "unidad": "USD corrientes"
+          }
+        ]
+      }
+    },
+    {
+      "pregunta": "Quiero una serie temporal de la esperanza de vida de Chile entre 2015 y 2023.",
+      "respuesta": "La vista no admite series temporales: solo puede mostrar un año por país. Por ello, **no modifico la carga actual de 2022**.\n\nPuedo mostrar, si quieres, la esperanza de vida de Chile para **un año concreto** entre 2015 y 2023 o actualizar la vista al **último dato disponible**.",
+      "llamadas": [],
+      "carga": {
+        "datos": [
+          {
+            "pais": "CHL",
+            "anio": 2022,
+            "varx": 15399.1045,
+            "vary": 79.176,
+            "varz": 19553036,
+            "varmapa": 15399.1045
+          },
+          {
+            "pais": "COL",
+            "anio": 2022,
+            "varx": 6680.4451,
+            "vary": 76.508,
+            "varz": 51737944,
+            "varmapa": 6680.4451
+          },
+          {
+            "pais": "PER",
+            "anio": 2022,
+            "varx": 7353.746,
+            "vary": 76.834,
+            "varz": 33475438,
+            "varmapa": 7353.746
+          }
+        ],
+        "variables": [
+          {
+            "columna": "varx",
+            "indicador": "NY.GDP.PCAP.CD",
+            "nombre": "PIB por habitante",
+            "unidad": "USD corrientes"
+          },
+          {
+            "columna": "vary",
+            "indicador": "SP.DYN.LE00.IN",
+            "nombre": "Esperanza de vida al nacer, total",
+            "unidad": "años"
+          },
+          {
+            "columna": "varz",
+            "indicador": "SP.POP.TOTL",
+            "nombre": "Población total",
+            "unidad": "personas"
+          },
+          {
+            "columna": "varmapa",
+            "indicador": "NY.GDP.PCAP.CD",
+            "nombre": "PIB por habitante",
+            "unidad": "USD corrientes"
+          }
+        ]
+      }
+    },
+    {
+      "pregunta": "Deja solo Chile en toda la vista, reutilizando la carga actual sin descargar otra vez.",
+      "respuesta": "Vista actualizada: queda únicamente **Chile**, reutilizando la carga existente sin descargar datos nuevos.\n\n- Año: **2022**\n- PIB por habitante: **15.399,1045 USD corrientes**\n- Esperanza de vida: **79,1760 años**\n- Población: **19.553.036 personas**\n- Mapa: coloreado por PIB por habitante",
+      "llamadas": [
+        {
+          "nombre": "ver_datos",
+          "argumentos": {},
+          "resultado": {
+            "datos": [
+              {
+                "pais": "CHL",
+                "anio": 2022,
+                "varx": 15399.1045,
+                "vary": 79.176,
+                "varz": 19553036,
+                "varmapa": 15399.1045
+              },
+              {
+                "pais": "COL",
+                "anio": 2022,
+                "varx": 6680.4451,
+                "vary": 76.508,
+                "varz": 51737944,
+                "varmapa": 6680.4451
+              },
+              {
+                "pais": "PER",
+                "anio": 2022,
+                "varx": 7353.746,
+                "vary": 76.834,
+                "varz": 33475438,
+                "varmapa": 7353.746
+              }
+            ],
+            "variables": [
+              {
+                "columna": "varx",
+                "indicador": "NY.GDP.PCAP.CD",
+                "nombre": "PIB por habitante",
+                "unidad": "USD corrientes"
+              },
+              {
+                "columna": "vary",
+                "indicador": "SP.DYN.LE00.IN",
+                "nombre": "Esperanza de vida al nacer, total",
+                "unidad": "años"
+              },
+              {
+                "columna": "varz",
+                "indicador": "SP.POP.TOTL",
+                "nombre": "Población total",
+                "unidad": "personas"
+              },
+              {
+                "columna": "varmapa",
+                "indicador": "NY.GDP.PCAP.CD",
+                "nombre": "PIB por habitante",
+                "unidad": "USD corrientes"
+              }
+            ]
+          },
+          "error": null
+        },
+        {
+          "nombre": "guardar_datos",
+          "argumentos": {
+            "datos": [
+              {
+                "pais": "CHL",
+                "anio": 2022,
+                "varx": 15399.1045,
+                "vary": 79.176,
+                "varz": 19553036,
+                "varmapa": 15399.1045
+              }
+            ],
+            "variables": [
+              {
+                "columna": "varx",
+                "indicador": "NY.GDP.PCAP.CD",
+                "nombre": "PIB por habitante",
+                "unidad": "USD corrientes"
+              },
+              {
+                "columna": "vary",
+                "indicador": "SP.DYN.LE00.IN",
+                "nombre": "Esperanza de vida al nacer, total",
+                "unidad": "años"
+              },
+              {
+                "columna": "varz",
+                "indicador": "SP.POP.TOTL",
+                "nombre": "Población total",
+                "unidad": "personas"
+              },
+              {
+                "columna": "varmapa",
+                "indicador": "NY.GDP.PCAP.CD",
+                "nombre": "PIB por habitante",
+                "unidad": "USD corrientes"
+              }
+            ]
+          },
+          "resultado": "Vista actualizada: 6 países.",
+          "error": null
+        }
+      ],
+      "carga": {
+        "datos": [
+          {
+            "pais": "CHL",
+            "anio": 2022,
+            "varx": 15399.1045,
+            "vary": 79.176,
+            "varz": 19553036,
+            "varmapa": 15399.1045
+          }
+        ],
+        "variables": [
+          {
+            "columna": "varx",
+            "indicador": "NY.GDP.PCAP.CD",
+            "nombre": "PIB por habitante",
+            "unidad": "USD corrientes"
+          },
+          {
+            "columna": "vary",
+            "indicador": "SP.DYN.LE00.IN",
+            "nombre": "Esperanza de vida al nacer, total",
+            "unidad": "años"
+          },
+          {
+            "columna": "varz",
+            "indicador": "SP.POP.TOTL",
+            "nombre": "Población total",
+            "unidad": "personas"
+          },
+          {
+            "columna": "varmapa",
+            "indicador": "NY.GDP.PCAP.CD",
+            "nombre": "PIB por habitante",
+            "unidad": "USD corrientes"
+          }
+        ]
+      }
+    },
+    {
+      "pregunta": "Usa ver_datos para decirme qué países, variables y año hay cargados, sin modificar nada.",
+      "respuesta": "La carga actual contiene:\n\n- **País:** Chile (`CHL`)\n- **Año:** 2022\n\n**Variables:**\n\n- **X:** PIB por habitante (`NY.GDP.PCAP.CD`) — USD corrientes\n- **Y:** Esperanza de vida al nacer, total (`SP.DYN.LE00.IN`) — años\n- **Tamaño:** Población total (`SP.POP.TOTL`) — personas\n- **Mapa:** PIB por habitante (`NY.GDP.PCAP.CD`) — USD corrientes\n\nNo se modificó la carga.",
+      "llamadas": [
+        {
+          "nombre": "ver_datos",
+          "argumentos": {},
+          "resultado": {
+            "datos": [
+              {
+                "pais": "CHL",
+                "anio": 2022,
+                "varx": 15399.1045,
+                "vary": 79.176,
+                "varz": 19553036,
+                "varmapa": 15399.1045
+              }
+            ],
+            "variables": [
+              {
+                "columna": "varx",
+                "indicador": "NY.GDP.PCAP.CD",
+                "nombre": "PIB por habitante",
+                "unidad": "USD corrientes"
+              },
+              {
+                "columna": "vary",
+                "indicador": "SP.DYN.LE00.IN",
+                "nombre": "Esperanza de vida al nacer, total",
+                "unidad": "años"
+              },
+              {
+                "columna": "varz",
+                "indicador": "SP.POP.TOTL",
+                "nombre": "Población total",
+                "unidad": "personas"
+              },
+              {
+                "columna": "varmapa",
+                "indicador": "NY.GDP.PCAP.CD",
+                "nombre": "PIB por habitante",
+                "unidad": "USD corrientes"
+              }
+            ]
+          },
+          "error": null
+        }
+      ],
+      "carga": {
+        "datos": [
+          {
+            "pais": "CHL",
+            "anio": 2022,
+            "varx": 15399.1045,
+            "vary": 79.176,
+            "varz": 19553036,
+            "varmapa": 15399.1045
+          }
+        ],
+        "variables": [
+          {
+            "columna": "varx",
+            "indicador": "NY.GDP.PCAP.CD",
+            "nombre": "PIB por habitante",
+            "unidad": "USD corrientes"
+          },
+          {
+            "columna": "vary",
+            "indicador": "SP.DYN.LE00.IN",
+            "nombre": "Esperanza de vida al nacer, total",
+            "unidad": "años"
+          },
+          {
+            "columna": "varz",
+            "indicador": "SP.POP.TOTL",
+            "nombre": "Población total",
+            "unidad": "personas"
+          },
+          {
+            "columna": "varmapa",
+            "indicador": "NY.GDP.PCAP.CD",
+            "nombre": "PIB por habitante",
+            "unidad": "USD corrientes"
+          }
+        ]
+      }
+    }
+  ]
+}

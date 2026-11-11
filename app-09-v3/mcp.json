@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "imf": {
+      "url": "https://imf.caseyjhand.com/mcp",
+      "timeout": 60
+    }
+  }
+}

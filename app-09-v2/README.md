@@ -32,7 +32,8 @@ chat$set_tools(mcp_tools("mcp-imf.json"))
 ```
 
 Se usa directamente la lista que devuelve `mcp_tools()`, sin seleccionar tools ni modificar sus esquemas.
-La App 09 original mantiene el dashboard y sus tools locales para guardar y leer la carga.
+App 09 mantiene un dashboard con X e Y y sus tools locales para guardar y leer la carga.
+App 09 v3 conserva el dashboard configurable anterior como referencia fuera de las slides.
 
 ## Comparar con el Banco Mundial
 

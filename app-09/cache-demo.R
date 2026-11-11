@@ -10,7 +10,7 @@ temporal <- "data/demo-fmi.pending.json"
 preguntas <- c(
   "Colorea los países de América Latina según su inflación promedio anual en 2023.",
   paste(
-    "Ahora agrega un gráfico con crecimiento real del PIB en X, inflación en Y y población como tamaño.",
+    "Ahora agrega un gráfico con crecimiento real del PIB en X e inflación en Y.",
     "Conserva el mapa."
   ),
   "Ahora consulta las mismas variables para 2020 y actualiza la vista."
@@ -46,7 +46,7 @@ shiny::testServer(app$server, {
   })
   cache <- list(
     generado_utc = format(Sys.time(), tz = "UTC", format = "%Y-%m-%d %H:%M:%S UTC"),
-    formato = "fmi-crecimiento-inflacion", endpoint = "https://imf.caseyjhand.com/mcp",
+    formato = "fmi-xy", endpoint = "https://imf.caseyjhand.com/mcp",
     modelo = chat$get_model(), pasos = pasos
   )
   write_json(cache, temporal, auto_unbox = TRUE, pretty = TRUE, null = "null", digits = NA)
@@ -55,4 +55,4 @@ shiny::testServer(app$server, {
 source("verify-demo.R", local = list2env(list(archivo_demo = temporal)), encoding = "UTF-8")
 stopifnot(file.copy(temporal, "data/demo-fmi.json", overwrite = TRUE))
 unlink(temporal)
-cat("Demo FMI guardada: inflación, crecimiento, población y cambio de año.\n")
+cat("Demo FMI guardada: inflación, crecimiento y cambio de año.\n")

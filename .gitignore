@@ -9,6 +9,7 @@
 /catalog/_site/
 /catalog/index_cache/
 /app-09/data/*.pending.json
+/app-09-v3/data/*.pending.json
 .Renviron
 .env
 __pycache__/

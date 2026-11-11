@@ -1,0 +1,66 @@
+{
+  "generado_utc": "2026-11-08 05:12:22 UTC",
+  "modelo": "gpt-5-nano",
+  "parametros": {
+    "max_tokens": 16384,
+    "reasoning_effort": "low"
+  },
+  "endpoint": "https://worldbank.caseyjhand.com/mcp",
+  "fuente": "Banco Mundial · World Development Indicators",
+  "prompt": "Responde en español, en un máximo de 35 palabras.\nIndica el país, el año, la unidad y la fuente del dato.",
+  "casos": [
+    {
+      "pregunta": "¿Cuál fue la esperanza de vida al nacer en Colombia en 2023?",
+      "sin_mcp": {
+        "respuesta": "Colombia, 2023, años de vida al nacer. 77,0 años. Fuente: Banco Mundial (World Bank), Life expectancy at birth, total (years).",
+        "llamadas": []
+      },
+      "con_mcp": {
+        "respuesta": "Colombia, 2023, 77.725 años, fuente: Banco Mundial (World Development Indicators) — indicador SP.DYN.LE00.IN.",
+        "llamadas": [
+          {
+            "nombre": "worldbank_get_data",
+            "argumentos": {
+              "indicator_id": "SP.DYN.LE00.IN",
+              "countries": "COL",
+              "date_range": "2023",
+              "page": 1,
+              "per_page": 100
+            },
+            "resultado": {
+              "sourceId": "2",
+              "data": [
+                {
+                  "countryCode": "CO",
+                  "countryIso3": "COL",
+                  "countryName": "Colombia",
+                  "date": "2023",
+                  "value": 77.725,
+                  "obsStatus": "",
+                  "isAggregate": false
+                }
+              ],
+              "indicator": {
+                "id": "SP.DYN.LE00.IN",
+                "name": "Life expectancy at birth, total (years)"
+              },
+              "nullCount": 0,
+              "appliedFilters": {
+                "indicatorId": "SP.DYN.LE00.IN",
+                "countries": "COL",
+                "dateRange": "2023",
+                "page": 1,
+                "perPage": 100
+              },
+              "totalCount": 1,
+              "currentPage": 1,
+              "totalPages": 1,
+              "lastUpdated": "2026-10-08"
+            },
+            "error": null
+          }
+        ]
+      }
+    }
+  ]
+}

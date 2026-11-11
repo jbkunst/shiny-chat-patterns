@@ -46,13 +46,8 @@ ui <- page_sidebar(
 
 # server ------------------------------------------------------------------
 server <- function(input, output, session) {
-  data <- reactiveVal(list(
-    datos = tibble(pais = character(), anio = integer(), x_var = double(), y_var = double(),
-      size_var = double(), color_var = double(), map_var = double()),
-    variables = tibble(indicador = character())
-  ))
-  escala <- reactiveVal("")
-  escala_tamano <- reactiveVal("area")
+  filas_vacias <- tibble(pais = character(), anio = integer(), x = double(), y = double())
+  data <- reactiveVal(list(datos = filas_vacias, variables = tibble(indicador = character())))
 
   output$n_paises <- renderText(n_distinct(data()$datos$pais))
   output$n_variables <- renderText(n_distinct(data()$variables$indicador))
@@ -63,90 +58,61 @@ server <- function(input, output, session) {
   output$table <- renderTable(data()$datos, digits = 4, striped = TRUE, hover = TRUE)
 
   output$plot <- renderPlot({
-    df <- data()$datos |> filter(if_all(c(x_var, y_var), ~ !is.na(.x)),
-      !grepl("x", escala()) | x_var > 0, !grepl("y", escala()) | y_var > 0)
-    if (!nrow(df)) return(ggplot() + xlim(0, 1) + ylim(0, 1) +
-      theme(axis.line = element_line(), panel.grid = element_blank(),
-        axis.text = element_blank(), axis.ticks = element_blank()) + labs(x = "X", y = "Y"))
-    info <- data()$variables
-    etiquetas <- with(info, setNames(str_c(nombre, " · ", unidad), columna))
-    tamano <- if (escala_tamano() == "log10") scale_size_continuous(transform = "log10")
-      else scale_size_area(max_size = 9)
-    tamano$na.value <- 3
-    ggplot(df, aes(x_var, y_var, size = size_var, color = color_var)) +
-      geom_point() + tamano +
-      scale_color_gradient(low = "#9cc9c4", high = "#0E4F5A", na.value = "#0E4F5A") +
-      scale_x_continuous(transform = if (grepl("x", escala())) "log10" else "identity") +
-      scale_y_continuous(transform = if (grepl("y", escala())) "log10" else "identity") +
-      labs(x = etiquetas["x_var"], y = etiquetas["y_var"],
-        size = etiquetas["size_var"], color = etiquetas["color_var"])
+    df <- data()$datos |> filter(!is.na(x), !is.na(y))
+    if (!nrow(df)) return(ggplot() + xlim(0, 1) + ylim(0, 1) + labs(x = "X", y = "Y"))
+    etiquetas <- with(data()$variables, setNames(str_c(nombre, " · ", unidad), columna))
+    ggplot(df, aes(x, y)) + geom_point(color = "#0E4F5A", size = 3) +
+      labs(x = etiquetas["x"], y = etiquetas["y"])
   })
 
   output$map <- mapgl::renderMaplibre({
     map <- mapgl::maplibre(style = mapgl::carto_style("positron")) |> mapgl::add_globe_control()
-    mapa <- mundo |> inner_join(data()$datos |> filter(!is.na(map_var)), by = c("adm0_a3" = "pais"))
+    mapa <- mundo |> inner_join(data()$datos, by = c("adm0_a3" = "pais")) |> filter(!is.na(y))
     if (!nrow(mapa)) return(map)
-    info <- data()$variables |> filter(columna == "map_var")
+    info <- data()$variables |> filter(columna == "y")
     mapa <- mapa |> mutate(detalle = str_glue(
-      "{name_es}<br>{info$nombre}: {round(map_var, 4)} {info$unidad}<br>Año: {anio}<br>FMI · WEO"
+      "{name_es}<br>{info$nombre}: {round(y, 4)} {info$unidad}<br>Año: {anio}<br>FMI · WEO"
     ))
-    rango <- range(mapa$map_var)
+    rango <- range(mapa$y)
     if (diff(rango) == 0) rango <- rango + c(-0.5, 0.5)
     colores <- c("#dcebea", "#0E4F5A")
     map |>
       mapgl::add_fill_layer(
         id = "paises", source = mapa, fill_opacity = 0.8, fill_outline_color = "white", tooltip = "detalle",
-        fill_color = mapgl::interpolate("map_var", values = rango, stops = colores)
+        fill_color = mapgl::interpolate("y", values = rango, stops = colores)
       ) |>
       mapgl::add_legend(str_c(info$nombre, " · ", info$unidad), values = rango, colors = colores)
   })
 
   # tools -----------------------------------------------------------------
   guardar_datos <- function(datos, variables) {
-    data(list(datos = bind_rows(isolate(data())$datos[0, ], datos),
-      variables = bind_rows(variables)))
+    data(list(datos = bind_rows(filas_vacias, datos), variables = bind_rows(variables)))
     paste("Vista actualizada:", length(datos), "países.")
   }
 
   ver_datos <- function() isolate(data())
 
-  configurar_grafico <- function(log = NULL, tamano = NULL) {
-    if (!is.null(log)) escala(log)
-    if (!is.null(tamano)) escala_tamano(tamano)
-    "Escala del gráfico actualizada."
-  }
-
   # chat ------------------------------------------------------------------
   chat <- ellmer::chat("openai/gpt-5.6-luna", system_prompt = prompt_sistema)
   chat$set_tools(mcp_tools("mcp.json"))
   chat$register_tool(tool(
-    guardar_datos, "Reemplaza la carga completa que comparten mapa, dispersión y tabla.",
+    guardar_datos, "Reemplaza la carga: mapa usa y; gráfico y tabla usan x e y.",
     arguments = list(
       datos = type_array(type_object(
         pais = type_string("Código ISO3 del país, sin agregados."),
-        anio = type_integer("Año real de los valores de esta fila."),
-        x_var = type_number("Valor del eje X; null si no se usa.", required = FALSE),
-        y_var = type_number("Valor del eje Y; null si no se usa.", required = FALSE),
-        size_var = type_number("Valor positivo para el tamaño; null si no se usa.", required = FALSE),
-        color_var = type_number("Valor para el color del punto; null para color uniforme.", required = FALSE),
-        map_var = type_number("Valor para el color del país; null si no se usa.", required = FALSE)
+        anio = type_integer("Año común de los valores de esta fila."),
+        x = type_number("Eje X; null para un mapa o si falta el valor.", required = FALSE),
+        y = type_number("Eje Y y color del mapa; null si falta el valor.", required = FALSE)
       ), "Una fila por país; valores reales del MCP a cuatro decimales."),
       variables = type_array(type_object(
-        columna = type_enum(c("x_var", "y_var", "size_var", "color_var", "map_var"), "Papel en la vista."),
-        indicador = type_string("ID exacto del indicador del MCP."),
-        nombre = type_string("Nombre breve del indicador."),
+        columna = type_enum(c("x", "y"), "Columna descrita; y también se usa en el mapa."),
+        indicador = type_string("ID del indicador del MCP."),
+        nombre = type_string("Nombre del indicador."),
         unidad = type_string("Unidad original de la fuente.")
-      ), "Nombre y unidad de cada columna utilizada. Un indicador puede tener varios usos.")
+      ), "Metadatos de cada columna utilizada.")
     )
   ))
   chat$register_tool(tool(ver_datos, "Lee la carga actual, sus nombres y unidades, sin modificarla."))
-  chat$register_tool(tool(
-    configurar_grafico, "Cambia las escalas de ejes y tamaño; conserva los datos.",
-    arguments = list(
-      log = type_enum(c("", "x", "y", "xy"), "Ejes logarítmicos; vacío para lineales.", required = FALSE),
-      tamano = type_enum(c("area", "log10"), "Área proporcional o tamaño logarítmico.", required = FALSE)
-    )
-  ))
   observeEvent(input$chat_user_input, {
     stream <- chat$stream_async(!!!input$chat_user_input, tool_mode = "sequential", stream = "content")
     shinychat::chat_append("chat", stream)
